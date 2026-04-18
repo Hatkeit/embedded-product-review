@@ -2,69 +2,492 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1d4ed8" />
+  <meta name="format-detection" content="telephone=no" />
   <title>임베디드 HW/FW 제품 양산 전환 리스크 검토</title>
+
+  <!-- 폰트 및 이미지 CDN preconnect -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+  />
+
   <style>
-    :root{--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;--blue:#1d4ed8;--blue-100:#dbeafe;--blue-50:#eff6ff;--dark:#0f172a;--green-50:#ecfdf5;--green-200:#a7f3d0;--shadow:0 10px 25px rgba(15,23,42,.06)}
-    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Inter,Arial,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-    .container{max-width:1200px;margin:0 auto;padding:32px 16px}.section{background:#fff;border:1px solid var(--line);border-radius:32px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:32px}.subsection{padding:24px}.headerbar{padding:16px 24px;border-bottom:1px solid var(--line);background:#f8fafc;font-size:14px;font-weight:700;color:#334155}
-    .hero-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--line)}.hero-nav .brand{font-size:14px;font-weight:700;color:#334155}.hero-nav nav{display:flex;gap:24px;font-size:14px;color:#475569}
-    .btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:16px;padding:14px 22px;font-weight:700;cursor:pointer;text-decoration:none}.btn-primary{background:var(--blue);color:#fff}.btn-secondary{background:#fff;color:#334155;border:1px solid #cbd5e1}.btn-pill{border-radius:999px;padding:10px 18px}
-    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:32px;padding:56px 24px;align-items:center}.eyebrow{font-size:14px;font-weight:700;color:#64748b;margin-bottom:12px}h1{font-size:46px;line-height:1.2;letter-spacing:-.04em;margin:0 0 16px;font-weight:900}h1 .accent{color:var(--blue)}
-    .lead{font-size:18px;color:#475569;max-width:720px}.note{margin-top:16px;padding:14px 16px;border:1px solid #bfdbfe;background:var(--blue-50);border-radius:18px;color:#334155;font-size:14px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
-    .hero-image{border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:0 18px 35px rgba(15,23,42,.12);min-height:360px;max-width:730px;margin-left:auto;background:linear-gradient(135deg,#dbeafe,#f8fafc)}.hero-image img{width:100%;height:100%;object-fit:cover;display:block}
-    .grid-3{display:grid;grid-template-columns:1.25fr .9fr .9fr;gap:24px}.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-    .fit-card,.small-card,.step,.result-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)}.fit-icon{font-size:28px;margin-bottom:10px}
-    h2{font-size:32px;letter-spacing:-.03em;margin:0 0 20px;font-weight:800}h3{font-size:24px;letter-spacing:-.02em;margin:0 0 16px;font-weight:800}h4{margin:0 0 8px;font-size:18px;font-weight:800}
-    ul.clean{list-style:none;padding:0;margin:0;display:grid;gap:12px}ul.clean li{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:#334155}.check{display:inline-flex;width:24px;height:24px;border-radius:999px;background:var(--blue-100);color:var(--blue);align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:0 0 auto;margin-top:1px}
-    .benefits{background:linear-gradient(135deg,#fff,#eff6ff)} .benefit-grid,.pain-grid,.steps,.tag-wrap,.control-grid{display:grid;gap:16px}
-    .benefit-grid,.pain-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.steps{grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
-    .step{background:#f8fafc}.step-num{width:40px;height:40px;border-radius:999px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:14px}
-    .dark{background:var(--dark);color:#fff}.dark p{color:#cbd5e1}.tag-wrap{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
-    .tags{display:flex;gap:8px;flex-wrap:wrap}.tag{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.08);font-size:14px;color:#f8fafc}
-    .cta-box{background:var(--blue-50);border:1px solid #dbeafe;border-radius:28px;padding:32px;word-break:keep-all;overflow-wrap:break-word}.muted{color:var(--muted)}.tiny{font-size:12px}
-    .preview-controls{background:#fff;border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow);margin-bottom:24px}.control-grid{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:14px}
-    .toggle{border:1px solid #cbd5e1;background:#fff;color:#334155;border-radius:16px;padding:14px 16px;font-weight:700;cursor:pointer}.toggle.active{background:var(--blue);border-color:var(--blue);color:#fff}
-    @media (max-width:1024px){.hero,.grid-3,.benefit-grid,.pain-grid,.steps,.tag-wrap,.control-grid{grid-template-columns:1fr 1fr}h1{font-size:42px}}\n    @media (max-width:900px){.hero{grid-template-columns:1fr;gap:24px}.hero-nav{flex-wrap:wrap;gap:14px;align-items:flex-start}.hero-nav .brand{flex:1 1 100%;max-width:100%;font-size:16px;line-height:1.4;word-break:keep-all;overflow-wrap:break-word}.hero-nav .btn-pill{width:100%;max-width:none;min-height:56px;padding:16px 18px;white-space:normal;line-height:1.35}.hero-image{min-height:280px;max-width:none}.actions{flex-direction:column}.actions .btn{width:100%}h1{font-size:40px;line-height:1.18;max-width:100% !important;word-break:keep-all;overflow-wrap:break-word}.lead,.note{max-width:100%}}
-    @media (max-width:720px){.hero,.grid-3,.benefit-grid,.pain-grid,.steps,.tag-wrap,.control-grid{grid-template-columns:1fr}.hero-nav nav{display:none}h1{font-size:34px;line-height:1.22}.container{padding:18px 12px}.subsection,.headerbar,.hero-nav,.hero{padding-left:16px;padding-right:16px}.grid-3[style*="1.5fr 1fr"]{grid-template-columns:1fr !important}.cta-box{padding:24px;border-radius:24px}.cta-box h3,.cta-box p,.cta-box a{word-break:keep-all;overflow-wrap:break-word}.cta-box h3{font-size:28px;line-height:1.35;margin-bottom:12px}.cta-box .btn{width:100%;min-height:56px;padding:16px 18px;white-space:normal;line-height:1.4}.small-card.dark{padding:24px}.hero-nav .brand{font-size:15px}.note{font-size:15px}}
-    .hide{display:none !important}
+    :root{
+      --bg:#f1f5f9;
+      --card:#fff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --blue:#1d4ed8;
+      --blue-100:#dbeafe;
+      --blue-50:#eff6ff;
+      --dark:#0f172a;
+      --green-50:#ecfdf5;
+      --green-200:#a7f3d0;
+      --shadow:0 10px 25px rgba(15,23,42,.06);
+    }
+
+    /* ---------- Reset & Base (cross-platform consistency) ---------- */
+    *,*::before,*::after{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    html{
+      scroll-behavior:smooth;
+      -webkit-text-size-adjust:100%;
+      -ms-text-size-adjust:100%;
+      text-size-adjust:100%;
+      overflow-x:hidden;
+      width:100%;
+    }
+
+    body{
+      margin:0;
+      font-family:'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+        'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕',
+        'Noto Sans KR', 'Segoe UI', Roboto, system-ui, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      text-rendering:optimizeLegibility;
+      word-break:keep-all;
+      overflow-wrap:break-word;
+      overflow-x:hidden;
+      width:100%;
+      min-height:100vh;
+      min-height:100dvh;
+      /* iPhone 노치 대응 */
+      padding-left:env(safe-area-inset-left);
+      padding-right:env(safe-area-inset-right);
+    }
+
+    img{
+      max-width:100%;
+      height:auto;
+      display:block;
+      -webkit-user-drag:none;
+    }
+
+    button, a{
+      font-family:inherit;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    /* ---------- Layout ---------- */
+    .container{
+      max-width:1200px;
+      margin:0 auto;
+      padding:32px 16px;
+      width:100%;
+    }
+
+    .section{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:32px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      margin-bottom:32px;
+    }
+
+    .subsection{padding:24px}
+
+    .headerbar{
+      padding:16px 24px;
+      border-bottom:1px solid var(--line);
+      background:#f8fafc;
+      font-size:14px;
+      font-weight:700;
+      color:#334155;
+    }
+
+    /* ---------- Hero Nav ---------- */
+    .hero-nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:16px 24px;
+      border-bottom:1px solid var(--line);
+      gap:16px;
+      flex-wrap:wrap;
+    }
+    .hero-nav .brand{
+      font-size:14px;
+      font-weight:700;
+      color:#334155;
+    }
+    .hero-nav nav{
+      display:flex;
+      gap:24px;
+      font-size:14px;
+      color:#475569;
+      flex-wrap:wrap;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:none;
+      border-radius:16px;
+      padding:14px 22px;
+      font-weight:700;
+      cursor:pointer;
+      text-decoration:none;
+      min-height:48px;
+      font-size:15px;
+      line-height:1.3;
+      -webkit-appearance:none;
+      appearance:none;
+      transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+      white-space:nowrap;
+    }
+    .btn:active{transform:scale(.98);opacity:.9}
+    .btn-primary{background:var(--blue);color:#fff}
+    .btn-secondary{background:#fff;color:#334155;border:1px solid #cbd5e1}
+    .btn-pill{border-radius:999px;padding:10px 18px;min-height:44px}
+
+    /* ---------- Hero ---------- */
+    .hero{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:32px;
+      padding:56px 24px;
+      align-items:center;
+    }
+    .eyebrow{
+      font-size:14px;
+      font-weight:700;
+      color:#64748b;
+      margin-bottom:12px;
+    }
+    h1{
+      font-size:46px;
+      line-height:1.2;
+      letter-spacing:-.04em;
+      margin:0 0 16px;
+      font-weight:900;
+      max-width:760px;
+      word-break:keep-all;
+      overflow-wrap:break-word;
+    }
+    h1 .accent{color:var(--blue)}
+    .lead{
+      font-size:18px;
+      color:#475569;
+      max-width:720px;
+    }
+    .note{
+      margin-top:16px;
+      padding:14px 16px;
+      border:1px solid #bfdbfe;
+      background:var(--blue-50);
+      border-radius:18px;
+      color:#334155;
+      font-size:14px;
+    }
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:28px;
+    }
+
+    .hero-image{
+      border:1px solid var(--line);
+      border-radius:28px;
+      overflow:hidden;
+      box-shadow:0 18px 35px rgba(15,23,42,.12);
+      min-height:360px;
+      max-width:730px;
+      margin-left:auto;
+      background:linear-gradient(135deg,#dbeafe,#f8fafc);
+      width:100%;
+      aspect-ratio: 4 / 3;
+    }
+    .hero-image img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* ---------- Grids ---------- */
+    .grid-3{
+      display:grid;
+      grid-template-columns:1.25fr .9fr .9fr;
+      gap:24px;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+    }
+
+    .fit-card,.small-card,.step,.result-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:20px;
+      box-shadow:var(--shadow);
+    }
+    .fit-icon{font-size:28px;margin-bottom:10px;line-height:1}
+
+    h2{
+      font-size:32px;
+      letter-spacing:-.03em;
+      margin:0 0 20px;
+      font-weight:800;
+      word-break:keep-all;
+      overflow-wrap:break-word;
+    }
+    h3{
+      font-size:24px;
+      letter-spacing:-.02em;
+      margin:0 0 16px;
+      font-weight:800;
+      word-break:keep-all;
+      overflow-wrap:break-word;
+    }
+    h4{
+      margin:0 0 8px;
+      font-size:18px;
+      font-weight:800;
+      word-break:keep-all;
+      overflow-wrap:break-word;
+    }
+
+    p{word-break:keep-all;overflow-wrap:break-word;margin:0 0 8px}
+
+    ul.clean{
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:grid;
+      gap:12px;
+    }
+    ul.clean li{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      font-size:15px;
+      color:#334155;
+      word-break:keep-all;
+      overflow-wrap:break-word;
+    }
+    .check{
+      display:inline-flex;
+      width:24px;
+      height:24px;
+      border-radius:999px;
+      background:var(--blue-100);
+      color:var(--blue);
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      font-weight:700;
+      flex:0 0 auto;
+      margin-top:1px;
+    }
+
+    .benefits{background:linear-gradient(135deg,#fff,#eff6ff)}
+
+    .benefit-grid,.pain-grid,.steps,.tag-wrap,.control-grid{
+      display:grid;
+      gap:16px;
+    }
+    .benefit-grid,.pain-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .steps{grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+
+    .step{background:#f8fafc}
+    .step-num{
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:var(--blue);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      margin-bottom:14px;
+    }
+
+    .dark{background:var(--dark);color:#fff}
+    .dark p{color:#cbd5e1}
+
+    .tag-wrap{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+    .tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      font-size:14px;
+      color:#f8fafc;
+      word-break:keep-all;
+    }
+
+    .cta-box{
+      background:var(--blue-50);
+      border:1px solid #dbeafe;
+      border-radius:28px;
+      padding:32px;
+      word-break:keep-all;
+      overflow-wrap:break-word;
+    }
+    .muted{color:var(--muted)}
+    .tiny{font-size:12px}
+
+    /* ---------- Responsive Breakpoints ---------- */
+    @media (max-width:1024px){
+      .hero,.grid-3,.benefit-grid,.pain-grid,.steps,.tag-wrap,.control-grid{
+        grid-template-columns:1fr 1fr;
+      }
+      h1{font-size:40px}
+    }
+
+    @media (max-width:900px){
+      .hero{grid-template-columns:1fr;gap:24px;padding:40px 20px}
+      .hero-nav{gap:14px}
+      .hero-nav .brand{
+        flex:1 1 100%;
+        max-width:100%;
+        font-size:16px;
+        line-height:1.4;
+      }
+      .hero-nav nav{display:none}
+      .hero-nav .btn-pill{
+        width:100%;
+        max-width:none;
+        min-height:52px;
+        padding:14px 18px;
+        white-space:normal;
+        line-height:1.35;
+      }
+      .hero-image{
+        min-height:260px;
+        max-width:none;
+        margin-left:0;
+      }
+      .actions{flex-direction:column}
+      .actions .btn{width:100%}
+      h1{
+        font-size:36px;
+        line-height:1.22;
+        max-width:100%;
+      }
+      .lead,.note{max-width:100%}
+    }
+
+    @media (max-width:720px){
+      .hero,.grid-3,.benefit-grid,.pain-grid,.steps,.tag-wrap,.control-grid{
+        grid-template-columns:1fr;
+      }
+      h1{font-size:30px;line-height:1.25}
+      h2{font-size:26px}
+      h3{font-size:20px}
+      .container{padding:16px 12px}
+      .subsection,.headerbar,.hero-nav{padding-left:16px;padding-right:16px}
+      .hero{padding:32px 16px}
+      .section{border-radius:24px}
+      .cta-box{padding:22px;border-radius:22px}
+      .cta-box h3{font-size:22px;line-height:1.35;margin-bottom:12px}
+      .cta-box .btn{
+        width:100%;
+        min-height:52px;
+        padding:14px 18px;
+        white-space:normal;
+        line-height:1.4;
+      }
+      .small-card.dark{padding:22px}
+      .hero-nav .brand{font-size:15px}
+      .note{font-size:14px}
+      .lead{font-size:16px}
+      .fit-card,.small-card,.step,.result-card{padding:18px;border-radius:20px}
+    }
+
+    @media (max-width:380px){
+      h1{font-size:26px}
+      .container{padding:12px 10px}
+    }
+
+    /* 터치 디바이스에서 hover 효과 제거 */
+    @media (hover:hover){
+      .btn-primary:hover{box-shadow:0 6px 18px rgba(29,78,216,.3)}
+      .btn-secondary:hover{background:#f8fafc}
+    }
+
+    /* 모션 민감 사용자 대응 */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <!--
-<section class="preview-controls">
-      <div class="eyebrow" style="color:var(--blue)">HTML 미리보기 컨트롤</div>
-      <h2 style="margin-bottom:8px">사전 검토 요청 버튼이 구글폼으로 이동하도록 수정된 버전</h2>
-      <p class="muted" style="margin:0">아래 토글로 메인, 기대효과, 제외범위를 켜고 끌 수 있습니다. 사전 검토 요청 버튼은 모두 구글폼 링크로 연결됩니다.</p>
-      <div class="control-grid">
-        <button class="toggle active" data-target="home-section">메인 홈페이지 · 표시</button>
-        <button class="toggle active" data-target="expectation-section">기대효과 · 표시</button>
-        <button class="toggle active" data-target="exclusion-section">제외범위 · 표시</button>
-      </div>
-    </section>
--->
 
     <section id="home-section" class="section">
-      <!-- <div class="headerbar">메인 홈페이지 미리보기</div> -->
       <div class="hero-nav">
         <div class="brand">임베디드 제품 양산 전환 리스크 검토</div>
-        <nav><span>서비스 소개</span><span>진행 방식</span><span>대응 범위</span><span>사전 검토 요청</span></nav>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeOP2nQ1gAGWgQvHf_8dpidenZ1KoLckzFBAjq1Mihn8nTcDA/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-pill">사전 검토 요청하기</a>
+        <nav>
+          <span>서비스 소개</span>
+          <span>진행 방식</span>
+          <span>대응 범위</span>
+          <span>사전 검토 요청</span>
+        </nav>
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSeOP2nQ1gAGWgQvHf_8dpidenZ1KoLckzFBAjq1Mihn8nTcDA/viewform?usp=publish-editor"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-primary btn-pill"
+        >사전 검토 요청하기</a>
       </div>
 
       <div class="hero">
         <div>
           <div class="eyebrow">제품 개발이 끝났다고 바로 안정적인 양산이 가능한 것은 아닙니다</div>
-          <h1 style="max-width:760px">임베디드 HW/FW 기반 제품<br>양산 전 검토가 필요한 사항을<br><span class="accent">확인합니다.</span></h1>
-          <p class="lead">설계, 펌웨어, 생산 이관, 현장 운용 측면에서 현재 단계에서 확인이 필요한 항목과 추가 검토가 필요한 부분을 정리합니다.</p>
-          <div class="note">모든 제품을 동일한 방식으로 검토하지 않으며, 제품 특성과 현재 단계에 따라 검토 가능 여부와 범위를 먼저 안내드립니다.</div>
+          <h1>
+            임베디드 HW/FW 기반 제품<br />
+            양산 전 검토가 필요한 사항을<br />
+            <span class="accent">확인합니다.</span>
+          </h1>
+          <p class="lead">
+            설계, 펌웨어, 생산 이관, 현장 운용 측면에서 현재 단계에서 확인이 필요한 항목과 추가 검토가 필요한 부분을 정리합니다.
+          </p>
+          <div class="note">
+            모든 제품을 동일한 방식으로 검토하지 않으며, 제품 특성과 현재 단계에 따라 검토 가능 여부와 범위를 먼저 안내드립니다.
+          </div>
           <div class="actions">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeOP2nQ1gAGWgQvHf_8dpidenZ1KoLckzFBAjq1Mihn8nTcDA/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" class="btn btn-primary">사전 검토 요청하기</a>
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSeOP2nQ1gAGWgQvHf_8dpidenZ1KoLckzFBAjq1Mihn8nTcDA/viewform?usp=publish-editor"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-primary"
+            >사전 검토 요청하기</a>
             <a href="#scope-section" class="btn btn-secondary">서비스 범위 보기</a>
           </div>
         </div>
-        <div class="hero-image"><img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1400&q=80" alt="산업용 전자장치 및 회로"></div>
+        <div class="hero-image">
+          <img
+            src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1400&q=80"
+            alt="산업용 전자장치 및 회로"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
 
       <div class="subsection">
@@ -146,19 +569,28 @@
       </div>
 
       <div id="scope-section" class="subsection">
-        <div class="grid-3" style="grid-template-columns:1.5fr 1fr;align-items:start">
+        <div class="grid-3 scope-grid">
           <div id="exclusion-section" class="small-card dark">
             <div class="tag-wrap">
               <div>
                 <h3>대응 범위</h3>
                 <div class="tags">
-                  <span class="tag">임베디드 제어</span><span class="tag">전자기기</span><span class="tag">센서 / 모듈</span><span class="tag">통신 / 전원제어</span><span class="tag">자동화 장비</span><span class="tag">HW/FW 연동 제품</span>
+                  <span class="tag">임베디드 제어</span>
+                  <span class="tag">전자기기</span>
+                  <span class="tag">센서 / 모듈</span>
+                  <span class="tag">통신 / 전원제어</span>
+                  <span class="tag">자동화 장비</span>
+                  <span class="tag">HW/FW 연동 제품</span>
                 </div>
               </div>
               <div>
                 <h3>제외 범위</h3>
                 <div class="tags">
-                  <span class="tag">순수 소프트웨어 단독 서비스</span><span class="tag">웹/앱 서비스 단독</span><span class="tag">AI 모델 개발 단독</span><span class="tag">경영 컨설팅</span><span class="tag">기구설계 단독</span>
+                  <span class="tag">순수 소프트웨어 단독 서비스</span>
+                  <span class="tag">웹/앱 서비스 단독</span>
+                  <span class="tag">AI 모델 개발 단독</span>
+                  <span class="tag">경영 컨설팅</span>
+                  <span class="tag">기구설계 단독</span>
                 </div>
               </div>
               <div>
@@ -169,26 +601,34 @@
           </div>
           <div class="cta-box">
             <h3>사전 검토 요청으로 시작합니다</h3>
-            <p class="muted">모든 제품을 동일한 방식으로 검토하지 않습니다. 제품 특성, 현재 단계, 우려사항을 먼저 확인한 뒤 검토 가능 여부와 적합한 검토 범위, 진행 방식을 안내드립니다.</p>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeOP2nQ1gAGWgQvHf_8dpidenZ1KoLckzFBAjq1Mihn8nTcDA/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="width:100%">사전 검토 요청하기</a>
-            <p class="tiny muted" style="margin-top:14px">작성하신 내용은 검토 목적 외에 사용하지 않으며, 외부에 공유되지 않습니다.</p>
+            <p class="muted">
+              모든 제품을 동일한 방식으로 검토하지 않습니다. 제품 특성, 현재 단계, 우려사항을 먼저 확인한 뒤 검토 가능 여부와 적합한 검토 범위, 진행 방식을 안내드립니다.
+            </p>
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSeOP2nQ1gAGWgQvHf_8dpidenZ1KoLckzFBAjq1Mihn8nTcDA/viewform?usp=publish-editor"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-primary"
+              style="width:100%;margin-top:12px"
+            >사전 검토 요청하기</a>
+            <p class="tiny muted" style="margin-top:14px">
+              작성하신 내용은 검토 목적 외에 사용하지 않으며, 외부에 공유되지 않습니다.
+            </p>
           </div>
         </div>
       </div>
     </section>
+
   </div>
-  <script>
-    document.querySelectorAll('.toggle').forEach(function(btn){
-      btn.addEventListener('click',function(){
-        var id=btn.getAttribute('data-target');
-        var target=document.getElementById(id);
-        if(!target) return;
-        var hidden=target.classList.toggle('hide');
-        btn.classList.toggle('active', !hidden);
-        var label=btn.textContent.split('·')[0].trim();
-        btn.textContent=label+' · '+(hidden?'숨김':'표시');
-      });
-    });
-  </script>
+
+  <style>
+    /* scope-grid 반응형 (인라인 style 선택자 대체) */
+    @media (min-width:1025px){
+      .scope-grid{grid-template-columns:1.5fr 1fr;align-items:start}
+    }
+    @media (max-width:1024px){
+      .scope-grid{grid-template-columns:1fr;align-items:start}
+    }
+  </style>
 </body>
 </html>
