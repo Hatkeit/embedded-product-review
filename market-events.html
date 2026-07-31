@@ -1,0 +1,1029 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="주가지수 차트에서 급락 구간을 자동으로 찾아내고, 그 구간에 있었던 이슈 사건을 매칭해 보여주는 도구" />
+  <meta name="theme-color" content="#1d4ed8" />
+  <title>주가지수 급락 구간 × 이슈 사건 매칭</title>
+  <style>
+    .viz-root{
+      color-scheme: light;
+      --surface-1:#ffffff;
+      --page:#f1f5f9;
+      --text-primary:#0b0b0b;
+      --text-secondary:#52514e;
+      --text-muted:#898781;
+      --grid:#e1e0d9;
+      --axis:#c3c2b7;
+      --border:rgba(11,11,11,.10);
+      --series-1:#2a78d6;
+      --critical:#d03b3b;
+      --wash:rgba(208,59,59,.10);
+      --field:#ffffff;
+      --field-line:#cbd5e1;
+      --ghost:rgba(11,11,11,.045);
+    }
+    @media (prefers-color-scheme: dark){
+      :root:where(:not([data-theme="light"])) .viz-root{
+        color-scheme: dark;
+        --surface-1:#12141a;
+        --page:#0b0d11;
+        --text-primary:#ffffff;
+        --text-secondary:#c3c2b7;
+        --text-muted:#898781;
+        --grid:#2c2c2a;
+        --axis:#383835;
+        --border:rgba(255,255,255,.10);
+        --series-1:#3987e5;
+        --critical:#d03b3b;
+        --wash:rgba(208,59,59,.11);
+        --field:#171a21;
+        --field-line:#333842;
+        --ghost:rgba(255,255,255,.06);
+      }
+    }
+    :root[data-theme="dark"] .viz-root{
+      color-scheme: dark;
+      --surface-1:#12141a;
+      --page:#0b0d11;
+      --text-primary:#ffffff;
+      --text-secondary:#c3c2b7;
+      --text-muted:#898781;
+      --grid:#2c2c2a;
+      --axis:#383835;
+      --border:rgba(255,255,255,.10);
+      --series-1:#3987e5;
+      --critical:#d03b3b;
+      --wash:rgba(208,59,59,.11);
+      --field:#171a21;
+      --field-line:#333842;
+      --ghost:rgba(255,255,255,.06);
+    }
+
+    *{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+      background:var(--page);color:var(--text-primary);line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+    }
+    .wrap{max-width:1120px;margin:0 auto;padding:32px 16px 64px}
+    .card{background:var(--surface-1);border:1px solid var(--border);border-radius:24px;padding:24px;margin-bottom:24px}
+    .backlink{display:inline-block;font-size:13px;color:var(--text-secondary);text-decoration:none;margin-bottom:16px}
+    .backlink:hover{color:var(--series-1)}
+    h1{font-size:30px;line-height:1.28;letter-spacing:-.03em;margin:0 0 10px;font-weight:800;word-break:keep-all}
+    h2{font-size:20px;letter-spacing:-.02em;margin:0 0 12px;font-weight:800;word-break:keep-all}
+    h3{font-size:15px;margin:0 0 8px;font-weight:700;word-break:keep-all}
+    p{margin:0 0 12px;word-break:keep-all}
+    .lead{color:var(--text-secondary);font-size:15px;max-width:74ch}
+    .tiny{font-size:12.5px;color:var(--text-muted);word-break:keep-all}
+
+    .notice{
+      display:flex;gap:10px;align-items:flex-start;
+      border:1px solid var(--border);border-radius:14px;
+      padding:12px 14px;font-size:13px;color:var(--text-secondary);
+      background:var(--ghost);margin:0 0 20px;word-break:keep-all
+    }
+    .notice svg{flex:0 0 auto;margin-top:3px}
+
+    /* one filter row above everything it scopes */
+    .filters{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;margin-bottom:18px}
+    .field{display:flex;flex-direction:column;gap:5px}
+    .field label{font-size:11.5px;font-weight:700;letter-spacing:.03em;color:var(--text-muted);text-transform:uppercase}
+    select,.filebtn{
+      appearance:none;font:inherit;font-size:14px;color:var(--text-primary);
+      background:var(--field);border:1px solid var(--field-line);border-radius:12px;
+      padding:8px 30px 8px 12px;cursor:pointer;min-height:38px;
+      background-image:linear-gradient(45deg,transparent 50%,var(--text-muted) 50%),linear-gradient(135deg,var(--text-muted) 50%,transparent 50%);
+      background-position:calc(100% - 15px) 17px,calc(100% - 10px) 17px;
+      background-size:5px 5px,5px 5px;background-repeat:no-repeat
+    }
+    .filebtn{background-image:none;padding:8px 14px;font-weight:700}
+    .filebtn:hover,select:hover{border-color:var(--series-1)}
+    .toggles{display:flex;gap:14px;align-items:center;padding-bottom:8px}
+    .toggle{display:inline-flex;gap:7px;align-items:center;font-size:13.5px;color:var(--text-secondary);cursor:pointer;user-select:none}
+    .toggle input{accent-color:var(--series-1);width:16px;height:16px;cursor:pointer}
+
+    .chart-head{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:baseline;margin-bottom:4px}
+    .chart-title{font-size:17px;font-weight:800;letter-spacing:-.01em}
+    .chart-sub{font-size:13px;color:var(--text-secondary)}
+    .badge{
+      display:inline-block;font-size:11px;font-weight:700;letter-spacing:.02em;
+      border:1px solid var(--border);border-radius:999px;padding:2px 9px;color:var(--text-muted)
+    }
+
+    .plot{position:relative;width:100%}
+    .plot svg{display:block;width:100%;overflow:visible}
+    .plot svg text{font-family:inherit}
+
+    .tip{
+      position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-100%);
+      background:var(--surface-1);border:1px solid var(--border);border-radius:12px;
+      padding:9px 11px;min-width:150px;max-width:280px;
+      box-shadow:0 8px 24px rgba(0,0,0,.14);transition:opacity .1s;z-index:5
+    }
+    .tip .t-date{font-size:11.5px;color:var(--text-muted);margin-bottom:3px;font-variant-numeric:tabular-nums}
+    .tip .t-val{font-size:18px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+    .tip .t-row{display:flex;align-items:center;gap:7px;margin-top:5px;font-size:12.5px;color:var(--text-secondary)}
+    .tip .t-key{display:inline-block;width:14px;height:2px;border-radius:2px;background:var(--series-1);flex:0 0 auto}
+    .tip .t-title{font-size:13.5px;font-weight:700;color:var(--text-primary);line-height:1.35;margin-bottom:4px}
+    .tip .t-desc{font-size:12.5px;color:var(--text-secondary);line-height:1.45}
+    .tip .t-cat{font-size:11px;color:var(--text-muted);margin-top:5px}
+
+    .legend-note{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;margin-top:12px;font-size:12.5px;color:var(--text-secondary)}
+    .legend-note span{display:inline-flex;align-items:center;gap:7px}
+    .sw-line{width:16px;height:2px;border-radius:2px;background:var(--series-1)}
+    .sw-wash{width:14px;height:14px;border-radius:4px;background:var(--wash);border:1px solid var(--border)}
+    .sw-evt{width:14px;height:14px;border-radius:999px;border:1px solid var(--axis);display:inline-block}
+
+    table{width:100%;border-collapse:collapse;font-size:13.5px}
+    .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top;word-break:keep-all}
+    th{font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--text-muted);font-weight:700;white-space:nowrap}
+    td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+    td.dd{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700;color:var(--critical)}
+    tbody tr:hover{background:var(--ghost)}
+    .ev-list{margin:0;padding:0;list-style:none;display:grid;gap:5px}
+    .ev-list li{display:flex;gap:8px;align-items:flex-start;line-height:1.45}
+    .ev-n{
+      flex:0 0 auto;min-width:18px;height:18px;border-radius:999px;border:1px solid var(--axis);
+      color:var(--text-muted);font-size:10.5px;font-weight:700;display:inline-flex;
+      align-items:center;justify-content:center;margin-top:2px;padding:0 4px;font-variant-numeric:tabular-nums
+    }
+    .none{color:var(--text-muted);font-size:12.5px}
+
+    .caveats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .caveats .box{border:1px solid var(--border);border-radius:16px;padding:16px}
+    .caveats p{font-size:13.5px;color:var(--text-secondary);margin:0}
+    .howto{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .howto ol{margin:0;padding-left:18px;font-size:13.5px;color:var(--text-secondary)}
+    .howto li{margin-bottom:6px;word-break:keep-all}
+
+    @media (max-width:820px){
+      .caveats,.howto{grid-template-columns:1fr}
+      h1{font-size:24px}
+      .card{padding:18px;border-radius:18px}
+    }
+    @media (prefers-reduced-motion:reduce){
+      .tip{transition:none}
+    }
+  </style>
+</head>
+<body>
+<div class="viz-root wrap">
+
+  <a class="backlink" href="index.html">← 메인으로</a>
+
+  <header style="margin-bottom:24px">
+    <h1>주가지수 급락 구간 × 이슈 사건 매칭</h1>
+    <p class="lead">
+      지수 시계열에서 <strong>전고점 대비 낙폭(drawdown)</strong>을 계산해 급락 구간을 자동으로 찾아내고,
+      그 구간에 실제로 있었던 사건을 겹쳐 보여줍니다. 차트가 알려주는 것은 “언제, 얼마나”이고
+      사건은 <strong>사후에 붙인 해석</strong>이라는 점을 전제로 보세요.
+    </p>
+  </header>
+
+  <div class="notice" id="dataNotice">
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M8 4.6v.1M8 7v4.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <span id="noticeText"></span>
+  </div>
+
+  <section class="card">
+    <div class="filters">
+      <div class="field">
+        <label for="selIndex">지수</label>
+        <select id="selIndex"></select>
+      </div>
+      <div class="field">
+        <label for="selRange">기간</label>
+        <select id="selRange">
+          <option value="0">전체</option>
+          <option value="2000">2000년 ~</option>
+          <option value="2007">2007년 ~</option>
+          <option value="2015">2015년 ~</option>
+          <option value="2020">2020년 ~</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="selThr">급락 기준</label>
+        <select id="selThr">
+          <option value="10">전고점 대비 −10%</option>
+          <option value="15">전고점 대비 −15%</option>
+          <option value="20" selected>전고점 대비 −20%</option>
+          <option value="30">전고점 대비 −30%</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="csvInput">내 데이터</label>
+        <button type="button" class="filebtn" id="csvBtn">CSV 불러오기</button>
+        <input type="file" id="csvInput" accept=".csv,.txt,.tsv" hidden />
+      </div>
+      <div class="toggles">
+        <label class="toggle"><input type="checkbox" id="chkLog" checked /> 로그 축</label>
+        <label class="toggle"><input type="checkbox" id="chkEvents" checked /> 사건 표시</label>
+      </div>
+    </div>
+
+    <div class="chart-head">
+      <span class="chart-title" id="chartTitle">—</span>
+      <span class="chart-sub" id="chartSub">—</span>
+      <span class="badge" id="chartBadge"></span>
+    </div>
+
+    <div class="plot" id="plot">
+      <svg id="svg" role="img" aria-labelledby="chartTitle chartSub"></svg>
+      <div class="tip" id="tip" role="status" aria-live="polite"></div>
+    </div>
+
+    <div class="legend-note">
+      <span><i class="sw-line"></i> 지수</span>
+      <span><i class="sw-wash"></i> 자동 탐지된 급락 구간(전고점 → 저점)</span>
+      <span><i class="sw-evt"></i> 이슈 사건 — 마커에 마우스를 올리거나 Tab으로 이동</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>탐지된 급락 구간과 해당 시기의 사건</h2>
+    <p class="tiny" style="margin-bottom:14px">
+      차트에서 읽을 수 있는 값을 그대로 표로 옮긴 것입니다. 한 구간 = <em>전고점을 다시 넘어서기 전까지의 한 사이클</em>이라
+      2018년 무역분쟁과 2020년 팬데믹처럼 서로 다른 사건이 한 줄로 묶이기도 합니다. 사건은 <em>전고점 90일 전 ~ 저점 90일 후</em>
+      사이에 일어난 것을 붙였을 뿐, 그 사건이 하락의 원인이라는 뜻은 아닙니다.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">전고점</th>
+            <th scope="col">저점</th>
+            <th scope="col">낙폭</th>
+            <th scope="col">하락 기간</th>
+            <th scope="col">회복까지</th>
+            <th scope="col">그 시기에 있었던 일</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>차트로 사건을 추정하는 순서</h2>
+    <div class="howto">
+      <div>
+        <h3>1. 모양부터 본다</h3>
+        <ol>
+          <li>수일~수주 수직 낙하 → 단발성 충격(테러, 파산, 정책 발표, 전쟁)</li>
+          <li>수개월 완만한 하락 → 구조적 요인(금리, 경기, 실적 사이클). 특정 사건 지목 불가</li>
+          <li>급락 후 V자 회복 → 정책 대응이 들어온 경우가 많다</li>
+        </ol>
+      </div>
+      <div>
+        <h3>2. 다른 자산과 대조한다</h3>
+        <ol>
+          <li>주가↓ + 금리↓ + 달러↑ + 금↑ → 위험회피형(금융위기·전쟁)</li>
+          <li>주가↓ + 금리↑ → 인플레이션·긴축형</li>
+          <li>한국만 빠지고 미국은 멀쩡 → 국내 요인(환율, 정치, 특정 업종)</li>
+        </ol>
+      </div>
+      <div>
+        <h3>3. 날짜로 좁혀 검색한다</h3>
+        <ol>
+          <li>일간 수익률이 −3% 이하이거나 ±3σ를 넘는 날을 뽑는다</li>
+          <li>그 날짜 <em>전후 1주일</em>의 뉴스를 본다 (당일만 보면 놓친다)</li>
+          <li>같은 날 다른 나라 지수도 빠졌는지 확인한다</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>해석할 때 빠지기 쉬운 함정</h2>
+    <div class="caveats">
+      <div class="box">
+        <h3>인과 착각</h3>
+        <p>하락 다음 날 언론이 붙인 설명일 뿐인 경우가 많습니다. 같은 뉴스가 나왔는데도 시장이 안 움직인 날이 훨씬 많습니다.</p>
+      </div>
+      <div class="box">
+        <h3>선반영</h3>
+        <p>사건 “발생일”이 아니라 예상되기 시작한 시점에 이미 빠져 있는 경우가 흔합니다. 2008년 고점은 리먼 파산 11개월 전이었습니다.</p>
+      </div>
+      <div class="box">
+        <h3>기술적 요인</h3>
+        <p>지수 구성종목 변경, 액면분할, 배당락, 기준지수 재산정 때문에 생긴 단차를 사건으로 오독할 수 있습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="tiny">
+    CSV 형식: 첫 줄에 헤더가 있고 <code>Date,Close</code>(또는 <code>날짜,종가</code>) 열이 있으면 자동으로 인식합니다.
+    헤더가 없으면 첫 열을 날짜, 둘째 열을 종가로 읽습니다. 파일은 브라우저 안에서만 처리되며 어디로도 전송되지 않습니다.
+  </p>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ------------------------------------------------------------------
+   * 데모 데이터
+   * 주요 변곡점(연말 종가, 고점, 저점)을 기준으로 재구성한 근사 시계열입니다.
+   * 정확한 수치 분석은 CSV 불러오기를 사용하세요.
+   * 'YYYY-MM' = 해당 월말, 'YYYY-MM-DD' = 그 날짜.
+   * ---------------------------------------------------------------- */
+  var DEMO = {
+    kospi: {
+      name: "KOSPI",
+      anchors: [
+        ["1995-01",950],["1995-12",882],["1996-05",979],["1996-12",651],
+        ["1997-06",745],["1997-10",530],["1997-12",376],
+        ["1998-06-16",280],["1998-12",562],
+        ["1999-07",1052],["1999-12",1028],["2000-03",860],["2000-12",505],
+        ["2001-03",523],["2001-09-17",468],["2001-12",694],
+        ["2002-04",937],["2002-10",640],["2002-12",628],
+        ["2003-03-17",515],["2003-12",811],
+        ["2004-04",936],["2004-08",720],["2004-12",896],
+        ["2005-12",1379],["2006-05",1464],["2006-06",1295],["2006-12",1434],
+        ["2007-07",1933],["2007-08",1873],["2007-10",2065],["2007-12",1897],
+        ["2008-05",1852],["2008-10-27",892],["2008-12",1124],
+        ["2009-12",1683],["2010-04",1741],["2010-06",1698],["2010-12",2051],
+        ["2011-04",2192],["2011-08-09",1684],["2011-09",1770],["2011-12",1826],
+        ["2012-12",1997],["2013-06",1863],["2013-12",2011],
+        ["2014-07",2076],["2014-12",1916],
+        ["2015-04",2127],["2015-08",1941],["2015-12",1961],
+        ["2016-02",1917],["2016-12",2026],["2017-12",2467],
+        ["2018-01",2567],["2018-10",2029],["2018-12",2041],
+        ["2019-08",1968],["2019-12",2198],
+        ["2020-02",1987],["2020-03-19",1458],["2020-12",2873],
+        ["2021-06",3297],["2021-12",2978],
+        ["2022-06",2332],["2022-09",2155],["2022-12",2236],
+        ["2023-07",2632],["2023-10",2277],["2023-12",2655],
+        ["2024-07",2771],["2024-08-05",2441],["2024-11",2455],["2024-12",2399],
+        ["2025-04-07",2328],["2025-06",3072],["2025-09",3400],["2025-12",3900]
+      ]
+    },
+    spx: {
+      name: "S&P 500",
+      anchors: [
+        ["1995-01",470],["1995-12",616],["1996-12",741],
+        ["1997-07",954],["1997-10",915],["1997-12",970],
+        ["1998-07-17",1187],["1998-08",957],["1998-12",1229],
+        ["1999-12",1469],["2000-03-24",1527],["2000-12",1320],
+        ["2001-09-21",966],["2001-12",1148],
+        ["2002-03",1147],["2002-10-09",777],["2002-12",880],
+        ["2003-03",848],["2003-12",1112],["2004-12",1212],["2005-12",1248],
+        ["2006-12",1418],["2007-10-09",1565],["2007-12",1468],
+        ["2008-09",1166],["2008-11-20",752],["2008-12",903],
+        ["2009-03-09",677],["2009-12",1115],
+        ["2010-04",1187],["2010-07-02",1023],["2010-12",1258],
+        ["2011-04",1364],["2011-10-03",1099],["2011-12",1258],
+        ["2012-12",1426],["2013-12",1848],["2014-12",2059],
+        ["2015-08-25",1868],["2015-12",2044],["2016-02-11",1829],["2016-12",2239],
+        ["2017-12",2674],["2018-01-26",2873],["2018-02-08",2581],
+        ["2018-09-20",2931],["2018-12-24",2351],["2018-12",2507],
+        ["2019-12",3231],["2020-02-19",3386],["2020-03-23",2237],["2020-12",3756],
+        ["2021-12",4766],["2022-06-16",3667],["2022-08",3955],
+        ["2022-10-12",3577],["2022-12",3840],
+        ["2023-12",4770],["2024-07",5522],["2024-12",5882],
+        ["2025-02-19",6144],["2025-04-08",4983],["2025-06",6205],["2025-12",6850]
+      ]
+    }
+  };
+
+  /* 사건 데이터베이스 — scope: KR(국내) / US(미국) / GL(글로벌) */
+  var EVENTS = [
+    {d:"1997-11-21",scope:"KR",cat:"외환위기",t:"IMF 구제금융 신청",
+     s:"외환보유고 고갈로 정부가 IMF에 구제금융을 공식 요청. 원달러 환율 급등과 대기업·금융기관 연쇄 부도로 이어졌다."},
+    {d:"1998-08-17",scope:"GL",cat:"신용경색",t:"러시아 모라토리엄 · LTCM 사태",
+     s:"러시아의 채무 지급유예 선언 후 헤지펀드 LTCM이 붕괴하며 전 세계 신용경색이 발생했다."},
+    {d:"2000-03-10",scope:"US",cat:"버블 붕괴",t:"나스닥 고점 — 닷컴버블 붕괴 시작",
+     s:"나스닥이 5,048로 정점을 찍고 2002년까지 약 78% 하락. 국내 코스닥도 같은 흐름으로 무너졌다."},
+    {d:"2001-09-11",scope:"GL",cat:"지정학",t:"9·11 테러",
+     s:"미국 증시는 나흘간 휴장 후 재개장 첫날 −4.9%. 이미 진행 중이던 경기침체 우려와 겹쳤다."},
+    {d:"2002-07-21",scope:"US",cat:"회계부정",t:"엔론·월드컴 회계부정 여파",
+     s:"월드컴 파산 신청. 대형 회계부정이 잇따르며 기업 실적에 대한 신뢰가 무너졌다."},
+    {d:"2003-03-17",scope:"KR",cat:"복합",t:"카드사태 · 이라크전 · 사스(SARS)",
+     s:"신용카드 부실이 터진 데다 이라크 전쟁 개시와 사스 확산이 겹쳐 KOSPI가 512까지 밀렸다."},
+    {d:"2004-04-26",scope:"KR",cat:"긴축",t:"중국 긴축 쇼크",
+     s:"중국의 급격한 대출 억제 조치로 소재·산업재 중심의 국내 증시가 크게 흔들렸다."},
+    {d:"2007-08-09",scope:"GL",cat:"신용경색",t:"BNP파리바 환매 중단 — 서브프라임 표면화",
+     s:"BNP파리바가 서브프라임 관련 펀드 3개의 환매를 중단. 금융위기의 첫 공개 신호로 꼽힌다."},
+    {d:"2008-09-15",scope:"GL",cat:"금융위기",t:"리먼브러더스 파산",
+     s:"글로벌 금융위기의 정점. 전 세계 지수가 동반 급락했고 KOSPI는 10월 27일 892까지 내려갔다."},
+    {d:"2010-05-06",scope:"GL",cat:"재정위기",t:"그리스 재정위기 · 플래시 크래시",
+     s:"그리스 구제금융 협상 국면에서 미국 증시가 장중 약 9% 폭락했다가 되돌리는 플래시 크래시가 발생했다."},
+    {d:"2011-08-05",scope:"GL",cat:"재정위기",t:"미국 신용등급 강등 · 유럽 재정위기",
+     s:"S&P가 미국 신용등급을 AAA에서 AA+로 강등. 이탈리아·스페인 국채 금리 급등과 겹치며 8월 한 달간 전 세계가 급락했다."},
+    {d:"2013-05-22",scope:"GL",cat:"통화정책",t:"테이퍼 텐트럼",
+     s:"버냉키 의장의 자산매입 축소 시사 발언에 신흥국 통화와 증시가 급락했다."},
+    {d:"2015-08-11",scope:"GL",cat:"통화·환율",t:"중국 위안화 절하 쇼크",
+     s:"인민은행의 기습적 위안화 절하와 상하이 증시 폭락이 겹치며 글로벌 증시가 급락했다."},
+    {d:"2016-06-24",scope:"GL",cat:"정치",t:"브렉시트 국민투표",
+     s:"영국의 EU 탈퇴 가결. 하루 급락 후 대부분 시장이 수주 내에 되돌렸다 — 이벤트성 충격의 전형이다."},
+    {d:"2016-11-09",scope:"US",cat:"정치",t:"미국 대선",
+     s:"개표 중 선물이 급락했다가 정규장에서 상승 반전. 야간 선물과 정규장 흐름이 반대였던 사례."},
+    {d:"2018-02-05",scope:"US",cat:"수급",t:"볼마겟돈(VIX 급등)",
+     s:"인버스 변동성 상품 청산이 연쇄적으로 일어나며 다우가 하루 1,175포인트 하락했다. 펀더멘털이 아닌 수급 사건."},
+    {d:"2018-10-10",scope:"GL",cat:"무역·긴축",t:"미중 무역분쟁 격화 · 연준 긴축",
+     s:"관세 확대와 금리 인상이 겹쳐 4분기 내내 계단식으로 하락했다. 단발성이 아닌 누적형 하락."},
+    {d:"2020-03-12",scope:"GL",cat:"팬데믹",t:"코로나19 팬데믹 선언",
+     s:"WHO 팬데믹 선언 전후로 미국 증시에 서킷브레이커가 반복 발동. 한 달 만에 −35% 수준까지 떨어졌다."},
+    {d:"2020-03-23",scope:"GL",cat:"정책 대응",t:"연준 무제한 양적완화 발표",
+     s:"저점을 만든 정책 대응. 하락의 원인이 아니라 <반등의 기점>으로 표시된 마커다."},
+    {d:"2022-02-24",scope:"GL",cat:"지정학",t:"러시아의 우크라이나 침공",
+     s:"에너지·곡물 가격 급등으로 인플레이션 압력이 가중되며 이미 진행 중이던 긴축 국면과 겹쳤다."},
+    {d:"2022-09-23",scope:"GL",cat:"금리",t:"영국 미니예산 · LDI 사태 · 강달러",
+     s:"영국 국채 급락에 연기금 담보 요구가 연쇄적으로 발생. 달러 초강세로 원달러가 1,440원대까지 올랐다."},
+    {d:"2023-03-10",scope:"US",cat:"은행",t:"SVB 파산 — 지역은행 불안",
+     s:"실리콘밸리은행 파산 후 크레디트스위스까지 흔들렸다. 지수 전체보다 금융 업종이 훨씬 크게 빠진 사례."},
+    {d:"2024-08-05",scope:"GL",cat:"수급",t:"엔캐리 청산 — 블랙먼데이",
+     s:"일본의 금리 인상 이후 엔캐리 트레이드가 급격히 청산되며 KOSPI가 하루 −8.77%, 역대 최대 낙폭을 기록했다."},
+    {d:"2024-12-03",scope:"KR",cat:"정치",t:"비상계엄 선포 — 국내 정치 리스크",
+     s:"미국 증시는 멀쩡한데 한국만 빠지고 환율이 급등한 전형적인 국내 요인 사례."},
+    {d:"2025-04-03",scope:"GL",cat:"무역",t:"미국 상호관세 발표",
+     s:"광범위한 상호관세 발표로 전 세계가 급락했다가, 유예 발표 이후 상당 부분을 되돌렸다."}
+  ];
+
+  var SCOPE_LABEL = {KR:"국내", US:"미국", GL:"글로벌"};
+
+  /* ---------------- 유틸 ---------------- */
+
+  var nf = new Intl.NumberFormat("ko-KR", {maximumFractionDigits:2});
+  var nf0 = new Intl.NumberFormat("ko-KR", {maximumFractionDigits:0});
+  function fmtVal(v){ return v >= 100 ? nf0.format(Math.round(v)) : nf.format(v); }
+
+  function pad2(n){ return n < 10 ? "0" + n : "" + n; }
+  function ymd(t){ var d = new Date(t); return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth()+1) + "-" + pad2(d.getUTCDate()); }
+  function ym(t){ var d = new Date(t); return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth()+1); }
+  function ymKo(t){ var d = new Date(t); return d.getUTCFullYear() + "년 " + (d.getUTCMonth()+1) + "월"; }
+  function ymdKo(t){ var d = new Date(t); return d.getUTCFullYear() + "." + pad2(d.getUTCMonth()+1) + "." + pad2(d.getUTCDate()); }
+  var DAY = 86400000;
+
+  /* "YYYY-MM" -> 월말, "YYYY-MM-DD" -> 그 날짜 */
+  function parseAnchorKey(k){
+    var p = k.split("-");
+    var y = +p[0], m = +p[1];
+    if (p.length === 2) return Date.UTC(y, m, 0);   // 0일 = 전월 말일 = m월 말일
+    return Date.UTC(y, m - 1, +p[2]);
+  }
+
+  /* 앵커 사이를 선형 보간해 월말 + 앵커 시점의 시계열을 만든다 */
+  function buildSeries(anchors){
+    var a = anchors.map(function(x){ return {t: parseAnchorKey(x[0]), v: x[1]}; })
+                   .sort(function(p,q){ return p.t - q.t; });
+
+    var times = {};
+    a.forEach(function(p){ times[p.t] = 1; });
+
+    var first = new Date(a[0].t), last = new Date(a[a.length-1].t);
+    var y = first.getUTCFullYear(), m = first.getUTCMonth();
+    while (true){
+      var t = Date.UTC(y, m + 1, 0);
+      if (t > last.getTime()) break;
+      if (t >= a[0].t) times[t] = 1;
+      m++; if (m > 11){ m = 0; y++; }
+    }
+
+    var keys = Object.keys(times).map(Number).sort(function(p,q){ return p - q; });
+    var out = [], i = 0;
+    keys.forEach(function(t){
+      while (i < a.length - 2 && a[i+1].t < t) i++;
+      var lo = a[i], hi = a[i+1] || a[i];
+      var v;
+      if (!hi || hi.t === lo.t || t <= lo.t) v = lo.v;
+      else if (t >= hi.t) v = hi.v;
+      else v = lo.v + (hi.v - lo.v) * (t - lo.t) / (hi.t - lo.t);
+      out.push({t: t, v: v});
+    });
+    return out;
+  }
+
+  /* 전고점 대비 낙폭으로 급락 구간을 찾는다 */
+  function detectDrawdowns(pts, thr){
+    var eps = [], peak = 0, cur = null;
+    for (var i = 1; i < pts.length; i++){
+      if (pts[i].v >= pts[peak].v){
+        if (cur){
+          cur.recoveryI = i;
+          if (cur.dd >= thr) eps.push(cur);
+          cur = null;
+        }
+        peak = i;
+      } else {
+        var dd = (pts[peak].v - pts[i].v) / pts[peak].v * 100;
+        if (!cur) cur = {peakI: peak, troughI: i, dd: dd, recoveryI: null};
+        if (dd > cur.dd){ cur.dd = dd; cur.troughI = i; }
+      }
+    }
+    if (cur && cur.dd >= thr) eps.push(cur);
+    return eps;
+  }
+
+  function monthsBetween(a, b){
+    var d1 = new Date(a), d2 = new Date(b);
+    return Math.max(0, (d2.getUTCFullYear()-d1.getUTCFullYear())*12 + (d2.getUTCMonth()-d1.getUTCMonth()));
+  }
+  function spanText(a, b){
+    var mo = monthsBetween(a, b);
+    if (mo < 1) return Math.max(1, Math.round((b-a)/DAY)) + "일";
+    if (mo < 24) return mo + "개월";
+    return Math.floor(mo/12) + "년 " + (mo%12) + "개월";
+  }
+
+  /* ---------------- 상태 ---------------- */
+
+  var state = {
+    key: "kospi",
+    fromYear: 0,
+    thr: 20,
+    log: true,
+    showEvents: true,
+    custom: null            // {name, pts}
+  };
+  var SOURCES = {};
+  Object.keys(DEMO).forEach(function(k){
+    SOURCES[k] = {name: DEMO[k].name, pts: buildSeries(DEMO[k].anchors), demo: true};
+  });
+
+  var EV = EVENTS.map(function(e){
+    var p = e.d.split("-");
+    return {t: Date.UTC(+p[0], +p[1]-1, +p[2]), scope: e.scope, cat: e.cat, title: e.t, desc: e.s};
+  }).sort(function(a,b){ return a.t - b.t; });
+
+  /* ---------------- DOM ---------------- */
+
+  var $ = function(id){ return document.getElementById(id); };
+  var svg = $("svg"), plot = $("plot"), tip = $("tip");
+  var NS = "http://www.w3.org/2000/svg";
+  function el(n, attrs){
+    var e = document.createElementNS(NS, n);
+    if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function css(name){ return getComputedStyle(document.querySelector(".viz-root")).getPropertyValue(name).trim(); }
+
+  function refreshSourceOptions(){
+    var sel = $("selIndex");
+    sel.textContent = "";
+    Object.keys(SOURCES).forEach(function(k){
+      var o = document.createElement("option");
+      o.value = k;
+      o.textContent = SOURCES[k].name + (SOURCES[k].demo ? " (데모)" : "");
+      sel.appendChild(o);
+    });
+    sel.value = state.key;
+  }
+
+  function currentPoints(){
+    var src = SOURCES[state.key];
+    if (!src) return [];
+    if (!state.fromYear) return src.pts;
+    var from = Date.UTC(state.fromYear, 0, 1);
+    return src.pts.filter(function(p){ return p.t >= from; });
+  }
+
+  /* ---------------- 렌더 ---------------- */
+
+  var M = {top: 60, right: 18, bottom: 30, left: 60};
+  var lastGeom = null;
+
+  function render(){
+    var src = SOURCES[state.key];
+    var pts = currentPoints();
+    svg.textContent = "";
+    hideTip();
+
+    if (!src || pts.length < 2){
+      $("chartTitle").textContent = "데이터 없음";
+      $("chartSub").textContent = "";
+      $("chartBadge").textContent = "";
+      $("tbody").textContent = "";
+      lastGeom = null;
+      return;
+    }
+
+    var W = Math.max(320, plot.clientWidth || 900);
+    var H = W < 620 ? 340 : 410;
+    svg.setAttribute("width", W);
+    svg.setAttribute("height", H);
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+
+    var pl = M.left, pr = W - M.right, pt = M.top, pb = H - M.bottom;
+    var pw = pr - pl, ph = pb - pt;
+
+    var vmin = Infinity, vmax = -Infinity;
+    pts.forEach(function(p){ if (p.v < vmin) vmin = p.v; if (p.v > vmax) vmax = p.v; });
+    var lo, hi, useLog = state.log && vmin > 0;
+    if (useLog){ lo = vmin / 1.10; hi = vmax * 1.10; }
+    else { var pad = (vmax - vmin) * 0.10 || 1; lo = Math.max(0, vmin - pad); hi = vmax + pad; }
+
+    var t0 = pts[0].t, t1 = pts[pts.length-1].t;
+    var x = function(t){ return pl + (t - t0) / (t1 - t0) * pw; };
+    var y = useLog
+      ? function(v){ return pb - (Math.log(v) - Math.log(lo)) / (Math.log(hi) - Math.log(lo)) * ph; }
+      : function(v){ return pb - (v - lo) / (hi - lo) * ph; };
+
+    lastGeom = {pts: pts, x: x, y: y, pl: pl, pr: pr, pt: pt, pb: pb, W: W, H: H};
+
+    var C = {
+      grid: css("--grid"), axis: css("--axis"), muted: css("--text-muted"),
+      secondary: css("--text-secondary"), primary: css("--text-primary"),
+      series: css("--series-1"), wash: css("--wash"), surface: css("--surface-1")
+    };
+
+    var gWash = el("g"), gGrid = el("g"), gAxis = el("g"), gLine = el("g"),
+        gEvt = el("g"), gHover = el("g");
+
+    /* 급락 구간 워시 */
+    var eps = detectDrawdowns(pts, state.thr);
+    eps.forEach(function(ep){
+      var x0 = x(pts[ep.peakI].t), x1 = x(pts[ep.troughI].t);
+      gWash.appendChild(el("rect", {x: x0, y: pt, width: Math.max(1.5, x1-x0), height: ph, fill: C.wash}));
+    });
+
+    /* y 그리드 + 눈금 */
+    yTicks(lo, hi, useLog).forEach(function(v){
+      var yy = y(v);
+      if (yy < pt - 1 || yy > pb + 1) return;
+      gGrid.appendChild(el("line", {x1: pl, x2: pr, y1: yy, y2: yy, stroke: C.grid, "stroke-width": 1}));
+      var tx = el("text", {x: pl - 10, y: yy + 4, "text-anchor": "end", "font-size": 11,
+                           fill: C.muted, style: "font-variant-numeric:tabular-nums"});
+      tx.textContent = nf0.format(v);
+      gAxis.appendChild(tx);
+    });
+
+    /* x 눈금 */
+    xTicks(t0, t1).forEach(function(t){
+      var xx = x(t);
+      if (xx < pl - 1 || xx > pr + 1) return;
+      var tx = el("text", {x: xx, y: pb + 19, "text-anchor": "middle", "font-size": 11,
+                           fill: C.muted, style: "font-variant-numeric:tabular-nums"});
+      tx.textContent = new Date(t).getUTCFullYear();
+      gAxis.appendChild(tx);
+    });
+    gAxis.appendChild(el("line", {x1: pl, x2: pr, y1: pb, y2: pb, stroke: C.axis, "stroke-width": 1}));
+
+    /* 선 */
+    var d = "";
+    pts.forEach(function(p, i){ d += (i ? "L" : "M") + x(p.t).toFixed(1) + " " + y(p.v).toFixed(1); });
+    gLine.appendChild(el("path", {d: d, fill: "none", stroke: C.series, "stroke-width": 2,
+                                  "stroke-linejoin": "round", "stroke-linecap": "round"}));
+
+    /* 끝점 직접 라벨 (선택적 라벨링) */
+    var last = pts[pts.length-1];
+    gLine.appendChild(el("circle", {cx: x(last.t), cy: y(last.v), r: 4,
+                                    fill: C.series, stroke: C.surface, "stroke-width": 2}));
+    /* 위쪽 사건 마커 띠와 겹치지 않게 끌어내린다 */
+    var endY = y(last.v) - 10;
+    if (endY < pt + 12) endY = y(last.v) + 20;
+    /* 라벨이 어디에 놓이든 읽히도록 표면색 후광을 깐다 */
+    var halo = "paint-order:stroke;stroke:" + C.surface + ";stroke-width:3px;stroke-linejoin:round";
+    var endLbl = el("text", {x: x(last.t) - 8, y: endY, "text-anchor": "end", style: halo,
+                             "font-size": 12, "font-weight": 700, fill: C.primary});
+    endLbl.textContent = fmtVal(last.v);
+    gLine.appendChild(endLbl);
+
+    /* 가장 깊은 급락의 저점 직접 라벨 */
+    var deepest = eps.reduce(function(a, b){ return !a || b.dd > a.dd ? b : a; }, null);
+    if (deepest){
+      var tp = pts[deepest.troughI];
+      gLine.appendChild(el("circle", {cx: x(tp.t), cy: y(tp.v), r: 4,
+                                      fill: C.series, stroke: C.surface, "stroke-width": 2}));
+      var dlY = Math.min(y(tp.v) + 19, pb - 6);
+      var dl = el("text", {x: x(tp.t), y: dlY, "text-anchor": "middle", style: halo,
+                           "font-size": 11.5, "font-weight": 700, fill: C.primary});
+      dl.textContent = "−" + deepest.dd.toFixed(0) + "%";
+      gLine.appendChild(dl);
+    }
+
+    /* 사건 마커 */
+    var skippedEvents = 0;
+    if (state.showEvents){
+      var rows = [-99, -99, -99], rowY = [pt - 52, pt - 34, pt - 16], skipped = 0;
+      var visible = EV.filter(function(e){ return e.t >= t0 && e.t <= t1; });
+      visible.forEach(function(e, idx){
+        var xx = x(e.t), r = 0;
+        while (r < 3 && xx - rows[r] < 22) r++;
+        if (r === 3){ skipped++; return; }   // 자리가 없으면 겹쳐 그리지 않고 표에 맡긴다
+        rows[r] = xx;
+        var cy = rowY[r] + 8;
+
+        var g = el("g", {tabindex: "0", role: "button",
+                         "aria-label": ymdKo(e.t) + " " + e.title, style: "cursor:pointer;outline:none"});
+        g.appendChild(el("line", {x1: xx, x2: xx, y1: cy + 7, y2: pb, stroke: C.axis,
+                                  "stroke-width": 1, opacity: .5}));
+        g.appendChild(el("circle", {cx: xx, cy: cy, r: 8, fill: C.surface,
+                                    stroke: C.axis, "stroke-width": 1}));
+        var n = el("text", {x: xx, y: cy + 3.5, "text-anchor": "middle", "font-size": 9.5,
+                            "font-weight": 700, fill: C.muted,
+                            style: "font-variant-numeric:tabular-nums;pointer-events:none"});
+        n.textContent = idx + 1;
+        g.appendChild(n);
+        /* 히트 영역은 마크보다 크게(≥24px) */
+        g.appendChild(el("rect", {x: xx - 13, y: cy - 13, width: 26, height: 26, fill: "transparent"}));
+
+        function show(){ showEventTip(e, xx, cy - 12); }
+        g.addEventListener("pointerenter", show);
+        g.addEventListener("focus", show);
+        g.addEventListener("pointerleave", hideTip);
+        g.addEventListener("blur", hideTip);
+        gEvt.appendChild(g);
+      });
+
+      skippedEvents = skipped;
+    }
+
+    /* 크로스헤어 */
+    var cross = el("line", {x1: 0, x2: 0, y1: pt, y2: pb, stroke: C.axis,
+                            "stroke-width": 1, opacity: 0});
+    var dot = el("circle", {r: 4, fill: C.series, stroke: C.surface, "stroke-width": 2, opacity: 0});
+    gHover.appendChild(cross); gHover.appendChild(dot);
+    var hit = el("rect", {x: pl, y: pt, width: pw, height: ph, fill: "transparent",
+                          style: "cursor:crosshair"});
+    gHover.appendChild(hit);
+
+    hit.addEventListener("pointermove", function(ev){
+      var rect = svg.getBoundingClientRect();
+      var px = ev.clientX - rect.left;
+      var tt = t0 + (px - pl) / pw * (t1 - t0);
+      var best = 0, bd = Infinity;
+      for (var i = 0; i < pts.length; i++){
+        var dd2 = Math.abs(pts[i].t - tt);
+        if (dd2 < bd){ bd = dd2; best = i; }
+      }
+      var p = pts[best];
+      var peakV = 0;
+      for (var j = 0; j <= best; j++) if (pts[j].v > peakV) peakV = pts[j].v;
+      var ddp = (peakV - p.v) / peakV * 100;
+
+      cross.setAttribute("x1", x(p.t)); cross.setAttribute("x2", x(p.t));
+      cross.setAttribute("opacity", .55);
+      dot.setAttribute("cx", x(p.t)); dot.setAttribute("cy", y(p.v)); dot.setAttribute("opacity", 1);
+      showValueTip(p, ddp, x(p.t), y(p.v) - 14);
+    });
+    hit.addEventListener("pointerleave", function(){
+      cross.setAttribute("opacity", 0); dot.setAttribute("opacity", 0); hideTip();
+    });
+
+    [gWash, gGrid, gAxis, gLine, gEvt, gHover].forEach(function(g){ svg.appendChild(g); });
+
+    /* 헤더 + 표 */
+    $("chartTitle").textContent = src.name;
+    $("chartSub").textContent = ymKo(t0) + " ~ " + ymKo(t1) + " · 급락 " + eps.length + "건 탐지"
+      + (skippedEvents ? " · 폭이 좁아 사건 " + skippedEvents + "건은 마커 생략(표에 있음)" : "");
+    $("chartBadge").textContent = src.demo ? "근사 데이터" : "불러온 데이터";
+    renderTable(pts, eps);
+  }
+
+  function yTicks(lo, hi, useLog){
+    var out = [];
+    if (useLog){
+      var e = Math.floor(Math.log10(lo));
+      for (; e <= Math.ceil(Math.log10(hi)); e++){
+        [1, 1.5, 2, 3, 5, 7].forEach(function(m){
+          var v = m * Math.pow(10, e);
+          if (v >= lo && v <= hi) out.push(v);
+        });
+      }
+      out.sort(function(a, b){ return a - b; });
+      while (out.length > 8) out = out.filter(function(_, i){ return i % 2 === 0; });
+    } else {
+      var span = hi - lo, step = Math.pow(10, Math.floor(Math.log10(span)));
+      if (span / step > 5) step *= 2; else if (span / step < 2.5) step /= 2;
+      for (var v2 = Math.ceil(lo / step) * step; v2 <= hi; v2 += step) out.push(v2);
+    }
+    return out;
+  }
+
+  function xTicks(t0, t1){
+    var y0 = new Date(t0).getUTCFullYear(), y1 = new Date(t1).getUTCFullYear();
+    var n = y1 - y0, step = n > 24 ? 5 : n > 12 ? 3 : n > 5 ? 2 : 1;
+    var out = [];
+    for (var yy = Math.ceil(y0 / step) * step; yy <= y1; yy += step) out.push(Date.UTC(yy, 0, 1));
+    return out;
+  }
+
+  /* ---------------- 툴팁 ---------------- */
+
+  function place(px, py){
+    tip.style.left = Math.min(Math.max(px, 90), (plot.clientWidth || 900) - 90) + "px";
+    tip.style.top = Math.max(py, 60) + "px";
+    tip.style.opacity = 1;
+  }
+  function hideTip(){ tip.style.opacity = 0; }
+
+  function showValueTip(p, ddp, px, py){
+    tip.textContent = "";
+    var d1 = document.createElement("div");
+    d1.className = "t-date"; d1.textContent = ymdKo(p.t);
+    var d2 = document.createElement("div");
+    d2.className = "t-val"; d2.textContent = fmtVal(p.v);
+    var d3 = document.createElement("div");
+    d3.className = "t-row";
+    var k = document.createElement("i"); k.className = "t-key";
+    var s = document.createElement("span");
+    s.textContent = ddp < 0.05 ? "전고점" : "전고점 대비 −" + ddp.toFixed(1) + "%";
+    d3.appendChild(k); d3.appendChild(s);
+    tip.appendChild(d1); tip.appendChild(d2); tip.appendChild(d3);
+    place(px, py);
+  }
+
+  function showEventTip(e, px, py){
+    tip.textContent = "";
+    var d1 = document.createElement("div");
+    d1.className = "t-date"; d1.textContent = ymdKo(e.t);
+    var d2 = document.createElement("div");
+    d2.className = "t-title"; d2.textContent = e.title;
+    var d3 = document.createElement("div");
+    d3.className = "t-desc"; d3.textContent = e.desc;
+    var d4 = document.createElement("div");
+    d4.className = "t-cat"; d4.textContent = SCOPE_LABEL[e.scope] + " · " + e.cat;
+    tip.appendChild(d1); tip.appendChild(d2); tip.appendChild(d3); tip.appendChild(d4);
+    place(px, py);
+  }
+
+  /* ---------------- 표(차트의 접근성 쌍) ---------------- */
+
+  function renderTable(pts, eps){
+    var tb = $("tbody");
+    tb.textContent = "";
+
+    if (!eps.length){
+      var tr0 = document.createElement("tr");
+      var td0 = document.createElement("td");
+      td0.colSpan = 6; td0.className = "none";
+      td0.textContent = "선택한 기준(−" + state.thr + "%)을 넘는 급락 구간이 이 기간에는 없습니다. 기준을 낮춰 보세요.";
+      tr0.appendChild(td0); tb.appendChild(tr0);
+      return;
+    }
+
+    eps.slice().sort(function(a, b){ return b.dd - a.dd; }).forEach(function(ep){
+      var peak = pts[ep.peakI], trough = pts[ep.troughI];
+      var rec = ep.recoveryI != null ? pts[ep.recoveryI] : null;
+      var tr = document.createElement("tr");
+
+      tr.appendChild(cell(ymKo(peak.t) + "\n" + fmtVal(peak.v), "num"));
+      tr.appendChild(cell(ymKo(trough.t) + "\n" + fmtVal(trough.v), "num"));
+      tr.appendChild(cell("−" + ep.dd.toFixed(1) + "%", "dd"));
+      tr.appendChild(cell(spanText(peak.t, trough.t), "num"));
+      tr.appendChild(cell(rec ? spanText(trough.t, rec.t) : "미회복", "num"));
+
+      var td = document.createElement("td");
+      var matched = EV.filter(function(e){
+        return e.t >= peak.t - 90*DAY && e.t <= trough.t + 90*DAY;
+      });
+      if (!matched.length){
+        var sp = document.createElement("span");
+        sp.className = "none";
+        sp.textContent = "등록된 사건 없음 — 구조적·누적형 하락일 수 있습니다";
+        td.appendChild(sp);
+      } else {
+        var ul = document.createElement("ul");
+        ul.className = "ev-list";
+        matched.forEach(function(e){
+          var li = document.createElement("li");
+          var n = document.createElement("span");
+          n.className = "ev-n";
+          n.textContent = SCOPE_LABEL[e.scope];
+          var txt = document.createElement("span");
+          var b = document.createElement("strong");
+          b.textContent = e.title;
+          txt.appendChild(b);
+          txt.appendChild(document.createTextNode(" · " + ymdKo(e.t)));
+          li.appendChild(n); li.appendChild(txt);
+          ul.appendChild(li);
+        });
+        td.appendChild(ul);
+      }
+      tr.appendChild(td);
+      tb.appendChild(tr);
+    });
+  }
+
+  function cell(text, cls){
+    var td = document.createElement("td");
+    if (cls) td.className = cls;
+    text.split("\n").forEach(function(line, i){
+      if (i){
+        td.appendChild(document.createElement("br"));
+        var sm = document.createElement("span");
+        sm.style.color = "var(--text-muted)";
+        sm.style.fontSize = "12px";
+        sm.textContent = line;
+        td.appendChild(sm);
+      } else {
+        td.appendChild(document.createTextNode(line));
+      }
+    });
+    return td;
+  }
+
+  /* ---------------- CSV ---------------- */
+
+  function parseCSV(text){
+    var lines = text.replace(/\r/g, "").split("\n").filter(function(l){ return l.trim() !== ""; });
+    if (!lines.length) throw new Error("빈 파일입니다.");
+    var delim = (lines[0].indexOf("\t") > -1) ? "\t" : ",";
+    var split = function(l){
+      return l.split(delim).map(function(c){ return c.trim().replace(/^"|"$/g, ""); });
+    };
+
+    var head = split(lines[0]);
+    var dateI = -1, valI = -1, start = 1;
+    head.forEach(function(h, i){
+      if (dateI < 0 && /^(date|날짜|일자|기준일|time)$/i.test(h)) dateI = i;
+      if (/^(close|종가|현재가|체결가|last|price|value|지수)$/i.test(h)) valI = i;
+    });
+    if (valI < 0) head.forEach(function(h, i){ if (/close|종가/i.test(h)) valI = i; });
+    if (dateI < 0 || valI < 0){ dateI = 0; valI = 1; start = 0; }
+
+    var pts = [];
+    for (var i = start; i < lines.length; i++){
+      var c = split(lines[i]);
+      if (c.length <= Math.max(dateI, valI)) continue;
+      var t = parseDate(c[dateI]);
+      var v = parseFloat(String(c[valI]).replace(/[,\s]/g, ""));
+      if (t == null || !isFinite(v) || v <= 0) continue;
+      pts.push({t: t, v: v});
+    }
+    if (pts.length < 3) throw new Error("읽을 수 있는 행이 3개 미만입니다. 날짜/종가 열을 확인하세요.");
+    pts.sort(function(a, b){ return a.t - b.t; });
+    return pts;
+  }
+
+  function parseDate(s){
+    s = String(s).trim();
+    var m = s.match(/^(\d{4})[-/.]\s?(\d{1,2})[-/.]\s?(\d{1,2})/);
+    if (m) return Date.UTC(+m[1], +m[2]-1, +m[3]);
+    m = s.match(/^(\d{4})(\d{2})(\d{2})$/);
+    if (m) return Date.UTC(+m[1], +m[2]-1, +m[3]);
+    m = s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/);
+    if (m) return Date.UTC(+m[3], +m[1]-1, +m[2]);
+    var d = new Date(s);
+    return isNaN(d.getTime()) ? null : Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  /* ---------------- 배선 ---------------- */
+
+  function setNotice(msg){ $("noticeText").textContent = msg; }
+  var DEMO_NOTICE = "내장 데이터는 주요 변곡점(연말 종가·고점·저점)을 기준으로 재구성한 근사 시계열입니다. " +
+                    "장기 흐름과 급락 구간의 위치·크기를 보기 위한 교육용이며, 개별 수치는 실제 종가와 다를 수 있습니다. " +
+                    "정확한 분석이 필요하면 거래소·데이터 제공처에서 받은 CSV를 불러오세요.";
+  setNotice(DEMO_NOTICE);
+
+  refreshSourceOptions();
+
+  $("selIndex").addEventListener("change", function(){
+    state.key = this.value;
+    setNotice(SOURCES[state.key].demo ? DEMO_NOTICE
+      : "불러온 CSV로 계산 중입니다. 급락 구간과 낙폭은 이 데이터 기준의 실제 값입니다.");
+    render();
+  });
+  $("selRange").addEventListener("change", function(){ state.fromYear = +this.value; render(); });
+  $("selThr").addEventListener("change", function(){ state.thr = +this.value; render(); });
+  $("chkLog").addEventListener("change", function(){ state.log = this.checked; render(); });
+  $("chkEvents").addEventListener("change", function(){ state.showEvents = this.checked; render(); });
+
+  $("csvBtn").addEventListener("click", function(){ $("csvInput").click(); });
+  $("csvInput").addEventListener("change", function(){
+    var f = this.files && this.files[0];
+    if (!f) return;
+    var fr = new FileReader();
+    fr.onload = function(){
+      try {
+        var pts = parseCSV(String(fr.result));
+        var key = "csv";
+        SOURCES[key] = {name: f.name.replace(/\.[^.]+$/, ""), pts: pts, demo: false};
+        state.key = key;
+        state.fromYear = 0;
+        $("selRange").value = "0";
+        refreshSourceOptions();
+        setNotice("불러온 CSV(" + pts.length + "개 행)로 계산 중입니다. 급락 구간과 낙폭은 이 데이터 기준의 실제 값입니다.");
+        render();
+      } catch (err){
+        setNotice("CSV를 읽지 못했습니다: " + err.message);
+      }
+    };
+    fr.readAsText(f, "utf-8");
+    this.value = "";
+  });
+
+  var rt;
+  window.addEventListener("resize", function(){
+    clearTimeout(rt);
+    rt = setTimeout(render, 120);
+  });
+  if (window.matchMedia){
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", render);
+  }
+
+  render();
+})();
+</script>
+</div>
+</body>
+</html>
