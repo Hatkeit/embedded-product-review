@@ -1,0 +1,47 @@
+# IPC-7351B 계산 입력 — 부품 치수 원본 (단일 진실 원본)
+#
+# 이 파일에 들어가는 부품은 "datasheet 에 권장 랜드 패턴이 없는" 부품만이다.
+# IC / 커넥터 / 크리스탈 / 전력 패키지는 datasheet 패턴을 쓰므로 여기 넣지 않는다.
+#
+# family      : CHIP (2단자 각형 수동) / GULLWING (걸윙 리드) / FLATLEAD (평면 리드)
+# name_prefix : IPC 심볼명 접두어. 저항 RESC, 커패시터 CAPC, 인덕터 INDC,
+#               걸윙 SOT/SOP, 평면리드 DIOM 등
+# L_min/L_max : 리드 span (toe~toe) 최소/최대
+# W_min/W_max : 리드 폭 최소/최대
+# T_min/T_max : 리드(단자) 길이 최소/최대  <- 여기 공차가 패드 길이를 지배한다
+# height      : 바디 높이 (심볼명에 인코딩됨)
+# body_W_max  : 바디 폭 최대 (courtyard 산출용)
+# pitch       : 리드 피치. CHIP 은 0
+#
+# 값이 TODO 인 행은 계산에서 제외되고 목록으로 보고된다.
+ref,family,name_prefix,pins,pitch,L_min,L_max,W_min,W_max,T_min,T_max,height,body_W_max,notes
+#
+# --- Chip 수동부품 8종 -------------------------------------------------------
+# L/W 공칭치수는 EIA/IEC 표준이라 벤더 무관하게 동일하다.
+# 공차와 T(단자 길이)는 벤더/시리즈마다 다르므로 실제 사용 벤더 datasheet 로 교체할 것.
+# 커패시터/인덕터는 name_prefix 와 height 만 바꿔 행을 복제한다 (형상은 동일).
+0201,CHIP,RESC,2,0,0.55,0.65,0.25,0.35,0.10,0.20,0.23,0.35,VERIFY 공차/T — 0603 metric
+0402,CHIP,RESC,2,0,0.95,1.05,0.45,0.55,0.20,0.30,0.35,0.55,VERIFY 공차/T — 1005 metric
+0603,CHIP,RESC,2,0,1.50,1.70,0.70,0.90,0.25,0.35,0.45,0.90,VERIFY 공차/T — 1608 metric
+0805,CHIP,RESC,2,0,1.90,2.10,1.15,1.35,0.30,0.45,0.50,1.35,VERIFY 공차/T — 2012 metric
+1206,CHIP,RESC,2,0,3.05,3.35,1.45,1.75,0.40,0.55,0.55,1.75,VERIFY 공차/T — 3216 metric
+1210,CHIP,RESC,2,0,3.05,3.35,2.35,2.65,0.40,0.55,0.55,2.65,VERIFY 공차/T — 3225 metric
+2010,CHIP,RESC,2,0,4.85,5.15,2.35,2.65,0.45,0.65,0.60,2.65,VERIFY 공차/T — 5025 metric
+2512,CHIP,RESC,2,0,6.15,6.45,3.05,3.35,0.50,0.70,0.60,3.35,VERIFY 공차/T — 6332 metric
+#
+# --- 소형 디스크리트 --------------------------------------------------------
+# 이쪽은 벤더별 편차가 커서 공칭치수조차 통일돼 있지 않다.
+# 실제 사용 부품의 datasheet 패키지 도면에서 직접 채울 것.
+SOT-23-3,GULLWING,SOT,3,0.95,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TO-236
+SOT-23-5,GULLWING,SOT,5,0.95,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,
+SOT-23-6,GULLWING,SOT,6,0.95,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,
+SOT-323,GULLWING,SOT,3,0.65,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,SC-70-3
+SOT-363,GULLWING,SOT,6,0.65,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,SC-70-6
+SOT-89,GULLWING,SOT,3,1.50,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,
+SOT-223,GULLWING,SOT,4,2.30,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,보통 datasheet 패턴 있음 — 확인 후 제외
+SOD-123,FLATLEAD,DIOM,2,0,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,
+SOD-323,FLATLEAD,DIOM,2,0,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,
+SOD-523,FLATLEAD,DIOM,2,0,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,
+SMA,FLATLEAD,DIOM,2,0,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,DO-214AC
+SMB,FLATLEAD,DIOM,2,0,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,DO-214AA
+SMC,FLATLEAD,DIOM,2,0,TODO,TODO,TODO,TODO,TODO,TODO,TODO,TODO,DO-214AB
