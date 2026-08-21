@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>1ED3431 상태핀 파형</title>
+<meta name="description" content="1ED34x1Mc12M(1ED3431) 게이트 드라이버의 RDYC·FLT_N 핀이 정상일 때 나타나는 파형 — 기동 시퀀스, 정상 스위칭, DESAT 고장 비교." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+<style>
+  :root{
+    --ground:#eaeeed; --surface:#ffffff; --surface-2:#f3f6f5;
+    --ink:#0f1719; --ink-2:#33474b; --muted:#5f7477; --line:#d3dcdb;
+    --accent:#0d6f7e; --accent-soft:#e2f0f2; --alarm:#a8321f; --alarm-soft:#fbeae6;
+    --sans:"IBM Plex Sans KR",-apple-system,"Segoe UI","Malgun Gothic",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+    --screen:#0a1416; --screen-line:#17282c; --screen-edge:#24383c; --screen-ink:#cfe0e2; --screen-dim:#7b9498;
+    --ch1:#f0c04a; --ch2:#4ac9da; --ch3:#dd85c4; --ch4:#8cc76d; --chx:#ff6f5f;
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#080f11; --surface:#101a1c; --surface-2:#162224;
+      --ink:#e7eff0; --ink-2:#b6c9cb; --muted:#8aa1a4; --line:#20302f;
+      --accent:#4ac9da; --accent-soft:#12292e; --alarm:#ff8877; --alarm-soft:#2a1614;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#080f11; --surface:#101a1c; --surface-2:#162224;
+    --ink:#e7eff0; --ink-2:#b6c9cb; --muted:#8aa1a4; --line:#20302f;
+    --accent:#4ac9da; --accent-soft:#12292e; --alarm:#ff8877; --alarm-soft:#2a1614;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-weight:400;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 20px 72px;display:flex;flex-direction:column;gap:34px}
+  h1,h2,h3{text-wrap:balance;margin:0;letter-spacing:-.02em;word-break:keep-all}
+  p{margin:0;word-break:keep-all}
+  code,.mono{font-family:var(--mono)}
+  a{color:var(--accent)}
+
+  /* header */
+  .masthead{display:flex;flex-direction:column;gap:14px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:clamp(28px,4.6vw,42px);font-weight:600;line-height:1.2}
+  h1 .pin{font-family:var(--mono);font-weight:500;color:var(--accent)}
+  .standfirst{font-size:17px;color:var(--ink-2);max-width:62ch;font-weight:300}
+  .meta-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;padding-bottom:18px}
+  .chip{font-family:var(--mono);font-size:12px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--surface)}
+
+  /* verdict */
+  .verdict{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+  .verdict h2{font-size:19px;font-weight:600}
+  .verdict p{color:var(--ink-2);max-width:70ch}
+  .polarity{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:4px}
+  .pol-card{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+  .pol-card .name{font-family:var(--mono);font-size:15px;font-weight:600}
+  .pol-card .name.c2{color:var(--accent)}
+  .pol-card .name.c3{color:var(--ink)}
+  .pol-card .lvl{font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .pol-card .txt{font-size:14px;color:var(--ink-2)}
+
+  /* sections */
+  section{display:flex;flex-direction:column;gap:16px}
+  .sec-head{display:flex;flex-direction:column;gap:6px}
+  .sec-head .tag{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  h2{font-size:23px;font-weight:600}
+  .sec-head p{color:var(--muted);font-size:15px;max-width:66ch}
+
+  /* scope panel */
+  .scope{background:var(--screen);border:1px solid var(--screen-edge);border-radius:var(--radius);padding:14px;overflow-x:auto}
+  .scope-bar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;padding:2px 6px 12px;border-bottom:1px solid var(--screen-line);margin-bottom:10px}
+  .scope-title{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--screen-dim)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-family:var(--mono);font-size:12px;color:var(--screen-ink)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+  .scope svg{display:block;width:100%;min-width:720px;height:auto}
+  svg text{font-family:var(--mono)}
+  .g-fine{stroke:var(--screen-line);stroke-width:1}
+  .g-mark{stroke:var(--screen-edge);stroke-width:1;stroke-dasharray:3 5}
+  .lbl{fill:var(--screen-ink);font-size:13px}
+  .lbl-dim{fill:var(--screen-dim);font-size:11.5px}
+  .lbl-num{fill:var(--screen-dim);font-size:11px}
+  .tr{fill:none;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+  .c1{stroke:var(--ch1)} .c2{stroke:var(--ch2)} .c3{stroke:var(--ch3)} .c4{stroke:var(--ch4)}
+  .bad{stroke:var(--chx);stroke-width:2;stroke-dasharray:5 4;fill:none}
+  .dot{fill:var(--screen)}
+  .band{fill:#4ac9da;opacity:.10}
+  .band-bad{fill:#ff6f5f;opacity:.10}
+  .cursor{stroke:var(--screen-dim);stroke-width:1;stroke-dasharray:2 4}
+
+  /* notes under panels */
+  .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .note{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+  .note .n{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.08em}
+  .note h3{font-size:15px;font-weight:600}
+  .note p{font-size:14px;color:var(--ink-2)}
+  .note.warn{border-color:color-mix(in srgb,var(--alarm) 45%,var(--line));background:var(--alarm-soft)}
+  .note.warn .n{color:var(--alarm)}
+
+  /* table */
+  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:600px;font-size:14px}
+  th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--surface-2)}
+  tbody tr:last-child td{border-bottom:none}
+  td.state{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:500}
+  .hi{color:var(--accent)} .lo{color:var(--alarm)}
+  td.p{color:var(--ink-2)}
+
+  /* checklist */
+  .checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .check{display:flex;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .check .box{flex:0 0 auto;width:18px;height:18px;border:1.5px solid var(--accent);border-radius:5px;margin-top:3px;position:relative}
+  .check .box::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid var(--accent);border-width:0 2px 2px 0;transform:rotate(42deg)}
+  .check div p{font-size:14px;color:var(--ink-2)}
+  .check div strong{font-weight:600;color:var(--ink);font-size:14.5px}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);padding-top:22px;display:flex;flex-direction:column;gap:10px}
+  footer p, footer li{font-size:13px;color:var(--muted)}
+  footer ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+  .caveat{background:var(--surface-2);border:1px dashed var(--line);border-radius:10px;padding:16px 18px;font-size:14px;color:var(--ink-2)}
+  @media (max-width:640px){
+    .polarity{grid-template-columns:1fr}
+    .wrap{padding:28px 14px 56px;gap:28px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">EiceDRIVER™ X3 Enhanced · 1ED34x1Mc12M</div>
+    <h1>1ED3431 <span class="pin">RDYC</span> · <span class="pin">FLT_N</span> 정상 파형</h1>
+    <p class="standfirst">정상 상태에서 두 상태핀은 파형이라기보다 <strong>움직이지 않는 DC 레벨</strong>입니다. 확인해야 할 것은 기동 시퀀스에서 언제 HIGH로 올라오는가, 그리고 스위칭 중에 절대 흔들리지 않는가 두 가지입니다.</p>
+    <div class="meta-strip">
+      <span class="chip">1200 V · ±3 A</span>
+      <span class="chip">open-drain 상태핀</span>
+      <span class="chip">pull-up → VCC1</span>
+      <span class="chip">기준 = GND1 (입력측)</span>
+    </div>
+  </header>
+
+  <div class="verdict">
+    <h2>먼저 극성부터 — “FLT/RDY”가 아니라 FLT_N / RDYC 입니다</h2>
+    <p>1ED34x1 계열의 상태핀은 이름과 극성이 서로 다릅니다. 여기서 헷갈리면 정상 파형을 고장으로 읽게 됩니다. 두 핀 모두 오픈드레인이라 외부 풀업(대표적으로 VCC1에 2.2 kΩ)이 없으면 아무 신호도 보이지 않습니다.</p>
+    <div class="polarity">
+      <div class="pol-card">
+        <span class="name c2">RDYC</span>
+        <span class="lvl">HIGH active — 정상 = HIGH (release)</span>
+        <span class="txt">드라이버 자신의 상태. 양측 UVLO 해제 + 과온 없음 + 내부 절연 통신 정상일 때만 HIGH. 반대로 입력이기도 해서, 외부에서 LOW로 당기면 FLT_N 클리어(리셋) 동작을 합니다.</span>
+      </div>
+      <div class="pol-card">
+        <span class="name c3">FLT_N</span>
+        <span class="lvl">LOW active — 정상 = HIGH (고장 없음)</span>
+        <span class="txt">애플리케이션 고장(대표적으로 DESAT) 보고. 고장 시 LOW로 래치. 이 핀도 입력 겸용이라 외부에서 LOW로 당기면 드라이버가 IN 신호를 무시하고 스위치를 꺼버립니다.</span>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head">
+      <span class="tag">파형 1 / 전원 투입</span>
+      <h2>기동 시퀀스 — RDYC가 HIGH로 올라오는 순간까지</h2>
+      <p>ms 스케일. 전원 투입 직후 RDYC는 LOW에서 출발합니다. 이 구간의 LOW는 고장이 아니라 정상입니다. FLT_N은 IC가 잡아당기지 않으므로 풀업을 따라 VCC1과 함께 올라옵니다.</p>
+    </div>
+    <div class="scope">
+      <div class="scope-bar">
+        <span class="scope-title">Power-up sequence · 기준 GND1</span>
+        <div class="legend">
+          <span><i style="background:var(--ch1)"></i>VCC1</span>
+          <span><i style="background:var(--ch4)"></i>VCC2</span>
+          <span><i style="background:var(--ch2)"></i>RDYC</span>
+          <span><i style="background:var(--ch3)"></i>FLT_N</span>
+        </div>
+      </div>
+      <svg viewBox="0 0 900 372" role="img" aria-label="1ED3431 전원 투입 시 VCC1, VCC2, RDYC, FLT_N 파형. RDYC는 양측 UVLO 해제와 구성 전송이 끝난 뒤 HIGH로 릴리즈된다.">
+        <line class="g-fine" x1="108" y1="26" x2="108" y2="330" />
+        <line class="g-fine" x1="108" y1="330" x2="884" y2="330" />
+
+        <rect class="band" x="404" y="26" width="116" height="304" />
+        <line class="cursor" x1="250" y1="26" x2="250" y2="336" />
+        <line class="cursor" x1="404" y1="26" x2="404" y2="336" />
+        <line class="cursor" x1="520" y1="26" x2="520" y2="336" />
+        <text class="lbl-num" x="250" y="20" text-anchor="middle">①</text>
+        <text class="lbl-num" x="404" y="20" text-anchor="middle">②</text>
+        <text class="lbl-num" x="520" y="20" text-anchor="middle">③</text>
+
+        <text class="lbl" x="14" y="66" fill="var(--ch1)">VCC1</text>
+        <text class="lbl-dim" x="14" y="82">입력측</text>
+        <line class="g-mark" x1="108" y1="57" x2="884" y2="57" />
+        <text class="lbl-dim" x="878" y="74" text-anchor="end">V(UVLO1H)</text>
+        <polyline class="tr c1" points="108,88 170,88 300,44 884,44" />
+        <circle cx="250" cy="57" r="3.5" fill="var(--ch1)" />
+
+        <text class="lbl" x="14" y="140" fill="var(--ch4)">VCC2</text>
+        <text class="lbl-dim" x="14" y="156">출력측</text>
+        <line class="g-mark" x1="108" y1="131" x2="884" y2="131" />
+        <text class="lbl-dim" x="878" y="148" text-anchor="end">V(UVLO2H)</text>
+        <polyline class="tr c4" points="108,162 330,162 450,118 884,118" />
+        <circle cx="404" cy="131" r="3.5" fill="var(--ch4)" />
+
+        <text class="lbl" x="14" y="214" fill="var(--ch2)">RDYC</text>
+        <text class="lbl-dim" x="14" y="230">ready</text>
+        <polyline class="tr c2" points="108,236 520,236 526,192 884,192" />
+        <text class="lbl-dim" x="150" y="256">LOW = 기동 중 (정상)</text>
+        <text class="lbl" x="540" y="182" fill="var(--ch2)">HIGH = ready</text>
+
+        <text class="lbl" x="14" y="288" fill="var(--ch3)">FLT_N</text>
+        <text class="lbl-dim" x="14" y="304">fault</text>
+        <polyline class="tr c3" points="108,310 170,310 300,266 884,266" />
+        <text class="lbl-dim" x="316" y="292">VCC1 풀업을 따라 상승 — 고장 없음(HIGH) 유지</text>
+
+        <text class="lbl-dim" x="410" y="350">구성 전송 + 기동 지연</text>
+        <text class="lbl-dim" x="410" y="366">≈ 200 µs (t_START 일부)</text>
+        <text class="lbl-dim" x="878" y="358" text-anchor="end">MCU는 이 에지를 확인한 뒤에 PWM 출력을 시작할 것</text>
+      </svg>
+    </div>
+    <div class="notes">
+      <div class="note">
+        <span class="n">①</span>
+        <h3>VCC1 &gt; V(UVLO1H)</h3>
+        <p>입력측이 먼저 살아납니다. 이때 FLT_N은 풀업 전압을 따라 HIGH가 되지만, RDYC는 아직 LOW입니다.</p>
+      </div>
+      <div class="note">
+        <span class="n">②</span>
+        <h3>VCC2 &gt; V(UVLO2H)</h3>
+        <p>출력측 UVLO가 해제되면 입력측 설정(ADJA·ADJB로 정한 DESAT·soft-off 값)이 출력측으로 전송됩니다.</p>
+      </div>
+      <div class="note">
+        <span class="n">③</span>
+        <h3>RDYC 릴리즈 = HIGH</h3>
+        <p>기동 지연 약 200 µs가 지나면 RDYC가 HIGH로 풀립니다. MCU는 이 에지를 확인한 뒤에 PWM을 내보내야 합니다.</p>
+      </div>
+      <div class="note">
+        <span class="n">순서 무관</span>
+        <h3>VCC2가 먼저 떠도 동일</h3>
+        <p>어느 쪽 전원이 먼저 올라오든 RDYC는 양쪽 조건이 모두 충족될 때까지 LOW를 유지합니다. 전원 순서에 따라 ①②의 순서만 바뀝니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="tag">파형 2 / 정상 운전</span>
+      <h2>스위칭 중 — 두 핀 모두 완전한 평선</h2>
+      <p>µs 스케일. 이것이 질문하신 “정상 파형”의 본체입니다. IN+가 계속 토글되고 게이트가 오르내려도 RDYC와 FLT_N은 에지에 어떤 반응도 하지 않아야 합니다.</p>
+    </div>
+    <div class="scope">
+      <div class="scope-bar">
+        <span class="scope-title">Steady-state switching · 정상</span>
+        <div class="legend">
+          <span><i style="background:var(--ch1)"></i>IN+</span>
+          <span><i style="background:var(--ch4)"></i>OUT (게이트)</span>
+          <span><i style="background:var(--ch2)"></i>RDYC</span>
+          <span><i style="background:var(--ch3)"></i>FLT_N</span>
+          <span><i style="background:var(--chx)"></i>비정상 예시</span>
+        </div>
+      </div>
+      <svg viewBox="0 0 900 356" role="img" aria-label="정상 스위칭 중 IN+와 게이트 출력은 토글하지만 RDYC와 FLT_N은 HIGH 평선을 유지한다. 붉은 점선은 비정상 글리치 예시.">
+        <line class="g-fine" x1="108" y1="26" x2="108" y2="330" />
+        <line class="g-fine" x1="108" y1="330" x2="884" y2="330" />
+
+        <text class="lbl" x="14" y="66" fill="var(--ch1)">IN+</text>
+        <text class="lbl-dim" x="14" y="82">PWM</text>
+        <polyline class="tr c1" points="108,88 150,88 154,44 250,44 254,88 350,88 354,44 450,44 454,88 550,88 554,44 650,44 654,88 750,88 754,44 850,44 854,88 884,88" />
+
+        <text class="lbl" x="14" y="140" fill="var(--ch4)">OUT</text>
+        <text class="lbl-dim" x="14" y="156">게이트</text>
+        <polyline class="tr c4" points="108,162 164,162 176,118 264,118 276,162 364,162 376,118 464,118 476,162 564,162 576,118 664,118 676,162 764,162 776,118 864,118 876,162 884,162" />
+        <text class="lbl-dim" x="150" y="184">전파 지연 · 슬루</text>
+
+        <text class="lbl" x="14" y="214" fill="var(--ch2)">RDYC</text>
+        <text class="lbl-dim" x="14" y="230">ready</text>
+        <polyline class="tr c2" points="108,208 884,208" />
+        <text class="lbl-dim" x="620" y="198">에지마다 미동 없음 — 이것이 정상</text>
+        <polyline class="bad" points="176,208 190,208 194,252 234,252 238,208 300,208" />
+        <text class="lbl-dim" x="196" y="272" fill="var(--chx)">▲ 이런 딥이 보이면 비정상</text>
+        <text class="lbl-dim" x="196" y="288" fill="var(--chx)">에지 후 ≈3.5 µs, 폭 ≈13 µs = 절연 통신 재동기</text>
+
+        <text class="lbl" x="14" y="300" fill="var(--ch3)">FLT_N</text>
+        <text class="lbl-dim" x="14" y="316">fault</text>
+        <polyline class="tr c3" points="108,308 884,308" />
+        <text class="lbl-dim" x="620" y="300">DESAT 미검출 — HIGH 유지</text>
+
+        <text class="lbl-dim" x="108" y="348">시간축은 스위칭 주기 기준(예: 10 kHz → 100 µs/div). 상태핀은 이 스케일에서 DC로 보여야 합니다.</text>
+      </svg>
+    </div>
+    <div class="notes">
+      <div class="note">
+        <span class="n">판정 기준</span>
+        <h3>정상 = 변화 없음</h3>
+        <p>정상 운전에서 RDYC·FLT_N은 이벤트 신호입니다. 파형이 “그려진다”면 이미 무언가 일어난 것입니다.</p>
+      </div>
+      <div class="note warn">
+        <span class="n">흔한 오진</span>
+        <h3>에지 동기 RDYC 딥</h3>
+        <p>스위칭 에지 직후 짧은 LOW 딥이 반복된다면 부품 불량이 아니라 노이즈로 인한 절연 통신 재동기일 가능성이 큽니다. VCC2/GND2/VEE2 디커플링, 온도센서 등 출력측 배선 커플링, dv/dt 경로를 먼저 보세요.</p>
+      </div>
+      <div class="note">
+        <span class="n">계측</span>
+        <h3>프로브 기준점</h3>
+        <p>RDYC·FLT_N은 GND1 기준입니다. 출력측 GND2를 기준으로 프로브를 물리면 실제로는 없는 파형이 보입니다.</p>
+      </div>
+      <div class="note">
+        <span class="n">MCU 측</span>
+        <h3>글리치 필터</h3>
+        <p>MCU 입력에 짧은 필터(수 µs)를 두더라도, 필터 전 원신호를 스코프로 한 번은 확인해야 실제 상태를 알 수 있습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="tag">파형 3 / 비교용</span>
+      <h2>고장일 때는 이렇게 다릅니다 — DESAT 검출과 클리어</h2>
+      <p>정상 파형을 판정하려면 비정상의 모양을 알아야 합니다. DESAT은 FLT_N만 움직이고 RDYC는 HIGH를 유지합니다. 해제는 RDYC를 일정 시간 이상 LOW로 당긴 뒤 상승 에지에서 이루어집니다.</p>
+    </div>
+    <div class="scope">
+      <div class="scope-bar">
+        <span class="scope-title">DESAT 검출 → soft-off → 클리어</span>
+        <div class="legend">
+          <span><i style="background:var(--ch1)"></i>IN+</span>
+          <span><i style="background:var(--ch4)"></i>OUT (게이트)</span>
+          <span><i style="background:var(--ch3)"></i>FLT_N</span>
+          <span><i style="background:var(--ch2)"></i>RDYC</span>
+        </div>
+      </div>
+      <svg viewBox="0 0 900 356" role="img" aria-label="DESAT 고장 시 게이트가 soft-off로 완만히 내려가고 FLT_N이 LOW로 래치된다. RDYC는 HIGH를 유지하며, RDYC를 LOW로 당긴 뒤 상승 에지에서 FLT_N이 클리어된다.">
+        <line class="g-fine" x1="108" y1="26" x2="108" y2="330" />
+        <line class="g-fine" x1="108" y1="330" x2="884" y2="330" />
+        <rect class="band-bad" x="430" y="26" width="330" height="304" />
+
+        <text class="lbl" x="14" y="66" fill="var(--ch1)">IN+</text>
+        <polyline class="tr c1" points="108,88 200,88 204,44 640,44 644,88 884,88" />
+
+        <text class="lbl" x="14" y="140" fill="var(--ch4)">OUT</text>
+        <text class="lbl-dim" x="14" y="156">게이트</text>
+        <polyline class="tr c4" points="108,162 214,162 226,118 430,118 530,162 884,162" />
+        <text class="lbl-dim" x="546" y="140">soft-off (완만한 하강)</text>
+        <text class="lbl-dim" x="300" y="106">← 정상 온 구간</text>
+
+        <text class="lbl" x="14" y="214" fill="var(--ch3)">FLT_N</text>
+        <text class="lbl-dim" x="14" y="230">fault</text>
+        <polyline class="tr c3" points="108,192 430,192 436,236 760,236 766,192 884,192" />
+        <text class="lbl-dim" x="470" y="224">LOW 래치 — IN 신호 무시</text>
+
+        <text class="lbl" x="14" y="292" fill="var(--ch2)">RDYC</text>
+        <text class="lbl-dim" x="14" y="308">ready</text>
+        <polyline class="tr c2" points="108,278 700,278 706,322 760,322 766,278 884,278" />
+        <text class="lbl-dim" x="440" y="268">고장 중에도 HIGH 유지 (전원·온도는 정상)</text>
+        <text class="lbl-dim" x="878" y="348" text-anchor="end">MCU가 RDYC를 t_CLR 이상 LOW로 → 상승 에지에서 FLT_N 클리어</text>
+      </svg>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th scope="col">상태</th><th scope="col">RDYC</th><th scope="col">FLT_N</th><th scope="col">해석</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="p">정상 운전</td><td class="state hi">HIGH</td><td class="state hi">HIGH</td><td class="p">두 핀 모두 평선. 이 상태가 목표.</td></tr>
+          <tr><td class="p">전원 투입 · 기동 중</td><td class="state lo">LOW</td><td class="state hi">HIGH</td><td class="p">정상적인 과도 구간. PWM 시작 전.</td></tr>
+          <tr><td class="p">VCC1 또는 VCC2 UVLO</td><td class="state lo">LOW</td><td class="state hi">HIGH</td><td class="p">전원 문제는 RDYC로 보고됩니다. 전원 레일부터 확인.</td></tr>
+          <tr><td class="p">과온(OT) 셧다운</td><td class="state lo">LOW</td><td class="state hi">HIGH</td><td class="p">RDYC가 LOW인데 전원이 정상이면 온도·통신을 의심.</td></tr>
+          <tr><td class="p">DESAT 검출</td><td class="state hi">HIGH</td><td class="state lo">LOW (래치)</td><td class="p">애플리케이션 고장. soft-off로 스위치 차단.</td></tr>
+          <tr><td class="p">외부에서 FLT_N을 LOW 구동</td><td class="state hi">HIGH</td><td class="state lo">LOW</td><td class="p">의도적 차단 입력. 드라이버가 IN을 무시합니다.</td></tr>
+          <tr><td class="p">외부에서 RDYC를 LOW 구동</td><td class="state lo">LOW</td><td class="state hi">→ HIGH</td><td class="p">고장 클리어 조작. 상승 에지에서 FLT_N 복귀.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="tag">현장 확인</span>
+      <h2>“정상인지” 판정할 때 보는 순서</h2>
+    </div>
+    <div class="checks">
+      <div class="check"><span class="box"></span><div><strong>풀업이 살아 있는가</strong><p>두 핀 모두 오픈드레인. VCC1으로 풀업(대표값 2.2 kΩ)이 없으면 플로팅이라 판정 자체가 불가능합니다.</p></div></div>
+      <div class="check"><span class="box"></span><div><strong>기준은 GND1</strong><p>프로브 그라운드를 입력측에 물립니다. 절연 배리어를 건너 측정하지 마세요.</p></div></div>
+      <div class="check"><span class="box"></span><div><strong>PWM 없이 먼저</strong><p>전원만 인가한 상태에서 RDYC=H, FLT_N=H를 확인. 여기서 실패하면 스위칭 문제가 아닙니다.</p></div></div>
+      <div class="check"><span class="box"></span><div><strong>그다음 저부하 스위칭</strong><p>정격 부하 전에 저전압·저전류로 토글하며 두 핀이 평선을 유지하는지 확인.</p></div></div>
+      <div class="check"><span class="box"></span><div><strong>MCU 핀 방향 점검</strong><p>두 핀은 입력 겸용입니다. MCU 포트가 실수로 푸시풀 출력이면 스스로 드라이버를 꺼버립니다.</p></div></div>
+      <div class="check"><span class="box"></span><div><strong>긴 캡처로 한 번</strong><p>수백 ms 단일 캡처로 간헐적 딥이 없는지 확인. 짧은 창에서는 재현이 안 됩니다.</p></div></div>
+    </div>
+  </section>
+
+  <div class="caveat">
+    <strong>수치 확인 필요</strong> — 기동 지연 ≈200 µs, 에지 동기 딥 폭 ≈13 µs는 공개 자료 기준의 대략값입니다. t<span class="mono">_START1</span>/t<span class="mono">_START2</span>, t<span class="mono">_CLR,min</span>, UVLO 임계값, DESAT 블랭킹·필터 시간의 정확한 규격은 사용 중인 리비전의 데이터시트 전기적 특성 표에서 확인하시기 바랍니다. 파형의 형태(레벨·순서·극성)는 그대로 유효합니다.
+  </div>
+
+  <footer>
+    <p>1ED3431MC12M / 1ED3431MU12M — EiceDRIVER™ 1ED34x1Mc12M Enhanced (1ED-X3 Analog), 1200 V 단채널 절연 게이트 드라이버.</p>
+    <ul>
+      <li><a href="https://www.infineon.com/assets/row/public/documents/24/49/infineon-1ed34x1mx12m-datasheet-en.pdf">EiceDRIVER™ 1ED34x1Mc12M Enhanced Datasheet (Infineon)</a></li>
+      <li><a href="https://www.infineon.com/assets/row/public/documents/24/42/infineon-an2020-06-1ed34x1-and-1ed38x0-applicationnotes-en.pdf">AN2020-06 — 1ED34x1 / 1ED38x0 Enhanced family Technical description</a></li>
+      <li><a href="https://www.infineon.com/cms/en/product/power/gate-driver-ics/1ed3431mc12m/">1ED3431MC12M 제품 페이지</a></li>
+    </ul>
+  </footer>
+
+</div>
+</body>
+</html>
