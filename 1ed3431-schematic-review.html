@@ -128,6 +128,41 @@
     </div>
   </header>
 
+  <div class="verdict" style="border-left-color:var(--ok)">
+    <h2 style="color:var(--ok)">해결 — OFF 15 Ω + DESAT 정상 결선으로 RDYC·FLT 정상</h2>
+    <p>2차측 게이트망을 <strong>OFF 0 Ω → 15 Ω</strong>으로 바꾸고 <strong>DESAT 감지망을 연결</strong>한 뒤, PWM 인가 중에도 RDYC와 FLT_N이 HIGH 평선을 유지합니다. 두 변경이 동시에 이루어졌으므로 원인은 아래 둘 중 하나(또는 둘 다)입니다.</p>
+    <div class="polarity" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:4px">
+      <div class="callout">
+        <h4>OFF 0 Ω → 15 Ω</h4>
+        <p>턴오프 밀러 전류가 2.4 A → 0.32 A로, di/dt가 약 8배 감소합니다. VEE2–GND2 경로 인덕턴스에서 생기는 L·di/dt가 검출 임계 0.5 V(V<sub>VEE2,NC</sub>)를 넘지 않게 됩니다.</p>
+      </div>
+      <div class="callout">
+        <h4>DESAT 감지망 연결</h4>
+        <p>DESAT 핀을 0 Ω으로 GND2에 직결하면 GND2 바운스가 핀에 그대로 실려 절대최대(−0.3 V)를 순간 침범할 수 있습니다. R52 1 kΩ + D8·D10 클램프가 들어가면 이 경로가 차단됩니다.</p>
+      </div>
+    </div>
+    <p>어느 쪽이었는지 확정하려면 <strong>DESAT은 연결한 채 OFF만 0 Ω으로 되돌려</strong> 한 번 재현해 보면 됩니다. 나머지 9채널에 무엇을 적용할지가 이 결과로 정해집니다.</p>
+  </div>
+
+  <section>
+    <div class="sec-head">
+      <div class="tagrow"><span class="sev warn">신규</span><span class="tag">DESAT 활성화에 따른 확인 항목</span></div>
+      <h2>DESAT이 살아났으므로 새로 볼 것</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>항목</th><th>현재 값</th><th>확인 · 권고</th></tr></thead>
+        <tbody>
+          <tr><td class="ref">점퍼 상태</td><td class="p">홀수 실장 / 짝수 제거여야 함</td><td class="p">둘 다 실장되면 DESAT이 GND2에 물려 보호가 무효입니다. 짝수 점퍼(P2·P4·…)가 제거되었는지 확인</td></tr>
+          <tr><td class="ref">블랭킹 · 필터</td><td class="p">ADJB 1.33 kΩ = set up 0<br>t<sub>DESATleb</sub> 650 ns / t<sub>DESATfilter</sub> 1575 ns</td><td class="p">턴온 전파지연 t<sub>PDON</sub> 244 ns + V<sub>DS</sub> 하강을 650 ns가 덮는지. DC링크를 올리며 오트립 감시. <strong>28.0 kΩ으로 바꾸면 필터는 1575 ns 그대로, 블랭킹만 1150 ns로 늘어 여유가 커집니다</strong></td></tr>
+          <tr><td class="ref">DESAT 임계</td><td class="p">typ 9.18 V, 전류원 500 µA<br>R52 1 kΩ → 0.5 V 강하</td><td class="p">실효 임계 ≈ 8.7 V. R<sub>DS(on)</sub> 33.9 mΩ 기준 약 250 A에 해당해 <strong>경단락만 잡습니다.</strong> 더 조이려면 R52를 키우세요 — 임계 감소분 = 500 µA × R</td></tr>
+          <tr><td class="ref">블랭킹 캡 C51</td><td class="p">NC</td><td class="good">데이터시트 Figure 13도 저항 + 다이오드만 씁니다. 미실장이 맞습니다</td></tr>
+          <tr><td class="ref">고장 클리어 경로</td><td class="p">미구현</td><td class="p">이제 FLT_N이 실제로 래치될 수 있습니다. MCU가 RDYC를 t<sub>CLRMIN</sub>(typ 1.0 / max 1.2 µs) 이상 LOW로 당겼다 놓는 루틴이 없으면 고장 1회에 전원 재투입이 필요합니다</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <div class="verdict">
     <h2>먼저 정정 — 공통 배선은 제조사 권장 구조입니다</h2>
     <p>데이터시트 §4.3.2는 이렇게 명시합니다. <em>&ldquo;In a typical application the RDYC pins of all gate driver ICs in the inverter are connected together and form a single wire RDYC signal.&rdquo;</em> FLT_N도 §4.3.3에 동일한 문장이 있습니다. <strong>6채널을 한 배선으로 묶은 것은 정상적인 설계이며, 이전 판에서 이를 구조적 결함처럼 서술한 것은 잘못</strong>이었습니다.</p>
