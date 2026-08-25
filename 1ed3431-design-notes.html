@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>1ED3431 설계 노트</title>
+<meta name="description" content="MicroInv 500W(V1109) 게이트 드라이버 설계 참조 — 1ED34x1Mc12M 데이터시트 Rev 1.10 대조 요약, 회로 추적 결과, 트러블슈팅 이력, 남은 작업." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+<style>
+  :root{
+    --ground:#eaeeed; --surface:#ffffff; --surface-2:#f3f6f5; --surface-3:#e9efee;
+    --ink:#0f1719; --ink-2:#33474b; --muted:#5f7477; --line:#d3dcdb;
+    --accent:#0d6f7e; --accent-soft:#e2f0f2;
+    --crit:#a8321f; --crit-soft:#fbeae6; --warn:#8a5a10; --warn-soft:#fbf2e2; --ok:#2c6b4f; --ok-soft:#e6f2ec;
+    --sans:"IBM Plex Sans KR",-apple-system,"Segoe UI","Malgun Gothic",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+    --radius:12px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#080f11; --surface:#101a1c; --surface-2:#162224; --surface-3:#1b2a2c;
+      --ink:#e7eff0; --ink-2:#b6c9cb; --muted:#8aa1a4; --line:#20302f;
+      --accent:#4ac9da; --accent-soft:#12292e;
+      --crit:#ff8877; --crit-soft:#2a1614; --warn:#e8b45e; --warn-soft:#2a2114; --ok:#7fd0a8; --ok-soft:#12261e;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#080f11; --surface:#101a1c; --surface-2:#162224; --surface-3:#1b2a2c;
+    --ink:#e7eff0; --ink-2:#b6c9cb; --muted:#8aa1a4; --line:#20302f;
+    --accent:#4ac9da; --accent-soft:#12292e;
+    --crit:#ff8877; --crit-soft:#2a1614; --warn:#e8b45e; --warn-soft:#2a2114; --ok:#7fd0a8; --ok-soft:#12261e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.62;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{text-wrap:balance;margin:0;letter-spacing:-.02em;word-break:keep-all}
+  p{margin:0;word-break:keep-all}
+  code{font-family:var(--mono);font-size:.92em;background:var(--surface-2);padding:1px 5px;border-radius:4px}
+  a{color:var(--accent)}
+
+  .shell{max-width:1180px;margin:0 auto;padding:36px 20px 80px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:40px;align-items:start}
+  nav.toc{position:sticky;top:24px;display:flex;flex-direction:column;gap:3px;font-size:13.5px;max-height:calc(100vh - 48px);overflow-y:auto}
+  nav.toc .toc-title{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  nav.toc a{color:var(--ink-2);text-decoration:none;padding:4px 8px;border-radius:6px;border-left:2px solid transparent}
+  nav.toc a:hover{background:var(--surface);color:var(--accent);border-left-color:var(--accent)}
+  nav.toc a .n{font-family:var(--mono);color:var(--muted);margin-right:6px;font-size:12px}
+  main{display:flex;flex-direction:column;gap:38px;min-width:0}
+
+  header.doc{display:flex;flex-direction:column;gap:10px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:clamp(26px,4vw,36px);font-weight:600;line-height:1.2}
+  .lede{font-size:16px;color:var(--ink-2);max-width:66ch;font-weight:300}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+  .chip{font-family:var(--mono);font-size:11.5px;padding:4px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--surface)}
+
+  section{display:flex;flex-direction:column;gap:14px;scroll-margin-top:24px}
+  .sec-num{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--accent)}
+  h2{font-size:21px;font-weight:600;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  h3{font-size:16px;font-weight:600;margin-top:6px}
+  section p{color:var(--ink-2);font-size:15px;max-width:74ch}
+  section p strong,li strong{color:var(--ink);font-weight:600}
+  ul,ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+  li{color:var(--ink-2);font-size:15px;word-break:keep-all}
+
+  .tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:540px;font-size:13.5px}
+  th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--surface-2);position:sticky;top:0}
+  tbody tr:last-child td{border-bottom:none}
+  td.m,th.m{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .hi{color:var(--accent);font-weight:600} .lo{color:var(--crit);font-weight:600}
+  .cur{background:var(--accent-soft)}
+  .bad{color:var(--crit);font-weight:600} .good{color:var(--ok);font-weight:600}
+
+  .box{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:14px 16px;background:var(--surface);display:flex;flex-direction:column;gap:6px}
+  .box h4{font-size:14.5px;font-weight:600}
+  .box p,.box li{font-size:14px;color:var(--ink-2)}
+  .box.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+  .box.crit{border-left-color:var(--crit);background:var(--crit-soft)}
+  .box.ok{border-left-color:var(--ok);background:var(--ok-soft)}
+  .box .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+  pre{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;margin:0;font-family:var(--mono);font-size:13px;line-height:1.65;color:var(--ink-2)}
+  .formula{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-family:var(--mono);font-size:14px;color:var(--ink);text-align:center}
+  footer{border-top:1px solid var(--line);padding-top:20px;display:flex;flex-direction:column;gap:8px}
+  footer p,footer li{font-size:13px;color:var(--muted)}
+  @media (max-width:860px){
+    .shell{grid-template-columns:1fr;gap:24px;padding:24px 14px 60px}
+    nav.toc{position:static;max-height:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 12px}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="toc">
+    <div class="toc-title">목차</div>
+    <a href="#s1"><span class="n">1</span>핀과 상태</a>
+    <a href="#s2"><span class="n">2</span>ADJA · ADJB</a>
+    <a href="#s3"><span class="n">3</span>DESAT</a>
+    <a href="#s4"><span class="n">4</span>게이트망</a>
+    <a href="#s5"><span class="n">5</span>전기적 특성</a>
+    <a href="#s6"><span class="n">6</span>절연 전원</a>
+    <a href="#s7"><span class="n">7</span>DC링크 · 프리차지</a>
+    <a href="#s8"><span class="n">8</span>이 보드의 실제 결선</a>
+    <a href="#s9"><span class="n">9</span>트러블슈팅 이력</a>
+    <a href="#s10"><span class="n">10</span>진단 절차</a>
+    <a href="#s11"><span class="n">11</span>남은 작업</a>
+    <a href="#s12"><span class="n">12</span>출처</a>
+  </nav>
+
+  <main>
+  <header class="doc">
+    <div class="eyebrow">MicroInv 500W · SCH_MICROINV_V1109 · 1ED3431MU12M ×10</div>
+    <h1>1ED3431 설계 노트</h1>
+    <p class="lede">EiceDRIVER™ 1ED34x1Mc12M 데이터시트 Rev 1.10 원문 대조 결과와, 회로도 벡터 추적으로 확인한 이 보드의 실제 결선, 그리고 브링업 중 확인된 문제와 해결을 한 곳에 모았습니다. 브라우저 검색(Ctrl+F)으로 찾으세요.</p>
+    <div class="chips">
+      <span class="chip">데이터시트 Rev 1.10 (2021-10-08)</span>
+      <span class="chip">IPB339N20NM6</span>
+      <span class="chip">DC링크 300~420 V</span>
+      <span class="chip">계통 220~264 Vac</span>
+    </div>
+  </header>
+
+  <section id="s1">
+    <div class="sec-num">01</div>
+    <h2>핀과 상태 — RDYC · FLT_N</h2>
+    <p><strong>RDYC는 High active, FLT_N은 Low active</strong>입니다. 둘 다 오픈드레인 출력이면서 동시에 입력이고, 외부 풀업이 필수입니다(데이터시트 typical <strong>2.2 kΩ</strong> → VCC1). 정상 상태는 <strong>둘 다 HIGH</strong>입니다.</p>
+    <div class="tw"><table>
+      <thead><tr><th>RDYC</th><th>FLT_N</th><th>의미</th></tr></thead>
+      <tbody>
+        <tr><td class="m hi">HIGH</td><td class="m hi">HIGH</td><td>정상. 두 핀 모두 평선</td></tr>
+        <tr><td class="m hi">HIGH</td><td class="m lo">LOW</td><td>드라이버는 건강, 애플리케이션 고장이 래치됨 (또는 외부에서 당김)</td></tr>
+        <tr><td class="m lo">LOW</td><td class="m hi">HIGH</td><td>준비 안 됨 — 전원·통신·ON핀 조건. FLT_N은 VCC1 풀업을 따라감</td></tr>
+        <tr><td class="m lo">LOW</td><td class="m lo">LOW</td><td>둘 다 눌림 — 외부·배선·전원 공통 원인</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>RDYC가 LOW가 되는 조건 (ready sources, §4.3.2)</h3>
+    <ol>
+      <li>VCC1 &lt; UVLO1</li>
+      <li>VCC2 &lt; UVLO2</li>
+      <li><strong>VEE2 over GND2 연결 실패</strong> — 검출 임계 V<sub>VEE2,NC</sub> = 0.5 V</li>
+      <li>내부 절연 신호 전송 이상</li>
+      <li><strong>ON 핀 전압이 VEE2 + 2 V 이상</strong> (기동 시 스위치가 꺼져 있어야 함)</li>
+      <li>외부에서 LOW로 구동 (fault-off 입력)</li>
+    </ol>
+
+    <h3>FLT_N이 LOW가 되는 조건 (fault sources, §4.3.3)</h3>
+    <ol>
+      <li>DESAT 검출</li>
+      <li>게이트 드라이버 과온 보호</li>
+      <li>외부에서 LOW로 구동</li>
+    </ol>
+    <div class="box"><span class="lbl">중요</span><p><strong>이 셋뿐입니다.</strong> 게이트 저항값, 스위치오프 타임아웃, UVLO 등은 FLT_N을 띄우지 않습니다. 그리고 이 보드는 DESAT을 최근에야 연결했으므로, 그전까지 FLT_N을 띄울 수 있는 것은 과온뿐이었습니다.</p></div>
+
+    <h3>공통 배선은 제조사 권장 구조입니다</h3>
+    <p>§4.3.2: <em>"In a typical application the RDYC pins of all gate driver ICs in the inverter are connected together and form a single wire RDYC signal."</em> FLT_N도 동일합니다. 다만 정량적 대가가 있습니다 — 글리치 내성이 t<sub>RDYCMIN</sub> 100 ns(max 115 ns)뿐이고, 한 번 흔들리면 복구까지 t<sub>SSIO</sub> ≤ 13 µs가 걸립니다.</p>
+
+    <h3>고장 클리어 절차 (§4.1, §4.3.2.2)</h3>
+    <pre>1. IN을 LOW로
+2. RDYC를 t_CLRMIN(typ 1.0 / max 1.2 µs) 이상 LOW로 당김
+3. RDYC 해제 → 상승 에지에서 FLT_N 클리어
+4. PWM 재개
+
+추가 조건: ON 핀이 VEE2+2 V 아래, 고장 원인 해소</pre>
+    <div class="box warn"><span class="lbl">주의</span><p>클리어는 <strong>레벨이 아니라 상승 에지</strong>에서 일어납니다. RDYC를 계속 LOW로 잡고 있으면 영원히 안 풀립니다. 그리고 RDYC가 흔들렸다 복귀할 때마다 6채널의 FLT 래치가 자동으로 지워지므로, RDYC가 불안정한 동안의 FLT 관측값은 신뢰할 수 없습니다.</p></div>
+
+    <h3>출력 상태 진리표 (Table 5 요약)</h3>
+    <div class="tw"><table>
+      <thead><tr><th>조건</th><th class="m">ON</th><th class="m">OFF</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td>정상 · IN=H</td><td class="m">high</td><td class="m">tri-state</td><td>게이트 충전</td></tr>
+        <tr><td>정상 · IN=L</td><td class="m">tri-state</td><td class="m">low</td><td>하드 스위칭 턴오프</td></tr>
+        <tr><td>RDYC H→L</td><td class="m">→ tri-state</td><td class="m">→ fault off</td><td><strong>soft-off</strong>. IN 무시</td></tr>
+        <tr><td>FLT_N H→L</td><td class="m">→ tri-state</td><td class="m">→ fault off</td><td><strong>soft-off</strong>. IN 무시</td></tr>
+        <tr><td>VCC1 손실</td><td class="m">→ tri-state</td><td class="m">→ fault off</td><td>출력측이 게이트 유지</td></tr>
+        <tr><td>VCC2 손실</td><td class="m">tri-state</td><td class="m">active shut down</td><td>게이트 전하로 자체 클램프</td></tr>
+      </tbody>
+    </table></div>
+    <p>ON과 OFF가 동시에 활성인 행이 없습니다. 그래서 두 핀에 각각 다른 저항을 달아도 내부 관통이 없습니다. <strong>모든 비정상 경로의 턴오프는 soft-off</strong>이고, 정상 턴오프만 하드 스위칭입니다.</p>
+  </section>
+
+  <section id="s2">
+    <div class="sec-num">02</div>
+    <h2>ADJA · ADJB — 설정 저항</h2>
+    <p>저항 하나로 출력측 보호 동작을 설정하는 다이얼입니다. <strong>ADJA는 soft-off 전류</strong>, <strong>ADJB는 DESAT 블랭킹·필터 시간</strong>을 정합니다. GND1으로 1.33 kΩ ~ 28.0 kΩ, E96 1% 중 지정된 16개 값만 유효합니다.</p>
+    <div class="box crit"><span class="lbl">핵심</span><p><strong>기동 시 딱 한 번만 읽습니다.</strong> 다음 전원 차단까지 유지되므로 운전 중 변경은 반영되지 않고, 저항을 바꾸면 반드시 콜드 파워사이클이 필요합니다. 또한 판독 노드이므로 <strong>병렬 누설에 매우 민감</strong>합니다.</p></div>
+    <div class="tw"><table>
+      <thead><tr><th class="m">set up</th><th class="m">저항</th><th class="m">ADJA soft-off</th><th class="m">ADJB 블랭킹 / 필터</th></tr></thead>
+      <tbody>
+        <tr><td>—</td><td class="m">&lt; 1.05 kΩ / GND1</td><td>default 146 mA</td><td class="bad">동작 정지</td></tr>
+        <tr class="cur"><td class="m">0</td><td class="m">1.33 kΩ ←현재</td><td class="m">15 mA</td><td class="m">650 / 1575 ns</td></tr>
+        <tr><td class="m">1</td><td class="m">1.58 kΩ</td><td class="m">29 mA</td><td class="m">650 / 1775 ns</td></tr>
+        <tr><td class="m">2</td><td class="m">1.91 kΩ</td><td class="m">44 mA</td><td class="m">650 / 1975 ns</td></tr>
+        <tr><td class="m">3</td><td class="m">2.26 kΩ</td><td class="m">58 mA</td><td class="m">650 / 2375 ns</td></tr>
+        <tr><td class="m">4</td><td class="m">2.74 kΩ</td><td class="m">73 mA</td><td class="m">650 / 2775 ns</td></tr>
+        <tr><td class="m">5</td><td class="m">3.32 kΩ</td><td class="m">87 mA</td><td class="m">650 / 3175 ns</td></tr>
+        <tr><td class="m">6</td><td class="m">4.02 kΩ</td><td class="m">102 mA</td><td class="m">650 / 3575 ns</td></tr>
+        <tr><td class="m">7</td><td class="m">4.87 kΩ</td><td class="m">116 mA</td><td class="m">650 / 3975 ns</td></tr>
+        <tr><td class="m">8</td><td class="m">5.90 kΩ</td><td class="m">131 mA</td><td class="m">1150 / 3975 ns</td></tr>
+        <tr><td class="m">9</td><td class="m">7.15 kΩ</td><td class="m">146 mA</td><td class="m">1150 / 3575 ns</td></tr>
+        <tr><td class="m">10</td><td class="m">8.66 kΩ</td><td class="m">160 mA</td><td class="m">1150 / 3175 ns</td></tr>
+        <tr><td class="m">11</td><td class="m">10.7 kΩ</td><td class="m">175 mA</td><td class="m">1150 / 2775 ns</td></tr>
+        <tr><td class="m">12</td><td class="m">13.7 kΩ</td><td class="m">189 mA</td><td class="m">1150 / 2375 ns</td></tr>
+        <tr><td class="m">13</td><td class="m">17.4 kΩ</td><td class="m">204 mA</td><td class="m">1150 / 1975 ns</td></tr>
+        <tr><td class="m">14</td><td class="m">23.2 kΩ</td><td class="m">218 mA</td><td class="m">1150 / 1775 ns</td></tr>
+        <tr><td class="m">15</td><td class="m">28.0 kΩ</td><td class="m">233 mA</td><td class="m">1150 / 1575 ns</td></tr>
+        <tr><td>—</td><td class="m">&gt; 45.3 kΩ / VCC1</td><td class="bad">동작 정지</td><td>default 400 / 225 ns</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box warn"><span class="lbl">양 끝의 의미가 핀마다 반대입니다</span><p>ADJA는 낮은 쪽이 default, 높은 쪽이 정지. <strong>ADJB는 낮은 쪽이 정지</strong>입니다. 현재 ADJB 1.33 kΩ은 정지 경계(1.05 kΩ) 바로 위로 여유가 21%뿐이고, 병렬 누설 약 5 kΩ이면 정지 영역에 들어갑니다.</p></div>
+    <div class="box ok"><span class="lbl">권고</span><p><strong>ADJB → 28.0 kΩ</strong>: DESAT 필터가 1575 ns로 현재와 동일하고 블랭킹만 650 → 1150 ns로 늘어납니다. 특성을 바꾸지 않으면서 정지 경계에서 20배 이상 멀어집니다.<br><strong>ADJA → 10.7 kΩ(175 mA)</strong>: 현재 15 mA는 최소값이라 Q<sub>g</sub> 26 nC 소자의 fault-off 방전에 약 1.7 µs가 걸립니다. RDYC 복귀 지연의 원인이 됩니다.<br>참고로 데이터시트 표준 응용 회로(Figure 17)는 <strong>ADJA·ADJB 모두 10 kΩ</strong>을 씁니다.</p></div>
+  </section>
+
+  <section id="s3">
+    <div class="sec-num">03</div>
+    <h2>DESAT</h2>
+    <p><strong>"켰는데 왜 아직 전압이 남아 있지?"를 보는 기능</strong>입니다. 전류를 직접 재지 않고, 소자가 켜진 상태의 양단 전압으로 단락을 판별합니다. 드라이버 안에서 루프가 닫히므로 MCU를 거치지 않고 µs 안에 반응합니다.</p>
+    <h3>회로와 동작</h3>
+    <pre>DESAT 핀 ─[ R_DESAT ]─[ 고전압 다이오드 ]─→ 드레인/컬렉터
+   ↑ 내부 전류원 500 µA
+
+정상: 소자 ON → 드레인 낮음 → 다이오드 도통 → 핀 1~2 V
+단락: 드레인 상승 → 다이오드 역바이어스 → 500 µA가 핀 충전 → 9.18 V 초과
+
+턴온 ─[ 블랭킹 ]─[ 필터 ]─→ soft-off + FLT_N LOW 래치
+       ADJB가 두 시간을 결정</pre>
+    <h3>임계 조정</h3>
+    <p>임계 typ <strong>9.18 V</strong>는 고정이지만, 보호 저항으로 실효 임계를 낮출 수 있습니다. <strong>감소분 = 500 µA × R<sub>DESAT</sub></strong>.</p>
+    <div class="tw"><table>
+      <thead><tr><th class="m">R_DESAT</th><th class="m">실효 임계</th><th class="m">환산 전류 (R<sub>DS(on)</sub> 33.9 mΩ)</th></tr></thead>
+      <tbody>
+        <tr class="cur"><td class="m">1 kΩ ←현재</td><td class="m">8.7 V</td><td class="m">≈ 250 A</td></tr>
+        <tr><td class="m">5 kΩ</td><td class="m">6.7 V</td><td class="m">≈ 197 A</td></tr>
+        <tr><td class="m">10 kΩ</td><td class="m">4.2 V</td><td class="m">≈ 124 A</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box warn"><span class="lbl">MOSFET에서의 한계</span><p>DESAT은 원래 IGBT용입니다. MOSFET은 V<sub>DS</sub> = I × R<sub>DS(on)</sub>로 전류에 비례하고, <strong>R<sub>DS(on)</sub>이 150 °C에서 상온의 약 2배</strong>가 되므로 같은 임계가 온도에 따라 2배 다른 전류를 의미합니다. 정밀한 과전류 보호로는 쓸 수 없고, <strong>파국적 단락을 끊는 최후 방어선</strong>으로 이해해야 합니다.</p></div>
+    <h3>보호 계층 설계</h3>
+    <div class="tw"><table>
+      <thead><tr><th>계층</th><th>수단</th><th class="m">반응</th><th>잡는 것</th></tr></thead>
+      <tbody>
+        <tr><td>1차</td><td>DESAT</td><td class="m">2~3 µs</td><td>파국적 단락, 관통</td></tr>
+        <tr><td>2차</td><td>션트 + 고속 비교기 → <strong>FLT_N 입력에 직결</strong></td><td class="m">수백 ns</td><td>사이클 단위 과전류</td></tr>
+        <tr><td>3차</td><td>DC링크 전류 센싱(AMC3302) + MCU</td><td class="m">수십 µs~ms</td><td>과부하, 이상 운전</td></tr>
+      </tbody>
+    </table></div>
+    <p>FLT_N은 fault-off 입력이기도 하므로, <strong>션트 비교기 출력을 오픈드레인으로 FLT_N에 물리면 MCU를 거치지 않고 6채널 전체를 즉시 차단</strong>할 수 있습니다. MOSFET에 맞는 임계(예: 60~80 A)로 2차 계층을 구성하는 방법입니다.</p>
+  </section>
+
+  <section id="s4">
+    <div class="sec-num">04</div>
+    <h2>게이트망 설계</h2>
+    <h3>계산식</h3>
+    <div class="formula">R<sub>tot</sub> = R<sub>DSON</sub> + R<sub>g,ext</sub> + R<sub>g,int</sub> &nbsp;·&nbsp; I<sub>Miller</sub> = (V<sub>drive</sub> − V<sub>plateau</sub>) / R<sub>tot</sub> &nbsp;·&nbsp; t<sub>M</sub> = Q<sub>gd</sub> / I<sub>Miller</sub></div>
+    <p>드라이버 출력 저항은 <strong>R<sub>DSON,H</sub> typ 1.12 Ω / R<sub>DSON,L</sub> typ 0.82 Ω</strong>, MOSFET 내부 R<sub>g</sub>는 약 1.5 Ω으로 가정했습니다. IPB339N20NM6의 Q<sub>gd</sub> = 3.4~5.1 nC, Q<sub>g</sub> = 15.9 nC(0~10 V).</p>
+    <div class="tw"><table>
+      <thead><tr><th class="m">게이트 저항</th><th class="m">밀러 전류</th><th class="m">밀러 구간</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td class="m">턴온 40.2 Ω</td><td class="m">0.22 A</td><td class="m">23 ns</td><td>적정</td></tr>
+        <tr><td class="m">턴온 20.1 Ω (현재)</td><td class="m">0.42 A</td><td class="m">12 ns</td><td>R55·R56 병렬</td></tr>
+        <tr><td class="m">턴오프 40.2 Ω</td><td class="m">0.13 A</td><td class="m">39 ns</td><td>턴온보다 느림</td></tr>
+        <tr><td class="m">턴오프 15 Ω</td><td class="m">0.32 A</td><td class="m">16 ns</td><td class="good">권장</td></tr>
+        <tr><td class="m">턴오프 0 Ω (이전)</td><td class="m">2.4 A</td><td class="m">2 ns</td><td class="bad">di/dt 과다 — 문제 원인</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box"><span class="lbl">CLAMP</span><p>§4.5.4.1: <em>"Connect the CLAMP pin directly to the gate with low inductive tracks."</em> <strong>0 Ω 직결이 맞습니다.</strong> 직접 클램핑 능력 typ 2 A, 절대최대 I<sub>CLAMP</sub> 2.4 A (t &lt; 5 µs). 클램프는 게이트가 V<sub>ON_CLAMP</sub>(typ 2.0 V) 아래로 내려간 뒤 t<sub>CLAMPfilter</sub> 235 ns를 거쳐 활성화되므로, <strong>밀러 구간 자체는 돕지 않고 그 이후를 잡습니다.</strong></p></div>
+    <div class="box ok"><span class="lbl">필요 없는 것 두 가지</span><p><strong>게이트–소스 저항</strong> — §4.5.3 active shut-down이 <em>"The IGBT gate is always clamped via OFF to VEE2"</em>로 처리합니다.<br><strong>IN+ 외부 풀다운</strong> — Table 12에 내부 풀다운 R<sub>INPD</sub> 33/40/47 kΩ이 있고, §3.2가 <em>"ensures IGBT off-state if not connected"</em>라고 명시합니다.</p></div>
+    <h3>게이트 오버슈트</h3>
+    <p>§4.6: 내부 다이오드가 ON·CLAMP에서 VCC2로 클램프하지만 <strong>0.75 A / 6 µs 정격</strong>입니다. 더 조이거나 큰 전류가 예상되면 <em>"Add an external Schottky diode"</em>가 데이터시트 권고입니다. 실측에서 게이트가 18.66 V까지 올라갔다면(V<sub>GS</sub> 절대최대 ±20 V) 이 대책을 검토하세요.</p>
+    <h3>스위치오프 타임아웃</h3>
+    <p>§4.5.5: OFF 출력과 게이트 사이 연결 실패나 불량 게이트 저항에 대비한 기능입니다. ON 핀 모니터링이 <strong>t<sub>CTT</sub> = 2.4 µs</strong> 안에 off 상태를 확인하지 못하면 CLAMP까지 동원해 강제 차단합니다. <strong>FLT_N은 뜨지 않습니다.</strong></p>
+  </section>
+
+  <section id="s5">
+    <div class="sec-num">05</div>
+    <h2>자주 쓰는 전기적 특성</h2>
+    <div class="tw"><table>
+      <thead><tr><th>파라미터</th><th class="m">Min</th><th class="m">Typ</th><th class="m">Max</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td>V<sub>UVLO1H</sub> (VCC1 기동)</td><td class="m">–</td><td class="m">2.95 V</td><td class="m lo">3.05 V</td><td>3.3 V 대비 여유 250 mV</td></tr>
+        <tr><td>V<sub>UVLO1L</sub> (VCC1 정지)</td><td class="m">2.6 V</td><td class="m">2.8 V</td><td class="m">–</td><td>이 아래면 RDYC LOW</td></tr>
+        <tr><td>V<sub>UVLO2H</sub> / V<sub>UVLO2L</sub></td><td class="m">–</td><td class="m">12.0 / 11.0 V</td><td class="m">12.6 / –</td><td>히스테리시스 1.0 V</td></tr>
+        <tr><td>V<sub>VEE2,NC</sub> (VEE2 미연결 검출)</td><td class="m">–</td><td class="m">0.5 V</td><td class="m">–</td><td>V<sub>VEE2</sub> − V<sub>GND2</sub></td></tr>
+        <tr><td>VCC1 동작 범위 / 소비전류</td><td class="m">3.0 V</td><td class="m">2.4 mA</td><td class="m">5.5 V / 4.0 mA</td><td>10채널이면 최대 40 mA</td></tr>
+        <tr><td>t<sub>RDYCMIN</sub> · t<sub>FLT_NMIN</sub></td><td class="m">85 ns</td><td class="m">100 ns</td><td class="m">115 ns</td><td>글리치 억제 한계</td></tr>
+        <tr><td>t<sub>CLRMIN</sub> (고장 클리어)</td><td class="m">–</td><td class="m">1.0 µs</td><td class="m">1.2 µs</td><td>RDYC LOW 유지 시간</td></tr>
+        <tr><td>t<sub>SSIO</sub> (입출력 재동기)</td><td class="m">–</td><td class="m">–</td><td class="m">13 µs</td><td>교란 후 복귀 지연</td></tr>
+        <tr><td>t<sub>PDON</sub> / t<sub>PDOFF</sub></td><td class="m">226 / 218 ns</td><td class="m">244 / 236 ns</td><td class="m">270 / 262 ns</td><td>전파 지연</td></tr>
+        <tr><td>t<sub>INMIN</sub> (입력 펄스 억제)</td><td class="m">98 ns</td><td class="m">103 ns</td><td class="m">108 ns</td><td>이보다 짧은 펄스는 무시</td></tr>
+        <tr><td>t<sub>CTT</sub> (스위치오프 타임아웃)</td><td class="m">–</td><td class="m">2.4 µs</td><td class="m">–</td><td>+ soft-off 시 2.4 µs 추가</td></tr>
+        <tr><td>R<sub>DSON,H</sub> / R<sub>DSON,L</sub></td><td class="m">0.51 / 0.31 Ω</td><td class="m">1.12 / 0.82 Ω</td><td class="m">2.24 / 1.64 Ω</td><td>출력 임피던스</td></tr>
+        <tr><td>I<sub>ON</sub> / I<sub>OFF</sub> 피크</td><td class="m">2.6 / 2.0 A</td><td class="m">3.8 / 2.5 A</td><td class="m">–</td><td>C<sub>LOAD</sub> = 33 nF</td></tr>
+        <tr><td>내부 풀다운 (IN)</td><td class="m">33 kΩ</td><td class="m">40 kΩ</td><td class="m">47 kΩ</td><td>외부 풀다운 불필요</td></tr>
+        <tr><td>내부 풀다운 (RDYC, FLT_N)</td><td class="m">0.8 MΩ</td><td class="m">1.0 MΩ</td><td class="m">1.2 MΩ</td><td>풀업 없으면 LOW로 읽힘</td></tr>
+        <tr><td>V<sub>OL</sub> (RDYC, FLT_N)</td><td class="m">–</td><td class="m">–</td><td class="m">300 mV</td><td>I<sub>SINK</sub> = 5 mA</td></tr>
+        <tr><td>CMTI</td><td class="m">–</td><td class="m">–</td><td class="m">200 V/ns</td><td>V<sub>OFFSET,test</sub> = 1500 V</td></tr>
+        <tr><td>스위칭 주파수 / T<sub>A</sub></td><td class="m">0</td><td class="m">–</td><td class="m">250 kHz / 125 °C</td><td>–</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box crit"><span class="lbl">VCC1 = 3.3 V의 여유</span><p>V<sub>UVLO1H</sub> max가 <strong>3.05 V</strong>이므로 3.3 V 대비 여유가 250 mV뿐입니다. §4.2.1: <em>"If V<sub>VCC1</sub> drops below V<sub>UVLO1L</sub> the RDYC signal is switched to low."</em> P3V3가 순간적으로 2.8 V 아래로 내려가는지 IC 핀에서 실측해 두세요.</p></div>
+  </section>
+
+  <section id="s6">
+    <div class="sec-num">06</div>
+    <h2>절연 전원</h2>
+    <div class="formula">P = Q<sub>g</sub> · V<sub>drive</sub> · f<sub>sw</sub> + I<sub>Q2</sub> · V<sub>CC2</sub></div>
+    <p>이 보드 기준: 26 nC × 15 V × 50 kHz = 20 mW, I<sub>Q2</sub> 3.9 mA × 15 V = 58 mW → <strong>채널당 약 80 mW</strong>. 게이트 드라이브용은 보통 0.5~2 W면 충분합니다.</p>
+    <div class="box crit"><span class="lbl">선정의 핵심은 전력이 아니라 결합 커패시턴스입니다</span><p>i<sub>CM</sub> = C<sub>iso</sub> · dv/dt. 일반 절연 DC/DC 모듈은 10~100 pF, 게이트 드라이브 전용은 5~20 pF 이하입니다. dv/dt 5 V/ns에 20 pF면 <strong>100 mA</strong>의 공통모드 전류가 1차측으로 밀려듭니다. CMTI 문제·통신 교란·RDYC 글리치의 물리적 원인입니다.</p></div>
+    <h3>현재 구성 평가 — DWS6-B4815 (6 W) 채널당 1개</h3>
+    <ul>
+      <li>필요 전력의 <strong>75배 과잉</strong>. 부하율 1.3%로, 비레귤레이션 제품이면 최소 부하 조건을 벗어날 수 있습니다</li>
+      <li>6 W급 변압기는 결합 커패시턴스가 큰 경향 → <strong>데이터시트에서 isolation capacitance 확인</strong>. 50 pF 이상이면 교체 검토</li>
+      <li>Ctrl 핀이 미결선 → 개방 상태가 "동작"인지 "정지"인지 확인 필요</li>
+    </ul>
+    <h3>확인 항목과 DIP/SMD 선택</h3>
+    <p>타입보다 <strong>"게이트 드라이브 전용으로 설계된 제품인가"</strong>가 중요합니다. 조건이 같다면 SMD가 유리합니다 — 리드 인덕턴스가 작고, 스루홀 패드가 스위칭 노드 대 다른 층 커패시턴스를 늘리지 않으며, 수삽 공정이 사라집니다. <strong>다만 강화절연이 필요하면 연면거리 확보에서 DIP wide-body가 유리</strong>할 수 있으니, 절연 등급 → 후보 → 타입 순으로 좁히세요.</p>
+    <p>디커플링은 §3.2가 <strong>VCC2–VEE2, VCC2–GND2, GND2–VEE2 세 쌍 모두</strong> 근접 배치를 요구합니다. 표준 예제는 1 µF + 100 nF입니다. <strong>현재 보드에는 100 nF이 없습니다.</strong></p>
+  </section>
+
+  <section id="s7">
+    <div class="sec-num">07</div>
+    <h2>DC링크 커패시터와 프리차지</h2>
+    <h3>DC링크 용량</h3>
+    <p>단상 인버터는 출력 전력이 계통 주파수의 2배로 맥동하고, DC링크가 그 에너지를 버퍼링합니다.</p>
+    <div class="formula">ΔE = P / (2π f<sub>line</sub>) &nbsp;·&nbsp; C = ΔE / (V<sub>dc</sub> · ΔV<sub>pp</sub>)</div>
+    <p>500 W 기준 ΔE = 1.33 J(60 Hz) / 1.59 J(50 Hz).</p>
+    <div class="tw"><table>
+      <thead><tr><th class="m">허용 ΔV<sub>pp</sub></th><th class="m">60 Hz</th><th class="m">50 Hz</th></tr></thead>
+      <tbody>
+        <tr><td class="m">20 V</td><td class="m">166 µF</td><td class="m">199 µF</td></tr>
+        <tr><td class="m">30 V</td><td class="m hi">111 µF</td><td class="m hi">133 µF</td></tr>
+        <tr><td class="m">40 V</td><td class="m">83 µF</td><td class="m">99 µF</td></tr>
+        <tr><td class="m">80 V</td><td class="m">42 µF</td><td class="m">50 µF</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box"><span class="lbl">실질적 하한을 정하는 것</span><p>리플의 골이 계통 피크보다 낮아지면 전류 제어권을 잃습니다. 계통 상한 264 Vac → 피크 373 V, 변조 여유 10~20 V → <strong>V<sub>dc,min</sub> ≥ 385~393 V</strong>. 공칭 400 V에서 ΔV<sub>pp</sub> ≤ 30 V → <strong>최소 약 110 µF(60 Hz) / 135 µF(50 Hz)</strong>.</p></div>
+    <p><strong>현재 구성</strong>: EC1~EC4 470 µF/250 V (Rubycon 250MXG, 25×30) <strong>2직렬 2병렬 = 470 µF / 500 V</strong>. 리플 7.1 Vpp(60 Hz)로 하한 대비 4배 여유. 캡당 100 kΩ 2개 직렬(=200 kΩ) 밸런싱 ✓.</p>
+    <ul>
+      <li><strong>전압 디레이팅</strong>: 420 V / 500 V = 84%로 전해 권장(≤80%)을 살짝 넘습니다. 420 V 상한 운전 여부 확인</li>
+      <li><strong>리플 전류</strong>: 120 Hz 성분 rms = I<sub>dc</sub>/√2 = 0.88 A. 여기에 DC/DC 정류·H브리지 고주파 성분이 더해집니다. 250MXG의 정격과 대조</li>
+      <li><strong>수명</strong>: 요구 수명이 15년 이상이면 지금 단계에서 필름 또는 액티브 파워 디커플링을 결정해야 합니다</li>
+    </ul>
+
+    <h3>프리차지와 기동 시퀀스</h3>
+    <p>돌입전류는 PV가 아니라 <strong>계통</strong>에서 옵니다. DC/AC단의 역병렬 다이오드가 항상 브리지 정류기를 이루기 때문입니다. DC링크가 빈 상태로 계통에 붙으면 특성 임피던스 √(L/C) = √(2 mH/470 µF) ≈ 2.1 Ω으로, <strong>이론 피크 373/2.1 ≈ 180 A</strong>입니다.</p>
+    <p>현재 보드에는 <code>RELAY_PRE</code>, <code>RELAY_GRID</code>와 <strong>R35·R36 100 Ω/5 W</strong> 프리차지 회로가 있습니다.</p>
+    <div class="tw"><table>
+      <thead><tr><th>항목</th><th class="m">값</th></tr></thead>
+      <tbody>
+        <tr><td>초기 피크 전류 (루프 200 Ω)</td><td class="m">1.9 A</td></tr>
+        <tr><td>시정수 τ</td><td class="m">94 ms</td></tr>
+        <tr><td>충전 완료 (3τ)</td><td class="m">약 280 ms</td></tr>
+        <tr><td>저항 총 소모 에너지</td><td class="m">32.7 J (저항당 16 J)</td></tr>
+        <tr><td>초기 순간 전력</td><td class="m">저항당 348 W</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box warn"><span class="lbl">확인 필요</span><p>5 W 정격 저항에 16 J, 순간 348 W입니다. <strong>권선형이면 대개 견디지만 후막이면 위험</strong>합니다. 단발 펄스 에너지 정격을 확인하고, 펌웨어에 재시도 횟수 제한과 대기 시간을 넣으세요.</p></div>
+    <pre>정상 기동 시퀀스
+1. 계통 전압·주파수 정상 확인
+2. RELAY_PRE 투입 → 저항 경유 충전
+3. V_DCLINK 상승 감시 (타임아웃 1 s) ← 안 올라오면 즉시 해제, 에러
+4. V_DCLINK ≈ 계통 피크 확인
+5. RELAY_GRID 투입
+6. RELAY_PRE 해제
+7. DC/DC 기동 → 400 V 승압 → 동기화 → 주입</pre>
+    <p>3번의 타임아웃 감시가 특히 중요합니다. 단락이 있어 DC링크가 안 올라오는데 프리차지 릴레이를 계속 닫아두면 저항이 348 W를 계속 먹습니다.</p>
+  </section>
+
+  <section id="s8">
+    <div class="sec-num">08</div>
+    <h2>이 보드의 실제 결선 (회로도 추적 결과)</h2>
+    <div class="tw"><table>
+      <thead><tr><th>항목</th><th>결선</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td>드라이버 수</td><td class="m">10개</td><td>DC/DC 4(p.3), DC/AC 4(p.4), 클램프 2(p.5)</td></tr>
+        <tr><td>RDY / FLT 버스</td><td>DC/DC 4 + 클램프 2 = <strong>6채널이 한 노드</strong>, 풀업 R219·R220 4.7 kΩ → P3V3</td><td>DC/AC는 별도 4채널 버스. 데이터시트 권장 구조</td></tr>
+        <tr><td>MCU 연결</td><td class="m">RDY_DDC → pin 120, RDY_DAC → 121, FLT_DDC → 93</td><td>직결, 직렬 저항 없음</td></tr>
+        <tr><td>VCC1</td><td class="m">P3V3, C57·C58 각 1 µF</td><td>규격 허용(3.3 V 또는 5 V)</td></tr>
+        <tr><td>VCC2</td><td class="m">15 V, VEE2 = GND2 (유니폴라), C50 1 µF</td><td class="bad">100 nF 없음</td></tr>
+        <tr><td>절연 전원</td><td class="m">DWS6-B4815 6 W, 채널당 1개 (클램프는 2채널 공유)</td><td>PV_IN에서 F3·F5 경유</td></tr>
+        <tr><td>ADJA / ADJB</td><td class="m">각 1.33 kΩ (전 채널)</td><td>set up 0 — 경계 근접</td></tr>
+        <tr><td>게이트망 (수정 후)</td><td class="m">ON 20.1 Ω(R55·R56 병렬) / OFF 15 Ω / CLAMP 0 Ω</td><td>OFF는 0 Ω → 15 Ω으로 변경됨</td></tr>
+        <tr><td>DESAT (수정 후)</td><td class="m">R52 1 kΩ + D9 STTH112U → PV_POS, D8·D10 BAT165 클램프, C51 NC</td><td>감지망 연결됨</td></tr>
+        <tr><td>IN+</td><td class="m">R53 0 Ω 직렬. R49 풀업 NC, C56·C59 필터 NC</td><td>내부 40 kΩ 풀다운으로 충분</td></tr>
+        <tr><td>MOSFET</td><td class="m">IPB339N20NM6 200 V / 39 A / 33.9 mΩ, D²PAK</td><td>Q<sub>g</sub> 15.9 nC, Q<sub>gd</sub> 3.4~5.1 nC</td></tr>
+        <tr><td>DC링크</td><td class="m">EC1~4 470 µF/250 V 2S2P = 470 µF/500 V</td><td>밸런싱 200 kΩ/캡</td></tr>
+        <tr><td>프리차지</td><td class="m">R35·R36 100 Ω/5 W + RELAY_PRE / RELAY_GRID</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="s9">
+    <div class="sec-num">09</div>
+    <h2>트러블슈팅 이력</h2>
+    <div class="tw"><table>
+      <thead><tr><th>증상</th><th>원인</th><th>해결 / 상태</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>RDYC가 계속 LOW, 기동 안 됨</strong></td>
+          <td>고임피던스 판독 노드의 플럭스 잔사 누설. ADJB가 1.05 kΩ 아래로 보이면 IC가 기동을 멈추고, RDYC 네트 자체도 11 kΩ 누설이면 V<sub>IH</sub> 경계</td>
+          <td class="good">PCB 세척으로 해결</td>
+        </tr>
+        <tr>
+          <td><strong>PWM 인가 시 RDYC LOW로 떨어짐</strong></td>
+          <td>턴오프 저항 0 Ω → 밀러 전류 2.4 A / 2 ns → VEE2–GND2 경로에 L·di/dt로 0.5 V 초과 가능(VEE2 미연결 검출), 또는 DESAT 핀이 0 Ω으로 GND2에 직결되어 GND2 바운스가 그대로 실림</td>
+          <td class="good">OFF 15 Ω + DESAT 감지망 연결로 해결</td>
+        </tr>
+        <tr>
+          <td><strong>게이트 파형 링잉·오버슈트</strong></td>
+          <td>측정 셋업(프로브 그라운드 리드, 두 채널 그라운드 공통) 가능성 우선. 그다음 게이트 루프 인덕턴스, 밀러 결합</td>
+          <td class="m">진행 중</td>
+        </tr>
+      </tbody>
+    </table></div>
+    <div class="box"><span class="lbl">미확정</span><p>두 번째 항목은 <strong>OFF 저항과 DESAT 연결을 동시에 바꿔</strong> 해결됐습니다. 어느 쪽이 원인이었는지 확정하려면 <strong>DESAT은 연결한 채 OFF만 0 Ω으로 되돌려</strong> 재현해 보면 됩니다. 나머지 9채널에 무엇을 적용할지가 이 결과로 정해집니다.</p></div>
+  </section>
+
+  <section id="s10">
+    <div class="sec-num">10</div>
+    <h2>진단 절차</h2>
+    <h3>RDYC / FLT_N 전압으로 원인 가르기</h3>
+    <div class="tw"><table>
+      <thead><tr><th class="m">실측값</th><th>의미</th><th>다음</th></tr></thead>
+      <tbody>
+        <tr><td class="m">0.05 ~ 0.35 V</td><td>능동 싱크 — 진짜 어서트</td><td>클리어 시퀀스 시도</td></tr>
+        <tr><td class="m">0.6 ~ 0.8 V</td><td>다이오드 클램프 — MCU 미전원 시 ESD 경로</td><td>MCU 레일·핀 방향 확인</td></tr>
+        <tr><td class="m">1 ~ 2.5 V</td><td>누설 분압 — 잔사</td><td>세척</td></tr>
+        <tr><td class="m">~0 V (수 Ω)</td><td>물리 단락</td><td>무전원 저항 측정, 브리지 확인</td></tr>
+        <tr><td class="m">약 2.9 V</td><td>MCU 내부 풀다운(40 kΩ)과의 분압</td><td>이것만으로는 LOW가 안 됩니다</td></tr>
+      </tbody>
+    </table></div>
+    <h3>PWM 관련 증상의 분리 사다리</h3>
+    <pre>A. PWM 주변장치 enable, 듀티 0% (납땜 불필요)
+   LOW → MCU 핀/대체기능 설정 문제. 여기서 끝
+   HIGH → 에지가 필요조건. B로
+
+B. 저주파·저듀티 (100 Hz, 1%)
+   에지마다 딥 → 딥 폭 측정. ~15 µs면 fault-off 확대 확정
+   무반응 → 반복률 올리며 임계 탐색
+
+C. R53(PWM 직렬 0 Ω) 제거 — MCU는 PWM 출력, 드라이버는 정지
+   LOW → 커플링 또는 P3V3 새그
+   HIGH → 실제 스위칭이 원인. D로
+
+D. MOSFET 게이트만 분리 (게이트 저항은 그대로!)
+   LOW → 절연 통신 교란 → VCC2에 100 nF
+   HIGH → 게이트 전류 → VEE2–GND2 연결 검출 확인</pre>
+    <div class="box warn"><span class="lbl">D단계 주의</span><p>게이트 저항을 제거하면 ON 핀이 떠서 모니터링이 오동작합니다(ready source 5번). 반드시 <strong>저항은 남기고 MOSFET 게이트만</strong> 분리하세요.</p></div>
+    <h3>측정 조건</h3>
+    <ul>
+      <li>DC링크 0 V부터, PWM 최소 펄스 300 ns 이상, 저주파(1~10 kHz)</li>
+      <li>스코프 4채널: IN+(7번) · RDYC · VCC1(2번 핀) · VCC2−GND2(차동/절연 프로브)</li>
+      <li>RDYC·FLT_N은 GND1 기준. 출력측은 반드시 절연·차동 프로브</li>
+      <li><strong>두 채널의 프로브 그라운드를 공통으로 두면 두 소스가 단락됩니다</strong> — DC링크 승압 전에 반드시 교체</li>
+    </ul>
+  </section>
+
+  <section id="s11">
+    <div class="sec-num">11</div>
+    <h2>남은 작업</h2>
+    <div class="tw"><table>
+      <thead><tr><th>우선</th><th>항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td class="m">1</td><td>원인 확정</td><td>DESAT 연결 유지 + OFF만 0 Ω으로 되돌려 재현 → 9채널 적용안 결정</td></tr>
+        <tr><td class="m">2</td><td>DESAT 검증</td><td>짝수 점퍼 제거 확인. 저전압에서 의도적 단락 시험 — FLT_N 하강 → soft-off → 클리어까지</td></tr>
+        <tr><td class="m">3</td><td>클리어 루틴</td><td>MCU가 RDYC를 t<sub>CLRMIN</sub> 이상 LOW로 당겼다 놓는 시퀀스. 없으면 고장 1회에 전원 재투입 필요</td></tr>
+        <tr><td class="m">4</td><td>ADJB → 28.0 kΩ</td><td>필터 동일, 블랭킹 2배, 정지 경계에서 이탈</td></tr>
+        <tr><td class="m">5</td><td>ADJA → 10.7 kΩ</td><td>soft-off 15 → 175 mA. fault-off 회복 시간 단축</td></tr>
+        <tr><td class="m">6</td><td>VCC2 100 nF 추가</td><td>14–15번 핀 바로 옆</td></tr>
+        <tr><td class="m">7</td><td>풀업 4.7 → 2.2 kΩ</td><td>데이터시트 표준값. 노이즈 여유 개선</td></tr>
+        <tr><td class="m">8</td><td>VCC1 마진 실측</td><td>PWM 인가 중 IC 핀에서 2.8 V 아래로 내려가는지</td></tr>
+        <tr><td class="m">9</td><td>게이트 링잉</td><td>프로브 위생 → 링잉 주파수로 루프 인덕턴스 역산 → 필요 시 외부 쇼트키</td></tr>
+        <tr><td class="m">10</td><td>2차 보호 계층</td><td>션트 + 고속 비교기 → FLT_N 오픈드레인 결선</td></tr>
+        <tr><td class="m">11</td><td>프리차지 저항 검증</td><td>16 J 펄스 내량, 반복 기동 10회 시험</td></tr>
+        <tr><td class="m">12</td><td>절연 전원 재검토</td><td>DWS6 결합 커패시턴스·최소 부하 확인. 다음 리비전에서 소형화 검토</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="s12">
+    <div class="sec-num">12</div>
+    <h2>출처와 검증 상태</h2>
+    <ul>
+      <li><strong>데이터시트 원문 확인</strong> — EiceDRIVER™ 1ED34x1Mc12M Enhanced, Rev 1.10 (2021-10-08). §3.2, §4.1~4.6, Table 4·5·7·11·12·13·15·16</li>
+      <li><strong>회로도 추적</strong> — SCH_MICROINV_V1109 (2026-07-30) PDF의 벡터 데이터에서 넷 연결·부품값을 직접 재구성</li>
+      <li><strong>MOSFET</strong> — IPB339N20NM6: 200 V / 39 A, R<sub>DS(on)</sub> 33.9 mΩ, Q<sub>g</sub> 15.9 nC, Q<sub>gd</sub> 3.4~5.1 nC, Q<sub>oss</sub> 48 nC</li>
+      <li><strong>가정값</strong> — MOSFET 내부 R<sub>g</sub> ≈ 1.5 Ω, C<sub>iss</sub> ≈ 2 nF (게이트 저항 계산에 사용). 실제 값으로 재계산 권장</li>
+      <li><strong>미확인</strong> — AN2020-06 응용 노트, DWS6-B4815 상세 규격, 레이아웃, 펌웨어</li>
+    </ul>
+    <footer>
+      <p>관련 문서 — <a href="https://claude.ai/code/artifact/c665b831-7c5b-4ec9-a407-e1cd50a696d1">RDYC·FLT_N 정상 파형</a> · <a href="https://claude.ai/code/artifact/5d114faa-c4a8-4bb5-a87a-3385323f3c89">회로 검토 리포트</a></p>
+      <p>이 문서는 브라우저 검색(Ctrl+F)으로 찾도록 만들어졌습니다. 내용이 갱신되면 같은 주소로 다시 발행됩니다.</p>
+    </footer>
+  </section>
+  </main>
+</div>
+</body>
+</html>
