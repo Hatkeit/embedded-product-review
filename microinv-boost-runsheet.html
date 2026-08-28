@@ -1,0 +1,704 @@
+<title>MicroInv 승압 런시트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+
+<style>
+/* ── tokens: light (bare :root = complete palette) ───────────────── */
+:root{
+  --paper:#FAFAF7;
+  --surface:#FFFFFF;
+  --surface-2:#F2F3F0;
+  --ink:#16181D;
+  --ink-2:#3D4350;
+  --muted:#6C727E;
+  --line:#DCDDD8;
+  --line-strong:#BDC0BA;
+
+  --wire:#2B34C8;          /* 회로도 배선 청색 — 주 강조 */
+  --wire-soft:#E8E9FB;
+  --part:#A8660B;          /* 회로도 심볼 황토 — 계측값 */
+  --part-soft:#FAF0DF;
+  --junction:#C9302C;      /* 회로도 접합점 적색 — 중단 한계 */
+  --junction-soft:#FBEAE9;
+  --ok:#1F7A4D;
+  --ok-soft:#E7F3EC;
+
+  --shadow:0 1px 2px rgba(22,24,29,.06), 0 8px 24px -16px rgba(22,24,29,.28);
+  --radius:3px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1014;
+    --surface:#161A20;
+    --surface-2:#1D222A;
+    --ink:#E6E8EC;
+    --ink-2:#C2C7D1;
+    --muted:#8D95A3;
+    --line:#2A303A;
+    --line-strong:#3C4450;
+
+    --wire:#808CFF;
+    --wire-soft:#1A1F3A;
+    --part:#E5A54A;
+    --part-soft:#2B2213;
+    --junction:#FF7069;
+    --junction-soft:#341A19;
+    --ok:#4FCB8C;
+    --ok-soft:#122A20;
+
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1014;
+  --surface:#161A20;
+  --surface-2:#1D222A;
+  --ink:#E6E8EC;
+  --ink-2:#C2C7D1;
+  --muted:#8D95A3;
+  --line:#2A303A;
+  --line-strong:#3C4450;
+
+  --wire:#808CFF;
+  --wire-soft:#1A1F3A;
+  --part:#E5A54A;
+  --part-soft:#2B2213;
+  --junction:#FF7069;
+  --junction-soft:#341A19;
+  --ok:#4FCB8C;
+  --ok-soft:#122A20;
+
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.9);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  font-size:15px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono","SFMono-Regular",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* ── shell ───────────────────────────────────────────────────────── */
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 96px}
+.col{max-width:70ch}
+
+/* ── sticky limits bar ───────────────────────────────────────────── */
+.limitbar{
+  position:sticky;top:0;z-index:20;
+  background:var(--surface);
+  border-bottom:1px solid var(--line);
+  box-shadow:var(--shadow);
+}
+.limitbar-in{
+  max-width:1000px;margin:0 auto;padding:8px 20px;
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 20px;
+}
+.limitbar .lead{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--junction);font-weight:600;
+}
+.limitbar .item{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:12.5px;font-variant-numeric:tabular-nums;color:var(--ink-2);
+}
+.limitbar .item b{color:var(--junction);font-weight:600}
+
+/* ── header ──────────────────────────────────────────────────────── */
+header.top{padding:56px 0 32px;border-bottom:2px solid var(--ink);margin-bottom:0}
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--wire);font-weight:600;margin:0 0 14px;
+}
+h1{
+  font-size:clamp(30px,5.2vw,46px);line-height:1.12;margin:0 0 14px;
+  font-weight:700;letter-spacing:-.022em;text-wrap:balance;
+}
+.dek{font-size:17px;line-height:1.6;color:var(--ink-2);margin:0;max-width:62ch}
+
+.facts{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  margin:30px 0 0;
+}
+.fact{background:var(--surface);padding:12px 14px}
+.fact dt{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 4px;
+}
+.fact dd{
+  margin:0;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);
+}
+.fact dd small{font-size:12px;font-weight:400;color:var(--muted);display:block;letter-spacing:0}
+
+/* ── sections ────────────────────────────────────────────────────── */
+section{padding-top:52px}
+h2{
+  font-size:13px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  color:var(--wire);margin:0 0 6px;
+}
+h2 + .sub{margin:0 0 22px;font-size:22px;font-weight:600;letter-spacing:-.015em;color:var(--ink);line-height:1.3}
+h3{font-size:16px;font-weight:600;margin:28px 0 8px;letter-spacing:-.01em}
+p{margin:0 0 14px}
+a{color:var(--wire)}
+
+/* ── abort panel ─────────────────────────────────────────────────── */
+.abort{
+  border:1px solid var(--junction);
+  border-left-width:4px;
+  background:var(--junction-soft);
+  padding:18px 20px;
+}
+.abort h3{margin:0 0 4px;color:var(--junction);font-size:15px}
+.abort .note{font-size:13.5px;color:var(--ink-2);margin:0 0 14px}
+
+/* ── tables ──────────────────────────────────────────────────────── */
+.tw{overflow-x:auto;border:1px solid var(--line);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:13.5px}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;background:var(--surface-2);white-space:nowrap;
+  border-bottom:1px solid var(--line-strong);
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.hi td{background:var(--wire-soft)}
+tr.hi td.num{font-weight:600}
+td .tag{color:var(--muted);font-size:12px}
+.val{color:var(--part);font-weight:600}
+
+/* ── steps ───────────────────────────────────────────────────────── */
+.steps{display:flex;flex-direction:column;gap:14px;margin-top:4px}
+.step{
+  display:grid;grid-template-columns:64px 1fr;gap:0;
+  border:1px solid var(--line);background:var(--surface);
+}
+.step > .rail{
+  background:var(--surface-2);border-right:1px solid var(--line);
+  padding:14px 0 14px;display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.step .code{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:19px;font-weight:700;color:var(--wire);line-height:1;
+}
+.step .rail .w{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:9.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;
+}
+.step > .body{padding:14px 18px 16px}
+.step h3{margin:0 0 4px;font-size:16.5px;letter-spacing:-.012em}
+.step .why{font-size:13.5px;color:var(--muted);margin:0 0 12px}
+.step .why b{color:var(--ink-2);font-weight:600}
+.kv{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);margin:0 0 12px;
+}
+.kv > div{background:var(--surface);padding:8px 10px}
+.kv dt{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:0 0 2px;
+}
+.kv dd{
+  margin:0;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:14.5px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--part);
+}
+.step ul{margin:0;padding-left:19px}
+.step li{margin:0 0 5px;font-size:14px}
+.step li::marker{color:var(--wire)}
+.gate{
+  border-left:3px solid var(--ok);background:var(--ok-soft);
+  padding:9px 12px;margin:12px 0 0;font-size:13.5px;color:var(--ink-2);
+}
+.gate b{color:var(--ok)}
+.warn{
+  border-left:3px solid var(--junction);background:var(--junction-soft);
+  padding:9px 12px;margin:12px 0 0;font-size:13.5px;color:var(--ink-2);
+}
+.warn b{color:var(--junction)}
+
+/* ── checklist ───────────────────────────────────────────────────── */
+.check{list-style:none;margin:0;padding:0;border:1px solid var(--line);background:var(--surface)}
+.check li{display:flex;gap:11px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:14px;align-items:flex-start}
+.check li:last-child{border-bottom:none}
+.check input[type=checkbox]{
+  appearance:none;flex:0 0 auto;width:16px;height:16px;margin:3px 0 0;
+  border:1.5px solid var(--line-strong);border-radius:2px;background:var(--surface);cursor:pointer;
+  display:grid;place-content:center;
+}
+.check input[type=checkbox]:checked{background:var(--wire);border-color:var(--wire)}
+.check input[type=checkbox]:checked::after{
+  content:"";width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;
+  transform:translateY(-1px) rotate(-45deg);
+}
+.check input[type=checkbox]:focus-visible{outline:2px solid var(--wire);outline-offset:2px}
+.check label{cursor:pointer}
+.check li.done label{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line-strong)}
+.check .ref{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;
+  color:var(--wire);background:var(--wire-soft);padding:1px 5px;margin-left:6px;white-space:nowrap;
+}
+
+/* ── record sheet ────────────────────────────────────────────────── */
+.record td{height:30px}
+.record td.blank{background:repeating-linear-gradient(90deg,transparent 0 4px,var(--surface-2) 4px 5px)}
+
+footer.end{
+  margin-top:64px;padding-top:22px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--muted);
+}
+footer.end code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;color:var(--ink-2)}
+
+.assump{font-size:13.5px;color:var(--muted)}
+.assump code{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;
+  background:var(--surface-2);padding:1px 5px;color:var(--ink-2);
+}
+
+@media (max-width:560px){
+  .step{grid-template-columns:1fr}
+  .step > .rail{
+    flex-direction:row;justify-content:flex-start;gap:12px;padding:8px 14px;
+    border-right:none;border-bottom:1px solid var(--line);
+  }
+  header.top{padding-top:36px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .limitbar{position:static;box-shadow:none}
+  body{background:#fff;font-size:11pt}
+  section{page-break-inside:auto}
+  .step{page-break-inside:avoid}
+}
+</style>
+
+<div class="limitbar">
+  <div class="limitbar-in">
+    <span class="lead">즉시 중단</span>
+    <span class="item">V_DC <b>&gt; 430 V</b></span>
+    <span class="item">I_in <b>&gt; 22 A</b></span>
+    <span class="item">L1 피크 <b>&gt; 25 A</b></span>
+    <span class="item">RDYC·FLT_N·FLT_PV <b>변화</b></span>
+    <span class="item">V_GS <b>&gt; 18 V</b></span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">SCH_MICROINV_V1109 · DC/DC 전력단</p>
+  <h1>30 V에서 400 V / 500 W까지<br>단계 승압 런시트</h1>
+  <p class="dek">
+    전류원 풀브릿지 + 액티브 클램프 + 배전압 정류 단을 무부하에서 정격까지 아홉 단계로 올린다.
+    각 단계의 로드 설정과 예상 듀티는 턴비 10:35과 배전압 전달 함수에서 계산했다.
+  </p>
+
+  <dl class="facts">
+    <div class="fact"><dt>입력</dt><dd>30 V<small>≥ 22 A 공급 능력</small></dd></div>
+    <div class="fact"><dt>목표 출력</dt><dd>400 V<small>정격 500 W</small></dd></div>
+    <div class="fact"><dt>턴비 / 정류</dt><dd>10 : 35<small>배전압, n = 3.5</small></dd></div>
+    <div class="fact"><dt>전달 함수</dt><dd>7·V<sub>in</sub>/(1−D)<small>D = 오버랩 듀티</small></dd></div>
+    <div class="fact"><dt>출력 하한</dt><dd>210 V<small>D = 0에서 고정</small></dd></div>
+    <div class="fact"><dt>전자로드</dt><dd>PLZ1003WH<small>CR+CV, +CV 0.1 V</small></dd></div>
+  </dl>
+</header>
+
+<section>
+  <h2>0 · 착수 전</h2>
+  <p class="sub">여기서 하나라도 미완이면 전원을 넣지 않는다</p>
+
+  <div class="abort">
+    <h3>ADJB 교체가 선행 조건이다</h3>
+    <p class="note">
+      만부하 커뮤테이션 시간을 <span class="mono">2·L<sub>lk</sub>·I/V<sub>pri</sub> = 2 × 1 µH × 18.7 A / 57.1 V ≈ <b>655 ns</b></span>로
+      추정했다. 현재 ADJB 1.33 kΩ의 DESAT 블랭킹은 <b>650 ns</b>다. 사실상 같은 값이라
+      500 W 근처에서 재현성 낮은 FLT_N이 뜬다. 하드웨어 고장으로 오인하기 딱 좋은 증상이므로
+      <b>ADJB를 28.0 kΩ으로 바꿔 블랭킹을 1150 ns로 올린 뒤</b> 시작한다. 필터 시간 1575 ns는 그대로다.
+    </p>
+  </div>
+
+  <ul class="check" id="prep">
+    <li><input type="checkbox" id="p1"><label for="p1">ADJB 1.33 kΩ → <b>28.0 kΩ</b> 교체 완료 (시험에 쓰는 전 채널)<span class="ref">R-1</span></label></li>
+    <li><input type="checkbox" id="p2"><label for="p2">DC/AC 단 게이트 정지, 계통 릴레이 <b>개방</b>. DC링크 부하는 전자로드 하나뿐</label></li>
+    <li><input type="checkbox" id="p3"><label for="p3">방전 저항 <b>5 kΩ / 50 W + 스위치</b> 설치 및 동작 확인 (τ = 2.4 s)</label></li>
+    <li><input type="checkbox" id="p4"><label for="p4">GDP-025 스위치와 스코프 배율을 <b>둘 다 ×200</b>으로. 기지 전압으로 검증<span class="ref">M-01</span></label></li>
+    <li><input type="checkbox" id="p5"><label for="p5">PLZ1003WH <b>CR+CV 모드, +CV = 0.1 V</b>, 센스 LOCAL, 리드 짧고 꼬임<span class="ref">M-02</span></label></li>
+    <li><input type="checkbox" id="p6"><label for="p6">PLZ의 CR 설정 범위가 <b>8 kΩ</b>까지 닿는지 확인. 안 되면 3.2 kΩ(50 W)부터 시작</label></li>
+    <li><input type="checkbox" id="p7"><label for="p7">입력 전원 30 V, 전류 제한 <b>22 A</b>, CV 모드</label></li>
+    <li><input type="checkbox" id="p8"><label for="p8">스코프 4채널: <b>RDYC / FLT_N / L1 전류 / V<sub>DS</sub></b> (또는 C6 양단)</label></li>
+    <li><input type="checkbox" id="p9"><label for="p9">DMM을 DC링크에 상시 연결 (ADC 대조 기준)<span class="ref">M-03</span></label></li>
+    <li><input type="checkbox" id="p10"><label for="p10">열화상 또는 접촉식 온도계 준비. 1차 6석 · D3 · D44 · T1 · L1/L3</label></li>
+    <li><input type="checkbox" id="p11"><label for="p11">FLT_PV(LTC4368 FAULT) 관측 수단 확보. 입력 보호 트립을 놓치지 않기 위해</label></li>
+  </ul>
+
+  <div class="abort" style="margin-top:22px">
+    <h3>즉시 중단 조건</h3>
+    <p class="note">하나라도 걸리면 듀티를 0으로 내리고 입력을 차단한다. 원인을 밝히기 전에는 재개하지 않는다.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>항목</th><th class="num">한계</th><th>근거</th></tr></thead>
+        <tbody>
+          <tr><td>DC링크 전압</td><td class="num">&gt; 430 V</td><td>운전 상한 420 V. 전해 2직렬 정격 500 V</td></tr>
+          <tr><td>입력 전류</td><td class="num">&gt; 22 A</td><td>LTC4368 OCP 27 A(회로도 주석) 도달 전에 정지</td></tr>
+          <tr><td>L1 전류</td><td class="num">피크 &gt; 25 A<br>또는 상향 변곡</td><td>인덕터 포화. 품번 미상이라 정격 불명 <span class="tag">U-9</span></td></tr>
+          <tr><td>1차 MOSFET 케이스</td><td class="num">&gt; 100 ℃</td><td>D²PAK, PCB 동박 방열</td></tr>
+          <tr><td>D3 · D44 케이스</td><td class="num">&gt; 120 ℃</td><td>SiC SBD 5 A 정격에 피크 4.8 A</td></tr>
+          <tr><td>RDYC</td><td class="num">LOW</td><td>게이트 드라이버 ready 상실</td></tr>
+          <tr><td>FLT_N</td><td class="num">LOW</td><td>DESAT 또는 과온 검출</td></tr>
+          <tr><td>FLT_PV</td><td class="num">활성</td><td>LTC4368 입력 보호 트립. 자동 재시도라 발진처럼 보인다</td></tr>
+          <tr><td>V<sub>GS</sub> 오버슈트</td><td class="num">&gt; 18 V</td><td>±20 V 정격. E-07에서 이미 18.66 V 관측</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>1 – 9 · 시험 단계</h2>
+  <p class="sub">앞 단계의 판정 기준을 통과하지 못하면 다음으로 넘어가지 않는다</p>
+
+  <div class="steps">
+
+    <div class="step">
+      <div class="rail"><span class="code">1</span><span class="w">무부하</span></div>
+      <div class="body">
+        <h3>210 V 하한 확인</h3>
+        <p class="why">이 시험 전체에서 <b>가장 값싸고 가장 중요한 검증</b>이다. 토폴로지 모델과 ADC 스케일을 한 번에 본다.</p>
+        <dl class="kv">
+          <div><dt>로드</dt><dd>OFF</dd></div>
+          <div><dt>오버랩 듀티</dt><dd>0</dd></div>
+          <div><dt>예상 V_out</dt><dd>210 V</dd></div>
+          <div><dt>예상 I_in</dt><dd>0.35 A</dd></div>
+        </dl>
+        <ul>
+          <li>부스트는 강압을 못 하므로 듀티 0에서도 출력이 <span class="val">7 × 30 = 210 V</span>로 자연히 선다.</li>
+          <li>DMM 값과 펌웨어 ADC 판독값을 <b>같이</b> 기록한다.</li>
+        </ul>
+        <div class="gate"><b>판정</b> — DMM이 200~220 V이면 통과. ADC가 DMM과 3% 넘게 차이나면 <span class="mono">U-10</span>을 먼저 해결한다. 실제 링크가 표시보다 높은 방향이면 420 V 상한을 모르고 넘긴다.</div>
+        <div class="warn"><b>주의</b> — 듀티 0 검증은 <b>반드시 무부하에서만</b>. 부하가 있는 상태에서 오버랩이 없으면 L1·L3 전류가 갈 곳을 잃고 전량 C6 클램프로 밀려든다.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="rail"><span class="code">2</span><span class="w">20 W</span></div>
+      <div class="body">
+        <h3>듀티 스윕 — 전달 함수 확정</h3>
+        <p class="why">턴비 10:35과 배전압 정류 가정이 맞는지 <b>여기서 결판난다</b>. 듀티를 0.05씩 올리며 전압을 따라간다.</p>
+        <dl class="kv">
+          <div><dt>CR 설정</dt><dd>8.0 kΩ</dd></div>
+          <div><dt>I_load</dt><dd>50 mA</dd></div>
+          <div><dt>최종 듀티</dt><dd>0.480</dd></div>
+          <div><dt>예상 I_in</dt><dd>1.0 A</dd></div>
+        </dl>
+        <div class="tw">
+          <table>
+            <thead><tr><th class="num">오버랩 D</th><th class="num">스위치별 D</th><th class="num">예상 V_out</th><th class="num">실측</th></tr></thead>
+            <tbody>
+              <tr><td class="num">0</td><td class="num">0.500</td><td class="num">209 V</td><td class="num">—</td></tr>
+              <tr><td class="num">0.10</td><td class="num">0.550</td><td class="num">232 V</td><td class="num">—</td></tr>
+              <tr><td class="num">0.20</td><td class="num">0.600</td><td class="num">261 V</td><td class="num">—</td></tr>
+              <tr><td class="num">0.30</td><td class="num">0.650</td><td class="num">299 V</td><td class="num">—</td></tr>
+              <tr><td class="num">0.35</td><td class="num">0.675</td><td class="num">322 V</td><td class="num">—</td></tr>
+              <tr><td class="num">0.40</td><td class="num">0.700</td><td class="num">348 V</td><td class="num">—</td></tr>
+              <tr><td class="num">0.45</td><td class="num">0.725</td><td class="num">380 V</td><td class="num">—</td></tr>
+              <tr class="hi"><td class="num">0.480</td><td class="num">0.740</td><td class="num">402 V</td><td class="num">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="gate" style="margin-top:14px"><b>판정</b> — 실측이 표를 ±5% 안에서 따라가면 토폴로지·턴비·정류 방식이 모두 확정된다. 벗어나면 멈추고 원인을 찾는다. 이 표가 안 맞으면 뒤 단계의 예상 듀티도 전부 무효다.</div>
+        <div class="warn"><b>계측 주의</b> — PLZ1003WH는 20 A 급이라 50 mA는 풀스케일의 0.25%다. 경부하 단계에서 로드 판독 전류를 믿지 말고, DMM 직렬 또는 보드 션트 R30(20 mΩ)으로 확인한다.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="rail"><span class="code">3</span><span class="w">50 W</span></div>
+      <div class="body">
+        <h3>첫 부하 — 클램프 거동 관찰</h3>
+        <p class="why">전류가 실려야 액티브 클램프가 일을 시작한다. C6 양단과 V<sub>DS</sub> 피크를 처음 본다.</p>
+        <dl class="kv">
+          <div><dt>CR 설정</dt><dd>3.2 kΩ</dd></div>
+          <div><dt>I_load</dt><dd>125 mA</dd></div>
+          <div><dt>예상 듀티</dt><dd>0.486</dd></div>
+          <div><dt>예상 I_in</dt><dd>2.0 A</dd></div>
+        </dl>
+        <ul>
+          <li>400 V를 유지하도록 듀티를 미세 조정한다. 무부하 대비 약 <span class="val">+0.006</span>.</li>
+          <li>C6(470 nF/630 V) 양단 전압을 기록. 이것이 1차 스위치가 받는 실제 응력이다.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="rail"><span class="code">4</span><span class="w">100 W</span></div>
+      <div class="body">
+        <h3>20% 부하</h3>
+        <dl class="kv">
+          <div><dt>CR 설정</dt><dd>1.6 kΩ</dd></div>
+          <div><dt>I_load</dt><dd>250 mA</dd></div>
+          <div><dt>예상 듀티</dt><dd>0.496</dd></div>
+          <div><dt>예상 I_in</dt><dd>3.7 A</dd></div>
+        </dl>
+        <ul>
+          <li>L1 전류 파형의 리플 폭을 기록한다. 여기서 스위칭 주파수도 같이 확정한다<span class="mono"> (U-8)</span>.</li>
+          <li>게이트 2채널 동시 캡처로 <b>오버랩 구간을 실측</b>한다. 설정 듀티와 실제 오버랩이 같은지<span class="mono"> (U-7)</span>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="rail"><span class="code">5</span><span class="w">250 W</span></div>
+      <div class="body">
+        <h3>50% 부하 — 첫 열 안정화</h3>
+        <p class="why">여기서 <b>15분 이상 유지</b>하며 온도가 평형에 드는지 본다. 만부하로 바로 가지 않는 이유가 이것이다.</p>
+        <dl class="kv">
+          <div><dt>CR 설정</dt><dd>640 Ω</dd></div>
+          <div><dt>I_load</dt><dd>625 mA</dd></div>
+          <div><dt>예상 듀티</dt><dd>0.526</dd></div>
+          <div><dt>예상 I_in</dt><dd>9.1 A</dd></div>
+        </dl>
+        <ul>
+          <li>1차 6석 케이스 온도를 <b>개별로</b> 기록한다. 편차가 크면 전류 분담이 고르지 않다는 뜻이다.</li>
+          <li>이 단계의 예상 1차 브릿지 손실은 약 <span class="val">12 W</span>다.</li>
+        </ul>
+        <div class="gate"><b>판정</b> — 15분 뒤 온도 상승이 멈추면 통과. 계속 오르면 만부하에서 반드시 넘친다.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="rail"><span class="code">6</span><span class="w">400 W</span></div>
+      <div class="body">
+        <h3>80% 부하</h3>
+        <dl class="kv">
+          <div><dt>CR 설정</dt><dd>400 Ω</dd></div>
+          <div><dt>I_load</dt><dd>1.00 A</dd></div>
+          <div><dt>예상 듀티</dt><dd>0.559</dd></div>
+          <div><dt>예상 I_in</dt><dd>14.8 A</dd></div>
+        </dl>
+        <ul>
+          <li>이 구간부터 커뮤테이션 시간이 길어져 <b>DESAT 블랭킹 여유가 줄어든다</b>. FLT_N을 계속 본다.</li>
+          <li>예상 1차 브릿지 손실 약 <span class="val">22 W</span>. 케이스 온도가 급하게 벌어지는지 확인.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="rail"><span class="code">7</span><span class="w">500 W</span></div>
+      <div class="body">
+        <h3>정격 — 효율 측정</h3>
+        <p class="why">1차 MOSFET을 바꿀지 말지가 <b>이 한 번의 측정으로 결정된다</b>.</p>
+        <dl class="kv">
+          <div><dt>CR 설정</dt><dd>320 Ω</dd></div>
+          <div><dt>I_load</dt><dd>1.25 A</dd></div>
+          <div><dt>예상 듀티</dt><dd>0.581</dd></div>
+          <div><dt>예상 I_in</dt><dd>18.7 A</dd></div>
+        </dl>
+        <div class="tw">
+          <table>
+            <thead><tr><th>손실 항목</th><th class="num">현재 200 V / 33.9 mΩ</th><th class="num">150 V / 3.3 mΩ 교체 시</th></tr></thead>
+            <tbody>
+              <tr><td>1차 브릿지 도통</td><td class="num">34.6 W</td><td class="num">2.5 W</td></tr>
+              <tr><td>L1·L3 DCR <span class="tag">10 mΩ 가정</span></td><td class="num">7.0 W</td><td class="num">7.0 W</td></tr>
+              <tr><td>Q1·Q2 + 션트</td><td class="num">3.6 W</td><td class="num">3.6 W</td></tr>
+              <tr><td>트랜스포머</td><td class="num">~10 W</td><td class="num">~10 W</td></tr>
+              <tr><td>2차 다이오드</td><td class="num">3.8 W</td><td class="num">3.8 W</td></tr>
+              <tr class="hi"><td><b>예상 효율</b></td><td class="num">≈ 89 %</td><td class="num">≈ 94.7 %</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="gate" style="margin-top:14px">
+          <b>판정</b> — <span class="mono">η = V_out·I_out / (V_in·I_in)</span>.
+          89% 근처면 1차 브릿지 손실 34.6 W가 확정이고 <span class="mono">R-10</span> 소자 교체를 진행한다.
+          94% 이상이면 루프 저항 140 mΩ 가정이 과보수였던 것이니 노트의 가정값을 실측으로 교체한다.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="rail"><span class="code">8</span><span class="w">30 분</span></div>
+      <div class="body">
+        <h3>정격 연속 운전</h3>
+        <p class="why">단발 측정에서는 안 보이는 것들이 여기서 나온다.</p>
+        <ul>
+          <li>5분 간격으로 전 온도점을 기록한다. 평형에 드는 시점과 최종 온도.</li>
+          <li>듀티가 시간에 따라 밀리는지 본다. 밀리면 온도에 따른 R<sub>DS(on)</sub> 상승이다.</li>
+          <li>DC링크 전압 드리프트, RDYC·FLT_N 평선 유지 여부.</li>
+        </ul>
+        <div class="gate"><b>판정</b> — 30분간 어떤 중단 조건도 걸리지 않고 온도가 평형이면 정격 검증 완료.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="rail"><span class="code">9</span><span class="w">과도</span></div>
+      <div class="body">
+        <h3>로드 덤프 응답</h3>
+        <p class="why">부스트는 부하가 빠져도 루프가 반응할 때까지 계속 에너지를 밀어넣는다. 커패시터 파괴까지의 여유가 <b>38 ms뿐</b>이다.</p>
+        <dl class="kv">
+          <div><dt>스텝</dt><dd>50% → 10%</dd></div>
+          <div><dt>측정</dt><dd>ΔV, t</dd></div>
+          <div><dt>합격선</dt><dd>&lt; 20 ms</dd></div>
+          <div><dt>파괴선</dt><dd>38 ms</dd></div>
+        </dl>
+        <div class="tw">
+          <table>
+            <thead><tr><th class="num">루프 응답</th><th class="num">오버슈트</th><th class="num">도달 전압</th><th>판정</th></tr></thead>
+            <tbody>
+              <tr><td class="num">5 ms</td><td class="num">13 V</td><td class="num">413 V</td><td>정상</td></tr>
+              <tr><td class="num">10 ms</td><td class="num">27 V</td><td class="num">427 V</td><td>운전 상한 420 V 초과</td></tr>
+              <tr><td class="num">20 ms</td><td class="num">53 V</td><td class="num">453 V</td><td>마진 없음</td></tr>
+              <tr class="hi"><td class="num">38 ms</td><td class="num">100 V</td><td class="num">500 V</td><td>전해 직렬 정격 도달 · 파괴</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="assump" style="margin-top:12px"><span class="mono">ΔV = P·t /(C·V) = 2660 · t</span> [V/s] · C = 470 µF, V = 400 V, P = 250 W→50 W 기준은 절반.</p>
+        <div class="warn"><b>절차</b> — 100% → 0%로 바로 가지 않는다. 50% → 10%로 시작해 오버슈트를 확인한 뒤 폭을 키운다. 20 ms를 넘으면 펌웨어 OVP를 430 V에 두고 즉시 게이트를 차단하도록 먼저 손본다.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <h2>부하 · 듀티 요약</h2>
+  <p class="sub">400 V를 유지하기 위해 각 단계에서 필요한 듀티</p>
+  <p>무부하에서 만부하까지 오버랩 듀티를 약 <b>0.10</b> 올려야 한다. 개루프로 운전한다면 단계마다 손으로 올리고, 폐루프라면 루프에 그만큼의 여유가 있는지 확인한다.</p>
+  <div class="tw">
+    <table>
+      <thead>
+        <tr>
+          <th class="num">단계</th><th class="num">P_out</th><th class="num">CR 설정</th><th class="num">I_load</th>
+          <th class="num">예상 I_in</th><th class="num">이상 D_ov</th><th class="num">+누설</th><th class="num">실제 예상 D_ov</th><th class="num">스위치별 D</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="num">1</td><td class="num">0 W</td><td class="num">OFF</td><td class="num">2.3 mA</td><td class="num">0.35 A</td><td class="num">0.476</td><td class="num">—</td><td class="num">0.476</td><td class="num">0.738</td></tr>
+        <tr><td class="num">2</td><td class="num">20 W</td><td class="num">8.0 kΩ</td><td class="num">50 mA</td><td class="num">1.0 A</td><td class="num">0.477</td><td class="num">0.003</td><td class="num">0.480</td><td class="num">0.740</td></tr>
+        <tr><td class="num">3</td><td class="num">50 W</td><td class="num">3.2 kΩ</td><td class="num">125 mA</td><td class="num">2.0 A</td><td class="num">0.480</td><td class="num">0.006</td><td class="num">0.486</td><td class="num">0.743</td></tr>
+        <tr><td class="num">4</td><td class="num">100 W</td><td class="num">1.6 kΩ</td><td class="num">250 mA</td><td class="num">3.7 A</td><td class="num">0.484</td><td class="num">0.012</td><td class="num">0.496</td><td class="num">0.748</td></tr>
+        <tr><td class="num">5</td><td class="num">250 W</td><td class="num">640 Ω</td><td class="num">625 mA</td><td class="num">9.1 A</td><td class="num">0.497</td><td class="num">0.029</td><td class="num">0.526</td><td class="num">0.763</td></tr>
+        <tr><td class="num">6</td><td class="num">400 W</td><td class="num">400 Ω</td><td class="num">1.00 A</td><td class="num">14.8 A</td><td class="num">0.511</td><td class="num">0.048</td><td class="num">0.559</td><td class="num">0.780</td></tr>
+        <tr class="hi"><td class="num">7</td><td class="num">500 W</td><td class="num">320 Ω</td><td class="num">1.25 A</td><td class="num">18.7 A</td><td class="num">0.521</td><td class="num">0.060</td><td class="num">0.581</td><td class="num">0.791</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="assump" style="margin-top:14px">
+    스위치별 듀티 0.791은 off-time이 주기의 21%라는 뜻이다. 클램프 리셋에 충분하므로 듀티 여유는 있다.
+    누설 듀티 손실은 <code>L_lk = 1 µH</code> 가정에서 전류에 비례하도록 배분한 추정치다.
+  </p>
+</section>
+
+<section>
+  <h2>기록표</h2>
+  <p class="sub">단계마다 이 열들을 채운다</p>
+  <div class="tw">
+    <table class="record">
+      <thead>
+        <tr>
+          <th class="num">단계</th><th class="num">D_ov</th><th class="num">V_in</th><th class="num">I_in</th>
+          <th class="num">V_out DMM</th><th class="num">ADC 판독</th><th class="num">I_out</th>
+          <th class="num">C6</th><th class="num">V_DS 피크</th><th class="num">L1 피크</th>
+          <th class="num">1차 최고 ℃</th><th class="num">D3/D44 ℃</th><th class="num">η</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="num">1</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="num">2</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="num">3</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="num">4</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="num">5</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="num">6</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="num">7</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="num">8</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>종료</h2>
+  <p class="sub">순서를 지킨다</p>
+  <div class="abort">
+    <h3>DC링크에 37.6 J이 남아 있다</h3>
+    <p class="note" style="margin-bottom:0">
+      400 V · 470 µF = <span class="mono">37.6 J</span>. 위험 에너지 기준 10 J의 네 배다.
+      밸런싱 저항만으로는 400 V에서 50 V까지 <b>195초</b> 걸린다. 잊어버리기 충분히 긴 시간이다.
+    </p>
+  </div>
+  <ol style="margin-top:18px;padding-left:20px">
+    <li style="margin-bottom:7px">듀티를 0으로 내린다 → 출력은 210 V 하한에 선다</li>
+    <li style="margin-bottom:7px">게이트를 정지시키고 <b>입력 전원을 차단</b>한다</li>
+    <li style="margin-bottom:7px">DC링크 전압이 내려가는 것을 <b>DMM으로 확인</b>한다 (CR 모드면 로드가 계속 방전시킨다)</li>
+    <li style="margin-bottom:7px">방전 스위치를 넣는다 → τ 2.4 s, 5초 뒤 50 V 이하</li>
+    <li style="margin-bottom:7px"><b>0 V를 눈으로 확인한 뒤</b> LOAD OFF</li>
+    <li>프로브 레인지 변경, 배선 변경은 이 시점 이후에만</li>
+  </ol>
+  <div class="warn" style="margin-top:16px">
+    <b>역순 금지</b> — LOAD OFF를 먼저 하면 CC 잔여 동작으로 단자가 음전압이 되어 REVERSE ALARM이 뜨고,
+    링크는 충전된 채로 남는다. 프로브 레인지를 활선에서 ×200 → ×20으로 돌리면 정격의 2.7배가 걸린다.
+  </div>
+</section>
+
+<section>
+  <h2>가정과 근거</h2>
+  <p class="sub">실측으로 바뀌어야 할 값들</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>값</th><th class="num">사용한 가정</th><th>확정 방법</th></tr></thead>
+      <tbody>
+        <tr><td>1차 루프 저항</td><td class="num">140 mΩ</td><td>7단계 효율 측정으로 역산 <span class="tag">F-13</span></td></tr>
+        <tr><td>누설 인덕턴스 L<sub>lk</sub></td><td class="num">1 µH</td><td>T1 2차 단락 후 1차 인덕턴스 측정</td></tr>
+        <tr><td>L1 · L3 DCR</td><td class="num">10 mΩ</td><td>4단자 저항 측정</td></tr>
+        <tr><td>스위칭 주파수</td><td class="num">미확인</td><td>4단계 게이트 캡처 <span class="tag">U-8</span></td></tr>
+        <tr><td>듀티 0.35의 정의</td><td class="num">미확인</td><td>게이트 2ch 동시 캡처로 오버랩 실측 <span class="tag">U-7</span></td></tr>
+        <tr><td>L1 · L3 포화 정격</td><td class="num">미확인</td><td>회로도에 품번 없음. 파형 관찰로 대체 <span class="tag">U-9</span></td></tr>
+        <tr><td>ADC 게인</td><td class="num">3.816 mV/V</td><td>1단계에서 DMM 대조 <span class="tag">U-10</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="end">
+  <p style="margin:0">
+    전달 함수 <code>V_out = 2·n·V_in /(1−D_ov)</code>, n = 3.5, 배전압 정류.
+    회로도 <code>SCH_MICROINV_V1109</code> p.1 벡터 추적으로 확인.
+    상세 근거와 이력은 연구노트 <code>notes/research-note-1ed3431.md</code> 2.4장 · 7.5장 참조.
+  </p>
+  <p style="margin:10px 0 0">체크 상태는 이 브라우저에만 저장된다.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY = "microinv-runsheet-prep-v1";
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#prep input[type=checkbox]"));
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+
+  function paint(box){
+    var li = box.closest("li");
+    if (li) li.classList.toggle("done", box.checked);
+  }
+
+  boxes.forEach(function(box){
+    if (saved[box.id]) box.checked = true;
+    paint(box);
+    box.addEventListener("change", function(){
+      paint(box);
+      var state = {};
+      boxes.forEach(function(b){ if (b.checked) state[b.id] = 1; });
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* 저장 불가 환경 */ }
+    });
+  });
+})();
+</script>
