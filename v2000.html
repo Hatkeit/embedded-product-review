@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="V2000 언폴딩 마이크로인버터 500W — 모듈 직결형 계통연계 인버터 설계 목표 사양. 3상 인터리브드 ACF + 60Hz 언폴더, 전해 커패시터 배제, KS C 8565 대응." />
+  <meta name="theme-color" content="#1d4ed8" />
+  <meta property="og:title" content="V2000 Unfolding Microinverter 500W — 설계 사양" />
+  <meta property="og:description" content="모듈 직결형 500W 계통연계 마이크로인버터. 언폴딩 구조, 능동 전력 디커플링, 25년 설계 수명." />
+  <meta property="og:type" content="website" />
+  <title>V2000 Unfolding Microinverter 500W — 설계 사양</title>
+  <style>
+    :root{
+      --bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;
+      --blue:#1d4ed8;--blue-100:#dbeafe;--blue-50:#eff6ff;--dark:#0f172a;
+      --accent:#0891b2;--accent-50:#ecfeff;
+      --shadow:0 10px 25px rgba(15,23,42,.06)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{margin:0;font-family:Inter,Arial,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+    .container{max-width:1200px;margin:0 auto;padding:32px 16px}
+    .section{background:#fff;border:1px solid var(--line);border-radius:32px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:32px}
+    .subsection{padding:24px}
+    .hero-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--line);gap:16px}
+    .hero-nav .brand{font-size:14px;font-weight:700;color:#334155}
+    .hero-nav nav{display:flex;gap:24px;font-size:14px;color:#475569}
+    .hero-nav nav a{color:inherit;text-decoration:none}
+    .hero-nav nav a:hover{color:var(--blue)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:16px;padding:14px 22px;font-weight:700;cursor:pointer;text-decoration:none;-webkit-tap-highlight-color:transparent}
+    .btn-primary{background:var(--blue);color:#fff}
+    .btn-secondary{background:#fff;color:#334155;border:1px solid #cbd5e1}
+    .btn-pill{border-radius:999px;padding:10px 18px}
+    .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:32px;padding:48px 24px;align-items:center}
+    .eyebrow{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:12px;letter-spacing:.02em}
+    h1{font-size:42px;line-height:1.22;letter-spacing:-.04em;margin:0 0 16px;font-weight:900;word-break:keep-all}
+    h1 .accent{color:var(--blue)}
+    .lead{font-size:17px;color:#475569;max-width:720px;word-break:keep-all}
+    .note{margin-top:16px;padding:14px 16px;border:1px solid #bfdbfe;background:var(--blue-50);border-radius:18px;color:#334155;font-size:14px;word-break:keep-all}
+    .note-warn{border-color:#fcd34d;background:#fffbeb}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+    .hero-visual{border:1px solid var(--line);border-radius:28px;background:linear-gradient(135deg,#dbeafe,#ecfeff);padding:22px;box-shadow:0 18px 35px rgba(15,23,42,.12)}
+    .spec-stack{display:grid;gap:10px;width:100%}
+    .spec-item{background:rgba(255,255,255,.88);border:1px solid rgba(29,78,216,.15);border-radius:14px;padding:12px 14px;font-size:14px;color:#0f172a;display:flex;align-items:center;gap:12px}
+    .spec-dot{width:8px;height:8px;border-radius:999px;background:var(--blue);flex-shrink:0}
+    .spec-item strong{font-weight:800}
+    .spec-item span{margin-left:auto;color:#475569;font-variant-numeric:tabular-nums}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .small-card,.result-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
+    .tag-line{font-size:11px;color:var(--accent);font-weight:700;margin-bottom:6px;letter-spacing:.05em;text-transform:uppercase}
+    h2{font-size:30px;letter-spacing:-.03em;margin:0 0 20px;font-weight:800;word-break:keep-all}
+    h3{font-size:23px;letter-spacing:-.02em;margin:0 0 16px;font-weight:800;word-break:keep-all}
+    h4{margin:0 0 8px;font-size:17px;font-weight:800;word-break:keep-all}
+    .muted{color:var(--muted)}
+    .tiny{font-size:12px}
+    .benefits{background:linear-gradient(135deg,#fff,#eff6ff)}
+    .cap-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}
+    .cap-card .num{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.1em}
+    .cap-card h4{font-size:16px;margin:6px 0 8px}
+    .cap-card p{margin:0;font-size:14px;color:#475569;line-height:1.55;word-break:keep-all}
+    .tool-chip{display:inline-block;padding:6px 12px;border-radius:8px;background:#f1f5f9;color:#1e293b;font-size:13px;font-weight:600;margin:3px}
+    .diagram{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;overflow-x:auto}
+    .diagram svg{display:block;width:100%;min-width:640px;height:auto}
+    .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    table.spec{width:100%;min-width:520px;border-collapse:collapse;font-size:14px}
+    table.spec caption{text-align:left;font-weight:800;font-size:16px;padding:0 0 10px;color:#0f172a}
+    table.spec th,table.spec td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;word-break:keep-all}
+    table.spec thead th{background:#f8fafc;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#475569;font-weight:700;white-space:nowrap}
+    table.spec td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+    table.spec tbody tr:last-child td{border-bottom:none}
+    table.spec tr.hl td{background:var(--blue-50);font-weight:700}
+    .dark{background:var(--dark);color:#fff}
+    .dark p,.dark li{color:#cbd5e1}
+    .tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.08);font-size:14px;color:#f8fafc}
+    ul.clean{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+    ul.clean li{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:#334155;word-break:keep-all}
+    .check{display:inline-flex;width:24px;height:24px;border-radius:999px;background:var(--blue-100);color:var(--blue);align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:0 0 auto;margin-top:1px}
+    .risk{border-left:4px solid #f59e0b;background:#fffbeb;border-radius:0 16px 16px 0;padding:16px 18px;margin-bottom:12px}
+    .risk h4{font-size:15px;margin-bottom:4px}
+    .risk p{margin:0;font-size:14px;color:#475569;word-break:keep-all}
+    .risk.high{border-left-color:#dc2626;background:#fef2f2}
+    .cta-box{background:var(--blue-50);border:1px solid #dbeafe;border-radius:28px;padding:32px;word-break:keep-all}
+    .footer{padding:24px;text-align:center}
+
+    @media (max-width:1024px){
+      .grid-3{grid-template-columns:1fr 1fr}
+      h1{font-size:38px}
+    }
+    @media (max-width:900px){
+      .hero{grid-template-columns:1fr;gap:20px;padding:36px 24px 44px}
+      .hero-nav{flex-wrap:wrap;gap:12px;align-items:flex-start;padding:14px 20px}
+      .hero-nav .brand{flex:1 1 100%;max-width:100%;font-size:16px;line-height:1.4;word-break:keep-all}
+      .hero-nav .btn-pill{width:100%;min-height:52px;padding:14px 18px;white-space:normal;line-height:1.35}
+      .actions{flex-direction:column}
+      .actions .btn{width:100%}
+      h1{font-size:34px;line-height:1.22}
+      .lead,.note{max-width:100%}
+    }
+    @media (max-width:720px){
+      .grid-2,.grid-3{grid-template-columns:1fr}
+      .hero-nav{padding:12px 16px;gap:10px}
+      .hero-nav nav{display:none}
+      .hero{padding:28px 16px 36px;gap:18px}
+      .br-md{display:none}
+      h1{font-size:29px;line-height:1.28}
+      h2{font-size:26px}
+      .lead{font-size:15px}
+      .container{padding:12px 10px}
+      .section{border-radius:24px;margin-bottom:20px}
+      .subsection{padding:20px 16px}
+      .cta-box{padding:24px;border-radius:24px}
+      .cta-box .btn{width:100%;min-height:52px}
+    }
+    @media (max-width:380px){
+      h1{font-size:25px;line-height:1.3}
+      h2{font-size:23px}
+      h3{font-size:19px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="section">
+      <div class="hero-nav">
+        <div class="brand">V2000 · Unfolding Microinverter 500W</div>
+        <nav>
+          <a href="#arch-section">구조</a>
+          <a href="#spec-section">전기 사양</a>
+          <a href="#control-section">제어·보호</a>
+          <a href="#cert-section">인증</a>
+          <a href="#risk-section">미결 이슈</a>
+        </nav>
+        <a href="index.html" class="btn btn-secondary btn-pill">엔지니어링 서비스</a>
+      </div>
+
+      <div class="hero">
+        <div>
+          <div class="eyebrow">MODULE-LEVEL · GRID-TIED · UNFOLDING TOPOLOGY</div>
+          <h1>V2000 <span class="accent">언폴딩 마이크로인버터</span><br class="br-md">500 W 설계 사양</h1>
+          <p class="lead">태양광 모듈 1장에 직결되는 500 W급 계통연계 마이크로인버터. 절연형 DC-DC가 전류를 정현파로 성형하고, 출력 H-브리지는 계통 주파수 60 Hz로만 극성을 전환합니다. 전해 커패시터를 배제해 옥외 25년 수명을 목표로 합니다.</p>
+          <div class="note note-warn">
+            <strong>개발 단계 문서입니다.</strong> 아래 수치는 상세 설계 착수 전 <strong>설계 목표 사양</strong>이며, 실측·시뮬레이션으로 확정된 값이 아닙니다. 확정 사양이 아닌 항목과 미결 이슈는 <a href="#risk-section" style="color:#b45309;font-weight:700">미결 이슈</a> 절에 명시했습니다.
+          </div>
+          <div class="actions">
+            <a href="#spec-section" class="btn btn-primary">전기 사양 보기</a>
+            <a href="docs/V2000-design-spec.md" class="btn btn-secondary">상세 사양서 (Markdown)</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="spec-stack">
+            <div class="spec-item"><span class="spec-dot"></span><strong>정격 AC 출력</strong><span>500 W / 220 V / 60 Hz</span></div>
+            <div class="spec-item"><span class="spec-dot"></span><strong>MPPT 범위 (정격 보장)</strong><span>34 ~ 55 Vdc</span></div>
+            <div class="spec-item"><span class="spec-dot"></span><strong>최대 입력 전압</strong><span>65 Vdc</span></div>
+            <div class="spec-item"><span class="spec-dot"></span><strong>권장 모듈</strong><span>450 ~ 700 Wp</span></div>
+            <div class="spec-item"><span class="spec-dot"></span><strong>목표 최대 효율</strong><span>≥ 96.5 %</span></div>
+            <div class="spec-item"><span class="spec-dot"></span><strong>전류 THD</strong><span>&lt; 5 %</span></div>
+            <div class="spec-item"><span class="spec-dot"></span><strong>보호 등급 · 냉각</strong><span>IP67 · 무팬</span></div>
+            <div class="spec-item"><span class="spec-dot"></span><strong>설계 수명</strong><span>25 년</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARCHITECTURE -->
+      <div id="arch-section" class="subsection">
+        <div class="small-card">
+          <div class="tag-line">ARCHITECTURE</div>
+          <h3>시스템 구조</h3>
+          <p class="muted" style="margin-top:-4px;margin-bottom:18px">절연형 DC-DC가 정류된 정현파를 만들고, 언폴더가 60 Hz로 극성만 뒤집습니다. 120 Hz 맥동 전력은 능동 전력 디커플링(APD)이 필름 커패시터로 흡수합니다.</p>
+
+          <div class="diagram">
+            <svg viewBox="0 0 820 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="V2000 전력단 블록도: PV 모듈, 입력 보호와 필터, 3상 인터리브드 액티브 클램프 플라이백, 정류 및 LC 필터, 강화 절연 경계, 60Hz 언폴더, EMI 필터와 이중 릴레이, 계통 순으로 연결되며 PV 레일에 능동 전력 디커플링이 병렬 접속되고, 1차측 주 제어 MCU와 2차측 계통보호 감시 MCU가 배치된 구성">
+              <defs>
+                <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#1d4ed8"/>
+                </marker>
+                <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#0891b2"/>
+                </marker>
+              </defs>
+
+              <rect width="820" height="350" fill="#fbfdff"/>
+
+              <!-- isolation boundary -->
+              <line x1="453" y1="26" x2="453" y2="330" stroke="#0891b2" stroke-width="2" stroke-dasharray="7 5"/>
+              <text x="453" y="18" text-anchor="middle" fill="#0891b2" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800">강화 절연 경계</text>
+              <text x="240" y="340" text-anchor="middle" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="600">1차측 · PV(−) 기준전위</text>
+              <text x="640" y="340" text-anchor="middle" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="600">2차측 · 계통 N 기준전위</text>
+
+              <!-- main power path -->
+              <g font-family="Inter, Arial, sans-serif">
+                <g>
+                  <rect x="15" y="90" width="85" height="72" rx="12" fill="#ecfdf5" stroke="#22c55e" stroke-width="2"/>
+                  <text x="57" y="118" text-anchor="middle" fill="#15803d" font-size="12" font-weight="800">PV 모듈</text>
+                  <text x="57" y="136" text-anchor="middle" fill="#64748b" font-size="10" font-weight="600">450~700 Wp</text>
+                </g>
+                <g>
+                  <rect x="112" y="90" width="95" height="72" rx="12" fill="#ffffff" stroke="#1d4ed8" stroke-width="2"/>
+                  <text x="159" y="114" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="800">입력 보호</text>
+                  <text x="159" y="130" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="800">· 필터</text>
+                  <text x="159" y="147" text-anchor="middle" fill="#64748b" font-size="9" font-weight="600">역접속 / OVP / CM</text>
+                </g>
+                <g>
+                  <rect x="219" y="90" width="130" height="72" rx="12" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2.5"/>
+                  <text x="284" y="112" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="800">3상 인터리브드</text>
+                  <text x="284" y="128" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="800">ACF DC-DC</text>
+                  <text x="284" y="146" text-anchor="middle" fill="#64748b" font-size="9" font-weight="600">110 kHz GaN · 정현파 성형</text>
+                </g>
+                <g>
+                  <rect x="361" y="90" width="80" height="72" rx="12" fill="#ffffff" stroke="#1d4ed8" stroke-width="2"/>
+                  <text x="401" y="114" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="800">정류</text>
+                  <text x="401" y="130" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="800">· LC</text>
+                  <text x="401" y="147" text-anchor="middle" fill="#64748b" font-size="9" font-weight="600">1200 V SiC</text>
+                </g>
+                <g>
+                  <rect x="465" y="90" width="105" height="72" rx="12" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2.5"/>
+                  <text x="517" y="114" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="800">언폴더</text>
+                  <text x="517" y="130" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="800">H-브리지</text>
+                  <text x="517" y="147" text-anchor="middle" fill="#64748b" font-size="9" font-weight="600">60 Hz · 650 V SJ</text>
+                </g>
+                <g>
+                  <rect x="582" y="90" width="100" height="72" rx="12" fill="#ffffff" stroke="#1d4ed8" stroke-width="2"/>
+                  <text x="632" y="114" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="800">EMI 필터</text>
+                  <text x="632" y="130" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="800">· 2중 릴레이</text>
+                  <text x="632" y="147" text-anchor="middle" fill="#64748b" font-size="9" font-weight="600">직렬 차단</text>
+                </g>
+                <g>
+                  <rect x="694" y="90" width="90" height="72" rx="12" fill="#ecfdf5" stroke="#22c55e" stroke-width="2"/>
+                  <text x="739" y="118" text-anchor="middle" fill="#15803d" font-size="12" font-weight="800">계통</text>
+                  <text x="739" y="136" text-anchor="middle" fill="#64748b" font-size="10" font-weight="600">220 V / 60 Hz</text>
+                </g>
+              </g>
+
+              <!-- arrows between blocks -->
+              <g stroke="#1d4ed8" stroke-width="2" marker-end="url(#ah)" fill="none">
+                <line x1="100" y1="126" x2="110" y2="126"/>
+                <line x1="207" y1="126" x2="217" y2="126"/>
+                <line x1="349" y1="126" x2="359" y2="126"/>
+                <line x1="441" y1="126" x2="463" y2="126"/>
+                <line x1="570" y1="126" x2="580" y2="126"/>
+                <line x1="682" y1="126" x2="692" y2="126"/>
+              </g>
+
+              <!-- APD branch -->
+              <g font-family="Inter, Arial, sans-serif">
+                <rect x="219" y="196" width="130" height="58" rx="12" fill="#ecfeff" stroke="#0891b2" stroke-width="2"/>
+                <text x="284" y="218" text-anchor="middle" fill="#0e7490" font-size="12" font-weight="800">능동 전력 디커플링</text>
+                <text x="284" y="236" text-anchor="middle" fill="#64748b" font-size="9" font-weight="600">40 µF / 450 V 필름 · 전해 없음</text>
+              </g>
+              <g stroke="#0891b2" stroke-width="2" fill="none">
+                <path d="M 213 126 L 213 225 L 217 225" marker-end="url(#ah2)"/>
+                <circle cx="213" cy="126" r="3.5" fill="#0891b2" stroke="none"/>
+              </g>
+
+              <!-- control MCUs -->
+              <g font-family="Inter, Arial, sans-serif">
+                <rect x="15" y="282" width="330" height="44" rx="12" fill="#0f172a"/>
+                <text x="180" y="300" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">주 제어 MCU (1차측)</text>
+                <text x="180" y="316" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="600">MPPT · 전류 성형 · SOGI-PLL · APD · 상태 머신</text>
+
+                <rect x="475" y="282" width="309" height="44" rx="12" fill="#0f172a"/>
+                <text x="629" y="300" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800">계통보호 감시 MCU (2차측)</text>
+                <text x="629" y="316" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="600">독립 전압·주파수 센싱 · 릴레이 독자 차단</text>
+              </g>
+              <g stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 4" fill="none">
+                <path d="M 345 304 L 475 304"/>
+              </g>
+              <text x="410" y="298" text-anchor="middle" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="700">상호 감시</text>
+            </svg>
+          </div>
+
+          <h4 style="margin-top:24px">언폴딩 동작 원리</h4>
+          <div class="diagram" style="margin-top:8px">
+            <svg viewBox="0 0 780 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="왼쪽은 DC-DC가 만드는 정류된 정현파 파형, 오른쪽은 언폴더가 극성을 전환해 만든 정현파 출력 파형">
+              <rect width="780" height="250" fill="#fbfdff"/>
+              <text x="200" y="26" text-anchor="middle" fill="#1e40af" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="800">① DC-DC 출력 — 정류된 정현파</text>
+              <text x="580" y="26" text-anchor="middle" fill="#1e40af" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="800">② 언폴더 출력 — 계통 정현파</text>
+
+              <!-- panel 1 -->
+              <line x1="30" y1="175" x2="375" y2="175" stroke="#cbd5e1" stroke-width="1.5"/>
+              <path d="M 50 175 C 103.3 81.7, 156.7 81.7, 210 175 C 263.3 81.7, 316.7 81.7, 370 175" fill="none" stroke="#1d4ed8" stroke-width="3" stroke-linecap="round"/>
+              <text x="36" y="196" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="600">0 V</text>
+              <text x="200" y="216" text-anchor="middle" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="600">고주파 스위칭으로 |sin| 성형 · 0 ~ 311 V</text>
+
+              <!-- divider -->
+              <line x1="390" y1="40" x2="390" y2="220" stroke="#e2e8f0" stroke-width="1.5"/>
+
+              <!-- panel 2 -->
+              <line x1="410" y1="140" x2="760" y2="140" stroke="#cbd5e1" stroke-width="1.5"/>
+              <path d="M 430 140 C 483.3 46.7, 536.7 46.7, 590 140 C 643.3 233.3, 696.7 233.3, 750 140" fill="none" stroke="#0891b2" stroke-width="3" stroke-linecap="round"/>
+              <line x1="590" y1="52" x2="590" y2="228" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <text x="596" y="62" fill="#b45309" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700">극성 전환 (60 Hz)</text>
+              <text x="416" y="158" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="600">0 V</text>
+              <text x="580" y="248" text-anchor="middle" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="600">영전류 구간에서 전환 → 스위칭 손실 ≈ 0</text>
+            </svg>
+          </div>
+
+          <div class="grid-3" style="margin-top:22px">
+            <div class="cap-card">
+              <div class="num">01</div>
+              <h4>스위칭 손실이 없는 출력단</h4>
+              <p>언폴더는 60 Hz로만 동작하고, 그것도 DC-DC가 전류를 0으로 내린 구간에서 전환합니다. 출력단 손실은 도통 손실 1.6 W뿐입니다.</p>
+            </div>
+            <div class="cap-card">
+              <div class="num">02</div>
+              <h4>전해 커패시터 전면 배제</h4>
+              <p>120 Hz 맥동 에너지 1.33 J을 PV측에서 수동으로 받으면 8,300 µF 전해가 필요합니다. APD로 450 V 버퍼에 담으면 40 µF 필름이면 충분합니다.</p>
+            </div>
+            <div class="cap-card">
+              <div class="num">03</div>
+              <h4>이중화 차단 수단</h4>
+              <p>주 MCU의 게이트 정지와, 독립 센싱을 가진 감시 MCU의 직렬 릴레이 개방. 두 계층이 서로를 감시하며 어느 한쪽 고장에도 계통에서 분리됩니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SPECS -->
+      <div id="spec-section" class="subsection">
+        <div class="small-card benefits">
+          <div class="tag-line">ELECTRICAL SPECIFICATION</div>
+          <h3>전기적 사양</h3>
+
+          <div class="table-wrap" style="margin-bottom:26px">
+            <table class="spec">
+              <caption>DC 입력 (PV)</caption>
+              <thead>
+                <tr><th>항목</th><th>최소</th><th>표준</th><th>최대</th><th>비고</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>권장 모듈 용량</td><td class="num">450 Wp</td><td class="num">550 Wp</td><td class="num">700 Wp</td><td>STC</td></tr>
+                <tr><td>MPPT 동작 전압 범위</td><td class="num">28 V</td><td class="num">—</td><td class="num">60 V</td><td>28~34 V는 전류 제한 디레이팅</td></tr>
+                <tr class="hl"><td>정격 출력 보장 MPPT 범위</td><td class="num">34 V</td><td class="num">40 V</td><td class="num">55 V</td><td>500 W 연속 보장 구간</td></tr>
+                <tr><td>기동 전압</td><td class="num">—</td><td class="num">30 V</td><td class="num">—</td><td>히스테리시스 2 V</td></tr>
+                <tr><td>최대 입력 전압 (절대 정격)</td><td class="num">—</td><td class="num">—</td><td class="num">65 V</td><td>−25 ℃ Voc 고려</td></tr>
+                <tr><td>최대 연속 입력 전류</td><td class="num">—</td><td class="num">—</td><td class="num">16 A</td><td></td></tr>
+                <tr><td>최대 입력 단락 전류 (Isc)</td><td class="num">—</td><td class="num">—</td><td class="num">20 A</td><td>모듈 정격 상한</td></tr>
+                <tr><td>순시 피크 입력 전류</td><td class="num">—</td><td class="num">—</td><td class="num">32 A</td><td>정현파 피크 시점 (2 × I<sub>DC</sub>)</td></tr>
+                <tr><td>입력 전압 리플 (120 Hz)</td><td class="num">—</td><td class="num">—</td><td class="num">2 %<sub>p-p</sub></td><td>APD 동작 시</td></tr>
+                <tr><td>MPPT 효율 (정적 / 동적)</td><td class="num">99.5 % / 99.0 %</td><td class="num">—</td><td class="num">—</td><td>EN 50530</td></tr>
+                <tr><td>커넥터</td><td colspan="3">MC4 호환 (IP68)</td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-wrap" style="margin-bottom:26px">
+            <table class="spec">
+              <caption>AC 출력 (계통)</caption>
+              <thead>
+                <tr><th>항목</th><th>최소</th><th>표준</th><th>최대</th><th>비고</th></tr>
+              </thead>
+              <tbody>
+                <tr class="hl"><td>정격 출력 전력</td><td class="num">—</td><td class="num">500 W</td><td class="num">—</td><td>연속</td></tr>
+                <tr><td>최대 겉보기 전력</td><td class="num">—</td><td class="num">—</td><td class="num">520 VA</td><td>무효전력 제어 시</td></tr>
+                <tr><td>정격 전압 / 주파수</td><td class="num">—</td><td class="num">220 V / 60 Hz</td><td class="num">—</td><td>단상 2선 + PE</td></tr>
+                <tr><td>동작 전압 범위</td><td class="num">195.8 V</td><td class="num">—</td><td class="num">242.0 V</td><td>정격의 89 ~ 110 %</td></tr>
+                <tr><td>동작 주파수 범위</td><td class="num">59.3 Hz</td><td class="num">—</td><td class="num">60.5 Hz</td><td></td></tr>
+                <tr><td>정격 출력 전류</td><td class="num">—</td><td class="num">2.27 A</td><td class="num">3.21 A<sub>pk</sub></td><td></td></tr>
+                <tr><td>전류 THD</td><td class="num">—</td><td class="num">&lt; 3 %</td><td class="num">5 %</td><td>정격 출력 기준</td></tr>
+                <tr><td>개별 고조파</td><td class="num">—</td><td class="num">—</td><td class="num">3 %</td><td>각 차수</td></tr>
+                <tr><td>역률</td><td class="num">0.99</td><td class="num">—</td><td class="num">1.0</td><td>조정 범위 0.8 진상 ~ 0.8 지상</td></tr>
+                <tr><td>DC 주입 전류</td><td class="num">—</td><td class="num">—</td><td class="num">0.5 %</td><td>정격 교류 전류 대비 (11.4 mA)</td></tr>
+                <tr><td>계통 커넥터</td><td colspan="3">현장 배선형 IP68 트렁크 커넥터</td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-wrap" style="margin-bottom:26px">
+            <table class="spec">
+              <caption>효율 및 손실 예산 <span class="tiny muted" style="font-weight:600">— 정격 500 W, Vmp 40 V, 25 ℃ 산정치</span></caption>
+              <thead>
+                <tr><th>블록</th><th>손실</th><th>주 손실 성분</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>입력 필터 + 역접속 보호</td><td class="num">0.6 W</td><td>도통</td></tr>
+                <tr><td>DC-DC 1차 스위치 (GaN × 3상)</td><td class="num">5.5 W</td><td>도통 (RMS 1.225×) + 클램프 순환</td></tr>
+                <tr><td>트랜스포머 × 3 (평면형)</td><td class="num">4.5 W</td><td>코어 + 권선 + 근접 효과</td></tr>
+                <tr><td>2차 정류 (1200 V SiC SBD)</td><td class="num">3.5 W</td><td>V<sub>f</sub> × I<sub>avg</sub></td></tr>
+                <tr><td>출력 LC 필터 인덕터</td><td class="num">1.2 W</td><td>코어 + DCR</td></tr>
+                <tr><td>언폴더 (650 V SJ × 4)</td><td class="num">1.6 W</td><td>도통 전용 (스위칭 ≈ 0)</td></tr>
+                <tr><td>APD 단</td><td class="num">1.8 W</td><td>순환 전력 처리</td></tr>
+                <tr><td>EMI 필터 + 릴레이 접점</td><td class="num">1.0 W</td><td></td></tr>
+                <tr><td>보조 전원 + 제어 + RF</td><td class="num">1.1 W</td><td></td></tr>
+                <tr class="hl"><td>합계</td><td class="num">20.8 W</td><td>η = 96.0 %</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="note">
+            <strong>손실의 절반은 DC-DC 1차측이고, 원인은 언폴딩 구조 그 자체입니다.</strong>
+            일정한 DC 링크가 없으므로 DC-DC는 순시 전력 <em>p(t) = P(1 − cos 2ωt)</em>, 즉 0 ~ 1000 W를 그대로 처리해야 합니다.
+            입력 전류 RMS가 DC 대비 1.225배가 되어 도통 손실이 1.5배로 늘어납니다. 개선 여지가 가장 큰 항목입니다.
+          </div>
+
+          <div class="table-wrap" style="margin-top:26px">
+            <table class="spec">
+              <caption>환경 및 기구</caption>
+              <thead><tr><th>항목</th><th>사양</th></tr></thead>
+              <tbody>
+                <tr><td>주위 온도 (동작)</td><td>−40 ℃ ~ +65 ℃ (+45 ℃ 초과 시 디레이팅)</td></tr>
+                <tr><td>주위 온도 (보관)</td><td>−40 ℃ ~ +85 ℃</td></tr>
+                <tr><td>상대 습도</td><td>0 ~ 100 % (결로 포함)</td></tr>
+                <tr><td>사용 고도</td><td>≤ 2000 m</td></tr>
+                <tr><td>보호 등급 · 냉각</td><td>IP67 · 자연 대류 (무팬)</td></tr>
+                <tr><td>케이스</td><td>알루미늄 다이캐스팅 (ADC12) + 실리콘 포팅</td></tr>
+                <tr><td>외형 · 중량 (목표)</td><td>220 × 180 × 33 mm · ≤ 2.2 kg</td></tr>
+                <tr><td>소음</td><td>&lt; 25 dB(A) @ 1 m</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTROL & PROTECTION -->
+      <div id="control-section" class="subsection">
+        <div class="small-card">
+          <div class="tag-line">CONTROL &amp; PROTECTION</div>
+          <h3>제어 및 보호</h3>
+
+          <div class="grid-2" style="margin-bottom:24px">
+            <div class="table-wrap">
+              <table class="spec">
+                <caption>제어 루프</caption>
+                <thead><tr><th>루프</th><th>대역폭</th><th>실행 주기</th></tr></thead>
+                <tbody>
+                  <tr><td>DC-DC 전류 성형</td><td class="num">5 kHz</td><td class="num">110 kHz</td></tr>
+                  <tr><td>PV 전압 (MPPT 기준)</td><td class="num">10 Hz</td><td class="num">1 kHz</td></tr>
+                  <tr><td>SOGI-PLL</td><td class="num">정정 &lt; 20 ms</td><td class="num">10 kHz</td></tr>
+                  <tr><td>APD 버퍼 전압</td><td class="num">20 Hz</td><td class="num">1 kHz</td></tr>
+                  <tr><td>MPPT (가변 스텝 P&amp;O)</td><td class="num">—</td><td class="num">100 ms</td></tr>
+                </tbody>
+              </table>
+              <p class="tiny muted" style="margin-top:10px">PV 전압 루프는 120 Hz보다 충분히 낮아야 합니다. 그렇지 않으면 APD가 흡수할 맥동을 MPPT가 되쫓아가며 MPP를 이탈합니다.</p>
+            </div>
+            <div class="table-wrap">
+              <table class="spec">
+                <caption>계통 보호 정정치</caption>
+                <thead><tr><th>조건</th><th>최대 차단 시간</th></tr></thead>
+                <tbody>
+                  <tr><td>V &lt; 50 % (110 V 미만)</td><td class="num">0.16 s</td></tr>
+                  <tr><td>50 % ≤ V &lt; 88 %</td><td class="num">2.00 s</td></tr>
+                  <tr><td>110 % &lt; V &lt; 120 %</td><td class="num">1.00 s</td></tr>
+                  <tr><td>V ≥ 120 % (264 V 이상)</td><td class="num">0.16 s</td></tr>
+                  <tr><td>f &gt; 60.5 Hz 또는 f &lt; 59.3 Hz</td><td class="num">0.16 s</td></tr>
+                  <tr class="hl"><td>단독운전 방지</td><td class="num">0.5 s 이내</td></tr>
+                  <tr><td>재연계 지연</td><td class="num">5분 이상</td></tr>
+                </tbody>
+              </table>
+              <p class="tiny muted" style="margin-top:10px">한전 「분산형전원 배전계통 연계 기술기준」 및 KS C 8565 근거. 인증 시험 전 최신 개정판 대조가 선행되어야 합니다.</p>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="cap-card">
+              <div class="num">단독운전 방지</div>
+              <h4>SMS 능동 검출 + 수동 다중 판정</h4>
+              <p>Slip-Mode Frequency Shift 정궤환 방식. 목표 검출 시간 0.3 s (요구 0.5 s), Q = 1.0 공진 부하에서 비검출 영역 없음. 다중 유닛 간 주입 상쇄를 막기 위해 유닛별 랜덤 위상 오프셋을 적용합니다. 주입 크기는 THD 기여 0.5 %p 이내로 제한합니다.</p>
+            </div>
+            <div class="cap-card">
+              <div class="num">영교차 시퀀스</div>
+              <h4>DC-DC가 먼저, 언폴더가 나중</h4>
+              <p>전류 지령을 영교차 전후 ±100 µs 구간에서 0으로 클램프하고 전류 센서로 50 mA 미만을 확인한 뒤에야 언폴더를 전환합니다. 순서가 깨지면 브리지 관통 전류가 발생합니다. 이 데드타임이 THD의 주 결정 요인입니다.</p>
+            </div>
+            <div class="cap-card">
+              <div class="num">DC측 보호</div>
+              <h4>역접속 · OVP · 절연 감시</h4>
+              <p>이상 다이오드 역접속 차단(자기복구), 65 V 초과 래치 정지, 20 A 초과 시 HW 비교기 사이클별 제한. 기동 전 절연 저항 1 MΩ 미만이면 기동 금지, 운전 중 30분 주기 감시 (IEC 62109-2).</p>
+            </div>
+            <div class="cap-card">
+              <div class="num">열 보호</div>
+              <h4>단계적 디레이팅</h4>
+              <p>방열판 75 ℃에서 선형 디레이팅 개시(2.5 %/℃), 90 ℃에서 출력 50 % 제한, 95 ℃ 정지. 트랜스 120 ℃, MCU 105 ℃ 독립 임계값.</p>
+            </div>
+          </div>
+
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
+            <div class="tag-line" style="margin-bottom:10px">통신 및 진단</div>
+            <span class="tool-chip">Sub-1GHz 917~923.5 MHz</span>
+            <span class="tool-chip">AES-128</span>
+            <span class="tool-chip">서비스 CAN FD 500k/2M</span>
+            <span class="tool-chip">UDS 스타일 진단</span>
+            <span class="tool-chip">DBC 형상 관리</span>
+            <span class="tool-chip">A/B 듀얼뱅크 OTA</span>
+            <span class="tool-chip">ECDSA P-256 서명</span>
+            <span class="tool-chip">시큐어 부트</span>
+            <p class="tiny muted" style="margin-top:12px">진단 신호는 DBC 파일로 형상 관리하고 빌드 시 코드를 자동 생성해 문서–구현 불일치를 구조적으로 차단합니다. 펌웨어 갱신은 야간 또는 출력 정지 상태에서만 허용합니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CERTIFICATION -->
+      <div id="cert-section" class="subsection">
+        <div class="small-card dark">
+          <h3>목표 인증 및 시험</h3>
+          <div class="grid-2" style="gap:24px">
+            <div>
+              <h4 style="color:#fff;font-size:15px;margin-bottom:12px">인증 규격</h4>
+              <div class="tags">
+                <span class="tag">KS C 8565</span>
+                <span class="tag">KS C IEC 62109-1</span>
+                <span class="tag">KS C IEC 62109-2</span>
+                <span class="tag">KC 안전확인</span>
+                <span class="tag">KN 11 / CISPR 11 Class B</span>
+                <span class="tag">IEC 61000-4-2/4/5/6/8/11</span>
+                <span class="tag">IEC 62093</span>
+                <span class="tag">한전 분산형전원 연계기준</span>
+              </div>
+            </div>
+            <div>
+              <h4 style="color:#fff;font-size:15px;margin-bottom:12px">환경·신뢰성 시험</h4>
+              <div class="tags">
+                <span class="tag">고온고습 85/85, 1000 h</span>
+                <span class="tag">온도 사이클 −40~+85 ℃, 200 cy</span>
+                <span class="tag">습도-동결 10 cy</span>
+                <span class="tag">염수분무 Kb Severity 2</span>
+                <span class="tag">IP67 침수 1 m / 30분</span>
+                <span class="tag">HALT</span>
+              </div>
+            </div>
+          </div>
+          <p class="tiny" style="margin-top:20px;color:#94a3b8">EOL 생산 시험 약 5.8분 / 대: ICT → Hipot 3000 Vac → 절연저항 → 펌웨어·키 주입 → 센서 캘리브레이션 → 모의 계통 3점 부하 → 보호 동작 → 릴레이 용착 자가진단 → RF 링크 → 기밀 시험. 전 측정값은 시리얼과 함께 저장해 현장 불량 역추적에 사용합니다.</p>
+        </div>
+      </div>
+
+      <!-- RISKS -->
+      <div id="risk-section" class="subsection">
+        <div class="small-card">
+          <div class="tag-line">OPEN ISSUES</div>
+          <h3>미결 이슈 및 리스크</h3>
+          <p class="muted" style="margin-top:-4px;margin-bottom:18px">상세 설계 착수 전에 결정이 필요한 항목입니다. 숨기지 않고 명시하는 편이 설계 검토에 유용하다고 판단했습니다.</p>
+
+          <div class="risk high">
+            <h4>OI-08 · 열 설계 부족 <span class="tiny" style="color:#dc2626">— 최우선, 상세 설계 착수 전 결정</span></h4>
+            <p>주위 45 ℃, 손실 20.8 W, 목표 열저항 1.8 ℃/W 조건에서 방열판이 82 ℃로 예측되어 디레이팅 개시점 75 ℃를 초과합니다. 대응 선택지는 (a) 열저항 1.3 ℃/W 이하로 개선, (b) 4상 인터리빙으로 손실 15 W 이하 축소, (c) 45 ℃ 이상 디레이팅을 허용하도록 사양 조정. <strong>비용 대 사양의 경영 판단이 필요한 항목입니다.</strong></p>
+          </div>
+          <div class="risk">
+            <h4>OI-01 · 트랜스 권선비 n 확정</h4>
+            <p>n을 키우면 1차 전압 응력이 내려가고 2차가 올라갑니다. n=6이면 1차 112 V(150 V GaN, 마진 25 %) / 2차 671 V(1200 V SiC, 마진 44 %). 실측 링잉 파형으로 시제품 1차에서 재확정합니다.</p>
+          </div>
+          <div class="risk">
+            <h4>OI-03 · CCM/DCM 천이 게인 스케줄링</h4>
+            <p>영교차 근방에서 플라이백 소신호 전달함수가 크게 바뀝니다. 동작 모드별 게인 스케줄링이 THD 성능을 좌우하며, 시뮬레이션만으로는 예측 정확도가 낮아 시제품 실측이 필수입니다.</p>
+          </div>
+          <div class="risk">
+            <h4>OI-06 · 계통 연계 기준 최신 개정판 대조</h4>
+            <p>§계통 보호 정정치는 현행 기준 기반 설계값입니다. 인증 착수 전 최신 개정판과 대조해야 합니다.</p>
+          </div>
+          <div class="risk">
+            <h4>OI-02 · Y 커패시터 용량 vs 누설 전류 3.5 mA</h4>
+            <p>CM 노이즈 저감과 IEC 62109-1 누설 전류 한계가 정면 충돌합니다. 트랜스 차폐 권선으로 CM 전류 자체를 줄이는 것을 1순위로 둡니다.</p>
+          </div>
+          <div class="risk">
+            <h4>구조적 리스크 · 500 W 단일 채널</h4>
+            <p>상용 언폴딩 마이크로인버터는 대부분 채널당 250~350 W입니다. 500 W 단일 채널은 2배 순시 전력 제약을 그대로 받으므로, 4상 인터리빙 또는 2채널 250 W 구성으로의 설계 변경 가능성을 열어 둡니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="cta-box">
+          <h3>상세 사양서</h3>
+          <p class="muted">전력단 소자 응력 계산, 제어 루프 설계, 상태 머신, 센싱 신호 체인, 펌웨어 아키텍처, EOL 시험 절차, 계산 근거 부록까지 포함한 전체 엔지니어링 사양서는 저장소의 Markdown 문서에 있습니다.</p>
+          <a href="docs/V2000-design-spec.md" class="btn btn-primary" style="width:100%">V2000 설계 사양서 전문 보기</a>
+          <p class="tiny muted" style="margin-top:14px">문서 버전 0.1 (Draft) · 2026-09-16 · 개념 설계 / 사양 확정 전</p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p class="tiny muted">V2000 Unfolding Microinverter 500W — 설계 목표 사양 · 확정 사양 아님</p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
