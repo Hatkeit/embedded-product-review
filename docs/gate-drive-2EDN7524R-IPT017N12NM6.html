@@ -276,6 +276,36 @@
     </div>
 
     <div class="card">
+      <div class="card-head"><span>턴오프 저항 R_G(off) 의 상한</span><span class="pn">0.5 Ω 이 어디서 나왔는가</span></div>
+      <div class="card-body">
+        <div class="eqbox">
+드라이버가 <b>싱크 정격 5 A 를 그대로 낼 수 있는 조건</b>:
+
+  RoL + R_G(off) + R_G(int) ≤ V_DD / 5 A = 12 / 5 = <b>2.4 Ω</b>
+  →  <b>R_G(off) ≤ 2.4 − 0.55 − R_G(int)</b>
+
+  R_G(int) 0.5 Ω  →  R_G(off) ≤ 1.35 Ω
+  R_G(int) 1.1 Ω  →  R_G(off) ≤ <b>0.75 Ω</b>
+  R_G(int) 1.5 Ω  →  R_G(off) ≤ 0.35 Ω
+  R_G(int) 2.0 Ω  →  R_G(off) ≤ 0 Ω   (이미 드라이버가 제한되지 않음)
+        </div>
+        <p class="lead"><b style="color:var(--ink)">0.5 Ω 은 계산으로 유도된 최적값이 아니라, 이 상한 안에 들어가는 설계 선택입니다.</b> R_G(int) 1.1 Ω(참고값) 기준 상한이 0.75 Ω 이므로 0.5 Ω 은 여유 있게 안쪽입니다. 이 구간에서는 <b style="color:var(--ink)">0 Ω 으로 낮춰도 초기 피크 전류가 늘지 않습니다</b> — 드라이버가 5 A 에서 이미 포화하기 때문입니다. 따라서 0 Ω 대신 0.5 Ω 을 두어 배선 링잉에 감쇠를 주는 편이 낫습니다. 상한을 넘겨 키우면 그때부터는 턴오프가 그만큼 느려집니다.</p>
+        <div class="table-wrap" style="margin-top:16px">
+          <table>
+            <thead><tr><th class="mono">R_G(int)</th><th class="mono">R_G(off) = 0 Ω</th><th class="mono">R_G(off) = 0.5 Ω</th><th>0.5 Ω 의 대가</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">0.5 Ω</td><td class="mono">5.0 A (제한)</td><td class="mono">5.0 A (제한)</td><td>없음</td></tr>
+              <tr class="pick"><td class="mono">1.1 Ω</td><td class="mono">5.0 A (제한)</td><td class="mono">5.0 A (제한)</td><td>없음</td></tr>
+              <tr><td class="mono">1.5 Ω</td><td class="mono">5.0 A (제한)</td><td class="mono">4.71 A</td><td>−6 %</td></tr>
+              <tr><td class="mono">2.0 Ω</td><td class="mono">4.71 A</td><td class="mono">3.93 A</td><td>−17 %</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lead" style="margin-top:12px">R_G(int) 가 1.5 Ω 이하이면 0.5 Ω 을 두는 데 <b style="color:var(--ink)">사실상 대가가 없습니다.</b> 2 Ω 을 넘어가면 손해가 보이기 시작하므로 그때 0 Ω(다이오드만)으로 바꾸는 것을 검토하십시오. 어느 쪽이든 턴오프 임피던스가 충분한지는 <b style="color:var(--ink)">V_GS(th) 를 확보한 뒤 또는 실측으로</b> 판정해야 합니다.</p>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="card-head"><span>게이트 구동 전력</span><span class="pn">Q_g 141 nC(최대) · V_DD 12 V</span></div>
       <div class="card-body">
         <div class="table-wrap">
@@ -521,7 +551,7 @@
             <thead><tr><th>기호</th><th class="mono">값</th><th class="mono">패키지</th><th>근거</th></tr></thead>
             <tbody>
               <tr class="pick"><td class="mono">D_off</td><td class="mono">PMEG3020 계열 (30 V / 2 A)</td><td class="mono">SOD-128 등</td><td>V_F 360 mV @ 2 A, I_FSM 50 A <span class="badge b-ok">확인</span></td></tr>
-              <tr><td class="mono">R_G(off)</td><td class="mono">0.5 Ω</td><td class="mono">0805 후막</td><td>턴오프 경로 최소화. 실측 후 0 ~ 1 Ω 조정</td></tr>
+              <tr class="pick"><td class="mono">R_G(off)</td><td class="mono">0.5 Ω</td><td class="mono">0805 후막</td><td>상한 <span style="font-family:'IBM Plex Mono',monospace">2.4 − 0.55 − R_G(int)</span> 안쪽. R_G(int) ≤ 1.5 Ω 이면 대가 없음</td></tr>
               <tr><td class="mono">R_gs</td><td class="mono">10 kΩ</td><td class="mono">0603</td><td>무구동 상태 게이트 고정. 밀러 대책 아님</td></tr>
               <tr><td class="mono">R_in</td><td class="mono">22 Ω</td><td class="mono">0603</td><td>입력 링잉 감쇠</td></tr>
               <tr><td class="mono">R_in,pd</td><td class="mono">10 kΩ</td><td class="mono">0603</td><td>MCU 부팅 전 입력 확정</td></tr>
