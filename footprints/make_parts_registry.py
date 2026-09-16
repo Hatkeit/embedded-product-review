@@ -61,6 +61,12 @@ fp_rows = [
      "리드=벤더랜드 1.143 오프셋 / 노출패드=2x3 윈도우 70.0%", "있음",
      "규칙2로 토 0.50 연장(벤더 1.143→1.57). 규칙4 이탈 — 페이스트는 벤더량 유지. 방향은 p.2 TOP VIEW 기준(p.26 기구도면과 90도 다름)",
      None, "미검증", "buildsoic127.il", "LT8304 DS 8304fa p.2 Pin Config / p.26 Package Description"],
+    ["SOP65P490X104-9M", "SMD", "PG-TSSOP-8 (노출다이패드)", 9, 0.65,
+     "리드 1.45 x 0.40 / 노출패드 1.75 x 2.05", None, "3.1 x 3.1 x 1.04max",
+     "x ±3.10 / y ±1.65",
+     "리드=벤더 스텐실 1.3 오프셋 / 노출패드=2x2 창 79.9%", "있음",
+     "규칙2로 토 0.15 연장(벤더 1.3→1.45). 마스크는 규칙6에 따라 데이터시트값(동판+0.05/변) 우선 → 마스크 웹 0.15. 방향은 p.7 Top View 기준",
+     None, "미검증", "buildsop65p490.il", "Infineon 2EDN752x DS Rev2.7 p.7 Pin Config / p.27 outline / p.28 footprint"],
 ]
 for r, row in enumerate(fp_rows, start=2):
     for c, v in enumerate(row, start=1):
@@ -73,17 +79,18 @@ fp["G2"] = "—"; fp["G2"].font = IN_FONT
 fp["G4"] = "—"; fp["G4"].font = IN_FONT
 fp["G5"] = "—"; fp["G5"].font = IN_FONT
 fp["G6"] = "—"; fp["G6"].font = IN_FONT
+fp["G7"] = "—"; fp["G7"].font = IN_FONT
 fp["E4"] = "—"; fp["E4"].font = IN_FONT
-for rr in (2,3,4,5,6):
+for rr in (2,3,4,5,6,7):
     fp.cell(row=rr, column=13, value="미실행").font = IN_FONT
-for rr in (2,3,4,5,6):
+for rr in (2,3,4,5,6,7):
     fp.cell(row=rr, column=13).fill = WARN
     fp.cell(row=rr, column=14).fill = WARN
 
-fp["A8"] = "※ DRC / 검증상태는 axlDRCUpdate(t) 와 extracta 대조를 실제로 돌린 뒤에만 갱신할 것."
-fp["A8"].font = Font(name=F, size=9, italic=True, color="C00000")
-fp["A9"] = "※ 다섯 풋프린트 모두 이 세션에서는 빌드하지 못했습니다 (Allegro/extracta 부재). 스크립트만 작성된 상태입니다."
+fp["A9"] = "※ DRC / 검증상태는 axlDRCUpdate(t) 와 extracta 대조를 실제로 돌린 뒤에만 갱신할 것."
 fp["A9"].font = Font(name=F, size=9, italic=True, color="C00000")
+fp["A10"] = "※ 여섯 풋프린트 모두 이 세션에서는 빌드하지 못했습니다 (Allegro/extracta 부재). 스크립트만 작성된 상태입니다."
+fp["A10"].font = Font(name=F, size=9, italic=True, color="C00000")
 fp.freeze_panes = "A2"
 
 fp["L2"].comment = Comment(
@@ -152,6 +159,11 @@ v_rows = [
      "S8E (SOIC-8 노출패드)", "SOIC127P600X175-9M", None, "있음",
      "LT8304/LT8304-1 DS 8304fa", "buildsoic127.il", "미검증",
      "핀9=노출패드=GND, 반드시 납땜. 1 TC/2 RREF/3 RFB/4 SW/5 GND/6 VIN/7 INTVCC/8 EN·UVLO. LT8304-1 도 동일 패키지"],
+    ["2EDN7524RXTMA1", "Infineon", "듀얼 게이트 드라이버",
+     "2ch x 5A / 4.5~20V / UVLO 4.2V / 비반전 / 전파지연 17ns / RthJA 64 K/W",
+     "PG-TSSOP-8 (노출다이패드)", "SOP65P490X104-9M", None, "있음",
+     "2EDN752x/2EDN852x DS Rev 2.7 (2025-03-18)", "buildsop65p490.il", "미검증",
+     "핀9=노출다이패드, GND(핀3)에 연결 필수. 1 ENA/2 INA/3 GND/4 INB/5 OUTB/6 VDD/7 OUTA/8 ENB. 마스크 웹 0.15 — 팹 전역 마스크 확장 금지"],
 ]
 for r, row in enumerate(v_rows, start=HR+1):
     v.cell(row=r, column=1, value=f"=ROW()-{HR}").font = FX_FONT

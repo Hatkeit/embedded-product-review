@@ -1,0 +1,25 @@
+SOP65P490X104-9M  expected values  (mm, TOP view per datasheet p.7, origin = package centre)
+  vendor lead land : 1.3 x 0.4  centre +/-2.2  inner 1.5500000000000003  outer 2.85
+  applied lead land: 1.45 x 0.4  centre +/-2.275  inner 1.5500000000000003  outer 3.0
+  lead mask        : 1.55 x 0.50   (datasheet: copper + 0.05/side)
+  lead paste       : 1.3 x 0.4  offset +0.075  lands at +/-2.2   (= p.28 stencil)
+  exposed pad      : copper 1.75 x 2.05  mask 1.85 x 2.15
+  exposed paste    : 2x2 windows 0.775 x 0.9249999999999999, gap 0.2, centres +/-0.48750000000000004/0.5625 -> 79.93%
+  lead tip (max)   : 2.5  toe exposed = 0.50  (rule >=0.50 OK)
+  pad-to-pad gap   : copper 0.25  /  MASK WEB 0.15  <-- see risks
+  lead heel <-> EP : 0.675
+  body             : 3.1 x 3.1 max (3+/-0.1), height 1.04 max
+  silk             : y=+/-1.55 lines, x -1.55..1.55; clearance to pad 0.325
+  place bound      : x +/-3.10  y +/-1.65  filled
+  refdes           : (-2.70, 1.525)
+
+pin                 name        x        y  rot   pasteX
+  1                  ENA   -2.275    0.975    0    -2.20
+  2                  INA   -2.275    0.325    0    -2.20
+  3                  GND   -2.275   -0.325    0    -2.20
+  4                  INB   -2.275   -0.975    0    -2.20
+  5                 OUTB    2.275   -0.975  180     2.20
+  6                  VDD    2.275   -0.325  180     2.20
+  7                 OUTA    2.275    0.325  180     2.20
+  8                  ENB    2.275    0.975  180     2.20
+  9   Exposed pad -> GND    0.000    0.000    0        -
