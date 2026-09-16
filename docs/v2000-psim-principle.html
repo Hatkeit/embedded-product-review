@@ -1,0 +1,1148 @@
+<title>V2000 언폴딩 회로 원리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#FCFCFD;
+    --sheet:#FFFFFF;
+    --ink:#0F1729;
+    --muted:#5A6473;
+    --faint:#8A93A3;
+    --rule:#DCE2EB;
+    --rule-strong:#B9C2D0;
+    --sym:#1B3A8F;      /* 부품 본체 — 원본 스키매틱의 청색 */
+    --wire:#C81E1E;     /* 전력 배선 — 원본 스키매틱의 적색 */
+    --sig:#0E7490;      /* 제어·신호 경로 */
+    --node:#B026C9;     /* 접속점 */
+    --warn-bg:#FFF8E6;
+    --warn-line:#E5B94E;
+    --warn-ink:#7A5610;
+    --dim:#C4CBD6;
+    --shadow:0 1px 2px rgba(15,23,41,.05), 0 8px 24px rgba(15,23,41,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0B0F16;
+      --sheet:#121824;
+      --ink:#E7ECF4;
+      --muted:#9AA5B6;
+      --faint:#7A8496;
+      --rule:#243044;
+      --rule-strong:#35435C;
+      --sym:#7FA6F5;
+      --wire:#FF7A7A;
+      --sig:#38D6E8;
+      --node:#E27BF5;
+      --warn-bg:#241D08;
+      --warn-line:#8A6E22;
+      --warn-ink:#E8C777;
+      --dim:#37425A;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0B0F16;
+    --sheet:#121824;
+    --ink:#E7ECF4;
+    --muted:#9AA5B6;
+    --faint:#7A8496;
+    --rule:#243044;
+    --rule-strong:#35435C;
+    --sym:#7FA6F5;
+    --wire:#FF7A7A;
+    --sig:#38D6E8;
+    --node:#E27BF5;
+    --warn-bg:#241D08;
+    --warn-line:#8A6E22;
+    --warn-ink:#E8C777;
+    --dim:#37425A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans KR","IBM Plex Sans Condensed",system-ui,sans-serif;
+    font-size:15px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1240px;margin:0 auto;padding-block:28px 64px;padding-left:16px;padding-right:16px}
+
+  /* ---- 도면 머리글 (title block 관습) ---- */
+  .masthead{border:1.5px solid var(--rule-strong);background:var(--sheet);box-shadow:var(--shadow)}
+  .masthead-body{padding:26px 24px 20px}
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--sig);font-weight:600;margin:0 0 10px;
+  }
+  h1{
+    font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;
+    font-size:clamp(28px,5vw,44px);line-height:1.12;letter-spacing:-.015em;
+    font-weight:700;margin:0 0 12px;text-wrap:balance;word-break:keep-all;
+  }
+  .standfirst{margin:0;max-width:62ch;color:var(--muted);font-size:16px;word-break:keep-all}
+  .titleblock{
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+    border-top:1.5px solid var(--rule-strong);
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;
+  }
+  .titleblock div{padding:9px 14px;border-right:1px solid var(--rule)}
+  .titleblock div:last-child{border-right:none}
+  .titleblock span{display:block;color:var(--faint);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+  .titleblock b{font-weight:500;color:var(--ink)}
+
+  /* ---- 경고 콜아웃 ---- */
+  .callout{
+    margin-top:24px;border:1px solid var(--warn-line);border-left-width:4px;
+    background:var(--warn-bg);color:var(--warn-ink);padding:18px 20px;border-radius:0 8px 8px 0;
+  }
+  .callout h2{
+    font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;
+    font-size:17px;margin:0 0 8px;font-weight:700;letter-spacing:0;
+  }
+  .callout p{margin:0 0 10px;font-size:14.5px;word-break:keep-all}
+  .callout p:last-child{margin-bottom:0}
+  .callout table{margin-top:12px;font-size:13.5px}
+
+  /* ---- 시트 ---- */
+  .sheet{
+    margin-top:36px;border:1.5px solid var(--rule-strong);background:var(--sheet);
+    box-shadow:var(--shadow);
+  }
+  .sheet-head{
+    display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    padding:14px 20px;border-bottom:1.5px solid var(--rule-strong);
+  }
+  .sheet-no{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;font-weight:600;
+    letter-spacing:.14em;color:var(--sheet);background:var(--sym);
+    padding:3px 9px;border-radius:3px;white-space:nowrap;
+  }
+  .sheet-head h2{
+    font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;
+    font-size:21px;font-weight:700;margin:0;letter-spacing:-.01em;word-break:keep-all;
+  }
+  .sheet-head .sub{color:var(--muted);font-size:13.5px;word-break:keep-all}
+  .sheet-body{padding:20px}
+  .canvas{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  .canvas svg{display:block;min-width:720px;width:100%;height:auto;max-width:100%}
+  figure{margin:0}
+  figcaption{
+    margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);
+    color:var(--muted);font-size:13.5px;word-break:keep-all;max-width:78ch;
+  }
+  figcaption b{color:var(--ink);font-weight:700}
+
+  .notes{display:grid;gap:10px;margin-top:18px}
+  .note{
+    display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:start;
+    font-size:14px;word-break:keep-all;
+  }
+  .note .mk{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+    color:var(--sig);border:1.5px solid var(--sig);border-radius:50%;
+    width:24px;height:24px;display:grid;place-items:center;margin-top:2px;
+  }
+  .note b{font-weight:700}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table caption{
+    text-align:left;font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;
+    font-weight:700;font-size:16px;padding:0 0 10px;color:var(--ink);
+  }
+  th,td{padding:9px 12px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top;word-break:keep-all}
+  thead th{
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--faint);font-weight:600;white-space:nowrap;
+    border-bottom:1.5px solid var(--rule-strong);
+  }
+  tbody tr:last-child td{border-bottom:none}
+  td.mono,th.mono{font-family:"IBM Plex Mono",monospace;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tag{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;padding:2px 7px;border-radius:3px;
+    border:1px solid currentColor;white-space:nowrap;
+  }
+  .t-power{color:var(--wire)}
+  .t-sig{color:var(--sig)}
+
+  .legend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2px;background:var(--rule)}
+  .legend-item{background:var(--sheet);padding:14px;display:grid;gap:8px}
+  .legend-item svg{display:block;height:54px;width:auto;max-width:100%}
+  .legend-item .lbl{font-size:13px;line-height:1.45;word-break:keep-all}
+  .legend-item .lbl b{display:block;font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-weight:700}
+  .legend-item .lbl span{color:var(--muted);font-size:12.5px}
+
+  @media (max-width:620px){
+    .titleblock{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .titleblock div{border-bottom:1px solid var(--rule)}
+    .sheet-body{padding:14px}
+    .masthead-body{padding:20px 16px 16px}
+  }
+</style>
+
+<div class="wrap">
+
+  <!-- ============ 머리글 ============ -->
+  <header class="masthead">
+    <div class="masthead-body">
+      <p class="eyebrow">Unfolding Microinverter · Operating Principle · PSIM Notation</p>
+      <h1>V2000 언폴딩 회로 원리</h1>
+      <p class="standfirst">S2G1812 보드의 전력단과 제어 구조를 PSIM 심볼로 다시 그렸습니다. 절연형 플라이백이 전류를 정현파로 성형하고, 출력 H-브리지는 계통 주파수 60&nbsp;Hz로 극성만 뒤집습니다. 각 시트는 회로가 실제로 무엇을 하는지를 보여주며, 부품 기호는 원본 스키매틱의 색 규약(청색 부품 · 적색 배선)을 따랐습니다.</p>
+    </div>
+    <div class="titleblock">
+      <div><span>Document</span><b>V2000-PSIM</b></div>
+      <div><span>Source</span><b>S2G1812 Rev 00</b></div>
+      <div><span>Rev</span><b>0.1 Draft</b></div>
+      <div><span>Sheets</span><b>5</b></div>
+    </div>
+  </header>
+
+  <!-- ============ 패키지 확인 ============ -->
+  <section class="callout">
+    <h2>LQFP144 지정에 대한 확인 사항</h2>
+    <p><b>STM32G4 시리즈에는 LQFP144 품목이 없습니다.</b> 이 계열의 최대 패키지는 LQFP100(STM32G474VE) 또는 UFBGA121입니다. 따라서 “LQFP144 + HRTIM” 조합을 유지하려면 STM32H7 계열(STM32H723ZGT6 / STM32H743ZIT6 등)로 올라가야 합니다.</p>
+    <p>그런데 이 이동에는 <b>방향이 반대인 대가</b>가 따릅니다. H7은 CPU와 핀 수가 크게 늘지만 <b>아날로그 집적도는 오히려 줄어듭니다.</b></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>항목</th><th class="mono">STM32G474VE (LQFP100)</th><th class="mono">STM32H743ZI (LQFP144)</th></tr></thead>
+        <tbody>
+          <tr><td>아날로그 비교기</td><td class="mono">7</td><td class="mono">2</td></tr>
+          <tr><td>내장 op-amp</td><td class="mono">6</td><td class="mono">2</td></tr>
+          <tr><td>ADC (SAR)</td><td class="mono">5</td><td class="mono">3</td></tr>
+          <tr><td>HRTIM1</td><td class="mono">있음</td><td class="mono">있음</td></tr>
+          <tr><td>CPU</td><td class="mono">M4F 170 MHz</td><td class="mono">M7 480 MHz</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px">앞선 검토서에서 제안한 <b>“외부 비교기 3개(U401·U406A·U406B) 제거”가 H7에서는 성립하지 않습니다.</b> 비교기가 2개뿐이라 4상 전류 제한을 내부로 흡수할 수 없고, 외부 비교기를 그대로 유지해야 합니다. 현재 소요 신호핀은 47개이므로 LQFP100이면 두 배 가까운 여유가 있습니다. <b>144핀이 필요한 별도 이유(확장 I/O, 외부 메모리 버스, 기존 보드 호환 등)가 있는지 확인이 필요합니다.</b> 아래 회로 원리는 MCU 품번과 무관하게 동일하게 적용됩니다.</p>
+  </section>
+
+  <!-- ============ SHEET 1 ============ -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">SHEET 1</span>
+      <h2>단일 플라이백 상 — 전력단 상세</h2>
+      <span class="sub">PVA 채널 1상. 이 구조가 4개 병렬로 동작한다.</span>
+    </div>
+    <div class="sheet-body">
+      <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 900 450" role="img" aria-label="단일 플라이백 상의 PSIM 심볼 회로도. 좌측 PV 직류원과 벌크 커패시터, 전류 트랜스포머, 절연 트랜스포머 1차 권선과 MOSFET, 2차 권선과 1200V 다이오드를 거쳐 우측의 플러스 HV 버스로 이어지며, 이 버스에는 스너버용 소용량 커패시터만 존재한다.">
+            <defs>
+              <marker id="s1-arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--sig)"/>
+              </marker>
+              <marker id="s1-arwP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--wire)"/>
+              </marker>
+              <g id="s1-mos">
+                <line x1="0" y1="0" x2="0" y2="12" stroke="var(--wire)" stroke-width="2"/>
+                <line x1="0" y1="12" x2="18" y2="12" stroke="var(--wire)" stroke-width="2"/>
+                <line x1="18" y1="4" x2="18" y2="60" stroke="var(--sym)" stroke-width="3"/>
+                <line x1="9" y1="12" x2="9" y2="52" stroke="var(--sym)" stroke-width="2.5"/>
+                <line x1="9" y1="32" x2="-20" y2="32" stroke="var(--sig)" stroke-width="2"/>
+                <line x1="18" y1="52" x2="0" y2="52" stroke="var(--wire)" stroke-width="2"/>
+                <line x1="0" y1="52" x2="0" y2="64" stroke="var(--wire)" stroke-width="2"/>
+                <polygon points="13,48 13,56 5,52" fill="var(--sym)"/>
+                <line x1="34" y1="16" x2="34" y2="48" stroke="var(--sym)" stroke-width="1.6"/>
+                <line x1="18" y1="16" x2="34" y2="16" stroke="var(--sym)" stroke-width="1.6"/>
+                <line x1="18" y1="48" x2="34" y2="48" stroke="var(--sym)" stroke-width="1.6"/>
+                <polygon points="30,38 38,38 34,29" fill="var(--sym)"/>
+                <line x1="29" y1="28" x2="39" y2="28" stroke="var(--sym)" stroke-width="1.8"/>
+              </g>
+            </defs>
+
+            <!-- ===== 좌측: PV 소스 ===== -->
+            <circle cx="70" cy="230" r="21" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <line x1="63" y1="219" x2="77" y2="219" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="70" y1="212" x2="70" y2="226" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="63" y1="243" x2="77" y2="243" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="70" y1="80" x2="70" y2="209" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="70" y1="251" x2="70" y2="380" stroke="var(--wire)" stroke-width="2"/>
+            <text x="70" y="288" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--ink)">PV 모듈</text>
+            <text x="70" y="304" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--muted)">28~60 V</text>
+
+            <!-- 레일 -->
+            <line x1="70" y1="80" x2="340" y2="80" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="70" y1="380" x2="340" y2="380" stroke="var(--wire)" stroke-width="2"/>
+            <text x="86" y="72" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--wire)">PVA+</text>
+            <text x="86" y="398" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--wire)">PVA−</text>
+
+            <!-- 벌크 커패시터 -->
+            <line x1="140" y1="80" x2="140" y2="218" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="127" y1="218" x2="153" y2="218" stroke="var(--sym)" stroke-width="2.6"/>
+            <path d="M127 234 Q140 224 153 234" fill="none" stroke="var(--sym)" stroke-width="2.6"/>
+            <line x1="140" y1="234" x2="140" y2="380" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="140" cy="80" r="3.4" fill="var(--node)"/>
+            <circle cx="140" cy="380" r="3.4" fill="var(--node)"/>
+            <text x="160" y="212" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--ink)">2700µF ×4</text>
+            <text x="160" y="228" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">63 V 전해</text>
+            <text x="160" y="248" font-family="Noto Sans KR, sans-serif" font-size="11.5" fill="var(--sig)">120 Hz 맥동 흡수</text>
+
+            <!-- 전류 트랜스포머 -->
+            <circle cx="232" cy="80" r="13" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="232" y1="93" x2="232" y2="112" stroke="var(--sig)" stroke-width="1.8" marker-end="url(#s1-arw)"/>
+            <text x="232" y="128" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sig)">CT</text>
+            <text x="232" y="143" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">TR100</text>
+            <text x="232" y="60" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">i_상</text>
+
+            <!-- 트랜스포머 -->
+            <line x1="330" y1="80" x2="330" y2="120" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="330" cy="80" r="3.4" fill="var(--node)"/>
+            <path d="M330 120 A9 9 0 0 0 330 136 A9 9 0 0 0 330 152 A9 9 0 0 0 330 168 A9 9 0 0 0 330 184" fill="none" stroke="var(--sym)" stroke-width="2.4"/>
+            <line x1="345" y1="112" x2="345" y2="192" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="351" y1="112" x2="351" y2="192" stroke="var(--sym)" stroke-width="2"/>
+            <path d="M366 120 A9 9 0 0 1 366 136 A9 9 0 0 1 366 152 A9 9 0 0 1 366 168 A9 9 0 0 1 366 184" fill="none" stroke="var(--sym)" stroke-width="2.4"/>
+            <circle cx="320" cy="117" r="3.6" fill="var(--sym)"/>
+            <circle cx="376" cy="187" r="3.6" fill="var(--sym)"/>
+            <text x="348" y="104" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--ink)">T100</text>
+            <text x="348" y="208" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">n = 1 : 6</text>
+
+            <!-- MOSFET -->
+            <line x1="330" y1="184" x2="330" y2="236" stroke="var(--wire)" stroke-width="2"/>
+            <use href="#s1-mos" x="330" y="236"/>
+            <line x1="330" y1="300" x2="330" y2="380" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="330" cy="380" r="3.4" fill="var(--node)"/>
+            <text x="378" y="262" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--ink)">S100 ∥ S101</text>
+            <text x="378" y="277" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">BSC190N15NS3 · 150 V</text>
+
+            <!-- 게이트 신호 -->
+            <line x1="252" y1="268" x2="310" y2="268" stroke="var(--sig)" stroke-width="2" marker-end="url(#s1-arw)"/>
+            <text x="248" y="263" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sig)">PWM</text>
+            <text x="248" y="278" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">65~150 kHz</text>
+
+            <!-- 2차측 -->
+            <line x1="366" y1="120" x2="470" y2="120" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="470" y1="120" x2="482" y2="120" stroke="var(--wire)" stroke-width="2"/>
+            <polygon points="482,110 506,120 482,130" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <line x1="506" y1="109" x2="506" y2="131" stroke="var(--sym)" stroke-width="2.8"/>
+            <line x1="506" y1="120" x2="560" y2="120" stroke="var(--wire)" stroke-width="2"/>
+            <text x="494" y="98" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--ink)">D101</text>
+            <text x="494" y="84" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">1200 V SiC</text>
+            <line x1="366" y1="184" x2="560" y2="184" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="560" y1="184" x2="560" y2="330" stroke="var(--wire)" stroke-width="2"/>
+
+            <!-- +HV / HGND 버스 -->
+            <line x1="560" y1="120" x2="866" y2="120" stroke="var(--wire)" stroke-width="3"/>
+            <line x1="560" y1="330" x2="866" y2="330" stroke="var(--wire)" stroke-width="3"/>
+            <circle cx="560" cy="120" r="3.8" fill="var(--node)"/>
+            <circle cx="560" cy="330" r="3.8" fill="var(--node)"/>
+            <text x="596" y="110" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--wire)">+HV</text>
+            <text x="596" y="350" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--wire)">HGND</text>
+
+            <!-- 스너버 커패시터 -->
+            <line x1="660" y1="120" x2="660" y2="212" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="648" y1="212" x2="672" y2="212" stroke="var(--sym)" stroke-width="2.6"/>
+            <line x1="648" y1="222" x2="672" y2="222" stroke="var(--sym)" stroke-width="2.6"/>
+            <line x1="660" y1="222" x2="660" y2="330" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="660" cy="120" r="3.4" fill="var(--node)"/>
+            <circle cx="660" cy="330" r="3.4" fill="var(--node)"/>
+            <text x="684" y="209" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--ink)">10 nF</text>
+            <text x="684" y="225" font-family="Noto Sans KR, sans-serif" font-size="11.5" fill="var(--wire)">스너버 전용</text>
+            <text x="684" y="242" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--wire)">벌크 커패시터 없음</text>
+
+            <!-- +HV 파형 인셋 -->
+            <rect x="758" y="146" width="108" height="72" rx="4" fill="none" stroke="var(--rule-strong)" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <line x1="766" y1="206" x2="858" y2="206" stroke="var(--rule-strong)" stroke-width="1"/>
+            <path d="M770 206 C782 158, 794 158, 806 206 C818 158, 830 158, 842 206" fill="none" stroke="var(--wire)" stroke-width="2.2"/>
+            <text x="812" y="164" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">|sin|</text>
+
+            <!-- 출력 화살표 -->
+            <line x1="866" y1="225" x2="890" y2="225" stroke="var(--wire)" stroke-width="2.4" marker-end="url(#s1-arwP)"/>
+            <text x="878" y="262" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--wire)">언폴더</text>
+            <text x="878" y="278" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--wire)">→</text>
+
+            <!-- 콜아웃 번호 -->
+            <circle cx="140" cy="422" r="11" fill="none" stroke="var(--sig)" stroke-width="1.6"/>
+            <text x="140" y="427" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--sig)">1</text>
+            <circle cx="330" cy="422" r="11" fill="none" stroke="var(--sig)" stroke-width="1.6"/>
+            <text x="330" y="427" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--sig)">2</text>
+            <circle cx="494" cy="422" r="11" fill="none" stroke="var(--sig)" stroke-width="1.6"/>
+            <text x="494" y="427" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--sig)">3</text>
+            <circle cx="700" cy="422" r="11" fill="none" stroke="var(--sig)" stroke-width="1.6"/>
+            <text x="700" y="427" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--sig)">4</text>
+          </svg>
+        </div>
+        <figcaption><b>플라이백을 고른 이유는 하나입니다.</b> 출력이 0&nbsp;V까지 내려가야 하기 때문입니다. 부스트 계열은 <span style="font-family:'IBM Plex Mono',monospace">V_out ≥ n·V_in</span> 이라 영교차를 만들 수 없지만, 플라이백은 벅부스트 계열이라 0&nbsp;V부터 311&nbsp;V까지 전 구간을 덮습니다.</figcaption>
+      </figure>
+
+      <div class="notes">
+        <div class="note"><span class="mk">1</span><div><b>벌크 전해 커패시터는 PV측에만 있습니다.</b> 2700&nbsp;µF 4개 = 10.8&nbsp;mF로 120&nbsp;Hz 맥동 에너지 1.33&nbsp;J를 흡수합니다. 이것이 이 제품 수명의 상한을 결정하는 부품입니다.</div></div>
+        <div class="note"><span class="mk">2</span><div><b>MOSFET 한 개가 아니라 두 개 병렬입니다.</b> S100∥S101이 같은 게이트 신호를 받습니다. 순시 피크 전력이 평균의 2배라서 한 개로는 전류를 감당하지 못합니다.</div></div>
+        <div class="note"><span class="mk">3</span><div><b>2차 다이오드가 1200&nbsp;V급인 이유.</b> 역전압 응력은 <span style="font-family:'IBM Plex Mono',monospace">V_out(pk) + n·V_in(max) = 311 + 360 = 671&nbsp;V</span> 입니다. 여기에 링잉과 서지 마진을 더하면 1200&nbsp;V가 필요합니다.</div></div>
+        <div class="note"><span class="mk">4</span><div><b>+HV 버스에 벌크 커패시터가 없습니다.</b> 10&nbsp;nF 스너버뿐입니다. 이 한 가지가 언폴딩 구조를 다른 모든 인버터와 구분합니다 — DC 링크가 존재하지 않으므로 DC-DC가 순시 0~1000&nbsp;W를 그대로 처리합니다.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SHEET 2 ============ -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">SHEET 2</span>
+      <h2>전체 전력단 — PV에서 계통까지</h2>
+      <span class="sub">4상 플라이백 → +HV 버스 → 언폴더 → EMI 필터 → 계통</span>
+    </div>
+    <div class="sheet-body">
+      <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1180 640" role="img" aria-label="전체 전력단 회로도. 좌측 PVA 채널의 플라이백 1상이 상세히 그려져 있고 180도 인터리브된 2상임을 표시한다. 그 아래 PVB 채널은 동일 구조 2상으로 요약되어 있다. 네 상의 출력이 모두 플러스 HV와 HGND 버스로 모이고, 이 버스를 네 개의 MOSFET으로 구성된 언폴더 H-브리지가 60헤르츠로 극성 전환하여 EMI 필터와 이중 릴레이를 거쳐 계통으로 전달한다.">
+            <defs>
+              <marker id="s2-arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--sig)"/>
+              </marker>
+              <g id="s2-mos">
+                <line x1="0" y1="0" x2="0" y2="10" stroke="var(--wire)" stroke-width="2"/>
+                <line x1="0" y1="10" x2="16" y2="10" stroke="var(--wire)" stroke-width="2"/>
+                <line x1="16" y1="3" x2="16" y2="57" stroke="var(--sym)" stroke-width="3"/>
+                <line x1="8" y1="11" x2="8" y2="49" stroke="var(--sym)" stroke-width="2.5"/>
+                <line x1="8" y1="30" x2="-18" y2="30" stroke="var(--sig)" stroke-width="2"/>
+                <line x1="16" y1="50" x2="0" y2="50" stroke="var(--wire)" stroke-width="2"/>
+                <line x1="0" y1="50" x2="0" y2="60" stroke="var(--wire)" stroke-width="2"/>
+                <polygon points="12,46 12,54 4,50" fill="var(--sym)"/>
+              </g>
+            </defs>
+
+            <!-- ======== PVA 채널 ======== -->
+            <circle cx="60" cy="195" r="20" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <line x1="53" y1="185" x2="67" y2="185" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="60" y1="178" x2="60" y2="192" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="53" y1="207" x2="67" y2="207" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="60" y1="90" x2="60" y2="175" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="60" y1="215" x2="60" y2="300" stroke="var(--wire)" stroke-width="2"/>
+            <text x="60" y="243" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--ink)">PVA</text>
+
+            <line x1="60" y1="90" x2="300" y2="90" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="60" y1="300" x2="300" y2="300" stroke="var(--wire)" stroke-width="2"/>
+
+            <line x1="118" y1="90" x2="118" y2="182" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="107" y1="182" x2="129" y2="182" stroke="var(--sym)" stroke-width="2.4"/>
+            <path d="M107 196 Q118 187 129 196" fill="none" stroke="var(--sym)" stroke-width="2.4"/>
+            <line x1="118" y1="196" x2="118" y2="300" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="118" cy="90" r="3.2" fill="var(--node)"/>
+            <circle cx="118" cy="300" r="3.2" fill="var(--node)"/>
+            <text x="136" y="178" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">10.8 mF</text>
+
+            <!-- 인터리브 표시 박스 -->
+            <rect x="182" y="66" width="200" height="252" rx="6" fill="none" stroke="var(--sig)" stroke-width="1.4" stroke-dasharray="6 4"/>
+            <text x="282" y="58" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--sig)">이 상을 180° 인터리브로 ×2</text>
+
+            <!-- 트랜스포머 -->
+            <line x1="228" y1="90" x2="228" y2="120" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="228" cy="90" r="3.2" fill="var(--node)"/>
+            <path d="M228 120 A8 8 0 0 0 228 136 A8 8 0 0 0 228 152 A8 8 0 0 0 228 168 A8 8 0 0 0 228 184" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <line x1="242" y1="113" x2="242" y2="191" stroke="var(--sym)" stroke-width="1.9"/>
+            <line x1="248" y1="113" x2="248" y2="191" stroke="var(--sym)" stroke-width="1.9"/>
+            <path d="M262 120 A8 8 0 0 1 262 136 A8 8 0 0 1 262 152 A8 8 0 0 1 262 168 A8 8 0 0 1 262 184" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <circle cx="219" cy="117" r="3.2" fill="var(--sym)"/>
+            <circle cx="271" cy="187" r="3.2" fill="var(--sym)"/>
+            <text x="245" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--ink)">T100</text>
+
+            <!-- MOSFET -->
+            <line x1="228" y1="184" x2="228" y2="222" stroke="var(--wire)" stroke-width="2"/>
+            <use href="#s2-mos" x="228" y="222"/>
+            <line x1="228" y1="282" x2="228" y2="300" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="228" cy="300" r="3.2" fill="var(--node)"/>
+            <text x="268" y="246" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--ink)">S100∥S101</text>
+            <line x1="172" y1="252" x2="208" y2="252" stroke="var(--sig)" stroke-width="2" marker-end="url(#s2-arw)"/>
+            <text x="168" y="256" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--sig)">PWM</text>
+
+            <!-- 2차측 → +HV -->
+            <line x1="262" y1="120" x2="330" y2="120" stroke="var(--wire)" stroke-width="2"/>
+            <polygon points="334,111 356,120 334,129" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="356" y1="110" x2="356" y2="130" stroke="var(--sym)" stroke-width="2.6"/>
+            <line x1="330" y1="120" x2="334" y2="120" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="356" y1="120" x2="452" y2="120" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="262" y1="184" x2="452" y2="184" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="452" y1="184" x2="452" y2="520" stroke="var(--wire)" stroke-width="2"/>
+
+            <!-- ======== PVB 채널 (요약) ======== -->
+            <rect x="40" y="378" width="342" height="104" rx="6" fill="none" stroke="var(--sym)" stroke-width="1.6" stroke-dasharray="7 4"/>
+            <text x="211" y="412" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="14" font-weight="700" fill="var(--ink)">PVB 채널 — 동일 구조 2상</text>
+            <text x="211" y="434" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">T201 / T202 · S200~S203 · D204 / D206</text>
+            <text x="211" y="458" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="600" fill="var(--sig)">4상 전체가 하나의 +HV 버스를 공유</text>
+            <line x1="382" y1="404" x2="486" y2="404" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="486" y1="404" x2="486" y2="120" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="486" cy="120" r="3.6" fill="var(--node)"/>
+
+            <!-- ======== +HV / HGND 버스 ======== -->
+            <line x1="452" y1="120" x2="1010" y2="120" stroke="var(--wire)" stroke-width="3.2"/>
+            <line x1="452" y1="520" x2="1010" y2="520" stroke="var(--wire)" stroke-width="3.2"/>
+            <text x="470" y="110" font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600" fill="var(--wire)">+HV</text>
+            <text x="470" y="540" font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600" fill="var(--wire)">HGND</text>
+
+            <!-- 필름 커패시터 + 경고 -->
+            <line x1="520" y1="120" x2="520" y2="310" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="509" y1="310" x2="531" y2="310" stroke="var(--sym)" stroke-width="2.4"/>
+            <line x1="509" y1="320" x2="531" y2="320" stroke="var(--sym)" stroke-width="2.4"/>
+            <line x1="520" y1="320" x2="520" y2="520" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="520" cy="120" r="3.2" fill="var(--node)"/>
+            <circle cx="520" cy="520" r="3.2" fill="var(--node)"/>
+            <text x="540" y="306" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">10 nF</text>
+            <text x="540" y="324" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--wire)">벌크 없음 →</text>
+            <text x="540" y="341" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--wire)">DC 링크가 아니다</text>
+
+            <!-- ======== 언폴더 H-브리지 ======== -->
+            <rect x="606" y="146" width="230" height="352" rx="6" fill="none" stroke="var(--rule-strong)" stroke-width="1.3" stroke-dasharray="6 4"/>
+            <text x="721" y="138" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">언폴더 — 60 Hz 극성 전환</text>
+
+            <!-- 좌측 레그 -->
+            <line x1="650" y1="120" x2="650" y2="170" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="650" cy="120" r="3.2" fill="var(--node)"/>
+            <use href="#s2-mos" x="650" y="170"/>
+            <line x1="650" y1="230" x2="650" y2="390" stroke="var(--wire)" stroke-width="2"/>
+            <use href="#s2-mos" x="650" y="390"/>
+            <line x1="650" y1="450" x2="650" y2="520" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="650" cy="520" r="3.2" fill="var(--node)"/>
+            <text x="674" y="196" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="700" fill="var(--sym)">S1</text>
+            <text x="674" y="416" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="700" fill="var(--sym)">S2</text>
+
+            <!-- 우측 레그 -->
+            <line x1="790" y1="120" x2="790" y2="170" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="790" cy="120" r="3.2" fill="var(--node)"/>
+            <use href="#s2-mos" x="790" y="170"/>
+            <line x1="790" y1="230" x2="790" y2="390" stroke="var(--wire)" stroke-width="2"/>
+            <use href="#s2-mos" x="790" y="390"/>
+            <line x1="790" y1="450" x2="790" y2="520" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="790" cy="520" r="3.2" fill="var(--node)"/>
+            <text x="814" y="196" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="700" fill="var(--sym)">S3</text>
+            <text x="814" y="416" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="700" fill="var(--sym)">S4</text>
+
+            <!-- 출력 A: 홉으로 우측 레그를 넘음 -->
+            <line x1="650" y1="270" x2="783" y2="270" stroke="var(--wire)" stroke-width="2"/>
+            <path d="M783 270 A7 7 0 0 1 797 270" fill="none" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="797" y1="270" x2="880" y2="270" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="650" cy="270" r="3.6" fill="var(--node)"/>
+            <text x="660" y="264" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--ink)">A</text>
+
+            <!-- 출력 B -->
+            <line x1="790" y1="352" x2="880" y2="352" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="790" cy="352" r="3.6" fill="var(--node)"/>
+            <text x="800" y="346" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--ink)">B</text>
+
+            <!-- ======== EMI 필터 ======== -->
+            <path d="M886 270 A10 10 0 0 1 906 270 A10 10 0 0 1 926 270 A10 10 0 0 1 946 270" fill="none" stroke="var(--sym)" stroke-width="2.4"/>
+            <line x1="880" y1="270" x2="886" y2="270" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="946" y1="270" x2="1010" y2="270" stroke="var(--wire)" stroke-width="2"/>
+            <text x="916" y="252" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">L (EMI)</text>
+            <line x1="880" y1="352" x2="1010" y2="352" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="966" y1="270" x2="966" y2="300" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="955" y1="300" x2="977" y2="300" stroke="var(--sym)" stroke-width="2.4"/>
+            <line x1="955" y1="310" x2="977" y2="310" stroke="var(--sym)" stroke-width="2.4"/>
+            <line x1="966" y1="310" x2="966" y2="352" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="966" cy="270" r="3.2" fill="var(--node)"/>
+            <circle cx="966" cy="352" r="3.2" fill="var(--node)"/>
+            <text x="986" y="298" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">X-cap</text>
+
+            <!-- ======== 이중 릴레이 ======== -->
+            <line x1="1010" y1="270" x2="1022" y2="270" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="1022" y1="270" x2="1044" y2="256" stroke="var(--sym)" stroke-width="2.4"/>
+            <circle cx="1022" cy="270" r="3" fill="var(--sym)"/>
+            <circle cx="1048" cy="270" r="3" fill="var(--sym)"/>
+            <line x1="1048" y1="270" x2="1060" y2="270" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="1060" y1="270" x2="1072" y2="270" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="1072" y1="270" x2="1094" y2="256" stroke="var(--sym)" stroke-width="2.4"/>
+            <circle cx="1072" cy="270" r="3" fill="var(--sym)"/>
+            <circle cx="1098" cy="270" r="3" fill="var(--sym)"/>
+            <line x1="1098" y1="270" x2="1120" y2="270" stroke="var(--wire)" stroke-width="2"/>
+            <text x="1060" y="232" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="700" fill="var(--ink)">2중 직렬 릴레이</text>
+            <text x="1060" y="247" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--muted)">독립 차단 수단</text>
+            <line x1="1010" y1="352" x2="1120" y2="352" stroke="var(--wire)" stroke-width="2"/>
+
+            <!-- ======== 계통 ======== -->
+            <line x1="1120" y1="270" x2="1120" y2="291" stroke="var(--wire)" stroke-width="2"/>
+            <line x1="1120" y1="331" x2="1120" y2="352" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="1120" cy="311" r="20" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <path d="M1108 311 A6 6 0 0 1 1120 311 A6 6 0 0 0 1132 311" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="1120" y="360" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--ink)">계통</text>
+            <text x="1120" y="376" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">220 V / 60 Hz</text>
+
+            <!-- 하단 요약 띠 -->
+            <line x1="40" y1="580" x2="1140" y2="580" stroke="var(--rule)" stroke-width="1.2"/>
+            <text x="40" y="606" font-family="Noto Sans KR, sans-serif" font-size="13" font-weight="700" fill="var(--sig)">고주파 스위칭은 왼쪽에서만 일어납니다.</text>
+            <text x="330" y="606" font-family="Noto Sans KR, sans-serif" font-size="13" fill="var(--muted)">언폴더 4개 소자는 60 Hz로, 그것도 전류가 0인 순간에만 전환하므로 스위칭 손실이 사실상 0입니다.</text>
+          </svg>
+        </div>
+        <figcaption>왼쪽 절반(플라이백 4상)이 고주파·고손실 영역이고, 오른쪽 절반(언폴더)은 저주파·저손실 영역입니다. <b>+HV 버스에 벌크 커패시터가 없다는 점이 두 영역을 하나로 묶습니다</b> — DC-DC가 만든 전류 파형이 필터링 없이 그대로 언폴더를 통과해 계통으로 나갑니다.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ SHEET 3 ============ -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">SHEET 3</span>
+      <h2>언폴딩 4단계 — 한 계통 주기에 무슨 일이 일어나는가</h2>
+      <span class="sub">스위치 개폐 상태와 전류 경로</span>
+    </div>
+    <div class="sheet-body">
+      <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1160 600" role="img" aria-label="언폴딩 동작의 네 단계. 첫째 양의 반주기에는 S1과 S4가 닫혀 전류가 왼쪽 위에서 오른쪽 아래로 흐른다. 둘째 영교차 구간에는 DC-DC가 먼저 전류를 0으로 만들고 네 스위치가 모두 열린다. 셋째 음의 반주기에는 S2와 S3이 닫혀 전류 방향이 반대가 된다. 넷째 다시 영교차. 아래 파형은 위쪽이 DC-DC가 만드는 정류된 정현파, 아래쪽이 언폴더 출력인 계통 정현파이며 네 단계의 경계가 점선으로 표시되어 있다.">
+            <defs>
+              <marker id="s3-arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--wire)"/>
+              </marker>
+              <!-- 닫힌 스위치 -->
+              <g id="sw-on">
+                <circle cx="0" cy="0" r="3.4" fill="var(--wire)"/>
+                <circle cx="0" cy="34" r="3.4" fill="var(--wire)"/>
+                <line x1="0" y1="0" x2="0" y2="34" stroke="var(--wire)" stroke-width="3"/>
+              </g>
+              <!-- 열린 스위치 -->
+              <g id="sw-off">
+                <circle cx="0" cy="0" r="3.4" fill="var(--dim)"/>
+                <circle cx="0" cy="34" r="3.4" fill="var(--dim)"/>
+                <line x1="0" y1="0" x2="16" y2="26" stroke="var(--dim)" stroke-width="2.6"/>
+              </g>
+            </defs>
+
+            <!-- ============ 패널 1 ============ -->
+            <g>
+              <rect x="20" y="42" width="258" height="250" rx="6" fill="none" stroke="var(--rule)" stroke-width="1.4"/>
+              <text x="36" y="32" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--sig)">① 양(+) 반주기</text>
+              <text x="149" y="278" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--wire)">S1 + S4 ON</text>
+              <!-- 레일 -->
+              <line x1="60" y1="80" x2="238" y2="80" stroke="var(--wire)" stroke-width="2.6"/>
+              <line x1="60" y1="250" x2="238" y2="250" stroke="var(--wire)" stroke-width="2.6"/>
+              <text x="52" y="76" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">+HV</text>
+              <!-- 레그 -->
+              <line x1="90" y1="80" x2="90" y2="104" stroke="var(--wire)" stroke-width="2"/>
+              <use href="#sw-on" x="90" y="104"/>
+              <line x1="90" y1="138" x2="90" y2="192" stroke="var(--wire)" stroke-width="2"/>
+              <use href="#sw-off" x="90" y="192"/>
+              <line x1="90" y1="226" x2="90" y2="250" stroke="var(--dim)" stroke-width="2"/>
+              <line x1="208" y1="80" x2="208" y2="104" stroke="var(--dim)" stroke-width="2"/>
+              <use href="#sw-off" x="208" y="104"/>
+              <line x1="208" y1="138" x2="208" y2="192" stroke="var(--wire)" stroke-width="2"/>
+              <use href="#sw-on" x="208" y="192"/>
+              <line x1="208" y1="226" x2="208" y2="250" stroke="var(--wire)" stroke-width="2"/>
+              <text x="74" y="126" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700" fill="var(--wire)">S1</text>
+              <text x="74" y="214" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700" fill="var(--dim)">S2</text>
+              <text x="230" y="126" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700" fill="var(--dim)">S3</text>
+              <text x="230" y="214" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700" fill="var(--wire)">S4</text>
+              <!-- 부하 경로 -->
+              <line x1="90" y1="165" x2="128" y2="165" stroke="var(--wire)" stroke-width="2.4"/>
+              <circle cx="149" cy="165" r="20" fill="none" stroke="var(--sym)" stroke-width="2"/>
+              <path d="M137 165 A6 6 0 0 1 149 165 A6 6 0 0 0 161 165" fill="none" stroke="var(--sym)" stroke-width="1.8"/>
+              <line x1="169" y1="165" x2="208" y2="165" stroke="var(--wire)" stroke-width="2.4"/>
+              <circle cx="90" cy="165" r="3.4" fill="var(--node)"/>
+              <circle cx="208" cy="165" r="3.4" fill="var(--node)"/>
+              <line x1="112" y1="148" x2="132" y2="148" stroke="var(--wire)" stroke-width="2" marker-end="url(#s3-arw)"/>
+              <text x="149" y="206" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">계통</text>
+            </g>
+
+            <!-- ============ 패널 2 ============ -->
+            <g>
+              <rect x="298" y="42" width="258" height="250" rx="6" fill="none" stroke="var(--rule)" stroke-width="1.4"/>
+              <text x="314" y="32" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--sig)">② 영교차 데드타임</text>
+              <text x="427" y="278" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--muted)">전 소자 OFF</text>
+              <line x1="338" y1="80" x2="516" y2="80" stroke="var(--dim)" stroke-width="2.6"/>
+              <line x1="338" y1="250" x2="516" y2="250" stroke="var(--dim)" stroke-width="2.6"/>
+              <line x1="368" y1="80" x2="368" y2="104" stroke="var(--dim)" stroke-width="2"/>
+              <use href="#sw-off" x="368" y="104"/>
+              <line x1="368" y1="138" x2="368" y2="192" stroke="var(--dim)" stroke-width="2"/>
+              <use href="#sw-off" x="368" y="192"/>
+              <line x1="368" y1="226" x2="368" y2="250" stroke="var(--dim)" stroke-width="2"/>
+              <line x1="486" y1="80" x2="486" y2="104" stroke="var(--dim)" stroke-width="2"/>
+              <use href="#sw-off" x="486" y="104"/>
+              <line x1="486" y1="138" x2="486" y2="192" stroke="var(--dim)" stroke-width="2"/>
+              <use href="#sw-off" x="486" y="192"/>
+              <line x1="486" y1="226" x2="486" y2="250" stroke="var(--dim)" stroke-width="2"/>
+              <line x1="368" y1="165" x2="406" y2="165" stroke="var(--dim)" stroke-width="2.4"/>
+              <circle cx="427" cy="165" r="20" fill="none" stroke="var(--dim)" stroke-width="2"/>
+              <path d="M415 165 A6 6 0 0 1 427 165 A6 6 0 0 0 439 165" fill="none" stroke="var(--dim)" stroke-width="1.8"/>
+              <line x1="447" y1="165" x2="486" y2="165" stroke="var(--dim)" stroke-width="2.4"/>
+              <text x="427" y="118" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="700" fill="var(--sig)">i = 0 확인 후</text>
+              <text x="427" y="134" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="700" fill="var(--sig)">전환</text>
+              <text x="427" y="216" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">±100 µs</text>
+            </g>
+
+            <!-- ============ 패널 3 ============ -->
+            <g>
+              <rect x="576" y="42" width="258" height="250" rx="6" fill="none" stroke="var(--rule)" stroke-width="1.4"/>
+              <text x="592" y="32" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--sig)">③ 음(−) 반주기</text>
+              <text x="705" y="278" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--wire)">S2 + S3 ON</text>
+              <line x1="616" y1="80" x2="794" y2="80" stroke="var(--wire)" stroke-width="2.6"/>
+              <line x1="616" y1="250" x2="794" y2="250" stroke="var(--wire)" stroke-width="2.6"/>
+              <line x1="646" y1="80" x2="646" y2="104" stroke="var(--dim)" stroke-width="2"/>
+              <use href="#sw-off" x="646" y="104"/>
+              <line x1="646" y1="138" x2="646" y2="192" stroke="var(--wire)" stroke-width="2"/>
+              <use href="#sw-on" x="646" y="192"/>
+              <line x1="646" y1="226" x2="646" y2="250" stroke="var(--wire)" stroke-width="2"/>
+              <line x1="764" y1="80" x2="764" y2="104" stroke="var(--wire)" stroke-width="2"/>
+              <use href="#sw-on" x="764" y="104"/>
+              <line x1="764" y1="138" x2="764" y2="192" stroke="var(--wire)" stroke-width="2"/>
+              <use href="#sw-off" x="764" y="192"/>
+              <line x1="764" y1="226" x2="764" y2="250" stroke="var(--dim)" stroke-width="2"/>
+              <text x="630" y="126" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700" fill="var(--dim)">S1</text>
+              <text x="630" y="214" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700" fill="var(--wire)">S2</text>
+              <text x="786" y="126" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700" fill="var(--wire)">S3</text>
+              <text x="786" y="214" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="700" fill="var(--dim)">S4</text>
+              <line x1="646" y1="165" x2="684" y2="165" stroke="var(--wire)" stroke-width="2.4"/>
+              <circle cx="705" cy="165" r="20" fill="none" stroke="var(--sym)" stroke-width="2"/>
+              <path d="M693 165 A6 6 0 0 1 705 165 A6 6 0 0 0 717 165" fill="none" stroke="var(--sym)" stroke-width="1.8"/>
+              <line x1="725" y1="165" x2="764" y2="165" stroke="var(--wire)" stroke-width="2.4"/>
+              <circle cx="646" cy="165" r="3.4" fill="var(--node)"/>
+              <circle cx="764" cy="165" r="3.4" fill="var(--node)"/>
+              <line x1="742" y1="148" x2="722" y2="148" stroke="var(--wire)" stroke-width="2" marker-end="url(#s3-arw)"/>
+              <text x="705" y="206" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">계통</text>
+            </g>
+
+            <!-- ============ 패널 4 ============ -->
+            <g>
+              <rect x="854" y="42" width="286" height="250" rx="6" fill="none" stroke="var(--sig)" stroke-width="1.6"/>
+              <text x="870" y="32" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--sig)">④ 순서가 핵심</text>
+              <text x="878" y="80" font-family="Noto Sans KR, sans-serif" font-size="13.5" font-weight="700" fill="var(--ink)">DC-DC가 먼저,</text>
+              <text x="878" y="100" font-family="Noto Sans KR, sans-serif" font-size="13.5" font-weight="700" fill="var(--ink)">언폴더가 나중.</text>
+              <line x1="878" y1="116" x2="1120" y2="116" stroke="var(--rule)" stroke-width="1.2"/>
+              <text x="878" y="142" font-family="Noto Sans KR, sans-serif" font-size="12.5" fill="var(--muted)">전류 지령을 0으로 클램프</text>
+              <text x="878" y="163" font-family="Noto Sans KR, sans-serif" font-size="12.5" fill="var(--muted)">→ 센서로 i &lt; 50 mA 확인</text>
+              <text x="878" y="184" font-family="Noto Sans KR, sans-serif" font-size="12.5" fill="var(--muted)">→ 언폴더 전환</text>
+              <text x="878" y="205" font-family="Noto Sans KR, sans-serif" font-size="12.5" fill="var(--muted)">→ 전류 지령 램프업</text>
+              <line x1="878" y1="222" x2="1120" y2="222" stroke="var(--rule)" stroke-width="1.2"/>
+              <text x="878" y="248" font-family="Noto Sans KR, sans-serif" font-size="12.5" font-weight="700" fill="var(--wire)">순서가 깨지면 브리지</text>
+              <text x="878" y="268" font-family="Noto Sans KR, sans-serif" font-size="12.5" font-weight="700" fill="var(--wire)">관통 전류가 발생합니다.</text>
+            </g>
+
+            <!-- ============ 파형 ============ -->
+            <rect x="20" y="322" width="1120" height="248" rx="6" fill="none" stroke="var(--rule)" stroke-width="1.4"/>
+
+            <!-- 단계 구분 점선 -->
+            <line x1="100" y1="340" x2="100" y2="556" stroke="var(--sig)" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <line x1="500" y1="340" x2="500" y2="556" stroke="var(--sig)" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <line x1="900" y1="340" x2="900" y2="556" stroke="var(--sig)" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <text x="300" y="352" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="700" fill="var(--sig)">①</text>
+            <text x="505" y="352" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="700" fill="var(--sig)">②</text>
+            <text x="700" y="352" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="700" fill="var(--sig)">③</text>
+            <text x="905" y="352" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="700" fill="var(--sig)">④</text>
+
+            <!-- 상단: DC-DC 출력 |sin| -->
+            <line x1="60" y1="440" x2="1110" y2="440" stroke="var(--rule-strong)" stroke-width="1.2"/>
+            <path d="M100 440 C233 340, 367 340, 500 440 C633 340, 767 340, 900 440 C1000 365, 1060 380, 1100 412" fill="none" stroke="var(--wire)" stroke-width="2.6"/>
+            <text x="66" y="378" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--wire)">DC-DC 출력 (+HV)</text>
+            <text x="66" y="394" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">0 ~ 311 V · |sin|</text>
+            <text x="66" y="436" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">0 V</text>
+
+            <!-- 하단: 계통 출력 sin -->
+            <line x1="60" y1="500" x2="1110" y2="500" stroke="var(--rule-strong)" stroke-width="1.2"/>
+            <path d="M100 500 C233 447, 367 447, 500 500 C633 553, 767 553, 900 500 C1000 460, 1060 468, 1100 483" fill="none" stroke="var(--sig)" stroke-width="2.6"/>
+            <text x="66" y="530" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--sig)">언폴더 출력 (계통)</text>
+            <text x="66" y="546" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">±311 V · 60 Hz</text>
+
+            <!-- 설명 -->
+            <text x="300" y="566" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" fill="var(--muted)">위 파형을 그대로 통과</text>
+            <text x="700" y="566" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" fill="var(--muted)">위 파형의 부호를 뒤집음</text>
+          </svg>
+        </div>
+        <figcaption><b>언폴더는 파형을 만들지 않습니다.</b> 이미 만들어진 <span style="font-family:'IBM Plex Mono',monospace">|sin|</span>의 부호만 반주기마다 뒤집습니다. 그래서 60&nbsp;Hz로만 스위칭하고, 전환 시점의 전류가 0이라 손실이 나지 않습니다. 대신 이 “0으로 만드는 구간”이 전류 파형에 결손을 남기고, 그것이 THD의 주 원인이 됩니다.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ SHEET 4 ============ -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">SHEET 4</span>
+      <h2>제어 블록도 — PSIM 제어 심볼</h2>
+      <span class="sub">MPPT · PLL · 전류 성형 · 언폴더 시퀀서</span>
+    </div>
+    <div class="sheet-body">
+      <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1160 540" role="img" aria-label="제어 블록도. PV 전압과 전류 센서가 MPPT 블록으로 들어가 전압 지령을 만들고, 합산점과 PI 제어기를 거쳐 전류 진폭 지령이 나온다. 별도로 계통 전압 센서가 SOGI PLL로 위상을 만들고 절댓값 블록이 사인 절댓값을 만든다. 두 신호가 곱셈기에서 만나 전류 지령이 되고, 상전류 피드백과 비교되어 PWM 게이팅 블록을 통해 네 개의 플라이백 게이트를 구동한다. PLL의 위상은 부호 판별을 거쳐 언폴더 시퀀서로 가서 두 개의 60헤르츠 게이트를 구동한다.">
+            <defs>
+              <marker id="s4-arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--sig)"/>
+              </marker>
+              <marker id="s4-arwG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--wire)"/>
+              </marker>
+            </defs>
+
+            <!-- ===== 센서 열 ===== -->
+            <circle cx="60" cy="70" r="20" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="60" y="76" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="600" fill="var(--sym)">V</text>
+            <text x="60" y="110" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">V_pv</text>
+
+            <circle cx="60" cy="160" r="20" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="60" y="166" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="600" fill="var(--sym)">I</text>
+            <text x="60" y="200" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">I_pv</text>
+
+            <circle cx="60" cy="360" r="20" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="60" y="366" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="600" fill="var(--sym)">V</text>
+            <text x="60" y="400" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">V_grid</text>
+
+            <circle cx="60" cy="470" r="20" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="60" y="476" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="600" fill="var(--sym)">I</text>
+            <text x="60" y="510" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">i_상 (CT)</text>
+
+            <!-- ===== MPPT ===== -->
+            <line x1="80" y1="70" x2="158" y2="70" stroke="var(--sig)" stroke-width="2"/>
+            <line x1="80" y1="160" x2="120" y2="160" stroke="var(--sig)" stroke-width="2"/>
+            <line x1="120" y1="160" x2="120" y2="100" stroke="var(--sig)" stroke-width="2"/>
+            <line x1="120" y1="100" x2="158" y2="100" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+            <rect x="160" y="52" width="122" height="66" rx="4" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="221" y="80" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="15" font-weight="700" fill="var(--ink)">MPPT</text>
+            <text x="221" y="98" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">P&amp;O · 100 ms</text>
+
+            <!-- ===== 합산점 ===== -->
+            <line x1="282" y1="85" x2="330" y2="85" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+            <text x="306" y="76" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">V_ref</text>
+            <circle cx="350" cy="85" r="19" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="350" y="91" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" font-weight="600" fill="var(--sym)">Σ</text>
+            <text x="336" y="64" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--sym)">+</text>
+            <text x="356" y="122" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--sym)">−</text>
+            <line x1="350" y1="146" x2="350" y2="104" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+            <line x1="80" y1="70" x2="80" y2="70" stroke="none"/>
+            <path d="M60 90 L60 210 L350 210 L350 146" fill="none" stroke="var(--sig)" stroke-width="1.6" stroke-dasharray="5 4"/>
+            <text x="200" y="226" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--faint)">V_pv 피드백 (대역폭 10 Hz)</text>
+
+            <!-- ===== PI ===== -->
+            <line x1="369" y1="85" x2="410" y2="85" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+            <rect x="412" y="58" width="82" height="54" rx="4" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="453" y="91" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="17" font-weight="700" fill="var(--ink)">PI</text>
+
+            <!-- ===== 곱셈기 ===== -->
+            <line x1="494" y1="85" x2="596" y2="85" stroke="var(--sig)" stroke-width="2"/>
+            <text x="545" y="76" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">I_pk (진폭)</text>
+            <line x1="596" y1="85" x2="596" y2="243" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+            <circle cx="596" cy="262" r="19" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="596" y="269" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="16" font-weight="600" fill="var(--sym)">×</text>
+
+            <!-- ===== PLL 경로 ===== -->
+            <line x1="80" y1="360" x2="158" y2="360" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+            <rect x="160" y="332" width="122" height="66" rx="4" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="221" y="360" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="15" font-weight="700" fill="var(--ink)">SOGI-PLL</text>
+            <text x="221" y="378" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">정정 &lt; 20 ms</text>
+
+            <line x1="282" y1="365" x2="340" y2="365" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+            <text x="311" y="356" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--sig)">θ</text>
+            <rect x="342" y="338" width="98" height="54" rx="4" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="391" y="371" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="600" fill="var(--ink)">|sin θ|</text>
+
+            <line x1="440" y1="365" x2="540" y2="365" stroke="var(--sig)" stroke-width="2"/>
+            <line x1="540" y1="365" x2="540" y2="272" stroke="var(--sig)" stroke-width="2"/>
+            <line x1="540" y1="272" x2="577" y2="272" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+
+            <!-- ===== 전류 루프 ===== -->
+            <line x1="615" y1="262" x2="672" y2="262" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+            <text x="643" y="253" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">i_ref</text>
+            <circle cx="692" cy="262" r="19" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="692" y="268" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="15" font-weight="600" fill="var(--sym)">Σ</text>
+            <text x="678" y="241" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--sym)">+</text>
+            <text x="700" y="300" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--sym)">−</text>
+            <path d="M80 470 L692 470 L692 281" fill="none" stroke="var(--sig)" stroke-width="1.8" marker-end="url(#s4-arw)"/>
+            <text x="420" y="486" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--faint)">상전류 피드백 · 110 kHz 샘플 (대역폭 5 kHz)</text>
+
+            <line x1="711" y1="262" x2="752" y2="262" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+            <rect x="754" y="234" width="104" height="56" rx="4" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="806" y="259" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="14" font-weight="700" fill="var(--ink)">전류 보상기</text>
+            <text x="806" y="277" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">PI + FMAC</text>
+
+            <line x1="858" y1="262" x2="902" y2="262" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+            <rect x="904" y="228" width="118" height="68" rx="4" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <text x="963" y="254" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="14" font-weight="700" fill="var(--ink)">PWM 게이팅</text>
+            <text x="963" y="272" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">HRTIM · 4상</text>
+            <text x="963" y="288" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">120° 인터리브</text>
+
+            <line x1="1022" y1="262" x2="1084" y2="262" stroke="var(--wire)" stroke-width="2.4" marker-end="url(#s4-arwG)"/>
+            <text x="1096" y="252" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--wire)">게이트</text>
+            <text x="1096" y="270" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--wire)">×4</text>
+
+            <!-- ===== 언폴더 시퀀서 ===== -->
+            <line x1="391" y1="392" x2="391" y2="424" stroke="var(--sig)" stroke-width="2"/>
+            <line x1="391" y1="424" x2="668" y2="424" stroke="var(--sig)" stroke-width="2" marker-end="url(#s4-arw)"/>
+            <text x="500" y="416" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">sgn(sin θ) · 극성</text>
+            <rect x="670" y="396" width="180" height="58" rx="4" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <text x="760" y="420" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="14" font-weight="700" fill="var(--ink)">언폴더 시퀀서</text>
+            <text x="760" y="438" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">60 Hz · 데드타임 ±100 µs</text>
+            <line x1="850" y1="425" x2="1084" y2="425" stroke="var(--wire)" stroke-width="2.4" marker-end="url(#s4-arwG)"/>
+            <text x="1096" y="415" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--wire)">게이트</text>
+            <text x="1096" y="433" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--wire)">×2</text>
+
+            <!-- 전류 0 클램프 연동 -->
+            <path d="M760 396 L760 330 L963 330 L963 296" fill="none" stroke="var(--sig)" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#s4-arw)"/>
+            <text x="862" y="322" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11" font-weight="600" fill="var(--sig)">영교차 전 전류 지령 0 클램프 요청</text>
+          </svg>
+        </div>
+        <figcaption>제어는 두 갈래로 갈립니다. <b>전력의 크기는 MPPT가</b> 정하고 (<span style="font-family:'IBM Plex Mono',monospace">I_pk</span>), <b>파형의 모양은 PLL이</b> 정합니다 (<span style="font-family:'IBM Plex Mono',monospace">|sin θ|</span>). 둘이 곱셈기에서 만나 전류 지령이 되고, 같은 PLL 위상이 언폴더의 극성 전환 시점도 결정합니다. 점선은 언폴더 전환 직전에 전류 지령을 0으로 내리라고 요청하는 경로입니다.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ SHEET 5 ============ -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">SHEET 5</span>
+      <h2>사이클별 피크 전류 제한 — 기준이 정현파로 움직인다</h2>
+      <span class="sub">S2G1812의 아날로그 구현과 STM32 대체 방식 비교</span>
+    </div>
+    <div class="sheet-body">
+      <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1160 470" role="img" aria-label="피크 전류 제한 회로 비교. 왼쪽은 현행 보드의 구현으로 전류 트랜스포머 신호가 비교기 반전 입력에, AC 전압이 저항을 통해 비반전 입력에 주입되어 전류 한계가 계통 전압을 추종한다. 오른쪽은 STM32 대체안으로 내장 DAC가 DMA로 정현파 테이블을 출력해 비교기 기준을 직접 만든다. 아래 파형은 사인 절댓값 형태의 전류 한계 포락선과 그 아래에서 스위칭하는 실제 상전류를 보여준다.">
+            <defs>
+              <marker id="s5-arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--sig)"/>
+              </marker>
+            </defs>
+
+            <!-- ===== 좌: 현행 ===== -->
+            <rect x="20" y="30" width="520" height="210" rx="6" fill="none" stroke="var(--rule-strong)" stroke-width="1.4"/>
+            <text x="36" y="20" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="700" fill="var(--muted)">현행 S2G1812 — 아날로그 주입</text>
+
+            <circle cx="70" cy="110" r="16" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="70" y="115" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--sym)">CT</text>
+            <line x1="86" y1="110" x2="250" y2="110" stroke="var(--sig)" stroke-width="2" marker-end="url(#s5-arw)"/>
+            <text x="168" y="102" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">i_상 (피크 검출)</text>
+
+            <circle cx="70" cy="190" r="16" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="70" y="195" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--sym)">V</text>
+            <text x="70" y="222" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">AC-N</text>
+            <line x1="86" y1="190" x2="140" y2="190" stroke="var(--sig)" stroke-width="2"/>
+            <rect x="142" y="180" width="46" height="20" rx="2" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="165" y="174" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">R455 100k</text>
+            <line x1="188" y1="190" x2="250" y2="190" stroke="var(--sig)" stroke-width="2" marker-end="url(#s5-arw)"/>
+
+            <polygon points="256,80 256,220 352,150" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <text x="268" y="116" font-family="IBM Plex Mono, monospace" font-size="15" font-weight="700" fill="var(--sym)">−</text>
+            <text x="268" y="196" font-family="IBM Plex Mono, monospace" font-size="15" font-weight="700" fill="var(--sym)">+</text>
+            <text x="290" y="248" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--ink)">U406B TP1946</text>
+            <line x1="352" y1="150" x2="410" y2="150" stroke="var(--sig)" stroke-width="2" marker-end="url(#s5-arw)"/>
+            <rect x="412" y="122" width="110" height="56" rx="4" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="467" y="146" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">TZ2 트립</text>
+            <text x="467" y="164" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">GPIO13 · wired-OR</text>
+
+            <!-- ===== 우: STM32 ===== -->
+            <rect x="600" y="30" width="540" height="210" rx="6" fill="none" stroke="var(--sig)" stroke-width="1.8"/>
+            <text x="616" y="20" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="700" fill="var(--sig)">STM32 대체 — DAC + DMA</text>
+
+            <circle cx="650" cy="110" r="16" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="650" y="115" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--sym)">CT</text>
+            <line x1="666" y1="110" x2="830" y2="110" stroke="var(--sig)" stroke-width="2" marker-end="url(#s5-arw)"/>
+            <text x="748" y="102" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">i_상</text>
+
+            <rect x="640" y="168" width="140" height="46" rx="4" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="710" y="188" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">DAC3 / DAC4</text>
+            <text x="710" y="205" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">DMA 정현파 테이블</text>
+            <line x1="780" y1="190" x2="830" y2="190" stroke="var(--sig)" stroke-width="2" marker-end="url(#s5-arw)"/>
+
+            <polygon points="836,80 836,220 932,150" fill="none" stroke="var(--sig)" stroke-width="2.4"/>
+            <text x="848" y="116" font-family="IBM Plex Mono, monospace" font-size="15" font-weight="700" fill="var(--sig)">−</text>
+            <text x="848" y="196" font-family="IBM Plex Mono, monospace" font-size="15" font-weight="700" fill="var(--sig)">+</text>
+            <text x="870" y="248" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--sig)">내장 COMP</text>
+            <line x1="932" y1="150" x2="990" y2="150" stroke="var(--sig)" stroke-width="2" marker-end="url(#s5-arw)"/>
+            <rect x="992" y="122" width="130" height="56" rx="4" fill="none" stroke="var(--sig)" stroke-width="2.2"/>
+            <text x="1057" y="146" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">HRTIM FLT</text>
+            <text x="1057" y="164" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">CPU 경유 없음</text>
+
+            <!-- ===== 파형 ===== -->
+            <rect x="20" y="272" width="1120" height="180" rx="6" fill="none" stroke="var(--rule)" stroke-width="1.4"/>
+            <line x1="70" y1="420" x2="1110" y2="420" stroke="var(--rule-strong)" stroke-width="1.2"/>
+            <text x="76" y="416" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">0</text>
+
+            <!-- 한계 포락선 -->
+            <path d="M110 420 C263 320, 417 320, 570 420 C723 320, 877 320, 1030 420" fill="none" stroke="var(--sig)" stroke-width="2.6" stroke-dasharray="7 4"/>
+            <text x="340" y="312" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--sig)">피크 전류 한계 — 계통 전압을 추종</text>
+
+            <!-- 실제 상전류 (톱니가 포락선 아래) -->
+            <path d="M110 420 L124 404 L128 418 L142 396 L146 414 L160 384 L164 408 L178 372 L182 400 L196 360 L200 392 L214 350 L218 386 L232 342 L236 380 L250 336 L254 376 L268 332 L272 374 L286 331 L290 373 L304 332 L308 374 L322 336 L326 376 L340 342 L344 380 L358 350 L362 386 L376 360 L380 392 L394 372 L398 400 L412 384 L416 408 L430 396 L434 414 L448 404 L452 418 L466 412 L470 420 L484 417 L488 420 L502 419 L506 420 L570 420" fill="none" stroke="var(--wire)" stroke-width="1.8"/>
+            <text x="620" y="404" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="600" fill="var(--wire)">← 실제 상전류 (110 kHz 스위칭)</text>
+            <text x="620" y="422" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--muted)">매 사이클 한계에 닿으면 즉시 차단</text>
+
+            <text x="76" y="446" font-family="Noto Sans KR, sans-serif" font-size="11.5" fill="var(--muted)">기준이 고정값이면 정현파를 만들 수 없습니다. 한계선 자체가 |sin| 모양으로 움직여야 합니다.</text>
+          </svg>
+        </div>
+        <figcaption>현행 보드는 저항 하나(R455)로 AC 전압을 비교기 기준에 섞어 이 기능을 만들었습니다. <b>영리한 아날로그 해법이지만 저항 오차와 op-amp 오프셋에 정확도가 묶입니다.</b> STM32에서는 DAC를 DMA로 돌려 같은 일을 12-bit 정밀도로 하고, 위상은 PLL과 소프트웨어로 정확히 맞출 수 있습니다. 외부 비교기 3개가 사라지는 것은 덤입니다 — 단, 이는 비교기가 7개인 STM32G474 기준이며, 상단 콜아웃에서 짚은 대로 <b>비교기 2개뿐인 STM32H7에서는 성립하지 않습니다.</b></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 심볼 범례 ============ -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">범례</span>
+      <h2>심볼 대조표</h2>
+      <span class="sub">PSIM 표기 · 회로 기능 · 실제 부품</span>
+    </div>
+    <div class="legend-grid">
+
+      <div class="legend-item">
+        <svg viewBox="0 0 90 60" role="img" aria-label="N채널 MOSFET 기호">
+          <line x1="30" y1="4" x2="30" y2="12" stroke="var(--wire)" stroke-width="2"/>
+          <line x1="30" y1="12" x2="48" y2="12" stroke="var(--wire)" stroke-width="2"/>
+          <line x1="48" y1="6" x2="48" y2="54" stroke="var(--sym)" stroke-width="3"/>
+          <line x1="39" y1="13" x2="39" y2="47" stroke="var(--sym)" stroke-width="2.5"/>
+          <line x1="39" y1="30" x2="14" y2="30" stroke="var(--sig)" stroke-width="2"/>
+          <line x1="48" y1="48" x2="30" y2="48" stroke="var(--wire)" stroke-width="2"/>
+          <line x1="30" y1="48" x2="30" y2="56" stroke="var(--wire)" stroke-width="2"/>
+          <polygon points="44,44 44,52 36,48" fill="var(--sym)"/>
+        </svg>
+        <div class="lbl"><b>MOSFET</b><span>스위치. 게이트(좌)에 PWM 인가. BSC190N15NS3 / STF23N80K5</span></div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 90 60" role="img" aria-label="절연 트랜스포머 기호">
+          <path d="M28 8 A7 7 0 0 0 28 22 A7 7 0 0 0 28 36 A7 7 0 0 0 28 50" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+          <line x1="42" y1="4" x2="42" y2="54" stroke="var(--sym)" stroke-width="2"/>
+          <line x1="48" y1="4" x2="48" y2="54" stroke="var(--sym)" stroke-width="2"/>
+          <path d="M62 8 A7 7 0 0 1 62 22 A7 7 0 0 1 62 36 A7 7 0 0 1 62 50" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+          <circle cx="20" cy="6" r="3" fill="var(--sym)"/>
+          <circle cx="70" cy="52" r="3" fill="var(--sym)"/>
+        </svg>
+        <div class="lbl"><b>절연 트랜스포머</b><span>PV와 계통을 갈라놓는 강화 절연 경계. 점은 극성. T100 / n = 1:6</span></div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 90 60" role="img" aria-label="다이오드 기호">
+          <line x1="8" y1="30" x2="28" y2="30" stroke="var(--wire)" stroke-width="2"/>
+          <polygon points="28,16 58,30 28,44" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+          <line x1="58" y1="14" x2="58" y2="46" stroke="var(--sym)" stroke-width="3"/>
+          <line x1="58" y1="30" x2="82" y2="30" stroke="var(--wire)" stroke-width="2"/>
+        </svg>
+        <div class="lbl"><b>다이오드</b><span>2차 정류. 역전압 671 V 응력 → 1200 V급. D101 B1D02120E</span></div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 90 60" role="img" aria-label="전해 커패시터 기호">
+          <line x1="45" y1="4" x2="45" y2="24" stroke="var(--wire)" stroke-width="2"/>
+          <line x1="27" y1="24" x2="63" y2="24" stroke="var(--sym)" stroke-width="2.8"/>
+          <path d="M27 40 Q45 29 63 40" fill="none" stroke="var(--sym)" stroke-width="2.8"/>
+          <line x1="45" y1="40" x2="45" y2="56" stroke="var(--wire)" stroke-width="2"/>
+        </svg>
+        <div class="lbl"><b>전해 커패시터</b><span>PV측 120 Hz 맥동 흡수. 2700 µF ×8 = 21.6 mF. <b style="color:var(--wire)">수명 제약 부품</b></span></div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 90 60" role="img" aria-label="전류 트랜스포머 기호">
+          <line x1="8" y1="20" x2="82" y2="20" stroke="var(--wire)" stroke-width="2.2"/>
+          <circle cx="45" cy="20" r="13" fill="none" stroke="var(--sym)" stroke-width="2"/>
+          <line x1="45" y1="33" x2="45" y2="50" stroke="var(--sig)" stroke-width="1.8"/>
+          <polygon points="41,46 49,46 45,54" fill="var(--sig)"/>
+        </svg>
+        <div class="lbl"><b>전류 트랜스포머 (CT)</b><span>상전류를 절연 검출. 피크 검출 후 ADC·비교기로. TR100 PA1005.100NL</span></div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 90 60" role="img" aria-label="이상 스위치 열림과 닫힘 기호">
+          <circle cx="16" cy="14" r="3.4" fill="var(--wire)"/><circle cx="16" cy="46" r="3.4" fill="var(--wire)"/>
+          <line x1="16" y1="14" x2="16" y2="46" stroke="var(--wire)" stroke-width="3"/>
+          <text x="16" y="60" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--wire)">ON</text>
+          <circle cx="62" cy="14" r="3.4" fill="var(--dim)"/><circle cx="62" cy="46" r="3.4" fill="var(--dim)"/>
+          <line x1="62" y1="14" x2="78" y2="40" stroke="var(--dim)" stroke-width="2.6"/>
+          <text x="66" y="60" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--faint)">OFF</text>
+        </svg>
+        <div class="lbl"><b>이상 스위치</b><span>SHEET 3에서 언폴더의 개폐 상태 표현. 닫힘 = 도통</span></div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 90 60" role="img" aria-label="비교기 기호">
+          <polygon points="22,10 22,50 72,30" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+          <text x="30" y="26" font-family="IBM Plex Mono, monospace" font-size="13" font-weight="700" fill="var(--sym)">−</text>
+          <text x="30" y="46" font-family="IBM Plex Mono, monospace" font-size="13" font-weight="700" fill="var(--sym)">+</text>
+          <line x1="8" y1="20" x2="22" y2="20" stroke="var(--sig)" stroke-width="2"/>
+          <line x1="8" y1="40" x2="22" y2="40" stroke="var(--sig)" stroke-width="2"/>
+          <line x1="72" y1="30" x2="84" y2="30" stroke="var(--sig)" stroke-width="2"/>
+        </svg>
+        <div class="lbl"><b>비교기</b><span>사이클별 전류 제한. CPU를 거치지 않고 PWM을 직접 차단</span></div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 90 60" role="img" aria-label="교류 전압원 기호">
+          <circle cx="45" cy="30" r="20" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+          <path d="M33 30 A6 6 0 0 1 45 30 A6 6 0 0 0 57 30" fill="none" stroke="var(--sym)" stroke-width="2"/>
+          <line x1="45" y1="4" x2="45" y2="10" stroke="var(--wire)" stroke-width="2"/>
+          <line x1="45" y1="50" x2="45" y2="56" stroke="var(--wire)" stroke-width="2"/>
+        </svg>
+        <div class="lbl"><b>교류 전압원</b><span>계통 220 V / 60 Hz. 인버터 관점에서는 무한 버스</span></div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 90 60" role="img" aria-label="배선 교차 홉 기호">
+          <line x1="8" y1="30" x2="38" y2="30" stroke="var(--wire)" stroke-width="2"/>
+          <path d="M38 30 A7 7 0 0 1 52 30" fill="none" stroke="var(--wire)" stroke-width="2"/>
+          <line x1="52" y1="30" x2="82" y2="30" stroke="var(--wire)" stroke-width="2"/>
+          <line x1="45" y1="6" x2="45" y2="54" stroke="var(--wire)" stroke-width="2"/>
+        </svg>
+        <div class="lbl"><b>홉 (비접속 교차)</b><span>넘어가는 선은 연결되지 않음. 접속은 <span style="color:var(--node)">●</span> 점으로만 표시</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ 노드 요약 ============ -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">요약</span>
+      <h2>주요 노드 파형</h2>
+      <span class="sub">회로를 읽을 때 각 지점에서 무엇을 보게 되는가</span>
+    </div>
+    <div class="sheet-body">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>노드</th><th>파형</th><th>범위</th><th>주파수 성분</th><th>설명</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">PVA+ / PVB+</td>
+              <td>DC + 120 Hz 리플</td>
+              <td class="mono">28 ~ 60 V</td>
+              <td class="mono">DC + 120 Hz</td>
+              <td>전해 커패시터가 맥동을 흡수한 뒤의 파형. 리플이 크면 MPPT 이용률이 떨어진다.</td>
+            </tr>
+            <tr>
+              <td class="mono">S100 드레인</td>
+              <td>구형파 + 링잉</td>
+              <td class="mono">0 ~ 112 V</td>
+              <td class="mono">110 kHz</td>
+              <td>플라이백 오프 구간에 <span class="mono">V_in + V_out/n</span> 이 실린다. 150 V 소자의 마진 25 %.</td>
+            </tr>
+            <tr>
+              <td class="mono">상전류 (CT)</td>
+              <td>|sin| 포락선 안의 톱니</td>
+              <td class="mono">0 ~ 24 A</td>
+              <td class="mono">110 kHz</td>
+              <td>포락선 자체가 정현파. SHEET 5의 한계선이 이 포락선을 만든다.</td>
+            </tr>
+            <tr>
+              <td class="mono">+HV</td>
+              <td>정류된 정현파</td>
+              <td class="mono">0 ~ 311 V</td>
+              <td class="mono">120 Hz</td>
+              <td><b>벌크 커패시터가 없어 평활되지 않는다.</b> 이것이 언폴딩 구조의 정의다.</td>
+            </tr>
+            <tr>
+              <td class="mono">언폴더 출력 A−B</td>
+              <td>정현파</td>
+              <td class="mono">±311 V</td>
+              <td class="mono">60 Hz</td>
+              <td>+HV의 부호를 반주기마다 뒤집은 것. 새로 만들어진 파형이 아니다.</td>
+            </tr>
+            <tr>
+              <td class="mono">계통 전류</td>
+              <td>정현파</td>
+              <td class="mono">2.27 A rms</td>
+              <td class="mono">60 Hz</td>
+              <td>THD &lt; 5 % 목표. 영교차 데드타임의 전류 결손이 주 왜곡원.</td>
+            </tr>
+            <tr>
+              <td class="mono">순시 전력 p(t)</td>
+              <td>0 ~ 2P 맥동</td>
+              <td class="mono">0 ~ 1000 W</td>
+              <td class="mono">120 Hz</td>
+              <td>DC-DC가 이 전체를 처리한다. 입력 전류 RMS가 1.225배 → 도통 손실 1.5배.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
