@@ -1,0 +1,796 @@
+<title>2EDN7524R 게이트 구동 설계</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#FCFCFD; --sheet:#FFFFFF; --ink:#0F1729; --muted:#5A6473; --faint:#8A93A3;
+    --rule:#DCE2EB; --rule-strong:#B9C2D0;
+    --sym:#1B3A8F; --wire:#C81E1E; --sig:#0E7490; --node:#B026C9;
+    --ok-bg:#ECFDF5; --ok-line:#34A47C; --ok-ink:#0B5B44;
+    --warn-bg:#FFF8E6; --warn-line:#E5B94E; --warn-ink:#7A5610;
+    --dim:#C4CBD6;
+    --shadow:0 1px 2px rgba(15,23,41,.05), 0 8px 24px rgba(15,23,41,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0B0F16; --sheet:#121824; --ink:#E7ECF4; --muted:#9AA5B6; --faint:#7A8496;
+      --rule:#243044; --rule-strong:#35435C;
+      --sym:#7FA6F5; --wire:#FF7A7A; --sig:#38D6E8; --node:#E27BF5;
+      --ok-bg:#0A2219; --ok-line:#2E7D5F; --ok-ink:#7EE0B8;
+      --warn-bg:#241D08; --warn-line:#8A6E22; --warn-ink:#E8C777;
+      --dim:#37425A;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0B0F16; --sheet:#121824; --ink:#E7ECF4; --muted:#9AA5B6; --faint:#7A8496;
+    --rule:#243044; --rule-strong:#35435C;
+    --sym:#7FA6F5; --wire:#FF7A7A; --sig:#38D6E8; --node:#E27BF5;
+    --ok-bg:#0A2219; --ok-line:#2E7D5F; --ok-ink:#7EE0B8;
+    --warn-bg:#241D08; --warn-line:#8A6E22; --warn-ink:#E8C777;
+    --dim:#37425A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Noto Sans KR","IBM Plex Sans Condensed",system-ui,sans-serif;
+    font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1240px;margin:0 auto;padding-block:28px 64px;padding-left:16px;padding-right:16px}
+
+  .masthead{border:1.5px solid var(--rule-strong);background:var(--sheet);box-shadow:var(--shadow)}
+  .masthead-body{padding:26px 24px 20px}
+  .eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--sig);font-weight:600;margin:0 0 10px}
+  h1{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;
+    font-size:clamp(27px,5vw,42px);line-height:1.12;letter-spacing:-.015em;font-weight:700;
+    margin:0 0 12px;text-wrap:balance;word-break:keep-all}
+  .standfirst{margin:0;max-width:64ch;color:var(--muted);font-size:16px;word-break:keep-all}
+  .titleblock{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+    border-top:1.5px solid var(--rule-strong);
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px}
+  .titleblock div{padding:9px 14px;border-right:1px solid var(--rule)}
+  .titleblock div:last-child{border-right:none}
+  .titleblock span{display:block;color:var(--faint);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+  .titleblock b{font-weight:500;color:var(--ink)}
+
+  /* 결론 */
+  .verdict{margin-top:24px;border:1.5px solid var(--ok-line);background:var(--ok-bg);
+    color:var(--ok-ink);border-radius:4px;overflow:hidden}
+  .verdict-head{padding:18px 22px 4px}
+  .verdict-head h2{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;
+    font-size:19px;margin:0 0 6px;font-weight:700}
+  .verdict-head p{margin:0 0 12px;font-size:14.5px;word-break:keep-all;max-width:70ch}
+  .bigvals{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;
+    background:var(--ok-line);border-top:1px solid var(--ok-line)}
+  .bigval{background:var(--ok-bg);padding:16px 20px}
+  .bigval .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--ok-ink);opacity:.75;display:block}
+  .bigval .v{font-family:"IBM Plex Sans Condensed",sans-serif;font-size:27px;font-weight:700;
+    line-height:1.2;font-variant-numeric:tabular-nums;display:block;margin-top:2px}
+  .bigval .n{font-size:12px;opacity:.8;display:block;word-break:keep-all;line-height:1.45;margin-top:3px}
+
+  .callout{margin-top:24px;border:1px solid var(--warn-line);border-left-width:4px;
+    background:var(--warn-bg);color:var(--warn-ink);padding:18px 20px;border-radius:0 8px 8px 0}
+  .callout h2{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;
+    font-size:17px;margin:0 0 8px;font-weight:700}
+  .callout p{margin:0 0 10px;font-size:14.5px;word-break:keep-all;max-width:76ch}
+  .callout p:last-child{margin-bottom:0}
+
+  .sheet{margin-top:34px;border:1.5px solid var(--rule-strong);background:var(--sheet);box-shadow:var(--shadow)}
+  .sheet-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    padding:14px 20px;border-bottom:1.5px solid var(--rule-strong)}
+  .sheet-no{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;font-weight:600;
+    letter-spacing:.14em;color:var(--sheet);background:var(--sym);padding:3px 9px;border-radius:3px;white-space:nowrap}
+  .sheet-head h2{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;
+    font-size:21px;font-weight:700;margin:0;letter-spacing:-.01em;word-break:keep-all}
+  .sheet-head .sub{color:var(--muted);font-size:13.5px;word-break:keep-all}
+  .sheet-body{padding:20px}
+  .canvas{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  .canvas svg{display:block;min-width:720px;width:100%;height:auto;max-width:100%}
+  figure{margin:0}
+  figcaption{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);
+    color:var(--muted);font-size:13.5px;word-break:keep-all;max-width:80ch}
+  figcaption b{color:var(--ink);font-weight:700}
+
+  .notes{display:grid;gap:10px;margin-top:18px}
+  .note{display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:start;font-size:14px;word-break:keep-all}
+  .note .mk{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--sig);
+    border:1.5px solid var(--sig);border-radius:50%;width:24px;height:24px;display:grid;place-items:center;margin-top:2px}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th,td{padding:9px 12px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top;word-break:keep-all}
+  thead th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--faint);font-weight:600;white-space:nowrap;border-bottom:1.5px solid var(--rule-strong)}
+  tbody tr:last-child td{border-bottom:none}
+  td.mono,th.mono{font-family:"IBM Plex Mono",monospace;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  tr.pick td{background:var(--ok-bg);font-weight:700}
+  tr.pick td:first-child{box-shadow:inset 3px 0 0 var(--ok-line)}
+  .est{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 5px;border-radius:3px;
+    border:1px solid var(--warn-line);color:var(--warn-ink);background:var(--warn-bg);white-space:nowrap}
+  .cfm{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 5px;border-radius:3px;
+    border:1px solid var(--ok-line);color:var(--ok-ink);background:var(--ok-bg);white-space:nowrap}
+
+  .eqbox{font-family:"IBM Plex Mono",monospace;font-size:13.5px;background:var(--paper);
+    border:1px solid var(--rule);border-left:3px solid var(--sig);padding:14px 16px;margin:16px 0;
+    overflow-x:auto;line-height:1.85;white-space:pre-wrap;tab-size:2}
+  .eqbox b{color:var(--sig)}
+
+  .chk{display:grid;gap:2px;background:var(--rule);margin-top:4px}
+  .chk-item{background:var(--sheet);padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
+  .chk-item .bx{width:18px;height:18px;border:2px solid var(--sym);border-radius:3px;margin-top:3px}
+  .chk-item b{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-weight:700;display:block;font-size:15px}
+  .chk-item span{font-size:13.5px;color:var(--muted);word-break:keep-all}
+
+  a{color:var(--sig)}
+  .src{font-size:13px;color:var(--muted);margin-top:14px}
+  .src a{word-break:break-all}
+
+  @media (max-width:620px){
+    .titleblock{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .titleblock div{border-bottom:1px solid var(--rule)}
+    .sheet-body{padding:14px}
+    .masthead-body{padding:20px 16px 16px}
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="masthead-body">
+      <p class="eyebrow">Gate Drive Design · EiceDRIVER 2EDN7524R × OptiMOS 6 IPT017N12NM6</p>
+      <h1>2EDN7524R 게이트 구동 설계</h1>
+      <p class="standfirst">5&nbsp;A 듀얼 저측 드라이버로 120&nbsp;V / 1.7&nbsp;mΩ OptiMOS 6를 구동합니다. 직렬 저항값과 주변 회로를 PSIM 심볼로 그리고, 값이 그렇게 나온 계산 근거를 함께 실었습니다.</p>
+    </div>
+    <div class="titleblock">
+      <div><span>Driver</span><b>2EDN7524R</b></div>
+      <div><span>MOSFET</span><b>IPT017N12NM6</b></div>
+      <div><span>V_DD</span><b>12 V</b></div>
+      <div><span>Rev</span><b>0.1 Draft</b></div>
+    </div>
+  </header>
+
+  <!-- ====== 결론 ====== -->
+  <section class="verdict">
+    <div class="verdict-head">
+      <h2>결론 — 이 값으로 시작하십시오</h2>
+      <p>턴온과 턴오프를 분리한 비대칭 구성입니다. 턴온은 dv/dt와 EMI를 통제하기 위해 느리게, 턴오프는 밀러 오인 턴온을 막기 위해 최대한 빠르게 가져갑니다. 초기값은 보수적으로 잡고 실측으로 조입니다.</p>
+    </div>
+    <div class="bigvals">
+      <div class="bigval">
+        <span class="k">R_G(on) 턴온</span>
+        <span class="v">3.3 Ω</span>
+        <span class="n">초기값. 최적화 목표 1.8 Ω. 0805</span>
+      </div>
+      <div class="bigval">
+        <span class="k">R_G(off) 턴오프</span>
+        <span class="v">0.5 Ω</span>
+        <span class="n">쇼트키 다이오드로 R_on 우회. 0805</span>
+      </div>
+      <div class="bigval">
+        <span class="k">V_DD 구동 전압</span>
+        <span class="v">12 V</span>
+        <span class="n">플래토 5.0 V 위 7 V 헤드룸</span>
+      </div>
+      <div class="bigval">
+        <span class="k">게이트 전류 (플래토)</span>
+        <span class="v">1.4 A</span>
+        <span class="n">3.3 Ω 기준. 1.8 Ω이면 2.0 A</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 주의 ====== -->
+  <section class="callout">
+    <h2>두 가지 먼저 확인하십시오</h2>
+    <p><b>1. 내부 게이트 저항 R_G(int) 는 데이터시트로 확인해야 합니다.</b> Infineon·Mouser·alldatasheet 도메인이 이 환경의 프록시 정책으로 차단되어 원문 PDF를 열지 못했습니다. 아래 계산은 <span class="est">R_G(int) = 1.0 Ω 가정</span> 기준이며, SHEET&nbsp;3에 0.5 / 1.0 / 1.5 Ω 세 경우를 모두 실어 두었으니 실제 값으로 바로 대조하실 수 있습니다. Q_gd 도 <span class="est">30 nC 가정</span>입니다.</p>
+      <p><b>2. 이 소자를 V2000 플라이백 1차에 쓰실 계획이라면 전압 마진이 부족합니다.</b> 앞서 계산한 1차 스위치 전압 응력은 <span style="font-family:'IBM Plex Mono',monospace">V_in(max) + V_out(pk)/n = 60 + 311/6 = 112 V</span> 였습니다. IPT017N12NM6은 120&nbsp;V 정격이므로 마진이 <b>7&nbsp;%</b>에 불과합니다. 누설 인덕턴스 링잉만으로도 넘어갑니다. 다른 용도(저전압 고전류단, 동기 정류, BMS 주스위치 등)라면 해당하지 않습니다.</p>
+  </section>
+
+  <!-- ====== SHEET 1 ====== -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">SHEET 1</span>
+      <h2>게이트 구동 회로 전체</h2>
+      <span class="sub">입력단 · 디커플링 · 분리 게이트 저항 · 켈빈 리턴</span>
+    </div>
+    <div class="sheet-body">
+      <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1180 540" role="img" aria-label="게이트 구동 회로도. 좌측 MCU PWM 입력이 22옴 직렬저항과 10k 풀다운을 거쳐 2EDN7524R의 INA 핀으로 들어간다. 드라이버 VDD 핀에는 10uF, 2.2uF, 100nF 디커플링 커패시터가 붙어 있다. OUTA 출력은 두 갈래로 나뉘어 위쪽은 3.3옴 턴온 저항, 아래쪽은 0.5옴 턴오프 저항과 쇼트키 다이오드를 거쳐 다시 합쳐진 뒤 MOSFET 게이트로 간다. 게이트와 켈빈 소스 사이에는 10k 풀다운 저항과 선택 사항인 18V TVS가 있다. MOSFET 소스의 켈빈 접속점에서 드라이버 GND 핀까지 별도 배선이 그려져 있고, 전력 리턴은 기생 인덕턴스를 거쳐 별도 접지로 간다.">
+            <defs>
+              <marker id="g1-arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--sig)"/>
+              </marker>
+              <g id="g1-gnd">
+                <line x1="0" y1="0" x2="0" y2="9" stroke="var(--sym)" stroke-width="2"/>
+                <line x1="-11" y1="9" x2="11" y2="9" stroke="var(--sym)" stroke-width="2.6"/>
+                <line x1="-6.5" y1="14" x2="6.5" y2="14" stroke="var(--sym)" stroke-width="2.6"/>
+                <line x1="-2.5" y1="19" x2="2.5" y2="19" stroke="var(--sym)" stroke-width="2.6"/>
+              </g>
+              <g id="g1-mos">
+                <line x1="0" y1="0" x2="0" y2="18" stroke="var(--wire)" stroke-width="2.4"/>
+                <line x1="0" y1="18" x2="26" y2="18" stroke="var(--wire)" stroke-width="2.4"/>
+                <line x1="26" y1="8" x2="26" y2="82" stroke="var(--sym)" stroke-width="4"/>
+                <line x1="13" y1="20" x2="13" y2="70" stroke="var(--sym)" stroke-width="3"/>
+                <line x1="13" y1="45" x2="-28" y2="45" stroke="var(--sig)" stroke-width="2.4"/>
+                <line x1="26" y1="72" x2="0" y2="72" stroke="var(--wire)" stroke-width="2.4"/>
+                <line x1="0" y1="72" x2="0" y2="90" stroke="var(--wire)" stroke-width="2.4"/>
+                <polygon points="21,66 21,78 10,72" fill="var(--sym)"/>
+                <line x1="26" y1="30" x2="50" y2="30" stroke="var(--sym)" stroke-width="1.8"/>
+                <line x1="26" y1="62" x2="50" y2="62" stroke="var(--sym)" stroke-width="1.8"/>
+                <line x1="50" y1="30" x2="50" y2="41" stroke="var(--sym)" stroke-width="1.8"/>
+                <line x1="50" y1="52" x2="50" y2="62" stroke="var(--sym)" stroke-width="1.8"/>
+                <polygon points="44,52 56,52 50,42" fill="none" stroke="var(--sym)" stroke-width="1.8"/>
+                <line x1="43" y1="41" x2="57" y2="41" stroke="var(--sym)" stroke-width="2.2"/>
+              </g>
+            </defs>
+
+            <!-- 게이트 루프 하이라이트 (맨 아래에) -->
+            <path d="M460 190 L752 190" fill="none" stroke="var(--sig)" stroke-width="13" opacity="0.13" stroke-linecap="round"/>
+            <path d="M780 235 L780 372 L300 372 L300 324" fill="none" stroke="var(--sig)" stroke-width="13" opacity="0.13" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <!-- ===== 입력단 ===== -->
+            <rect x="34" y="172" width="46" height="36" rx="3" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <path d="M42 198 L42 182 L54 182 L54 198 L66 198 L66 182 L72 182" fill="none" stroke="var(--sym)" stroke-width="1.8"/>
+            <text x="57" y="164" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--ink)">MCU PWM</text>
+            <text x="57" y="224" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">3.3 V LVTTL</text>
+
+            <line x1="80" y1="190" x2="104" y2="190" stroke="var(--sig)" stroke-width="2"/>
+            <rect x="104" y="181" width="44" height="18" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="148" y1="190" x2="186" y2="190" stroke="var(--sig)" stroke-width="2"/>
+            <text x="126" y="174" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--ink)">22 Ω</text>
+            <text x="126" y="215" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">R_in</text>
+
+            <circle cx="186" cy="190" r="3.4" fill="var(--node)"/>
+            <line x1="186" y1="190" x2="186" y2="226" stroke="var(--sig)" stroke-width="2"/>
+            <rect x="177" y="226" width="18" height="44" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="186" y1="270" x2="186" y2="288" stroke="var(--sig)" stroke-width="2"/>
+            <use href="#g1-gnd" x="186" y="288"/>
+            <text x="204" y="252" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--ink)">10 kΩ</text>
+            <text x="186" y="190" font-size="0" fill="none">.</text>
+            <line x1="186" y1="190" x2="248" y2="190" stroke="var(--sig)" stroke-width="2"/>
+
+            <!-- ===== 드라이버 ===== -->
+            <rect x="250" y="150" width="192" height="174" rx="4" fill="none" stroke="var(--sym)" stroke-width="2.6"/>
+            <text x="346" y="238" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="17" font-weight="700" fill="var(--ink)">2EDN7524R</text>
+            <text x="346" y="257" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">5 A · RoH 0.7 Ω · RoL 0.55 Ω</text>
+            <text x="346" y="273" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--faint)">핀 번호는 패키지별 데이터시트 확인</text>
+            <text x="258" y="194" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">IN A</text>
+            <text x="258" y="304" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">IN B</text>
+            <text x="434" y="194" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">OUT A</text>
+            <text x="434" y="304" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">OUT B</text>
+            <text x="398" y="166" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">V_DD</text>
+            <text x="308" y="318" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">GND</text>
+
+            <!-- 채널 B 스텁 -->
+            <line x1="250" y1="300" x2="212" y2="300" stroke="var(--sig)" stroke-width="2" stroke-dasharray="5 4"/>
+            <line x1="442" y1="300" x2="480" y2="300" stroke="var(--sig)" stroke-width="2" stroke-dasharray="5 4"/>
+            <text x="496" y="296" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="600" fill="var(--sig)">채널 B — 2번째 FET로 동일 구성</text>
+            <text x="496" y="313" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--muted)">(병렬 사용은 SHEET 4 참조 — 권장하지 않음)</text>
+
+            <!-- ===== VDD 디커플링 ===== -->
+            <line x1="418" y1="150" x2="418" y2="70" stroke="var(--wire)" stroke-width="2.4"/>
+            <line x1="266" y1="70" x2="418" y2="70" stroke="var(--wire)" stroke-width="2.4"/>
+            <text x="440" y="66" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--wire)">+12 V</text>
+            <g>
+              <line x1="282" y1="70" x2="282" y2="94" stroke="var(--wire)" stroke-width="2"/>
+              <line x1="271" y1="94" x2="293" y2="94" stroke="var(--sym)" stroke-width="2.6"/>
+              <path d="M271 104 Q282 96 293 104" fill="none" stroke="var(--sym)" stroke-width="2.6"/>
+              <line x1="282" y1="104" x2="282" y2="118" stroke="var(--wire)" stroke-width="2"/>
+              <use href="#g1-gnd" x="282" y="118"/>
+              <circle cx="282" cy="70" r="3.2" fill="var(--node)"/>
+              <text x="282" y="60" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--ink)">10 µF</text>
+            </g>
+            <g>
+              <line x1="340" y1="70" x2="340" y2="94" stroke="var(--wire)" stroke-width="2"/>
+              <line x1="329" y1="94" x2="351" y2="94" stroke="var(--sym)" stroke-width="2.6"/>
+              <line x1="329" y1="104" x2="351" y2="104" stroke="var(--sym)" stroke-width="2.6"/>
+              <line x1="340" y1="104" x2="340" y2="118" stroke="var(--wire)" stroke-width="2"/>
+              <use href="#g1-gnd" x="340" y="118"/>
+              <circle cx="340" cy="70" r="3.2" fill="var(--node)"/>
+              <text x="340" y="60" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--ink)">2.2 µF</text>
+            </g>
+            <g>
+              <line x1="394" y1="70" x2="394" y2="94" stroke="var(--wire)" stroke-width="2"/>
+              <line x1="383" y1="94" x2="405" y2="94" stroke="var(--sym)" stroke-width="2.6"/>
+              <line x1="383" y1="104" x2="405" y2="104" stroke="var(--sym)" stroke-width="2.6"/>
+              <line x1="394" y1="104" x2="394" y2="118" stroke="var(--wire)" stroke-width="2"/>
+              <use href="#g1-gnd" x="394" y="118"/>
+              <circle cx="394" cy="70" r="3.2" fill="var(--node)"/>
+              <text x="394" y="60" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--ink)">100 nF</text>
+            </g>
+            <text x="266" y="140" font-family="Noto Sans KR, sans-serif" font-size="11" font-weight="600" fill="var(--sig)">← V_DD 핀 5 mm 이내</text>
+
+            <!-- ===== 출력 분기 ===== -->
+            <line x1="442" y1="190" x2="480" y2="190" stroke="var(--wire)" stroke-width="2.4"/>
+            <circle cx="480" cy="190" r="3.6" fill="var(--node)"/>
+            <!-- 상: 턴온 -->
+            <line x1="480" y1="190" x2="480" y2="150" stroke="var(--wire)" stroke-width="2.4"/>
+            <line x1="480" y1="150" x2="506" y2="150" stroke="var(--wire)" stroke-width="2.4"/>
+            <rect x="506" y="140" width="52" height="20" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <line x1="558" y1="150" x2="620" y2="150" stroke="var(--wire)" stroke-width="2.4"/>
+            <line x1="620" y1="150" x2="620" y2="190" stroke="var(--wire)" stroke-width="2.4"/>
+            <text x="532" y="132" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="15" font-weight="700" fill="var(--ink)">3.3 Ω</text>
+            <text x="532" y="118" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--sig)">R_G(on) · 0805</text>
+            <!-- 하: 턴오프 -->
+            <line x1="480" y1="190" x2="480" y2="238" stroke="var(--wire)" stroke-width="2.4"/>
+            <line x1="480" y1="238" x2="502" y2="238" stroke="var(--wire)" stroke-width="2.4"/>
+            <rect x="502" y="228" width="44" height="20" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <line x1="546" y1="238" x2="566" y2="238" stroke="var(--wire)" stroke-width="2.4"/>
+            <polygon points="608,228 566,238 608,248" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <line x1="566" y1="227" x2="566" y2="249" stroke="var(--sym)" stroke-width="3"/>
+            <line x1="608" y1="238" x2="620" y2="238" stroke="var(--wire)" stroke-width="2.4"/>
+            <line x1="620" y1="238" x2="620" y2="190" stroke="var(--wire)" stroke-width="2.4"/>
+            <circle cx="620" cy="190" r="3.6" fill="var(--node)"/>
+            <text x="524" y="272" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="14" font-weight="700" fill="var(--ink)">0.5 Ω</text>
+            <text x="524" y="287" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--sig)">R_G(off)</text>
+            <text x="592" y="272" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--ink)">BAT54</text>
+            <text x="592" y="287" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--muted)">쇼트키</text>
+
+            <!-- ===== 게이트 레일 ===== -->
+            <line x1="620" y1="190" x2="752" y2="190" stroke="var(--wire)" stroke-width="2.4"/>
+
+            <!-- TVS (옵션) -->
+            <line x1="662" y1="190" x2="662" y2="222" stroke="var(--sym)" stroke-width="2" stroke-dasharray="4 3"/>
+            <polygon points="652,222 672,222 662,240" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <polygon points="652,258 672,258 662,240" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="662" y1="258" x2="662" y2="372" stroke="var(--sym)" stroke-width="2" stroke-dasharray="4 3"/>
+            <circle cx="662" cy="190" r="3.2" fill="var(--node)"/>
+            <text x="612" y="332" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">18 V TVS</text>
+            <text x="612" y="347" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--muted)">(옵션)</text>
+
+            <!-- R_gs -->
+            <line x1="712" y1="190" x2="712" y2="270" stroke="var(--wire)" stroke-width="2"/>
+            <rect x="703" y="270" width="18" height="44" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="712" y1="314" x2="712" y2="372" stroke="var(--wire)" stroke-width="2"/>
+            <circle cx="712" cy="190" r="3.2" fill="var(--node)"/>
+            <text x="730" y="296" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--ink)">10 kΩ</text>
+            <text x="730" y="311" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">R_gs</text>
+
+            <!-- ===== MOSFET ===== -->
+            <use href="#g1-mos" x="780" y="145"/>
+            <line x1="780" y1="145" x2="780" y2="98" stroke="var(--wire)" stroke-width="2.6"/>
+            <text x="798" y="94" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--wire)">→ 드레인 (전력단)</text>
+            <text x="856" y="176" font-family="IBM Plex Sans Condensed, sans-serif" font-size="15" font-weight="700" fill="var(--ink)">IPT017N12NM6</text>
+            <text x="856" y="193" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">120 V · 1.7 mΩ · TOLL</text>
+            <text x="856" y="209" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">Qg 113 nC · V_plateau 5.0 V</text>
+            <text x="856" y="226" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--warn-ink)">R_G(int) ≈ 1.0 Ω (확인 필요)</text>
+
+            <!-- 켈빈 노드 -->
+            <line x1="780" y1="235" x2="780" y2="372" stroke="var(--wire)" stroke-width="2.4"/>
+            <circle cx="780" cy="372" r="5" fill="var(--node)"/>
+            <text x="800" y="368" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--node)">켈빈 접속점</text>
+            <text x="800" y="385" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--muted)">게이트 리턴은 반드시 여기서</text>
+
+            <!-- 켈빈 리턴 배선 -->
+            <line x1="300" y1="372" x2="780" y2="372" stroke="var(--wire)" stroke-width="2.4"/>
+            <line x1="300" y1="372" x2="300" y2="324" stroke="var(--wire)" stroke-width="2.4"/>
+
+            <!-- 전력 리턴 + 기생 인덕턴스 -->
+            <path d="M780 372 A9 9 0 0 0 780 390 A9 9 0 0 0 780 408 A9 9 0 0 0 780 426" fill="none" stroke="var(--sym)" stroke-width="2.4"/>
+            <line x1="780" y1="426" x2="780" y2="452" stroke="var(--wire)" stroke-width="2.6"/>
+            <use href="#g1-gnd" x="780" y="452"/>
+            <text x="800" y="406" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--ink)">L_s</text>
+            <text x="820" y="406" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--muted)">패키지·배선 기생</text>
+            <text x="800" y="452" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="600" fill="var(--wire)">전력 리턴</text>
+            <text x="800" y="468" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--muted)">게이트 루프에서 분리</text>
+
+            <!-- 루프 라벨 -->
+            <text x="440" y="400" font-family="Noto Sans KR, sans-serif" font-size="13" font-weight="700" fill="var(--sig)">게이트 루프 — 이 음영 면적이 곧 인덕턴스입니다</text>
+            <text x="440" y="419" font-family="Noto Sans KR, sans-serif" font-size="12" fill="var(--muted)">다른 접지는 기호로 생략했지만 이 한 줄만은 실제 배선으로 그려야 합니다. 10 nH 이하 목표.</text>
+
+            <!-- 하단 구분선 -->
+            <line x1="34" y1="500" x2="1150" y2="500" stroke="var(--rule)" stroke-width="1.2"/>
+            <text x="34" y="524" font-family="Noto Sans KR, sans-serif" font-size="12.5" fill="var(--muted)">입력은 −10 V까지 견디므로 클램프 다이오드가 필요 없습니다. 그라운드 바운스에 강한 것이 2EDN 계열의 특징입니다.</text>
+          </svg>
+        </div>
+        <figcaption><b>턴온과 턴오프를 다른 저항으로 통과시키는 것이 이 회로의 전부입니다.</b> 턴온 전류는 3.3&nbsp;Ω을 지나 느리게 흐르고, 턴오프 전류는 쇼트키를 통해 0.5&nbsp;Ω만 지나 빠르게 빠집니다. 다이오드 방향에 주의하십시오 — 애노드가 게이트 쪽, 캐소드가 드라이버 쪽입니다.</figcaption>
+      </figure>
+
+      <div class="notes">
+        <div class="note"><span class="mk">1</span><div><b>R_gs 10 kΩ은 밀러 턴온을 막지 못합니다.</b> 드라이버가 UVLO이거나 전원이 없을 때 게이트를 확실히 내려놓기 위한 것입니다. 밀러 대책은 낮은 턴오프 임피던스와 배선이지 이 저항이 아닙니다.</div></div>
+        <div class="note"><span class="mk">2</span><div><b>2.2 µF는 DC 바이어스 디레이팅을 고려한 값입니다.</b> 게이트 한 번 충전에 141&nbsp;nC가 필요하고 V_DD 강하를 5&nbsp;% 이내로 잡으면 최소 235&nbsp;nF, 2채널 동시 스위칭이면 470&nbsp;nF입니다. X7R 2.2&nbsp;µF/25&nbsp;V는 12&nbsp;V 바이어스에서 실효 1.2&nbsp;µF 남짓이니 이 정도가 적당합니다.</div></div>
+        <div class="note"><span class="mk">3</span><div><b>TOLL 패키지에 켈빈 소스 핀이 있는지 핀아웃으로 확인하십시오.</b> 있으면 게이트 리턴을 반드시 거기에 물립니다. 없으면 소스 핀 중 하나를 게이트 리턴 전용으로 지정하고, 전력 전류가 그 경로로 흐르지 않게 배치합니다.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SHEET 2 ====== -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">SHEET 2</span>
+      <h2>턴온 / 턴오프 전류 경로</h2>
+      <span class="sub">각 경로에 무엇이 직렬로 들어가는가</span>
+    </div>
+    <div class="sheet-body">
+      <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1160 400" role="img" aria-label="턴온과 턴오프의 저항 체인 비교. 턴온 경로는 드라이버 내부 0.7옴, 외부 3.3옴, MOSFET 내부 1.0옴이 직렬로 합계 5.0옴이며 플래토 전류 1.40암페어. 턴오프 경로는 MOSFET 내부 1.0옴, 외부 0.5옴, 드라이버 내부 0.55옴 합계 2.05옴이며 플래토 전류 2.44암페어로 턴온보다 1.7배 빠르다.">
+            <defs>
+              <marker id="g2-arwA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--wire)"/>
+              </marker>
+              <marker id="g2-arwB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" fill="var(--sig)"/>
+              </marker>
+            </defs>
+
+            <!-- ===== 턴온 ===== -->
+            <text x="34" y="34" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--wire)">턴 온 — 느리게 (dv/dt · EMI 통제)</text>
+            <rect x="30" y="46" width="1100" height="136" rx="6" fill="none" stroke="var(--rule)" stroke-width="1.4"/>
+
+            <circle cx="92" cy="114" r="22" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <line x1="84" y1="102" x2="100" y2="102" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="92" y1="94" x2="92" y2="110" stroke="var(--sym)" stroke-width="2"/>
+            <line x1="84" y1="128" x2="100" y2="128" stroke="var(--sym)" stroke-width="2"/>
+            <text x="92" y="162" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--ink)">V_DD 12 V</text>
+
+            <line x1="114" y1="114" x2="180" y2="114" stroke="var(--wire)" stroke-width="2.4" marker-end="url(#g2-arwA)"/>
+
+            <rect x="196" y="96" width="112" height="36" rx="3" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <text x="252" y="119" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="16" font-weight="700" fill="var(--ink)">0.7 Ω</text>
+            <text x="252" y="84" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">RoH 드라이버 내부</text>
+            <text x="252" y="162" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--faint)">고정</text>
+
+            <line x1="308" y1="114" x2="360" y2="114" stroke="var(--wire)" stroke-width="2.4" marker-end="url(#g2-arwA)"/>
+
+            <rect x="376" y="92" width="130" height="44" rx="3" fill="none" stroke="var(--wire)" stroke-width="2.8"/>
+            <text x="441" y="121" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="19" font-weight="700" fill="var(--wire)">3.3 Ω</text>
+            <text x="441" y="84" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--wire)">R_G(on) 외부</text>
+            <text x="441" y="162" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11" font-weight="700" fill="var(--wire)">설계자가 정하는 유일한 값</text>
+
+            <line x1="506" y1="114" x2="558" y2="114" stroke="var(--wire)" stroke-width="2.4" marker-end="url(#g2-arwA)"/>
+
+            <rect x="574" y="96" width="112" height="36" rx="3" fill="none" stroke="var(--sym)" stroke-width="2.2" stroke-dasharray="6 3"/>
+            <text x="630" y="119" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="16" font-weight="700" fill="var(--ink)">1.0 Ω</text>
+            <text x="630" y="84" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">R_G(int) FET 내부</text>
+            <text x="630" y="162" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--warn-ink)">확인 필요</text>
+
+            <line x1="686" y1="114" x2="738" y2="114" stroke="var(--wire)" stroke-width="2.4" marker-end="url(#g2-arwA)"/>
+            <line x1="754" y1="88" x2="754" y2="140" stroke="var(--sym)" stroke-width="3.4"/>
+            <line x1="766" y1="88" x2="766" y2="140" stroke="var(--sym)" stroke-width="3.4"/>
+            <text x="760" y="162" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">C_iss</text>
+
+            <line x1="806" y1="70" x2="806" y2="158" stroke="var(--rule-strong)" stroke-width="1.2"/>
+            <text x="828" y="92" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--muted)">R 합계</text>
+            <text x="1100" y="92" text-anchor="end" font-family="IBM Plex Sans Condensed, sans-serif" font-size="17" font-weight="700" fill="var(--ink)">5.0 Ω</text>
+            <text x="828" y="120" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--muted)">플래토 전류</text>
+            <text x="1100" y="120" text-anchor="end" font-family="IBM Plex Sans Condensed, sans-serif" font-size="17" font-weight="700" fill="var(--wire)">1.40 A</text>
+            <text x="828" y="148" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--muted)">밀러 구간</text>
+            <text x="1100" y="148" text-anchor="end" font-family="IBM Plex Sans Condensed, sans-serif" font-size="17" font-weight="700" fill="var(--ink)">21 ns</text>
+
+            <!-- ===== 턴오프 ===== -->
+            <text x="34" y="228" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="var(--sig)">턴 오프 — 빠르게 (밀러 오인 턴온 방지)</text>
+            <rect x="30" y="240" width="1100" height="136" rx="6" fill="none" stroke="var(--sig)" stroke-width="1.6"/>
+
+            <line x1="86" y1="282" x2="86" y2="334" stroke="var(--sym)" stroke-width="3.4"/>
+            <line x1="98" y1="282" x2="98" y2="334" stroke="var(--sym)" stroke-width="3.4"/>
+            <text x="92" y="356" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">C_iss</text>
+
+            <line x1="114" y1="308" x2="180" y2="308" stroke="var(--sig)" stroke-width="2.4" marker-end="url(#g2-arwB)"/>
+
+            <rect x="196" y="290" width="112" height="36" rx="3" fill="none" stroke="var(--sym)" stroke-width="2.2" stroke-dasharray="6 3"/>
+            <text x="252" y="313" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="16" font-weight="700" fill="var(--ink)">1.0 Ω</text>
+            <text x="252" y="278" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">R_G(int) FET 내부</text>
+            <text x="252" y="356" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="10.5" font-weight="700" fill="var(--warn-ink)">줄일 수 없는 하한</text>
+
+            <line x1="308" y1="308" x2="360" y2="308" stroke="var(--sig)" stroke-width="2.4" marker-end="url(#g2-arwB)"/>
+
+            <rect x="376" y="286" width="130" height="44" rx="3" fill="none" stroke="var(--sig)" stroke-width="2.8"/>
+            <text x="441" y="315" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="19" font-weight="700" fill="var(--sig)">0.5 Ω</text>
+            <text x="441" y="278" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--sig)">R_G(off) 외부</text>
+            <text x="441" y="356" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--muted)">3.3 Ω은 다이오드가 우회</text>
+
+            <line x1="506" y1="308" x2="558" y2="308" stroke="var(--sig)" stroke-width="2.4" marker-end="url(#g2-arwB)"/>
+
+            <rect x="574" y="290" width="112" height="36" rx="3" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <text x="630" y="313" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="16" font-weight="700" fill="var(--ink)">0.55 Ω</text>
+            <text x="630" y="278" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">RoL 드라이버 내부</text>
+            <text x="630" y="356" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--faint)">고정</text>
+
+            <line x1="686" y1="308" x2="738" y2="308" stroke="var(--sig)" stroke-width="2.4" marker-end="url(#g2-arwB)"/>
+            <use href="#g1-gnd" x="754" y="300"/>
+
+            <line x1="806" y1="264" x2="806" y2="352" stroke="var(--rule-strong)" stroke-width="1.2"/>
+            <text x="828" y="286" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--muted)">R 합계</text>
+            <text x="1100" y="286" text-anchor="end" font-family="IBM Plex Sans Condensed, sans-serif" font-size="17" font-weight="700" fill="var(--ink)">2.05 Ω</text>
+            <text x="828" y="314" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--muted)">플래토 전류</text>
+            <text x="1100" y="314" text-anchor="end" font-family="IBM Plex Sans Condensed, sans-serif" font-size="17" font-weight="700" fill="var(--sig)">2.44 A</text>
+            <text x="828" y="342" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--muted)">턴온 대비</text>
+            <text x="1100" y="342" text-anchor="end" font-family="IBM Plex Sans Condensed, sans-serif" font-size="17" font-weight="700" fill="var(--sig)">1.7 배 빠름</text>
+          </svg>
+        </div>
+        <figcaption>설계자가 정할 수 있는 저항은 <b>가운데 두 개뿐</b>입니다. 드라이버 내부 0.7 / 0.55&nbsp;Ω과 FET 내부 R_G(int)는 주어진 값입니다. 특히 턴오프에서 R_G(int) 1&nbsp;Ω은 <b>외부 저항을 0으로 해도 없어지지 않는 하한</b>이라, 밀러 대책의 한계를 여기서 정합니다.</figcaption>
+      </figure>
+
+      <div class="eqbox">
+<b>턴온 플래토 전류</b>  I_G(on) = (V_DD − V_plateau) / (RoH + R_G(on) + R_G(int))
+                    = (12 − 5.0) / (0.7 + 3.3 + 1.0) = 7 / 5.0 = <b>1.40 A</b>
+
+<b>초기 피크 전류</b>   I_pk = V_DD / (RoH + R_G(on) + R_G(int)) = 12 / 5.0 = <b>2.40 A</b>   → 5 A 드라이버 한계까지 여유
+
+<b>밀러 구간 시간</b>   t_miller = Q_gd / I_G(on) = 30 nC / 1.40 A = <b>21 ns</b>
+<b>드레인 dv/dt</b>     @ V_DS 60 V → 60 / 21 = <b>2.8 V/ns</b>
+
+<b>턴오프 플래토 전류</b> I_G(off) = V_plateau / (RoL + R_G(off) + R_G(int)) = 5.0 / 2.05 = <b>2.44 A</b>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SHEET 3 ====== -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">SHEET 3</span>
+      <h2>직렬저항 선정</h2>
+      <span class="sub">R_G(int) 값에 따른 감도 포함</span>
+    </div>
+    <div class="sheet-body">
+
+      <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1140 230" role="img" aria-label="턴온 게이트 저항 선정 구간을 나타낸 수직선. 0에서 1옴 구간은 게이트 루프 감쇠 부족과 과도한 dv/dt로 위험, 1.8에서 4.7옴 구간이 권장, 6.8옴 이상은 스위칭 손실 과다 구간이다. 초기값 3.3옴과 최적화 목표 1.8옴이 표시되어 있다.">
+            <!-- 구간 띠 — 축척 176.4 px/Ω, 원점 x=60 -->
+            <rect x="60" y="86" width="317" height="34" fill="var(--wire)" opacity="0.16"/>
+            <rect x="377" y="86" width="512" height="34" fill="var(--ok-line)" opacity="0.24"/>
+            <rect x="889" y="86" width="159" height="34" fill="var(--warn-line)" opacity="0.2"/>
+
+            <!-- 축 -->
+            <line x1="60" y1="120" x2="1048" y2="120" stroke="var(--rule-strong)" stroke-width="2"/>
+            <g font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--muted)">
+              <line x1="60" y1="120" x2="60" y2="128" stroke="var(--rule-strong)" stroke-width="2"/>
+              <text x="60" y="146" text-anchor="middle">0</text>
+              <line x1="236" y1="120" x2="236" y2="128" stroke="var(--rule-strong)" stroke-width="2"/>
+              <text x="236" y="146" text-anchor="middle">1.0</text>
+              <line x1="377" y1="120" x2="377" y2="128" stroke="var(--rule-strong)" stroke-width="2"/>
+              <text x="377" y="146" text-anchor="middle">1.8</text>
+              <line x1="448" y1="120" x2="448" y2="128" stroke="var(--rule-strong)" stroke-width="2"/>
+              <text x="448" y="146" text-anchor="middle">2.2</text>
+              <line x1="642" y1="120" x2="642" y2="128" stroke="var(--rule-strong)" stroke-width="2"/>
+              <text x="642" y="146" text-anchor="middle">3.3</text>
+              <line x1="889" y1="120" x2="889" y2="128" stroke="var(--rule-strong)" stroke-width="2"/>
+              <text x="889" y="146" text-anchor="middle">4.7</text>
+              <line x1="1048" y1="120" x2="1048" y2="128" stroke="var(--rule-strong)" stroke-width="2"/>
+              <text x="1048" y="146" text-anchor="middle">5.6</text>
+              <text x="1082" y="126" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">Ω</text>
+            </g>
+
+            <!-- 구간 라벨 -->
+            <text x="218" y="76" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--wire)">감쇠 부족 · dv/dt 과대</text>
+            <text x="633" y="76" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12.5" font-weight="700" fill="var(--ok-ink)">권장 구간</text>
+            <text x="968" y="76" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--warn-ink)">손실 증가</text>
+
+            <!-- 지시선: 초기값 -->
+            <line x1="642" y1="86" x2="642" y2="176" stroke="var(--sig)" stroke-width="2"/>
+            <circle cx="642" cy="103" r="6" fill="var(--sig)"/>
+            <text x="642" y="196" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="15" font-weight="700" fill="var(--sig)">3.3 Ω — 초기값</text>
+            <text x="642" y="214" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" fill="var(--muted)">1.40 A · 2.8 V/ns · 먼저 여기서 시작</text>
+
+            <!-- 지시선: 목표값 -->
+            <line x1="377" y1="86" x2="377" y2="176" stroke="var(--ok-line)" stroke-width="2" stroke-dasharray="5 4"/>
+            <circle cx="377" cy="103" r="6" fill="var(--ok-line)"/>
+            <text x="377" y="196" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="15" font-weight="700" fill="var(--ok-ink)">1.8 Ω — 최적화 목표</text>
+            <text x="377" y="214" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" fill="var(--muted)">2.00 A · 4.0 V/ns · 파형 확인 후 이동</text>
+
+            <!-- 상단 설명 -->
+            <text x="60" y="36" font-family="Noto Sans KR, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">R_G(on) 선정 구간</text>
+            <text x="60" y="54" font-family="Noto Sans KR, sans-serif" font-size="12" fill="var(--muted)">보수적으로 시작해 파형을 보며 줄입니다. 반대 방향(빠르게 시작해 늦추기)은 소자를 잃을 수 있습니다.</text>
+          </svg>
+        </div>
+        <figcaption>왼쪽 끝을 피하는 이유는 두 가지입니다. <b>dv/dt가 과해지고</b>, 게이트 루프가 <b>감쇠 부족</b>이 됩니다. 아래 감쇠 계산을 보십시오.</figcaption>
+      </figure>
+
+      <div class="table-wrap" style="margin-top:26px">
+        <table>
+          <thead>
+            <tr>
+              <th>R_G(on)</th><th class="mono">R 합계</th><th class="mono">I_G 플래토</th>
+              <th class="mono">밀러 시간</th><th class="mono">dv/dt @60 V</th><th>판정</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">0 Ω</td><td class="mono">1.7 Ω</td><td class="mono">4.12 A</td><td class="mono">7.3 ns</td><td class="mono">8.2 V/ns</td><td>감쇠 부족 · EMI 과다</td></tr>
+            <tr><td class="mono">0.5 Ω</td><td class="mono">2.2 Ω</td><td class="mono">3.18 A</td><td class="mono">9.4 ns</td><td class="mono">6.4 V/ns</td><td>공격적</td></tr>
+            <tr><td class="mono">1.0 Ω</td><td class="mono">2.7 Ω</td><td class="mono">2.59 A</td><td class="mono">11.6 ns</td><td class="mono">5.2 V/ns</td><td>공격적</td></tr>
+            <tr class="pick"><td class="mono">1.8 Ω</td><td class="mono">3.5 Ω</td><td class="mono">2.00 A</td><td class="mono">15.0 ns</td><td class="mono">4.0 V/ns</td><td>최적화 목표</td></tr>
+            <tr><td class="mono">2.2 Ω</td><td class="mono">3.9 Ω</td><td class="mono">1.79 A</td><td class="mono">16.7 ns</td><td class="mono">3.6 V/ns</td><td>양호</td></tr>
+            <tr class="pick"><td class="mono">3.3 Ω</td><td class="mono">5.0 Ω</td><td class="mono">1.40 A</td><td class="mono">21.4 ns</td><td class="mono">2.8 V/ns</td><td>초기값 (권장 시작점)</td></tr>
+            <tr><td class="mono">4.7 Ω</td><td class="mono">6.4 Ω</td><td class="mono">1.09 A</td><td class="mono">27.5 ns</td><td class="mono">2.2 V/ns</td><td>보수적</td></tr>
+            <tr><td class="mono">6.8 Ω</td><td class="mono">8.5 Ω</td><td class="mono">0.82 A</td><td class="mono">36.5 ns</td><td class="mono">1.6 V/ns</td><td>손실 과다</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-top:8px">V_DD 12 V, V_plateau 5.0 V <span class="cfm">확인됨</span>, RoH 0.7 Ω <span class="cfm">확인됨</span>, R_G(int) 1.0 Ω <span class="est">가정</span>, Q_gd 30 nC <span class="est">가정</span> 기준.</p>
+
+      <h3 style="font-family:'IBM Plex Sans Condensed','Noto Sans KR',sans-serif;font-size:17px;margin:30px 0 10px;font-weight:700">R_G(int) 실제 값이 다를 때 — 같은 I_G를 얻으려면</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>실제 R_G(int)</th><th class="mono">I_G = 1.4 A 목표</th><th class="mono">I_G = 2.0 A 목표</th><th class="mono">외부 0 Ω일 때 최대 I_G</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">0.5 Ω</td><td class="mono">R_on = 3.8 Ω</td><td class="mono">R_on = 2.3 Ω</td><td class="mono">5.83 A → 드라이버 5 A 제한</td></tr>
+            <tr><td class="mono">1.0 Ω <span class="est">본문 가정</span></td><td class="mono">R_on = 3.3 Ω</td><td class="mono">R_on = 1.8 Ω</td><td class="mono">4.12 A</td></tr>
+            <tr><td class="mono">1.5 Ω</td><td class="mono">R_on = 2.8 Ω</td><td class="mono">R_on = 1.3 Ω</td><td class="mono">3.18 A</td></tr>
+            <tr><td class="mono">2.5 Ω</td><td class="mono">R_on = 1.8 Ω</td><td class="mono">R_on = 0.3 Ω</td><td class="mono">2.19 A</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13.5px;color:var(--muted);margin-top:10px;word-break:keep-all">표를 보면 <b style="color:var(--ink)">R_G(int)가 커질수록 외부 저항은 그만큼 줄어들 뿐, 합계는 같습니다.</b> 데이터시트 값을 확인하신 뒤 이 표에서 해당 행을 골라 외부 저항만 바꾸시면 됩니다.</p>
+
+      <h3 style="font-family:'IBM Plex Sans Condensed','Noto Sans KR',sans-serif;font-size:17px;margin:30px 0 10px;font-weight:700">게이트 루프 감쇠 — 저항이 하는 두 번째 일</h3>
+      <div class="eqbox">
+게이트 루프는 L_loop 와 C_iss 의 직렬 공진 회로입니다. 임계 감쇠 조건:
+
+  <b>R_총 ≥ 2 · √(L_loop / C_iss)</b>      (C_iss ≈ 15 nF <span style="color:var(--warn-ink)">가정</span>)
+
+  L_loop =  5 nH  →  필요 R = 1.15 Ω     R_총 5.0 Ω  ✓ 과감쇠
+  L_loop = 10 nH  →  필요 R = 1.63 Ω     R_총 5.0 Ω  ✓ 과감쇠
+  L_loop = 20 nH  →  필요 R = 2.31 Ω     R_총 5.0 Ω  ✓ 과감쇠
+  L_loop = 40 nH  →  필요 R = 3.27 Ω     R_총 5.0 Ω  ✓ 과감쇠
+
+  외부 0 Ω (R_총 1.7 Ω) 이면  L_loop &lt; 11 nH 를 지켜야 링잉이 잡힙니다.
+      </div>
+      <p style="font-size:13.5px;color:var(--muted);word-break:keep-all">외부 저항을 0으로 두면 <b style="color:var(--ink)">배선 인덕턴스 11&nbsp;nH 이하라는 까다로운 조건</b>이 붙습니다. 3.3&nbsp;Ω이면 40&nbsp;nH의 헐거운 배선에서도 과감쇠입니다. 첫 시제품에서 보수적으로 시작하라는 이유가 이것입니다.</p>
+
+      <h3 style="font-family:'IBM Plex Sans Condensed','Noto Sans KR',sans-serif;font-size:17px;margin:30px 0 10px;font-weight:700">전력 분담 — 저항 정격 선정</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>f_sw</th><th class="mono">게이트 총 손실</th><th class="mono">드라이버 (채널당)</th><th class="mono">R_G(on) 소자</th><th class="mono">FET 내부 R_G</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">50 kHz</td><td class="mono">85 mW</td><td class="mono">23 mW</td><td class="mono">28 mW</td><td class="mono">35 mW</td></tr>
+            <tr class="pick"><td class="mono">100 kHz</td><td class="mono">169 mW</td><td class="mono">47 mW</td><td class="mono">56 mW</td><td class="mono">70 mW</td></tr>
+            <tr><td class="mono">200 kHz</td><td class="mono">338 mW</td><td class="mono">94 mW</td><td class="mono">112 mW</td><td class="mono">139 mW</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13.5px;color:var(--muted);margin-top:10px;word-break:keep-all">Q_g = 141&nbsp;nC (최대), V_DD = 12&nbsp;V 기준. <span style="font-family:'IBM Plex Mono',monospace">P = Q_g·V_DD·f_sw</span> 를 턴온·턴오프 경로의 저항비로 나눈 값입니다. <b style="color:var(--ink)">200&nbsp;kHz에서도 R_G(on)은 112&nbsp;mW</b>이므로 0805 (125&nbsp;mW)면 충분하지만, 순시 피크가 <span style="font-family:'IBM Plex Mono',monospace">I²R = 2.4²×3.3 ≈ 19&nbsp;W</span>(20&nbsp;ns)라 <b style="color:var(--ink)">0805 후막 저항</b>을 쓰고 0603 이하는 피하십시오. 2채널 동시 사용 시 드라이버 총 손실은 2배입니다.</p>
+    </div>
+  </section>
+
+  <!-- ====== SHEET 4 ====== -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">SHEET 4</span>
+      <h2>두 채널을 어떻게 쓸 것인가</h2>
+      <span class="sub">병렬 10 A vs 2개 FET 개별 구동</span>
+    </div>
+    <div class="sheet-body">
+      <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1120 300" role="img" aria-label="두 채널 사용 방식 비교. 왼쪽은 OUTA와 OUTB를 병렬로 묶어 하나의 MOSFET을 구동하는 구성으로, 드라이버 출력 임피던스가 0.35옴으로 반감되지만 전체 저항 합계에서 차지하는 비중이 작아 이득이 없다. 오른쪽은 두 채널로 두 개의 MOSFET을 각각 구동하는 구성으로 이쪽을 권장한다.">
+            <!-- 좌: 병렬 -->
+            <rect x="24" y="30" width="512" height="222" rx="6" fill="none" stroke="var(--rule)" stroke-width="1.4"/>
+            <text x="40" y="20" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="700" fill="var(--muted)">A · 채널 병렬 → 1개 FET</text>
+
+            <rect x="56" y="76" width="118" height="130" rx="4" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <text x="115" y="132" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">2EDN7524R</text>
+            <text x="64" y="106" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--sym)">OUT A</text>
+            <text x="64" y="186" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--sym)">OUT B</text>
+            <line x1="174" y1="100" x2="230" y2="100" stroke="var(--wire)" stroke-width="2.2"/>
+            <line x1="174" y1="180" x2="230" y2="180" stroke="var(--wire)" stroke-width="2.2"/>
+            <line x1="230" y1="100" x2="230" y2="180" stroke="var(--wire)" stroke-width="2.2"/>
+            <circle cx="230" cy="140" r="3.6" fill="var(--node)"/>
+            <line x1="230" y1="140" x2="278" y2="140" stroke="var(--wire)" stroke-width="2.2"/>
+            <rect x="278" y="130" width="52" height="20" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <line x1="330" y1="140" x2="392" y2="140" stroke="var(--wire)" stroke-width="2.2"/>
+            <text x="304" y="122" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--ink)">2.2 Ω</text>
+            <use href="#g1-mos" x="420" y="96"/>
+            <text x="304" y="172" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">R_on 재계산</text>
+
+            <text x="56" y="232" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--muted)">RoH 0.35 Ω · R 합계 3.55 Ω · I_pk 3.4 A</text>
+            <text x="332" y="232" font-family="Noto Sans KR, sans-serif" font-size="12" font-weight="700" fill="var(--wire)">이득 없음</text>
+
+            <!-- 우: 개별 -->
+            <rect x="576" y="30" width="520" height="222" rx="6" fill="none" stroke="var(--ok-line)" stroke-width="1.8"/>
+            <text x="592" y="20" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="700" fill="var(--ok-ink)">B · 채널 개별 → 2개 FET  ✓ 권장</text>
+
+            <rect x="608" y="76" width="118" height="130" rx="4" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <text x="667" y="132" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">2EDN7524R</text>
+            <text x="616" y="106" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--sym)">OUT A</text>
+            <text x="616" y="186" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--sym)">OUT B</text>
+
+            <line x1="726" y1="100" x2="766" y2="100" stroke="var(--wire)" stroke-width="2.2"/>
+            <rect x="766" y="90" width="48" height="20" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <line x1="814" y1="100" x2="856" y2="100" stroke="var(--wire)" stroke-width="2.2"/>
+            <text x="790" y="82" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--ink)">3.3 Ω</text>
+            <g transform="translate(884,56) scale(0.62)"><use href="#g1-mos" x="0" y="0"/></g>
+            <text x="960" y="104" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">FET 1 — 1상</text>
+
+            <line x1="726" y1="180" x2="766" y2="180" stroke="var(--wire)" stroke-width="2.2"/>
+            <rect x="766" y="170" width="48" height="20" fill="none" stroke="var(--sym)" stroke-width="2.2"/>
+            <line x1="814" y1="180" x2="856" y2="180" stroke="var(--wire)" stroke-width="2.2"/>
+            <text x="790" y="162" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" font-weight="600" fill="var(--ink)">3.3 Ω</text>
+            <g transform="translate(884,136) scale(0.62)"><use href="#g1-mos" x="0" y="0"/></g>
+            <text x="960" y="184" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">FET 2 — 2상</text>
+
+            <text x="608" y="232" font-family="Noto Sans KR, sans-serif" font-size="12" fill="var(--muted)">1 ns 지연 정합 → 인터리브 위상 정밀도 확보</text>
+          </svg>
+        </div>
+        <figcaption><b>이 조합에서 채널 병렬은 의미가 없습니다.</b> 병렬로 묶으면 드라이버 출력 임피던스가 0.7&nbsp;→&nbsp;0.35&nbsp;Ω으로 반이 되지만, 전체 5&nbsp;Ω 중 0.35&nbsp;Ω의 비중은 7&nbsp;%에 불과합니다. 애초에 이 FET의 Q_g가 113&nbsp;nC라 단일 채널 5&nbsp;A로 충분하고, 실제 피크 전류는 2.4&nbsp;A로 드라이버 정격의 절반도 쓰지 않습니다. <b>두 채널은 두 개의 FET에 쓰는 것이 맞습니다</b> — 1&nbsp;ns 채널 정합이 인터리브 위상 정밀도로 그대로 돌아옵니다.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ====== 부품표 ====== -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">BOM</span>
+      <h2>주변회로 상수표</h2>
+      <span class="sub">채널당 부품</span>
+    </div>
+    <div class="sheet-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>기호</th><th>값</th><th class="mono">패키지</th><th>역할 · 선정 근거</th></tr></thead>
+          <tbody>
+            <tr class="pick"><td class="mono">R_G(on)</td><td class="mono">3.3 Ω → 1.8 Ω</td><td class="mono">0805 후막</td><td>턴온 속도 · 게이트 루프 감쇠. 순시 19 W 감당 위해 0603 금지</td></tr>
+            <tr class="pick"><td class="mono">R_G(off)</td><td class="mono">0.5 Ω</td><td class="mono">0805 후막</td><td>턴오프 속도. 0 Ω도 가능하나 V_DS 오버슈트 확인 후 결정</td></tr>
+            <tr><td class="mono">D_off</td><td class="mono">BAT54 / PMEG2005</td><td class="mono">SOD-323</td><td>턴오프 시 R_G(on) 우회. V_f 낮은 쇼트키. 4 A 펄스 (20 ns) 사용</td></tr>
+            <tr><td class="mono">R_gs</td><td class="mono">10 kΩ</td><td class="mono">0603</td><td>무구동 상태 게이트 고정. FET 핀 바로 옆, 켈빈 소스로 리턴</td></tr>
+            <tr><td class="mono">R_in</td><td class="mono">22 Ω</td><td class="mono">0603</td><td>입력 링잉 감쇠. MCU 출력 보호</td></tr>
+            <tr><td class="mono">R_in,pd</td><td class="mono">10 kΩ</td><td class="mono">0603</td><td>MCU 부팅 전 입력 확정. 드라이버 입력이 뜨는 것을 방지</td></tr>
+            <tr><td class="mono">C_vdd1</td><td class="mono">100 nF X7R / 25 V</td><td class="mono">0402 · 0603</td><td>고주파. V_DD 핀에서 2 mm 이내</td></tr>
+            <tr><td class="mono">C_vdd2</td><td class="mono">2.2 µF X7R / 25 V</td><td class="mono">0805</td><td>게이트 전하 공급. DC 바이어스 디레이팅 후 실효 ≈ 1.2 µF</td></tr>
+            <tr><td class="mono">C_vdd3</td><td class="mono">10 µF / 25 V</td><td class="mono">1206</td><td>벌크. 2채널 동시 스위칭 대응</td></tr>
+            <tr><td class="mono">TVS_gs</td><td class="mono">18 V 양방향 (옵션)</td><td class="mono">SOD-323</td><td>게이트 링잉 클램프. 용량 추가 50~100 pF 감수. 첫 시제품 권장</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 체크리스트 ====== -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">체크</span>
+      <h2>레이아웃과 브링업</h2>
+      <span class="sub">부품값보다 이쪽이 결과를 더 많이 좌우합니다</span>
+    </div>
+    <div class="chk">
+      <div class="chk-item"><span class="bx"></span><div><b>드라이버를 FET에서 15 mm 이내에 배치</b><span>게이트 루프 인덕턴스는 대략 배선 1 mm당 1 nH입니다. 왕복 30 mm면 이미 30 nH입니다.</span></div></div>
+      <div class="chk-item"><span class="bx"></span><div><b>게이트 배선과 리턴 배선을 나란한 쌍으로</b><span>인접 층에 겹쳐 배치하면 상호 인덕턴스가 상쇄되어 루프 인덕턴스가 크게 줄어듭니다.</span></div></div>
+      <div class="chk-item"><span class="bx"></span><div><b>켈빈 소스 확인 — TOLL 핀아웃부터</b><span>전용 소스 센스 핀이 있으면 게이트 리턴은 반드시 거기로. 없으면 소스 핀 하나를 리턴 전용으로 지정하고 전력 전류가 그 경로를 지나지 않게 배치합니다.</span></div></div>
+      <div class="chk-item"><span class="bx"></span><div><b>드라이버 GND는 켈빈 접속점에 단독으로 연결</b><span>전력 접지 평면을 경유하면 di/dt에 의한 전위차가 그대로 V_GS에 실립니다. 331 A 소자에서는 치명적입니다.</span></div></div>
+      <div class="chk-item"><span class="bx"></span><div><b>디커플링은 V_DD 핀과 GND 핀 사이 최단 경로</b><span>100 nF를 2 mm 이내, 그 바깥에 2.2 µF, 다시 바깥에 10 µF 순으로 배치합니다.</span></div></div>
+      <div class="chk-item"><span class="bx"></span><div><b>브링업은 저전압 · 저전류에서 시작</b><span>V_DS를 정격의 20 % 정도로 낮춘 상태에서 게이트 파형과 드레인 파형을 먼저 확인합니다.</span></div></div>
+      <div class="chk-item"><span class="bx"></span><div><b>V_GS를 FET 핀에서 측정 — 저항 앞이 아니라</b><span>드라이버 출력에서 보면 깨끗해도 게이트 핀에서는 링잉이 보입니다. 짧은 접지 스프링을 쓴 프로브로 소자 핀에서 직접 측정합니다.</span></div></div>
+      <div class="chk-item"><span class="bx"></span><div><b>턴오프 시 V_GS 상승(밀러 어깨)을 확인</b><span>V_GS(th) 최솟값의 절반을 넘으면 턴오프 임피던스를 더 낮추거나, 하프브리지 구성이라면 음전압 바이어스(−3 ~ −5 V)를 검토해야 합니다.</span></div></div>
+      <div class="chk-item"><span class="bx"></span><div><b>V_DS 오버슈트를 확인한 뒤 R_G(on)을 줄인다</b><span>3.3 Ω에서 파형이 깨끗하면 2.2 → 1.8 Ω 순으로 내려가며 각 단계에서 오버슈트와 EMI를 재확인합니다.</span></div></div>
+    </div>
+  </section>
+
+  <!-- ====== 확인 필요 ====== -->
+  <section class="sheet">
+    <div class="sheet-head">
+      <span class="sheet-no">확인</span>
+      <h2>수치 출처와 미확인 항목</h2>
+      <span class="sub">계산에 쓴 값이 어디서 왔는지</span>
+    </div>
+    <div class="sheet-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>파라미터</th><th class="mono">사용 값</th><th>상태</th></tr></thead>
+          <tbody>
+            <tr><td>2EDN7524R RoH (소스)</td><td class="mono">0.7 Ω</td><td><span class="cfm">확인됨</span></td></tr>
+            <tr><td>2EDN7524R RoL (싱크)</td><td class="mono">0.55 Ω</td><td><span class="cfm">확인됨</span></td></tr>
+            <tr><td>2EDN7524R 피크 전류</td><td class="mono">5 A 소스 / 5 A 싱크</td><td><span class="cfm">확인됨</span></td></tr>
+            <tr><td>2EDN7524R V_CC 범위</td><td class="mono">4.2 ~ 20 V</td><td><span class="cfm">확인됨</span> — 12 V 사용</td></tr>
+            <tr><td>2EDN7524R 전파 지연</td><td class="mono">17 ns on / 19 ns off, 정합 1 ns</td><td><span class="cfm">확인됨</span></td></tr>
+            <tr><td>IPT017N12NM6 Q_g</td><td class="mono">113 nC 표준 / 141 nC 최대 @ 10 V</td><td><span class="cfm">확인됨</span></td></tr>
+            <tr><td>IPT017N12NM6 V_plateau</td><td class="mono">5.0 V</td><td><span class="cfm">확인됨</span></td></tr>
+            <tr><td>IPT017N12NM6 정격</td><td class="mono">120 V · 1.7 mΩ · TOLL</td><td><span class="cfm">확인됨</span></td></tr>
+            <tr><td><b>IPT017N12NM6 R_G(int)</b></td><td class="mono">1.0 Ω</td><td><span class="est">가정</span> — 저항값을 직접 좌우. 최우선 확인</td></tr>
+            <tr><td><b>IPT017N12NM6 Q_gd</b></td><td class="mono">30 nC</td><td><span class="est">가정</span> — dv/dt 계산에만 사용</td></tr>
+            <tr><td>IPT017N12NM6 C_iss</td><td class="mono">15 nF</td><td><span class="est">가정</span> — 감쇠 계산에만 사용</td></tr>
+            <tr><td>IPT017N12NM6 V_GS(th)</td><td class="mono">3.0 V (최솟값 추정)</td><td><span class="est">가정</span> — 밀러 판정 기준</td></tr>
+            <tr><td>2EDN7524R 핀 번호</td><td class="mono">—</td><td><span class="est">미확인</span> — 패키지 접미(R/F/G)별 확인 필요</td></tr>
+            <tr><td>TOLL 켈빈 소스 핀 유무</td><td class="mono">—</td><td><span class="est">미확인</span> — 레이아웃 착수 전 확인</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="src">수치 출처: <a href="https://www.infineon.com/part/IPT017N12NM6">Infineon IPT017N12NM6 제품 페이지</a> · <a href="https://www.infineon.com/cms/en/product/power/gate-driver-ics/2edn7524r/">Infineon 2EDN7524R 제품 페이지</a> · <a href="https://www.mouser.com/datasheet/2/196/Infineon_2EDN752x_2EDN852x_DS__DataSheet_v02_06_EN-3159868.pdf">2EDN752x / 2EDN852x 데이터시트 (Mouser)</a> · <a href="https://www.infineon.com/assets/row/public/documents/24/49/infineon-ipt017n12nm6-datasheet-en.pdf?fileId=8ac78c8c850f4bee0185c27a93a6538c">IPT017N12NM6 데이터시트 PDF (Infineon)</a></p>
+    </div>
+  </section>
+
+</div>
