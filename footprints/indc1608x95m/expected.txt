@@ -1,0 +1,16 @@
+INDC1608X95M  expected values  (mm, TOP view, origin = component centre)
+  body             : 1.6+/-0.15 x 0.8+/-0.15 x 0.8+/-0.15  (max 1.75 x 0.9500000000000001 x 0.9500000000000001), electrode 0.4+/-0.2
+  vendor land      : 0.65 x 0.7  gap a=0.7  span b=2.0  -> inner 0.35  outer 1.0
+  applied land     : 1.03 x 0.7  centre +/-0.865  inner 0.35  outer 1.38
+  paste            : 0.65 x 0.7  offset +0.19  lands at +/-0.675 (spans 0.35 to 1.0)
+  mask             : = copper (1:1, rule 6 chip convention)
+  body end (max)   : 0.875  toe exposed = 0.505  (rule >=0.50 OK)
+  land gap         : 0.7  (rule >=0.20 OK, datasheet a untouched)
+  silk             : y=+/-0.55 lines, x -0.875..0.875; clearance to pad 0.15
+  assembly         : 1.75 x 0.9500000000000001 closed rect
+  place bound      : x +/-1.48  y +/-0.70  filled
+  refdes           : (-1.08, 0.70)
+
+pin        x        y  rot   pasteX
+  1   -0.865    0.000    0   -0.675
+  2    0.865    0.000  180    0.675

@@ -67,6 +67,11 @@ fp_rows = [
      "리드=벤더 스텐실 1.3 오프셋 / 노출패드=2x2 창 79.9%", "있음",
      "규칙2로 토 0.15 연장(벤더 1.3→1.45). 마스크는 규칙6에 따라 데이터시트값(동판+0.05/변) 우선 → 마스크 웹 0.15. 방향은 p.7 Top View 기준",
      None, "미검증", "buildsop65p490.il", "Infineon 2EDN752x DS Rev2.7 p.7 Pin Config / p.27 outline / p.28 footprint"],
+    ["INDC1608X95M", "SMD", "1608 메트릭 / 0603 인치 칩", 2, None,
+     "1.03 x 0.70", None, "1.75 x 0.95 x 0.95max", "x ±1.48 / y ±0.70",
+     "벤더랜드 0.65 오프셋 (규칙4 칩 조항)", "있음",
+     "규칙2로 토 0.505 연장(벤더 0.65→1.03). 이탈 없음. 데이터시트 전면 'Reference Only' 워터마크",
+     None, "미검증", "buildindc1608.il", "Murata JENF243A_0003AM-01 p.5 외형 / p.10 12.1 Land dimensions"],
 ]
 for r, row in enumerate(fp_rows, start=2):
     for c, v in enumerate(row, start=1):
@@ -80,17 +85,19 @@ fp["G4"] = "—"; fp["G4"].font = IN_FONT
 fp["G5"] = "—"; fp["G5"].font = IN_FONT
 fp["G6"] = "—"; fp["G6"].font = IN_FONT
 fp["G7"] = "—"; fp["G7"].font = IN_FONT
+fp["G8"] = "—"; fp["G8"].font = IN_FONT
+fp["E8"] = "—"; fp["E8"].font = IN_FONT
 fp["E4"] = "—"; fp["E4"].font = IN_FONT
-for rr in (2,3,4,5,6,7):
+for rr in (2,3,4,5,6,7,8):
     fp.cell(row=rr, column=13, value="미실행").font = IN_FONT
-for rr in (2,3,4,5,6,7):
+for rr in (2,3,4,5,6,7,8):
     fp.cell(row=rr, column=13).fill = WARN
     fp.cell(row=rr, column=14).fill = WARN
 
-fp["A9"] = "※ DRC / 검증상태는 axlDRCUpdate(t) 와 extracta 대조를 실제로 돌린 뒤에만 갱신할 것."
-fp["A9"].font = Font(name=F, size=9, italic=True, color="C00000")
-fp["A10"] = "※ 여섯 풋프린트 모두 이 세션에서는 빌드하지 못했습니다 (Allegro/extracta 부재). 스크립트만 작성된 상태입니다."
+fp["A10"] = "※ DRC / 검증상태는 axlDRCUpdate(t) 와 extracta 대조를 실제로 돌린 뒤에만 갱신할 것."
 fp["A10"].font = Font(name=F, size=9, italic=True, color="C00000")
+fp["A11"] = "※ 일곱 풋프린트 모두 이 세션에서는 빌드하지 못했습니다 (Allegro/extracta 부재). 스크립트만 작성된 상태입니다."
+fp["A11"].font = Font(name=F, size=9, italic=True, color="C00000")
 fp.freeze_panes = "A2"
 
 fp["L2"].comment = Comment(
@@ -164,6 +171,11 @@ v_rows = [
      "PG-TSSOP-8 (노출다이패드)", "SOP65P490X104-9M", None, "있음",
      "2EDN752x/2EDN852x DS Rev 2.7 (2025-03-18)", "buildsop65p490.il", "미검증",
      "핀9=노출다이패드, GND(핀3)에 연결 필수. 1 ENA/2 INA/3 GND/4 INB/5 OUTB/6 VDD/7 OUTA/8 ENB. 마스크 웹 0.15 — 팹 전역 마스크 확장 금지"],
+    ["BLM18SP300SN1D", "Murata", "칩 페라이트 비드",
+     "30±10Ω @100MHz / 정격 6000mA(85°C)·4000mA(125°C) / DCR 0.008Ω max / -55~+125°C / DC 전원라인용",
+     "1608 메트릭 (0603)", "INDC1608X95M", None, "있음",
+     "Murata JENF243A_0003AM-01 (Reference Only)", "buildindc1608.il", "미검증",
+     "무극성. 정격전류가 커서 연결 패턴 폭 d 요구: 35µm 동박에서 6.4mm (18µm·70µm은 규정 없음) — 레이아웃에서 확보할 것"],
 ]
 for r, row in enumerate(v_rows, start=HR+1):
     v.cell(row=r, column=1, value=f"=ROW()-{HR}").font = FX_FONT
