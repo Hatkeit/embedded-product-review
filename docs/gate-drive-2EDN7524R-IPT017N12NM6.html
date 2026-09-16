@@ -114,7 +114,16 @@
 
   .gapcard{border:1.5px solid var(--gap-line);background:var(--gap-bg);color:var(--gap-ink);padding:18px 20px;margin-bottom:18px}
   .gapcard h3{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:16px;margin:0 0 8px;font-weight:700}
-  .gapcard p{margin:0;font-size:14px;word-break:keep-all;max-width:78ch}
+  .gapcard p{margin:0 0 10px;font-size:14px;word-break:keep-all;max-width:78ch}
+  .gapcard p:last-child{margin-bottom:0}
+  .badcard{border:1.5px solid var(--bad-line);border-left-width:5px;background:var(--bad-bg);color:var(--bad-ink);
+    padding:18px 22px;margin-top:24px}
+  .badcard h2{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:18px;margin:0 0 10px;font-weight:700}
+  .badcard p{margin:0 0 10px;font-size:14.5px;word-break:keep-all;max-width:78ch}
+  .badcard p:last-child{margin-bottom:0}
+  .badcard table{margin-top:12px;font-size:13.5px}
+  .badcard th,.badcard td{border-bottom-color:var(--bad-line)}
+  .badcard thead th{color:var(--bad-ink);opacity:.75;border-bottom-color:var(--bad-line)}
 
   .chk{display:grid;gap:2px;background:var(--rule)}
   .chk-item{background:var(--sheet);padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
@@ -139,7 +148,7 @@
 
   <header class="masthead">
     <div class="masthead-body">
-      <p class="eyebrow">Gate Drive Design · Verified Data Only · Rev 0.2</p>
+      <p class="eyebrow">Gate Drive Design · Verified Data Only · Rev 0.3</p>
       <h1>2EDN7524R 게이트 구동 설계</h1>
       <p class="standfirst">5&nbsp;A 듀얼 저측 드라이버로 120&nbsp;V / 1.7&nbsp;mΩ OptiMOS&nbsp;6를 구동합니다. 이 개정판은 <b>데이터시트로 확인한 값만</b>으로 설계를 전개하고, 확인하지 못한 값은 계산에 넣지 않고 따로 분리했습니다.</p>
     </div>
@@ -147,7 +156,7 @@
       <div><span>Driver</span><b>2EDN7524R</b></div>
       <div><span>MOSFET</span><b>IPT017N12NM6</b></div>
       <div><span>V_DD</span><b>12 V (설계 선택)</b></div>
-      <div><span>Rev</span><b>0.2</b></div>
+      <div><span>Rev</span><b>0.3</b></div>
     </div>
   </header>
 
@@ -160,6 +169,26 @@
       <div class="key"><span class="badge b-ref">참고</span><span>동일 계열의 다른 품번에서 확인한 값. 근거로 표시하되 확정 계산에는 쓰지 않습니다.</span></div>
       <div class="key"><span class="badge b-gap">미확보</span><span>확인하지 못한 값. 수치를 만들지 않고 빈칸으로 둡니다.</span></div>
     </div>
+  </section>
+
+  <!-- ===== 풋프린트 경고 ===== -->
+  <section class="badcard">
+    <h2>CAD 풋프린트가 패키지와 맞지 않습니다</h2>
+    <p>제공된 CAD 파일 <span style="font-family:'IBM Plex Mono',monospace">2EDN7524RXTMA1_<b>SOIC127P600X173-8N</b></span> 은 <b>1.27 mm 피치 SOIC-8 (= PG-DSO-8, F 접미)</b> 풋프린트입니다. 그러나 데이터시트 §1.2 와 §2 는 <b>R 접미 = PG-TSSOP-8</b> 로 규정하고 있고, 유통사 등재도 TSSOP-8 EP 입니다.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>항목</th><th class="mono">CAD 파일이 가정한 것</th><th class="mono">2EDN7524R 실제</th></tr></thead>
+        <tbody>
+          <tr><td>패키지</td><td class="mono">SOIC-8 / PG-DSO-8</td><td class="mono">PG-TSSOP-8</td></tr>
+          <tr><td>리드 피치</td><td class="mono">1.27 mm</td><td class="mono">0.65 mm (3 × 0.65 = 1.95)</td></tr>
+          <tr><td>리드 스팬</td><td class="mono">6.00 mm</td><td class="mono">4.9 ± 0.1 mm</td></tr>
+          <tr><td>몸체 높이</td><td class="mono">1.73 mm</td><td class="mono">1.04 mm 최대</td></tr>
+          <tr><td>노출 다이패드</td><td class="mono">없음 (접미 N)</td><td class="mono">2.05 × 1.71 mm <b>있음</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px"><b>모든 치수가 다릅니다.</b> 이 풋프린트로 레이아웃하고 2EDN7524R 을 발주하면 부품이 올라가지 않습니다. 또한 데이터시트 §2 각주는 <b>“PG-TSSOP-8 의 노출 패드는 GND 핀에 연결해야 한다”</b> 고 명시하므로, TSSOP 풋프린트에는 GND 로 연결된 패드와 서멀 비아가 반드시 있어야 합니다.</p>
+    <p><b>둘 중 하나를 선택하십시오.</b> ① 풋프린트를 PG-TSSOP-8 로 교체하고 2EDN7524R 유지, 또는 ② 품번을 <span style="font-family:'IBM Plex Mono',monospace">2EDN7524<b>F</b></span>(PG-DSO-8)로 바꾸고 현재 풋프린트 유지. 핀 배치는 세 패키지가 모두 동일하므로 회로도는 어느 쪽이든 그대로입니다.</p>
   </section>
 
   <!-- ===== PART 1 ===== -->
@@ -177,18 +206,23 @@
           <table>
             <thead><tr><th>파라미터</th><th class="mono">값</th><th>상태</th><th>설계에서의 역할</th></tr></thead>
             <tbody>
-              <tr><td>구성</td><td class="mono">듀얼 채널 비절연 저측, 직접(비반전) 입력</td><td><span class="badge b-ok">확인</span></td><td>2개 FET 또는 2상 구동</td></tr>
-              <tr class="pick"><td>출력 임피던스 RoH (소스)</td><td class="mono">0.7 Ω</td><td><span class="badge b-ok">확인</span></td><td>턴온 경로 직렬 성분</td></tr>
-              <tr class="pick"><td>출력 임피던스 RoL (싱크)</td><td class="mono">0.55 Ω</td><td><span class="badge b-ok">확인</span></td><td>턴오프 경로 직렬 성분</td></tr>
-              <tr class="pick"><td>피크 출력 전류</td><td class="mono">5 A 소스 / 5 A 싱크</td><td><span class="badge b-ok">확인</span></td><td>턴오프 피크 전류의 상한을 결정</td></tr>
-              <tr><td>V_CC 동작 범위</td><td class="mono">4.2 ~ 20 V</td><td><span class="badge b-ok">확인</span></td><td>12 V 선택 근거</td></tr>
-              <tr><td>전파 지연</td><td class="mono">17 ns (on) / 19 ns (off)</td><td><span class="badge b-ok">확인</span></td><td>제어 타이밍 예산</td></tr>
-              <tr><td>채널 간 지연 정합</td><td class="mono">1 ns</td><td><span class="badge b-ok">확인</span></td><td>인터리브 위상 정밀도</td></tr>
-              <tr><td>입력 논리</td><td class="mono">LVTTL 호환, 입력 3 ~ 20 V</td><td><span class="badge b-ok">확인</span></td><td>3.3 V MCU 직결 가능</td></tr>
-              <tr><td>입력 음전압 내성</td><td class="mono">−10 V</td><td><span class="badge b-ok">확인</span></td><td>클램프 다이오드 불필요</td></tr>
-              <tr><td>패키지</td><td class="mono">PG-TSSOP-8</td><td><span class="badge b-ref">참고</span></td><td>R 접미 해당 여부 재확인 필요</td></tr>
-              <tr><td>핀 번호 배치</td><td class="mono">—</td><td><span class="badge b-gap">미확보</span></td><td>회로도 심볼에 핀번호 미기재</td></tr>
-              <tr><td>UVLO 임계</td><td class="mono">—</td><td><span class="badge b-gap">미확보</span></td><td>기동 시퀀스 검토 시 필요</td></tr>
+              <tr><td>구성</td><td class="mono">듀얼 채널 비절연 저측, 직접(비반전) 입력 (x=4)</td><td><span class="badge b-ok">확인</span></td><td>2개 FET 또는 2상 구동</td></tr>
+              <tr class="pick"><td>출력 임피던스 RoH (소스)</td><td class="mono">0.35 / 0.7 / 1.2 Ω</td><td><span class="badge b-ok">확인</span></td><td>I_SRC 50 mA 조건. 턴온 경로 직렬 성분</td></tr>
+              <tr class="pick"><td>출력 임피던스 RoL (싱크)</td><td class="mono">0.28 / 0.55 / 1.0 Ω</td><td><span class="badge b-ok">확인</span></td><td>I_SNK 50 mA 조건. 턴오프 경로 직렬 성분</td></tr>
+              <tr class="pick"><td>피크 출력 전류</td><td class="mono">5.0 A 표준, <b>약 6.5 Apk 능동 제한</b></td><td><span class="badge b-ok">확인</span></td><td>설계상 제한. 생산 시험 항목 아님</td></tr>
+              <tr><td>V_DD 동작 범위</td><td class="mono">4.5 ~ 20 V (75xx) / 8.6 ~ 20 V (85xx)</td><td><span class="badge b-ok">확인</span></td><td>12 V 선택 근거</td></tr>
+              <tr><td><b>UVLO (75xx)</b></td><td class="mono">ON 3.9/4.2/4.5 V · OFF 3.6/3.9/4.2 V · 히스 0.3 V</td><td><span class="badge b-ok">확인</span></td><td>기동·정지 시퀀스</td></tr>
+              <tr><td>전파 지연</td><td class="mono">15/17/23 ns (lh) · 15/19/23 ns (hl)</td><td><span class="badge b-ok">확인</span></td><td>C_LOAD 1.8 nF, V_DD 12 V</td></tr>
+              <tr><td>채널 간 지연 정합</td><td class="mono">표준 1 ns, <b>최대 2 ns</b></td><td><span class="badge b-ok">확인</span></td><td>인터리브 위상 정밀도</td></tr>
+              <tr><td>상승 / 하강 시간</td><td class="mono">5.3 ns / 4.5 ns 표준, 각 10 ns 최대</td><td><span class="badge b-ok">확인</span></td><td>C_LOAD 1.8 nF</td></tr>
+              <tr><td>최소 입력 펄스폭</td><td class="mono">15 ns</td><td><span class="badge b-ok">확인</span></td><td>출력이 반응하는 하한</td></tr>
+              <tr><td>입력 임계</td><td class="mono">V_INH 1.98/2.1/2.2 V · V_INL 0.95/1.02/1.1 V</td><td><span class="badge b-ok">확인</span></td><td>히스테리시스 1.1 V 표준, 전원 무관</td></tr>
+              <tr><td><b>ENA / ENB 내부 풀업</b></td><td class="mono">400 kΩ 표준 → <b>개방 시 인에이블</b></td><td><span class="badge b-ok">확인</span></td><td>§ENA/ENB 절</td></tr>
+              <tr><td><b>INA / INB 내부 풀다운</b></td><td class="mono">100 kΩ 표준 → <b>개방 시 출력 LOW</b></td><td><span class="badge b-ok">확인</span></td><td>직접 입력 버전(x=4) 기준</td></tr>
+              <tr><td>입력 전압 범위</td><td class="mono">−5 ~ +20 V, 견딤 −10 V</td><td><span class="badge b-ok">확인</span></td><td>클램프 다이오드 불필요</td></tr>
+              <tr><td>정지 전류</td><td class="mono">0.7 mA (OUT H) / 0.48 mA (OUT L) 표준</td><td><span class="badge b-ok">확인</span></td><td>V_DD 12 V</td></tr>
+              <tr class="pick"><td><b>패키지 (R 접미)</b></td><td class="mono">PG-TSSOP-8 · 0.65 mm 피치 · <b>노출 다이패드</b></td><td><span class="badge b-ok">확인</span></td><td>노출패드는 GND 핀에 연결 필수</td></tr>
+              <tr><td>핀 번호 배치</td><td class="mono">1=ENA 2=INA 3=GND 4=INB 5=OUTB 6=VDD 7=OUTA 8=ENB</td><td><span class="badge b-ok">확인</span></td><td>F/R/G 세 패키지 모두 동일</td></tr>
             </tbody>
           </table>
         </div>
@@ -235,7 +269,7 @@
               <tr><td>패키지</td><td class="mono">SOD-123, 2핀</td><td class="mono">SOD-128</td><td>기판 여유에 따름</td></tr>
               <tr><td>V_RRM</td><td class="mono">30 V</td><td class="mono">30 V</td><td>≥ 20 V (둘 다 충족)</td></tr>
               <tr class="rej"><td>평균 순방향 전류 I_O</td><td class="mono">200 mA</td><td class="mono">2 A</td><td>다이 크기 = 동저항</td></tr>
-              <tr class="rej"><td>비반복 서지 I_FSM</td><td class="mono">600 mA</td><td class="mono">50 A</td><td>펄스 5 A 대응</td></tr>
+              <tr class="rej"><td>비반복 서지 I_FSM</td><td class="mono">600 mA</td><td class="mono">50 A</td><td>펄스 6.5 A 대응</td></tr>
               <tr class="rej"><td>순방향 전압 V_F 최대</td><td class="mono">350 mV <span class="badge b-gap">시험 전류 미확보</span></td><td class="mono">360 mV @ 2 A</td><td><b>2 A에서 &lt; 0.5 V</b></td></tr>
               <tr><td>역회복 시간</td><td class="mono">5 ns</td><td class="mono">쇼트키 (해당 없음)</td><td>쇼트키면 충족</td></tr>
               <tr class="rej"><td>판정</td><td class="mono">부적합</td><td class="mono">적합</td><td>—</td></tr>
@@ -261,15 +295,20 @@
         <div class="eqbox">
 <b>턴오프 초기 전류</b>   I = V_DD / (RoL + R_G(off) + R_G(int))
 
-  R_G(int)가 작을수록 커지지만, <b>드라이버 싱크 정격 5 A 가 상한</b>입니다.
+  R_G(int)가 작을수록 커지지만, 드라이버 내부에서
+  <b>약 6.5 Apk 에 능동 전류 제한</b>이 걸립니다 (데이터시트 Table 13 각주).
 
-  R_G(int) 0.5 Ω → 12 / 1.55 = 7.74 A  →  5.0 A 로 제한
-  R_G(int) 1.1 Ω → 12 / 2.15 = 5.58 A  →  5.0 A 로 제한
-  R_G(int) 1.5 Ω → 12 / 2.55 = 4.71 A  →  4.7 A
-  R_G(int) 2.0 Ω → 12 / 3.05 = 3.93 A  →  3.9 A
+  R_G(int) 0.5 Ω → 12 / 1.55 = 7.74 A  →  6.5 A 로 제한
+  R_G(int) 1.1 Ω → 12 / 2.15 = <b>5.58 A</b>
+  R_G(int) 1.5 Ω → 12 / 2.55 = 4.71 A
+  R_G(int) 2.0 Ω → 12 / 3.05 = 3.93 A
 
-  <b>결론: R_G(int) 값과 무관하게 다이오드는 최대 5 A 를 넘지 않는다.</b>
+  <b>결론: 다이오드가 겪는 최대 전류는 6.5 A 를 넘지 않는다.</b>
   (V_DD 12 V, R_G(off) 0.5 Ω 기준)
+        </div>
+        <div class="gapcard" style="margin-bottom:16px">
+          <h3>Rev 0.2 정정</h3>
+          <p>이전 개정에서는 데이터시트를 열지 못해 <b>“드라이버 싱크 정격 5 A 가 상한”</b> 이라고 썼습니다. 원문 확인 결과 5.0 A 는 <b>표준값</b>이고 실제 능동 제한은 <b>약 6.5 Apk</b> 입니다. 다이오드 요구는 그만큼 올라가지만, 선정한 PMEG3020 계열(I_FSM 50 A)은 그대로 충분합니다.</p>
         </div>
         <p class="lead">이 한 줄이 다이오드 선정을 확정합니다. <b style="color:var(--ink)">미확보 값에 의존하지 않고 상한이 정해지기 때문입니다.</b> 평균 전류는 <span style="font-family:'IBM Plex Mono',monospace">Q_g × f_sw = 141&nbsp;nC × 100&nbsp;kHz = 14&nbsp;mA</span>로 작지만, 선정 기준은 평균이 아니라 <b style="color:var(--ink)">5&nbsp;A 펄스에서의 순방향 전압</b>입니다. 200&nbsp;mA급 다이는 이 전류에서 동저항이 커져 우회하려던 게이트 저항과 비슷해지므로, 분리 저항 구성 자체가 무력화됩니다.</p>
       </div>
@@ -279,29 +318,28 @@
       <div class="card-head"><span>턴오프 저항 R_G(off) 의 상한</span><span class="pn">0.5 Ω 이 어디서 나왔는가</span></div>
       <div class="card-body">
         <div class="eqbox">
-드라이버가 <b>싱크 정격 5 A 를 그대로 낼 수 있는 조건</b>:
+턴오프 초기 전류는 저항비로 정해지고, 약 6.5 Apk 에서 내부 제한이 걸립니다.
 
-  RoL + R_G(off) + R_G(int) ≤ V_DD / 5 A = 12 / 5 = <b>2.4 Ω</b>
-  →  <b>R_G(off) ≤ 2.4 − 0.55 − R_G(int)</b>
+  <b>I = min( V_DD / (RoL + R_G(off) + R_G(int)) ,  약 6.5 A )</b>
 
-  R_G(int) 0.5 Ω  →  R_G(off) ≤ 1.35 Ω
-  R_G(int) 1.1 Ω  →  R_G(off) ≤ <b>0.75 Ω</b>
-  R_G(int) 1.5 Ω  →  R_G(off) ≤ 0.35 Ω
-  R_G(int) 2.0 Ω  →  R_G(off) ≤ 0 Ω   (이미 드라이버가 제한되지 않음)
+R_G(off) 를 0 → 0.5 Ω 으로 키울 때의 전류 변화:
         </div>
-        <p class="lead"><b style="color:var(--ink)">0.5 Ω 은 계산으로 유도된 최적값이 아니라, 이 상한 안에 들어가는 설계 선택입니다.</b> R_G(int) 1.1 Ω(참고값) 기준 상한이 0.75 Ω 이므로 0.5 Ω 은 여유 있게 안쪽입니다. 이 구간에서는 <b style="color:var(--ink)">0 Ω 으로 낮춰도 초기 피크 전류가 늘지 않습니다</b> — 드라이버가 5 A 에서 이미 포화하기 때문입니다. 따라서 0 Ω 대신 0.5 Ω 을 두어 배선 링잉에 감쇠를 주는 편이 낫습니다. 상한을 넘겨 키우면 그때부터는 턴오프가 그만큼 느려집니다.</p>
-        <div class="table-wrap" style="margin-top:16px">
+        <div class="table-wrap">
           <table>
             <thead><tr><th class="mono">R_G(int)</th><th class="mono">R_G(off) = 0 Ω</th><th class="mono">R_G(off) = 0.5 Ω</th><th>0.5 Ω 의 대가</th></tr></thead>
             <tbody>
-              <tr><td class="mono">0.5 Ω</td><td class="mono">5.0 A (제한)</td><td class="mono">5.0 A (제한)</td><td>없음</td></tr>
-              <tr class="pick"><td class="mono">1.1 Ω</td><td class="mono">5.0 A (제한)</td><td class="mono">5.0 A (제한)</td><td>없음</td></tr>
-              <tr><td class="mono">1.5 Ω</td><td class="mono">5.0 A (제한)</td><td class="mono">4.71 A</td><td>−6 %</td></tr>
+              <tr><td class="mono">0.5 Ω</td><td class="mono">6.5 A (제한)</td><td class="mono">6.5 A (제한)</td><td>없음</td></tr>
+              <tr class="pick"><td class="mono">1.1 Ω</td><td class="mono">6.5 A (제한)</td><td class="mono">5.58 A</td><td>−14 %</td></tr>
+              <tr><td class="mono">1.5 Ω</td><td class="mono">5.85 A</td><td class="mono">4.71 A</td><td>−19 %</td></tr>
               <tr><td class="mono">2.0 Ω</td><td class="mono">4.71 A</td><td class="mono">3.93 A</td><td>−17 %</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="lead" style="margin-top:12px">R_G(int) 가 1.5 Ω 이하이면 0.5 Ω 을 두는 데 <b style="color:var(--ink)">사실상 대가가 없습니다.</b> 2 Ω 을 넘어가면 손해가 보이기 시작하므로 그때 0 Ω(다이오드만)으로 바꾸는 것을 검토하십시오. 어느 쪽이든 턴오프 임피던스가 충분한지는 <b style="color:var(--ink)">V_GS(th) 를 확보한 뒤 또는 실측으로</b> 판정해야 합니다.</p>
+        <p class="lead" style="margin-top:14px"><b style="color:var(--ink)">0.5 Ω 은 계산으로 유도된 최적값이 아니라 설계 선택이고, 공짜도 아닙니다.</b> R_G(int) 1.1 Ω(참고값) 기준으로 턴오프 초기 전류가 약 14 % 줄어듭니다. 그 대가로 게이트 루프 링잉에 감쇠를 얻습니다. <b style="color:var(--ink)">둘 중 무엇이 맞는지는 실측으로 판정해야 합니다</b> — V_DS 오버슈트가 크면 0.5 Ω 을 유지하고, 턴오프 시 V_GS 밀러 어깨가 크면 0 Ω 으로 낮춥니다. V_GS(th) 를 확보하지 못했으므로 계산으로는 결론이 나지 않습니다.</p>
+        <div class="gapcard" style="margin-top:16px;margin-bottom:0">
+          <h3>Rev 0.2 정정</h3>
+          <p>이전 개정에서는 <b>“R_G(int) 1.5 Ω 이하이면 0.5 Ω 을 두는 데 대가가 없다”</b> 고 썼습니다. 그 결론은 드라이버 제한을 5 A 로 잘못 본 데서 나온 것입니다. 실제 제한이 6.5 A 이므로 <b>R_G(int) 1.1 Ω 에서 이미 14 % 의 대가가 있습니다.</b></p>
+        </div>
       </div>
     </div>
 
@@ -421,14 +459,23 @@
 
               <!-- 드라이버 -->
               <rect x="250" y="150" width="192" height="174" rx="4" fill="none" stroke="var(--sym)" stroke-width="2.6"/>
-              <text x="346" y="238" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="17" font-weight="700" fill="var(--ink)">2EDN7524R</text>
-              <text x="346" y="257" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">5 A · RoH 0.7 Ω · RoL 0.55 Ω</text>
-              <text x="258" y="194" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">IN A</text>
-              <text x="258" y="304" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">IN B</text>
-              <text x="434" y="194" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">OUT A</text>
-              <text x="434" y="304" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">OUT B</text>
-              <text x="398" y="166" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">V_DD</text>
-              <text x="308" y="318" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">GND</text>
+              <text x="346" y="242" text-anchor="middle" font-family="IBM Plex Sans Condensed, sans-serif" font-size="17" font-weight="700" fill="var(--ink)">2EDN7524R</text>
+              <text x="346" y="260" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">PG-TSSOP-8 · 노출패드 → GND</text>
+              <!-- ENA / ENB — 내부 풀업, 개방 -->
+              <line x1="250" y1="170" x2="216" y2="170" stroke="var(--sig)" stroke-width="2"/>
+              <circle cx="211" cy="170" r="4.5" fill="none" stroke="var(--sig)" stroke-width="2"/>
+              <text x="258" y="174" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--sig)">ENA 1</text>
+              <line x1="442" y1="170" x2="476" y2="170" stroke="var(--sig)" stroke-width="2"/>
+              <circle cx="481" cy="170" r="4.5" fill="none" stroke="var(--sig)" stroke-width="2"/>
+              <text x="434" y="174" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" fill="var(--sig)">8 ENB</text>
+              <text x="258" y="198" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">INA 2</text>
+              <text x="258" y="306" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">INB 4</text>
+              <text x="434" y="198" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">7 OUTA</text>
+              <text x="434" y="306" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">5 OUTB</text>
+              <text x="398" y="166" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">6 V_DD</text>
+              <text x="300" y="318" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">3 GND</text>
+              <text x="346" y="346" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="700" fill="var(--sig)">EN 내부 풀업 400 kΩ — 개방 = 인에이블</text>
+              <text x="346" y="362" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--muted)">IN 내부 풀다운 100 kΩ — 개방 = 출력 LOW</text>
               <line x1="250" y1="300" x2="212" y2="300" stroke="var(--sig)" stroke-width="2" stroke-dasharray="5 4"/>
               <line x1="442" y1="300" x2="480" y2="300" stroke="var(--sig)" stroke-width="2" stroke-dasharray="5 4"/>
               <text x="496" y="304" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="600" fill="var(--sig)">채널 B — 2번째 FET로 동일 구성</text>
@@ -544,6 +591,39 @@
     </div>
 
     <div class="card">
+      <div class="card-head"><span>ENA / ENB 를 개방으로 두는 근거</span><span class="pn">데이터시트 §2, §4.3, §4.4, Table 2</span></div>
+      <div class="card-body">
+        <p class="lead" style="margin-top:0">회로도에서 ENA(1)·ENB(8)을 아무 데도 연결하지 않은 것은 생략이 아니라 <b style="color:var(--ink)">데이터시트가 허용하는 정상 사용법</b>입니다.</p>
+        <div class="eqbox">
+<b>§4.3</b>  "The enable inputs are internally pulled up to a logic high voltage,
+      i.e. the driver is enabled with these pins left open."
+
+<b>§4.3</b>  "The direct PWM inputs are internally pulled down to a logic low voltage.
+      This prevents a switch-on event during power up and a not driven input condition."
+
+<b>§2</b>   "if ENA is high or left open, OUTA is controlled by INA; ENA low causes OUTA low"
+
+<b>§4.4</b>  "Gate Drive Outputs held active low in case of floating inputs ENx, INx
+      or during startup or power down once UVLO is not exceeded."
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>핀</th><th class="mono">내부 저항</th><th class="mono">개방 시 상태</th><th>결과</th></tr></thead>
+            <tbody>
+              <tr class="pick"><td class="mono">ENA / ENB</td><td class="mono">400 kΩ 풀<b>업</b></td><td class="mono">HIGH</td><td>인에이블 — OUTx 를 INx 가 제어</td></tr>
+              <tr class="pick"><td class="mono">INA / INB</td><td class="mono">100 kΩ 풀<b>다운</b></td><td class="mono">LOW</td><td>출력 LOW — MOSFET OFF</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lead" style="margin-top:14px"><b style="color:var(--ink)">두 풀 방향이 반대인 것이 핵심입니다.</b> EN 이 개방으로 인에이블되어도 그것이 “출력이 켜진다”는 뜻은 아닙니다. EN 은 <b style="color:var(--ink)">INx 에게 출력 제어권을 넘긴다</b>는 의미일 뿐이고, 그 INx 는 풀다운이라 개방 시 LOW 입니다. 어느 핀이 떠도 게이트는 내려갑니다. UVLO 미달 구간에서도 마찬가지입니다.</p>
+        <div class="gapcard" style="margin-top:16px;margin-bottom:0">
+          <h3>그래도 권장되는 것</h3>
+          <p>400 kΩ 은 약한 풀업이라 노이즈·누설에 취약합니다. 입력 임계는 V_INL 최소 <b>0.95 V</b> 이므로, 400 kΩ 에 2.4 µA 만 흘러들면 1 V 가 떨어져 EN 이 LOW 로 오인될 수 있습니다. <b>기능적으로는 개방이 정상이지만, 전력단 근처의 강한 dv/dt 환경에서는 EN 을 V_DD 에 직결하거나 10 kΩ 으로 풀업하고 100 pF 를 GND 로 두는 편이 안전합니다.</b> 반대로 MCU 로 EN 을 제어할 계획이면 그대로 구동하면 됩니다 — 입력이 −10 V 까지 견디므로 접지 바운스에도 강합니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="card-head"><span>주변회로 상수 — 확정분</span><span class="pn">채널당</span></div>
       <div class="card-body">
         <div class="table-wrap">
@@ -648,14 +728,13 @@
               <tr><td class="mono"><b>V_GS 최대 정격</b></td><td>구동 전압 및 클램프 설계</td><td>12 V 구동 확정, TVS 클램프 전압 선정</td></tr>
               <tr><td class="mono"><b>12 V 지점 Q_g</b></td><td>데이터시트 값은 10 V 조건</td><td>구동 전력·디커플링의 정확도. 현재 값은 과소 추정</td></tr>
               <tr><td class="mono"><b>TOLL 켈빈 소스 핀</b></td><td>게이트 리턴 접속점 결정</td><td>레이아웃 착수. 핀아웃 확인 필수</td></tr>
-              <tr><td class="mono"><b>2EDN7524R 핀 번호</b></td><td>회로도 작성</td><td>심볼에 핀번호 기재. 패키지 접미(R/F/G) 확인 필요</td></tr>
               <tr><td class="mono"><b>BAT54T1G V_F 시험 전류</b></td><td>비교의 정량화</td><td>350 mV가 어느 전류에서의 값인지. 판정 자체는 불변</td></tr>
             </tbody>
           </table>
         </div>
         <div class="gapcard" style="margin-top:18px;margin-bottom:0">
-          <h3>확보하지 못한 이유</h3>
-          <p>이 세션의 네트워크 정책이 infineon.com, onsemi.com, mouser.com, alldatasheet, digikey, farnell, nexperia, st.com 등 부품사·유통사 도메인을 모두 차단합니다. 위 검증값은 전부 <b>검색 결과 스니펫</b>에서 확보한 것입니다. 원문 PDF를 열 수 있는 환경에서 위 9개 항목을 채우면 문서가 완성됩니다.</p>
+          <h3>해결된 항목 — 드라이버 측</h3>
+          <p>데이터시트 원문(Rev 2.7, 2025-03-18)을 확보하여 <b>2EDN7524R 관련 미확보 항목은 전부 해소</b>되었습니다 — 핀 번호, 패키지, UVLO, 입력 임계, 내부 풀업·풀다운 저항, 능동 전류 제한. 남은 항목은 모두 <b>MOSFET(IPT017N12NM6) 측</b>이며, 부품사 도메인 차단으로 원문을 열지 못했습니다.</p>
         </div>
       </div>
     </div>
