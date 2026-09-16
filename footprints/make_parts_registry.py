@@ -55,6 +55,12 @@ fp_rows = [
      "벤더랜드(소형 1.2x1.6, 탭 2.7x3.0)만큼만 오프셋", "있음",
      "규칙2로 토 0.50 연장(소형 1.6→1.89, 탭 2.7→3.15). 규칙4 이탈 — 페이스트는 벤더량 유지. TOP/BOTTOM VIEW 미확정",
      None, "미검증", "buildindm8084.il", "Eaton ELX1187 p.2 Mechanical / Recommended PCB Layout"],
+    ["SOIC127P600X175-9M", "SMD", "S8E (SOIC-8 .150\" 노출패드)", 9, 1.27,
+     "리드 1.57 x 0.76 / 노출패드 2.26 x 2.99", None, "3.988 x 5.004 x 1.752max",
+     "x ±3.70 / y ±2.602",
+     "리드=벤더랜드 1.143 오프셋 / 노출패드=2x3 윈도우 70.0%", "있음",
+     "규칙2로 토 0.50 연장(벤더 1.143→1.57). 규칙4 이탈 — 페이스트는 벤더량 유지. 방향은 p.2 TOP VIEW 기준(p.26 기구도면과 90도 다름)",
+     None, "미검증", "buildsoic127.il", "LT8304 DS 8304fa p.2 Pin Config / p.26 Package Description"],
 ]
 for r, row in enumerate(fp_rows, start=2):
     for c, v in enumerate(row, start=1):
@@ -66,17 +72,18 @@ for r, row in enumerate(fp_rows, start=2):
 fp["G2"] = "—"; fp["G2"].font = IN_FONT
 fp["G4"] = "—"; fp["G4"].font = IN_FONT
 fp["G5"] = "—"; fp["G5"].font = IN_FONT
+fp["G6"] = "—"; fp["G6"].font = IN_FONT
 fp["E4"] = "—"; fp["E4"].font = IN_FONT
-for rr in (2,3,4,5):
+for rr in (2,3,4,5,6):
     fp.cell(row=rr, column=13, value="미실행").font = IN_FONT
-for rr in (2,3,4,5):
+for rr in (2,3,4,5,6):
     fp.cell(row=rr, column=13).fill = WARN
     fp.cell(row=rr, column=14).fill = WARN
 
-fp["A7"] = "※ DRC / 검증상태는 axlDRCUpdate(t) 와 extracta 대조를 실제로 돌린 뒤에만 갱신할 것."
-fp["A7"].font = Font(name=F, size=9, italic=True, color="C00000")
-fp["A8"] = "※ 네 풋프린트 모두 이 세션에서는 빌드하지 못했습니다 (Allegro/extracta 부재). 스크립트만 작성된 상태입니다."
+fp["A8"] = "※ DRC / 검증상태는 axlDRCUpdate(t) 와 extracta 대조를 실제로 돌린 뒤에만 갱신할 것."
 fp["A8"].font = Font(name=F, size=9, italic=True, color="C00000")
+fp["A9"] = "※ 다섯 풋프린트 모두 이 세션에서는 빌드하지 못했습니다 (Allegro/extracta 부재). 스크립트만 작성된 상태입니다."
+fp["A9"].font = Font(name=F, size=9, italic=True, color="C00000")
 fp.freeze_panes = "A2"
 
 fp["L2"].comment = Comment(
@@ -140,6 +147,11 @@ v_rows = [
      "EE5.0 SMT 8핀", "INDM8084X550-8M", None, "있음",
      "Eaton ELX1187 (2022-04)", "buildindm8084.il", "미검증",
      "Pri=8(dot)-7(대형탭), Sec=1(dot)-3, 2/4/5/6=NC. 평면도 TOP/BOTTOM 미확정 — 뒤집히면 1↔3, 7↔8 극성 반전. 부품 아래 배선·비아 금지(데이터시트)"],
+    ["LT8304ES8E#PBF", "Analog Devices (Linear)", "절연 플라이백 컨버터",
+     "3~100Vin / 150V 2A DMOS / 24W / no-opto 절연 / θJA 33°C/W / Tj -40~+125°C",
+     "S8E (SOIC-8 노출패드)", "SOIC127P600X175-9M", None, "있음",
+     "LT8304/LT8304-1 DS 8304fa", "buildsoic127.il", "미검증",
+     "핀9=노출패드=GND, 반드시 납땜. 1 TC/2 RREF/3 RFB/4 SW/5 GND/6 VIN/7 INTVCC/8 EN·UVLO. LT8304-1 도 동일 패키지"],
 ]
 for r, row in enumerate(v_rows, start=HR+1):
     v.cell(row=r, column=1, value=f"=ROW()-{HR}").font = FX_FONT

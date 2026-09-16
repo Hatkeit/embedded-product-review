@@ -1,0 +1,23 @@
+SOIC127P600X175-9M  expected values  (mm, TOP view per datasheet p.2, origin = package centre)
+  vendor lead land : 1.143 x 0.76   inner span 4.06 (edge 2.03)  outer span 6.346 (>= 6.22 MIN)
+  applied lead land: 1.57 x 0.76   centre x=+/-2.8150  outer 3.6
+  paste lead       : 1.143 x 0.76   offset +0.2135  lands at x=+/-2.6015
+  exposed pad land : 2.26 x 2.99  paste = 2x3 windows 0.95 x 0.83 -> 70.0%
+  lead tip (max)   : 3.0985  toe exposed = 0.5015  (rule >=0.50 OK)
+  pad-to-pad gap   : 0.51  (rule >=0.20 OK)
+  lead heel <-> EP : 0.90
+  body             : 3.988 x 5.004 x 1.752 max
+  silk             : y=+/-2.502 lines, x -1.994..1.994; clearance to pad 0.167
+  place bound      : x +/-3.70  y +/-2.602  filled
+  refdes           : (-3.30, 2.635)
+
+pin               name         x        y  rot    pasteX
+  1                 TC   -2.8150    1.905    0   -2.6015
+  2               RREF   -2.8150    0.635    0   -2.6015
+  3                RFB   -2.8150   -0.635    0   -2.6015
+  4                 SW   -2.8150   -1.905    0   -2.6015
+  5                GND    2.8150   -1.905  180    2.6015
+  6                VIN    2.8150   -0.635  180    2.6015
+  7             INTVCC    2.8150    0.635  180    2.6015
+  8            EN/UVLO    2.8150    1.905  180    2.6015
+  9  GND (exposed pad)    0.0000    0.000    0         -
