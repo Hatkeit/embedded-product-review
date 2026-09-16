@@ -1,0 +1,17 @@
+CAPRR750W80D185H420  expected values  (mm, TOP view, origin = midpoint of the two leads)
+  lead pitch F    : 7.5  (+/-0.5)       datasheet p.2, phiD=18 column
+  lead dia phi-d  : 0.8               datasheet p.2, phiD=18 column
+  drill           : 1.1 plated       = lead + 0.30  (IPC-7251 level B)
+  land            : 2.0              = drill + 0.90, annular ring 0.45/side
+  internal th/anti: 2.6
+  case dia max    : 18.5             (phiD + 0.5)
+  height max      : 42.0             (L + alpha, L>=20 -> alpha=2.0)
+  silk/assy circle: r=9.25
+  place bound     : +/-9.35 filled square
+  pad extreme     : 4.854 from origin -> silk clearance 4.40 (rule >=0.1 OK)
+  pad-to-pad gap  : 5.50 copper edge to edge
+  refdes silk     : (-8.95, 9.60)   assy: (-8.95, 1.35)
+
+pin  net        x        y    pad   shape  drill
+  1  (+)   -3.750    0.000   2.00  SQUARE   1.10
+  2  (-)    3.750    0.000   2.00  CIRCLE   1.10

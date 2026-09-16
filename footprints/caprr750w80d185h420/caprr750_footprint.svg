@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="508" height="508" viewBox="0 0 508 508">
+<rect width="508" height="508" fill="#fff"/>
+<rect x="48.7" y="48.7" width="411.4" height="411.4" fill="none" stroke="#c8b8e8" stroke-width="1.5" stroke-dasharray="6 4"/>
+<circle cx="254.4" cy="254.4" r="203.5" fill="none" stroke="#111" stroke-width="2.2"/>
+<rect x="149.9" y="232.4" width="44.0" height="44.0" fill="#d98f3f"/>
+<circle cx="336.9" cy="254.4" r="22.0" fill="#d98f3f"/>
+<circle cx="171.9" cy="254.4" r="12.1" fill="#fff" stroke="#555" stroke-width="0.8"/>
+<circle cx="336.9" cy="254.4" r="12.1" fill="#fff" stroke="#555" stroke-width="0.8"/>
+<line x1="109.2" y1="254.4" x2="135.6" y2="254.4" stroke="#111" stroke-width="2.2"/>
+<line x1="122.4" y1="267.6" x2="122.4" y2="241.2" stroke="#111" stroke-width="2.2"/>
+<line x1="373.2" y1="254.4" x2="399.6" y2="254.4" stroke="#111" stroke-width="2.2"/>
+<text x="171.9" y="296.2" font-family="Helvetica" font-size="12" text-anchor="middle" fill="#2a6fd6">1 (+)</text>
+<text x="336.9" y="296.2" font-family="Helvetica" font-size="12" text-anchor="middle" fill="#2a6fd6">2 (-)</text>
+<text x="57.5" y="47.2" font-family="Helvetica" font-size="13" fill="#111">REFDES</text>
+<text x="254.4" y="395.2" font-family="Helvetica" font-size="11" text-anchor="middle" fill="#888">case max 18.5 / h max 42.0</text>
+</svg>

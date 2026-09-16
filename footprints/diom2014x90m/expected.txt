@@ -1,0 +1,15 @@
+DIOM2014X90M  expected values  (mm, TOP view, origin = body centre)
+  vendor land     : 0.73 x 0.5, span 2.9, pitch 2.17  -> inner edge 0.72
+  applied land    : 1.13 x 0.5  centre +/-1.285  inner 0.72  outer 1.85
+  paste           : 0.73 x 0.5  local offset +0.20 (toward centre), lands at +/-1.085
+  lead tip (max)  : 1.35   toe exposed = 0.50  (rule >=0.50 OK)
+  pad-to-pad gap  : 1.44  (rule >=0.20 OK)
+  body            : 1.95 x 1.35 x 0.9 max -> silk lines y=+/-0.675, x +/-0.975
+  cathode bar     : x=-0.55  (clearance to pad 0.12, rule >=0.10 OK)
+  place bound     : x +/-1.95  y +/-0.775  filled
+  refdes          : (-1.55, 0.60) textblock 21 left
+  land span total : 3.70  (vendor 2.9) -> +0.80 area cost
+
+pin  net        x        y  rot   pasteX
+  1    K   -1.285    0.000    0   -1.085
+  2    A    1.285    0.000  180    1.085
