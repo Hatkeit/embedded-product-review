@@ -1,0 +1,24 @@
+INDM8084X550-8M  expected values  (mm, TOP view, origin = package centre)
+  vendor land small : 1.2 x 1.6  pitch 1.85  inner edge y=2.80
+  vendor land tab   : 2.7 x 3.0  gap 2.7      inner edge x=1.35
+  applied small     : 1.2 x 1.89  centre y=+/-3.745  outer 4.69
+  applied tab       : 3.15 x 3.0  centre x=+/-2.925  outer 4.50
+  paste small       : 1.2 x 1.6  offset +0.145  lands at y=+/-3.60
+  paste tab         : 2.7 x 3.0  offset +0.225  lands at x=+/-2.70
+  toe exposed       : small 0.50 / tab 0.50  (rule >=0.50 OK)
+  small pad gap     : 0.65  (rule >=0.20 OK)
+  tab<->small gap   : 1.30 vertical (datasheet 1.3, untouched)
+  envelope          : 8.0 x 8.38 x 5.50 max
+  silk corners      : x +/-4.00 y +/-4.19, ends at x +/-2.55 / y +/-1.60
+  place bound       : x +/-4.60  y +/-4.79  filled
+  refdes            : (-4.20, 5.04)
+
+pin              net        x        y  rot   padstack
+  3          Sec (-)   -1.850   -3.745    0   R120_189
+  2               NC    0.000   -3.745    0   R120_189
+  1      Sec (+) dot    1.850   -3.745    0   R120_189
+  4               NC   -1.850    3.745  180   R120_189
+  5               NC    0.000    3.745  180   R120_189
+  6               NC    1.850    3.745  180   R120_189
+  7          Pri (-)   -2.925    0.000    0   R315_300
+  8      Pri (+) dot    2.925    0.000  180   R315_300
