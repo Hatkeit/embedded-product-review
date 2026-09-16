@@ -141,13 +141,13 @@
     <div class="masthead-body">
       <p class="eyebrow">S2G1812 Auxiliary Supply · NCP1031 EOL Replacement</p>
       <h1>NCP1031 대체 보조전원 선정</h1>
-      <p class="standfirst">S2G1812 보조전원(U600)의 NCP1031DR2가 단종되었습니다. 이 회로는 <b>비절연 주출력을 VFB로 직접 조정하고 절연 권선 하나를 딸려 보내는 구조</b>라, 흔한 no-opto 절연 플라이백 부품으로는 대체되지 않습니다. 회로를 판독해 요구를 확정하고 후보 4안을 비교했습니다.</p>
+      <p class="standfirst">S2G1812 보조전원(U600)의 NCP1031은 <b>SOIC-8(DR2)과 DFN-8(MNTXG) 모두 조달할 수 없습니다.</b> 이 회로는 <b>비절연 주출력을 VFB로 직접 조정하고 절연 권선 하나를 딸려 보내는 구조</b>라, 흔한 no-opto 절연 플라이백 부품으로는 대체되지 않습니다. 회로 변경 없는 경로가 사라졌으므로 판단은 하나로 압축됩니다 — <b>T600을 살릴 것인가, 다시 설계할 것인가.</b></p>
     </div>
     <div class="titleblock">
-      <div><span>대체 대상</span><b>NCP1031DR2</b></div>
-      <div><span>상태</span><b>Obsolete</b></div>
+      <div><span>대체 대상</span><b>NCP1031 전 계열</b></div>
+      <div><span>상태</span><b>조달 불가</b></div>
       <div><span>회로</span><b>U600 / T600</b></div>
-      <div><span>Rev</span><b>0.1</b></div>
+      <div><span>Rev</span><b>0.2</b></div>
     </div>
   </header>
 
@@ -355,8 +355,9 @@
       <div class="card-body">
         <div class="table-wrap">
           <table>
-            <thead><tr><th>항목</th><th class="mono">A. NCP1031MNTXG</th><th class="mono">B. UCC25230</th><th class="mono">C. LM5017</th><th class="mono">D. PWM + 외부 FET</th></tr></thead>
+            <thead><tr><th>항목</th><th class="mono" style="text-decoration:line-through;opacity:.5">A. NCP1031MNTXG</th><th class="mono">B. UCC25230</th><th class="mono">C. LM5017</th><th class="mono">D. PWM + 외부 FET</th></tr></thead>
             <tbody>
+              <tr><td>조달 가능성</td><td class="mono" style="color:var(--bad-ink)"><b>불가 (탈락)</b></td><td class="mono">가능</td><td class="mono">가능</td><td class="mono">가능</td></tr>
               <tr><td>제조사</td><td class="mono">onsemi</td><td class="mono">TI</td><td class="mono">TI</td><td class="mono">TI / onsemi</td></tr>
               <tr><td>입력 범위</td><td class="mono">동일</td><td class="mono">12 ~ 100 V</td><td class="mono">~100 V</td><td class="mono">컨트롤러 무관</td></tr>
               <tr><td>스위치</td><td class="mono">200 V 내장</td><td class="mono">고측+저측 내장</td><td class="mono">고측+저측 내장</td><td class="mono"><b>외부 200 V</b></td></tr>
@@ -375,13 +376,10 @@
     </div>
 
     <div class="card">
-      <div class="card-head"><span>A안 — NCP1031MNTXG (DFN-8)</span><span class="pn">같은 실리콘, 다른 패키지</span></div>
+      <div class="card-head"><span style="text-decoration:line-through;opacity:.6">A안 — NCP1031MNTXG (DFN-8)</span><span class="pn" style="color:var(--bad-ink);font-weight:700">탈락 — 구매 불가</span></div>
       <div class="card-body">
-        <p class="lead" style="margin-top:0">SOIC-8(DR2)만 단종이고 <b>DFN-8(MNTXG)은 별개 품번</b>입니다. LCSC에 데이터시트가 등재되어 있습니다. 같은 실리콘이므로 <b>회로·T600·펌웨어·EMI 전부 그대로</b>이고 풋프린트만 바꾸면 됩니다.</p>
-        <div class="gapcard" style="margin-top:14px;margin-bottom:0">
-          <h3>단, 임시방편일 수 있습니다</h3>
-          <p>SOIC 패키지가 단종되었다면 DFN도 시간문제일 가능성이 있습니다. <b>onsemi에 MNTXG의 수명 상태(longevity / PCN)를 직접 확인</b>하십시오. 장기 생산 제품(25년 수명 목표)에 이미 EOL 진행 중인 계열을 다시 넣는 것은 같은 문제를 미루는 것입니다. <b>단기 생산 연장용으로는 최선, 신규 설계로는 부적합</b>합니다.</p>
-        </div>
+        <p class="lead" style="margin-top:0">SOIC-8(DR2)에 이어 <b>DFN-8(MNTXG)도 구매할 수 없음이 확인되었습니다.</b> NCP1031 계열 전체가 사용 불가이므로, <b>회로 변경 없는 경로는 존재하지 않습니다.</b></p>
+        <p class="lead" style="margin-top:10px">이로써 판단이 한 가지로 압축됩니다 — <b style="color:var(--ink)">T600(자성 부품)을 살릴 것인가, 다시 설계할 것인가.</b></p>
       </div>
     </div>
 
@@ -438,22 +436,69 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-head"><span>D안 — 범용 전류모드 PWM + 외부 200 V MOSFET</span><span class="pn">T600 재사용이 최우선이면</span></div>
+    <div class="card pickcard">
+      <div class="card-head"><span>D안 — 범용 전류모드 PWM + 외부 200 V MOSFET</span><span class="pn">T600을 살리는 유일한 경로</span></div>
       <div class="card-body">
-        <p class="lead" style="margin-top:0">UCC28C43 / NCP1252 급의 고정 주파수 전류모드 컨트롤러에 외부 200 V MOSFET을 붙이는 고전적 구성입니다. <b>플라이백 토폴로지와 T600 권선비를 그대로 유지</b>하므로 자성 부품 재설계가 필요 없습니다. VCC는 기존 <span style="font-family:'IBM Plex Mono',monospace">T600 핀3 + D605</span> 보조 권선을 그대로 쓰고, 기동은 입력 레일에서 저항으로 받습니다.</p>
-        <div class="table-wrap" style="margin-top:14px">
+        <p class="lead" style="margin-top:0">고정 주파수 전류모드 컨트롤러에 외부 200 V MOSFET을 붙이는 고전적 구성입니다. <b>플라이백 토폴로지와 T600 권선비·dot 배치를 그대로 유지</b>하므로 자성 부품 재설계와 EMI 재시험이 필요 없습니다. A안이 탈락한 지금, <b style="color:var(--ink)">T600을 살릴 수 있는 후보는 이것뿐입니다.</b></p>
+
+        <h3 style="margin:20px 0 10px;font-family:'IBM Plex Sans Condensed',sans-serif;font-size:15px;letter-spacing:.02em">구체 품번 — 2개로 압축</h3>
+        <div class="table-wrap">
           <table>
-            <thead><tr><th>장점</th><th>단점</th></tr></thead>
+            <thead><tr><th>항목</th><th class="mono">D-1. UCC28C43 계열</th><th class="mono">D-2. LT3758</th></tr></thead>
             <tbody>
-              <tr>
-                <td>T600 재설계 불필요 → <b>EMI 영향 최소</b><br>주파수를 기존 값에 맞출 수 있음<br>단종 위험 사실상 없음 (30년 된 계열)<br>전력 확장 자유</td>
-                <td>부품 <b>5~6개 증가</b> (컨트롤러 + FET + 전류센스 저항 + 기동저항 + 수동)<br>면적 증가<br>전류센스 노드가 새로 생겨 레이아웃 주의 필요</td>
-              </tr>
+              <tr><td>제조사 / 패키지</td><td class="mono">TI · SOIC-8</td><td class="mono">ADI(LT)</td></tr>
+              <tr><td>입력 전압</td><td class="mono">컨트롤러는 VCC 20 V 급 — <b>입력 레일과 무관</b></td><td class="mono"><b>5.5 ~ 100 V 직결</b></td></tr>
+              <tr class="pick"><td>기준 전압</td><td class="mono"><b>2.5 V</b> (±1 % 상온, ±2 % 전온도)</td><td class="mono">단일 FB 핀 — <b>값 미확보</b></td></tr>
+              <tr><td>UVLO</td><td class="mono">8.4 V 기동 / 7.6 V 정지</td><td class="mono">내부</td></tr>
+              <tr><td>최대 듀티</td><td class="mono">'C43 = <b>100 %</b> / 'C44·'C45 = 50 %</td><td class="mono">제어기 내부 제한</td></tr>
+              <tr><td>주파수</td><td class="mono">RT·CT 외부 설정</td><td class="mono"><b>외부 저항 1개로 100 kHz ~ 1 MHz</b>, SYNC 핀 있음</td></tr>
+              <tr class="pick"><td>컨트롤러 VCC</td><td class="mono">외부 공급 — <b>기동저항 + T600 핀3 보조권선</b></td><td class="mono"><b>내부 7.2 V 레귤레이터 자립</b> — 기동저항 불필요</td></tr>
+              <tr><td>게이트 구동 전압</td><td class="mono">VCC 전압 그대로 (10 ~ 15 V)</td><td class="mono"><b>7.2 V 고정</b> → FET 선정 제약</td></tr>
+              <tr><td>보호</td><td class="mono">사이클별 전류 제한</td><td class="mono">소프트스타트 + 주파수 폴드백</td></tr>
+              <tr><td>2차 소싱</td><td class="mono"><b>UCx84x / UCx84xA 핀 호환 — 다수 벤더</b></td><td class="mono">단일 벤더</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="lead" style="margin-top:14px"><b style="color:var(--ink)">자성 부품 재설계와 EMI 재시험 비용이 부품 5개보다 크다면 이 안이 가장 저렴합니다.</b> 구체 품번은 이 환경에서 검증하지 못했습니다.</p>
+
+        <p class="lead" style="margin-top:16px"><b style="color:var(--ink)">권장은 D-1입니다.</b> 이유는 셋입니다.</p>
+        <ol style="margin:10px 0 0;padding-left:22px;line-height:1.85">
+          <li><b>궤환 분압을 거의 그대로 씁니다.</b> NCP1031의 VFB 기준은 <span class="mono">2.3 V</span>(확인), UCC28C43은 <span class="mono">2.5 V</span>(확인)로 차이가 8.7 %뿐입니다. R604/R607의 <b>구조와 배치는 그대로 두고 분압비만 8.7 % 조정</b>하면 됩니다. LT3758은 FB 기준값을 확인하지 못해 분압을 새로 계산해야 합니다.</li>
+          <li><b>게이트 전압이 자유롭습니다.</b> LT3758은 게이트를 7.2 V로만 구동하므로 <span class="mono">V_GS = 10 V</span> 기준으로 R_DS(on)을 규정한 일반적인 200 V MOSFET을 쓸 수 없습니다. 저전압 구동 품목으로 후보가 좁아집니다.</li>
+          <li><b>단종 위험이 가장 낮습니다.</b> UCx84x 핀 배치는 수십 년간 여러 벤더가 유지해 온 사실상의 표준입니다. NCP1031로 한 번 겪은 문제를 반복하지 않는 것이 이번 재선정의 목적입니다.</li>
+        </ol>
+
+        <h3 style="margin:22px 0 10px;font-family:'IBM Plex Sans Condensed',sans-serif;font-size:15px;letter-spacing:.02em">D-1 채택 시 BOM 증분</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>추가 부품</th><th>값</th><th>결정 근거</th></tr></thead>
+            <tbody>
+              <tr><td>N-ch MOSFET</td><td class="mono">200 V 이상</td><td>NCP1031 내장 스위치가 200 V였으므로 동급 이상. 스너버 유무에 따라 250 V 권장</td></tr>
+              <tr><td>전류센스 저항</td><td class="mono"><span class="badge b-gap">미확보</span></td><td><b>R = V_th(CS) / I_pk</b> — 컨트롤러 CS 임계값과 T600 1차 피크 전류를 모두 확인한 뒤 결정</td></tr>
+              <tr><td>CS 필터 R·C</td><td class="mono">1 kΩ + 470 pF 급</td><td>턴온 선단 스파이크(leading-edge spike) 제거. 값은 실파형으로 조정</td></tr>
+              <tr><td>기동저항 2개 직렬</td><td class="mono">합계 ≈ 18 kΩ</td><td>아래 계산 참조. 2개 직렬은 전압 분담과 전력 분담용</td></tr>
+              <tr><td>게이트 저항</td><td class="mono">10 ~ 22 Ω</td><td>EMI와 스위칭 손실 절충. 실파형 확인 필요</td></tr>
+              <tr><td>RT · CT</td><td class="mono">주파수 실측값에 맞춤</td><td>PART 4의 2단계(VDRAIN 파형 실측)가 선행되어야 함</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lead" style="margin-top:12px">기존 <span class="mono">T600 핀3 + D605 + C611</span> 보조 권선은 <b>그대로 컨트롤러 VCC로 재사용</b>합니다. 순증 <b>6~7 부품</b>, 면적은 현행 U600 영역의 1.5~2배로 예상됩니다.</p>
+
+        <div class="gapcard" style="margin-top:16px;margin-bottom:0">
+          <h3>유일한 실질 손실 — 내장 HV 기동 회로를 잃습니다</h3>
+          <p>NCP1031은 VDRAIN에서 직접 기동 전류를 끌어왔습니다. 외부 컨트롤러는 그 기능이 없어 <b>입력 레일에서 저항으로 기동</b>해야 하고, 이 저항은 정상 운전 중에도 계속 전류를 흘립니다.</p>
+          <p style="margin-top:10px"><b>기동저항 상한</b> — UC3843의 기동 전류는 <span class="mono">&lt; 1 mA</span>(확인), UVLO 기동 임계는 <span class="mono">8.4 V</span>(확인)입니다. 최저 입력 28 V에서 기동하려면<br>
+          <span class="mono" style="display:inline-block;margin:8px 0 0 4px">R ≤ (28 − 8.4) / 1 mA = 19.6 kΩ → 18 kΩ 채택</span></p>
+          <p style="margin-top:10px"><b>정상 운전 손실</b> — 최대 입력 65 V, 보조권선이 VCC를 12 V로 유지한다고 보면<br>
+          <span class="mono" style="display:inline-block;margin:8px 0 0 4px">P = (65 − 12)² / 18 kΩ ≈ 156 mW</span><br>
+          출력 2~3 W 기준 <b>5~8 %</b>에 해당합니다. 무시할 수 없는 값입니다.</p>
+          <p style="margin-top:10px"><b>완화 수단</b> — BiCMOS 공정인 UCC28C4x는 바이폴라 UC384x보다 기동 전류가 낮으므로 R을 더 키울 수 있습니다. 다만 <b>정확한 I_CC(start) 최대값은 이 환경에서 확인하지 못했습니다</b> <span class="badge b-gap">미확보</span>. 위 18 kΩ은 1 mA 최악값 기준의 <b>보수적 상한</b>이며, 데이터시트의 실제 최대값으로 다시 계산하면 손실은 줄어듭니다.</p>
+          <p style="margin-top:10px"><b>야간 대기전력에는 영향 없음</b> — 이 보조전원은 PV 입력에서 급전되므로 일몰 후 자연 정지합니다. V2000 설계 사양 §8.2의 야간 50 mW 목표는 계통측 회로에 적용되는 값이라 이 손실과 무관합니다.</p>
+        </div>
+
+        <div class="gapcard" style="margin-top:14px;margin-bottom:0">
+          <h3>결정 전 확인 — 최대 듀티</h3>
+          <p>UCC28C43은 최대 듀티가 <b>100 %</b>(확인)입니다. 플라이백에서는 자속 리셋을 위해 듀티 상한이 필요하므로, T600의 기존 권선비에서 최저 입력(28 V) 시 실제 D를 먼저 구해야 합니다. <b>D가 50 %를 넘지 않으면 듀티 50 % 제한형인 'C44 / 'C45가 더 안전</b>하고, 넘으면 'C43에 외부 듀티 제한을 두어야 합니다. 이 판단은 T600 권선비 실측이 선행되어야 합니다 <span class="badge b-gap">미확보</span>.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -468,11 +513,11 @@
     <div class="card">
       <div class="steps">
         <div class="step"><span class="n">1</span><div><b>각 레일의 실소비 전력 측정</b><span>FT-10V · FT-3.3V · FT-H12V를 정상 운전 상태에서 각각 측정합니다. <b>이 값 하나가 B안과 C안을 가릅니다.</b> NCP1031의 6 W는 부품 능력이지 보드 요구가 아닙니다. 게이트 드라이버가 물린 FT-10V가 지배적일 것으로 예상됩니다.</span></div></div>
-        <div class="step"><span class="n">2</span><div><b>현재 스위칭 주파수 실측</b><span>CT 커패시터 값으로 역산하지 말고 VDRAIN 파형을 직접 측정합니다. EMI 영향 판단의 기준선이 됩니다.</span></div></div>
-        <div class="step"><span class="n">3</span><div><b>NCP1031MNTXG 수명 상태 확인</b><span>onsemi에 longevity / PCN을 직접 문의합니다. 장기 공급이 보장되면 A안이 압도적으로 빠릅니다. 보장되지 않으면 후보에서 제외하십시오.</span></div></div>
-        <div class="step"><span class="n">4</span><div><b>실측 2 W 이하 → B안, 초과 → C안</b><span>UCC25230은 기능 대응이 가장 정확하지만 0.2 A가 벽입니다. LM5017은 전력과 교차 조정에서 유리하지만 OV를 잃습니다.</span></div></div>
-        <div class="step"><span class="n">5</span><div><b>T600 재설계 비용을 견적</b><span>B·C안 모두 자성 부품 재설계가 필요합니다. 설계 + 시료 + EMI 재시험 비용이 D안의 부품 5~6개보다 크면 D안으로 선회하십시오.</span></div></div>
-        <div class="step"><span class="n">6</span><div><b>OV 기능의 실제 필요성 판단</b><span>C안을 택할 경우 OV를 포기할지, 외부 비교기로 옮길지 결정해야 합니다. PV 과전압은 이미 MCU의 ADCINA3/ADCINB5 경로로도 감시되므로 중복일 수 있습니다.</span></div></div>
+        <div class="step"><span class="n">2</span><div><b>현재 스위칭 주파수 실측</b><span>CT 커패시터 값으로 역산하지 말고 VDRAIN 파형을 직접 측정합니다. EMI 영향 판단의 기준선이자, D안을 택할 경우 <b>RT·CT 값을 확정하는 근거</b>가 됩니다.</span></div></div>
+        <div class="step"><span class="n">3</span><div><b>T600 권선비 · 1차 인덕턴스 · 피크 전류 실측</b><span>A안이 탈락한 지금 <b>D안이 T600을 살리는 유일한 경로</b>이고, D안의 미확보 항목 세 가지 — 최대 듀티('C43 대 'C44/'C45), 전류센스 저항값, 200 V MOSFET 등급 — 이 전부 이 측정 하나에 달려 있습니다.</span></div></div>
+        <div class="step"><span class="n">4</span><div><b>1차 분기 — T600을 살릴 것인가</b><span>D안은 부품이 <b>6~7개 늘고 기동저항 손실 약 156 mW</b>가 생기지만 자성 부품 재설계와 EMI 재시험이 없습니다. B·C안은 부품 증가가 거의 없지만 <b>T600 설계 + 시료 + EMI 재시험</b>이 따릅니다. 이 비용 비교가 갈림길입니다.</span></div></div>
+        <div class="step"><span class="n">5</span><div><b>T600 재설계로 간다면 — 실측 2 W 이하 → B안, 초과 → C안</b><span>UCC25230은 UV/OV까지 기능 대응이 가장 정확하지만 0.2 A가 벽입니다. LM5017은 전력과 교차 조정에서 유리하지만 OV를 잃습니다. 1단계 실측값이 이 둘을 가릅니다.</span></div></div>
+        <div class="step"><span class="n">6</span><div><b>OV 기능의 실제 필요성 판단</b><span>C안 또는 D안을 택할 경우 OV를 포기할지, 외부 비교기로 옮길지 결정해야 합니다. PV 과전압은 이미 MCU의 ADCINA3/ADCINB5 경로로도 감시되므로 중복일 수 있습니다.</span></div></div>
       </div>
     </div>
   </section>
@@ -493,10 +538,16 @@
               <tr><td>NCP1031 — 200 V 스위치, 6 W, CT 주파수, VFB 2.3 V, UV/OV, 단종 상태</td><td><span class="badge b-ok">확인</span> 검색</td></tr>
               <tr><td>UCC25230 — 12~100 V, 0.2 A, 380 kHz, UVLO+OVLO, SON-8, 다중권선 커플드 인덕터</td><td><span class="badge b-ok">확인</span> 검색</td></tr>
               <tr><td>LM5017 — 100 V, 600 mA, COT 준고정, Fly-Buck, 고전압 기동, UVLO 설정, WSON-8/HSOP-8</td><td><span class="badge b-ok">확인</span> 검색</td></tr>
-              <tr><td>NCP1031MNTXG 현재 수명 상태</td><td><span class="badge b-gap">미확보</span> onsemi 직접 문의 필요</td></tr>
+              <tr><td>UCC28C43 — 20 V 전류모드 PWM, UVLO 8.4/7.6 V, 최대 듀티 100 %, 기준 2.5 V(±1 % 상온 / ±2 % 전온도), SOIC-8, UCx84x 핀 호환</td><td><span class="badge b-ok">확인</span> 검색</td></tr>
+              <tr><td>UC3843 — 기동 전류 &lt; 1 mA, UVLO 8.4/7.6 V, 최대 듀티 100 %</td><td><span class="badge b-ok">확인</span> 검색</td></tr>
+              <tr><td>LT3758 — 5.5~100 V 입력, 외부 저측 N-ch 구동, 내부 7.2 V 레귤레이터, 100 kHz~1 MHz 외부 저항 설정 + SYNC, 단일 FB, 소프트스타트·주파수 폴드백</td><td><span class="badge b-ok">확인</span> 검색</td></tr>
+              <tr><td><b>NCP1031 — DR2G(SOIC-8) · MNTXG(DFN-8) 모두 조달 불가</b></td><td><span class="badge b-ok">확인</span> 유통 재고 확인 + 사용자 확인</td></tr>
               <tr><td>UCC25230 출력 전압 범위와 전력 상한의 정확한 경계</td><td><span class="badge b-gap">미확보</span> 데이터시트·SBVA034 대조 필요</td></tr>
               <tr><td>LM5017 Fly-Buck 절연 출력 교차 조정 실측치</td><td><span class="badge b-gap">미확보</span> 레퍼런스 디자인 확인 필요</td></tr>
-              <tr><td>D안 구체 품번 사양</td><td><span class="badge b-gap">미확보</span></td></tr>
+              <tr><td>UCC28C4x 기동 전류 I_CC(start) 최대값 — 기동저항 손실을 좌우</td><td><span class="badge b-gap">미확보</span> 위 계산은 1 mA 최악값 기준의 보수적 상한</td></tr>
+              <tr><td>UCC28C4x 전류센스 임계 전압 — R_sense 결정에 필수</td><td><span class="badge b-gap">미확보</span> 데이터시트 대조 필요</td></tr>
+              <tr><td>LT3758 FB 기준 전압 — 분압 재계산에 필수</td><td><span class="badge b-gap">미확보</span></td></tr>
+              <tr><td><b>T600 권선비 · 1차 인덕턴스 · 피크 전류</b></td><td><span class="badge b-gap">미측정</span> — D안의 듀티·R_sense·FET 등급이 전부 여기에 달림</td></tr>
               <tr><td><b>보드 실소비 전력</b></td><td><span class="badge b-gap">미측정</span> — 선정을 가르는 항목</td></tr>
             </tbody>
           </table>
@@ -517,6 +568,8 @@
           <b>NCP1030 / NCP1031</b> — <a href="https://www.onsemi.com/pdf/datasheet/ncp1030-d.pdf">onsemi 데이터시트</a>, <a href="https://www.digikey.com/en/products/detail/onsemi/NCP1031DR2G/921254">DigiKey (Obsolete)</a>, <a href="https://www.onsemi.com/pub/Collateral/EVBUM2142-D.PDF">NCP1031 6.5 W PoE 평가보드</a>, <a href="https://datasheet.lcsc.com/lcsc/2008271735_onsemi-NCP1031MNTXG_C603438.pdf">NCP1031MNTXG (LCSC)</a><br>
           <b>UCC25230</b> — <a href="https://www.ti.com/product/UCC25230">TI 제품 페이지</a>, <a href="https://www.ti.com/lit/ds/symlink/ucc25230.pdf">데이터시트</a>, <a href="https://www.ti.com/lit/an/sbva034/sbva034.pdf">SBVA034 Bias Power Supply Design Review</a><br>
           <b>LM5017</b> — <a href="https://www.ti.com/product/LM5017">TI 제품 페이지</a>, <a href="https://www.ti.com/lit/ds/symlink/lm5017.pdf">데이터시트</a><br>
+          <b>UCC28C43 / UC3843</b> — <a href="https://www.ti.com/product/UCC28C43">TI 제품 페이지</a>, <a href="https://www.ti.com/lit/ds/symlink/ucc28c43.pdf">UCC28C4x 데이터시트</a>, <a href="https://www.ti.com/lit/ds/symlink/uc3843.pdf">UCx84x 데이터시트</a><br>
+          <b>LT3758</b> — <a href="https://www.analog.com/en/products/lt3758.html">ADI 제품 페이지</a>, <a href="https://www.analog.com/media/en/technical-documentation/data-sheets/3758fc.pdf">데이터시트</a><br>
           <b>회로 결선</b> — S2G1812 리버스 스키매틱 01.DC POWER 시트 직접 판독
         </p>
       </div>
