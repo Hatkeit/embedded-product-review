@@ -474,8 +474,8 @@ R_G(off) 를 0 → 0.5 Ω 으로 키울 때의 전류 변화:
               <text x="434" y="306" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">5 OUTB</text>
               <text x="398" y="166" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">6 V_DD</text>
               <text x="300" y="318" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" fill="var(--sym)">3 GND</text>
-              <text x="346" y="346" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="700" fill="var(--sig)">EN 내부 풀업 400 kΩ — 개방 = 인에이블</text>
-              <text x="346" y="362" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--muted)">IN 내부 풀다운 100 kΩ — 개방 = 출력 LOW</text>
+              <text x="346" y="346" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="700" fill="var(--sig)">ENA · ENB 는 미연결(N.C.) — 내부 400 kΩ 풀업으로 인에이블</text>
+              <text x="346" y="362" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="700" fill="var(--wire)">GND 에 연결하면 디스에이블 — 절대 접지하지 말 것</text>
               <line x1="250" y1="300" x2="212" y2="300" stroke="var(--sig)" stroke-width="2" stroke-dasharray="5 4"/>
               <line x1="442" y1="300" x2="480" y2="300" stroke="var(--sig)" stroke-width="2" stroke-dasharray="5 4"/>
               <text x="496" y="304" font-family="Noto Sans KR, sans-serif" font-size="11.5" font-weight="600" fill="var(--sig)">채널 B — 2번째 FET로 동일 구성</text>
@@ -615,6 +615,20 @@ R_G(off) 를 0 → 0.5 Ω 으로 키울 때의 전류 변화:
             </tbody>
           </table>
         </div>
+
+        <h4 style="font-family:'IBM Plex Sans Condensed','Noto Sans KR',sans-serif;font-size:16px;margin:24px 0 10px;font-weight:700">“개방”은 미연결이지 접지가 아닙니다</h4>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>EN 핀 처리</th><th class="mono">논리 상태</th><th class="mono">OUTx</th><th>판정</th></tr></thead>
+            <tbody>
+              <tr class="pick"><td><b>아무것도 연결 안 함 (N.C. · 개방)</b></td><td class="mono">HIGH</td><td class="mono">INx 가 제어</td><td>정상 — 데이터시트 권장</td></tr>
+              <tr class="pick"><td>V_DD 에 직결</td><td class="mono">HIGH</td><td class="mono">INx 가 제어</td><td>정상 — 노이즈 환경에서 더 안전</td></tr>
+              <tr><td>10 kΩ 으로 V_DD 풀업</td><td class="mono">HIGH</td><td class="mono">INx 가 제어</td><td>정상 — MCU 제어 병행 시</td></tr>
+              <tr class="rej"><td><b>GND 에 연결</b></td><td class="mono">LOW</td><td class="mono"><b>영구 LOW</b></td><td><b>디스에이블 — MOSFET 이 켜지지 않음</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lead" style="margin-top:12px">데이터시트 Table 2 와 §2 가 <span style="font-family:'IBM Plex Mono',monospace">“ENA low causes OUTA low”</span> 로 명시합니다. <b style="color:var(--wire)">EN 을 접지하면 드라이버가 영구 정지합니다.</b> PCB 상에서는 EN 패드에 어떤 네트도 할당하지 않고 그대로 두면 됩니다 — 패드는 존재하되 연결이 없는 상태입니다.</p>
         <p class="lead" style="margin-top:14px"><b style="color:var(--ink)">두 풀 방향이 반대인 것이 핵심입니다.</b> EN 이 개방으로 인에이블되어도 그것이 “출력이 켜진다”는 뜻은 아닙니다. EN 은 <b style="color:var(--ink)">INx 에게 출력 제어권을 넘긴다</b>는 의미일 뿐이고, 그 INx 는 풀다운이라 개방 시 LOW 입니다. 어느 핀이 떠도 게이트는 내려갑니다. UVLO 미달 구간에서도 마찬가지입니다.</p>
         <div class="gapcard" style="margin-top:16px;margin-bottom:0">
           <h3>그래도 권장되는 것</h3>
