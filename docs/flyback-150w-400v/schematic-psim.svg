@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1140" viewBox="0 0 1600 1140" font-family="ui-monospace,Menlo,Consolas,monospace">
+<rect width="1600" height="1140" fill="#ffffff"/>
+<text x="24" y="34" font-size="17" fill="#0f172a" text-anchor="start" font-weight="800">PV 입력 액티브클램프 플라이백   18-50 V(PV) / 400 V / 150 W   -   PSIM 심볼 회로도</text>
+<text x="24" y="54" font-size="10.5" fill="#64748b" text-anchor="start" font-weight="400">PS-FBT-150W-400V Rev.A   |   소자 파라미터 : psim-circuit.md 4장   |   제어 C 코드 : psim_control.c   |   검증 : sim_verify.py (32/32 PASS)</text>
+<rect x="24" y="70" width="1552" height="452" rx="10" fill="#fbfcfe" stroke="#cbd5e1"/>
+<text x="40" y="92" font-size="13" fill="#0f172a" text-anchor="start" font-weight="800">A.  전력단   Active Clamp Flyback</text>
+<rect x="56" y="180" width="118" height="92" rx="6" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="115.0" y="218.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">PV Module</text>
+<text x="115.0" y="233.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">Solar Module</text>
+<text x="115.0" y="245.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">(functional model)</text>
+<text x="56" y="290" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">Voc(STC) &#8804; 43.1 V  (저온 -25 &#176;C 상승분 포함)</text>
+<text x="56" y="302" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">Pmp &#8804; 150 W,  Vmp 18 ~ 42 V</text>
+<polyline points="174,214 178,214" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<polyline points="174,254 206,254 206,468 704,468" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<rect x="178" y="189" width="92" height="50" rx="6" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.6"/>
+<text x="224.0" y="206.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">Q3</text>
+<text x="224.0" y="221.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">역극성 보호</text>
+<text x="224.0" y="233.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">ideal-diode ctrl</text>
+<polyline points="270,214 286,214" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<rect x="286" y="207" width="34" height="14" fill="#fff" stroke="#1d4ed8" stroke-width="1.5"/>
+<text x="303.0" y="201" font-size="9.5" fill="#0f172a" text-anchor="middle" font-weight="400">F1 10 A</text>
+<polyline points="320,214 322,214" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<path d="M 322,214 a 9,9 0 0 1 18,0 a 9,9 0 0 1 18,0 a 9,9 0 0 1 18,0 a 9,9 0 0 1 18,0" fill="none" stroke="#1d4ed8" stroke-width="1.8"/>
+<text x="358" y="199" font-size="9.5" fill="#0f172a" text-anchor="middle" font-weight="400">L_CM</text>
+<polyline points="394,214 508,214" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<circle cx="410" cy="214" r="3.4" fill="#1d4ed8"/>
+<polyline points="410,214 410,268" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<line x1="396" y1="268" x2="424" y2="268" stroke="#1d4ed8" stroke-width="2.6"/>
+<line x1="396" y1="278" x2="424" y2="278" stroke="#1d4ed8" stroke-width="2.6"/>
+<polyline points="410,278 410,468" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<circle cx="410" cy="468" r="3.4" fill="#1d4ed8"/>
+<text x="432" y="266" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">Cin 250 uF</text>
+<text x="432" y="278" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">전해 2x220 uF/63 V</text>
+<text x="432" y="290" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">+ 세라믹 6x10 uF/100 V</text>
+<text x="432" y="302" font-size="9" fill="#dc2626" text-anchor="start" font-weight="400">리플 5.68 Arms</text>
+<circle cx="508" cy="214" r="3.4" fill="#1d4ed8"/>
+<polyline points="508,214 508,132" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<line x1="508" y1="118" x2="508" y2="146" stroke="#1d4ed8" stroke-width="2.6"/>
+<line x1="518" y1="118" x2="518" y2="146" stroke="#1d4ed8" stroke-width="2.6"/>
+<text x="513" y="162" font-size="9.5" fill="#0f172a" text-anchor="middle" font-weight="400">Cc 18 uF / 100 V</text>
+<polyline points="518,132 600,132" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<g transform="translate(648,132) rotate(-90)">
+<line x1="0" y1="0" x2="0" y2="-14" stroke="#1d4ed8" stroke-width="1.7"/>
+<line x1="-15" y1="-14" x2="15" y2="-14" stroke="#1d4ed8" stroke-width="1.7"/>
+<line x1="-15" y1="-14" x2="-15" y2="-34" stroke="#1d4ed8" stroke-width="1.7"/>
+<line x1="-15" y1="-34" x2="15" y2="-34" stroke="#1d4ed8" stroke-width="1.7"/>
+<line x1="0" y1="-34" x2="0" y2="-48" stroke="#1d4ed8" stroke-width="1.7"/>
+<line x1="-24" y1="-11" x2="-24" y2="-37" stroke="#1d4ed8" stroke-width="2.4"/>
+<line x1="-24" y1="-24" x2="-40" y2="-24" stroke="#1d4ed8" stroke-width="1.7"/>
+<path d="M 9,-14 L 9,-25 L 16,-19.5 Z" fill="#1d4ed8"/>
+<line x1="9" y1="-14" x2="16" y2="-14" stroke="#1d4ed8" stroke-width="1.4"/>
+</g>
+<polyline points="648,132 704,132 704,338" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<text x="594" y="166" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">D</text>
+<text x="654" y="166" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">S (= SW)</text>
+<text x="624" y="90" font-size="10.5" fill="#0f172a" text-anchor="middle" font-weight="700">Q2  클램프 150 V</text>
+<text x="196" y="102" font-size="9.5" fill="#1d4ed8" text-anchor="start" font-weight="400">액티브 클램프 : 누설에너지 회수 + ZVS &#8594; Vds 스파이크 없음</text>
+<text x="196" y="114" font-size="9.5" fill="#1d4ed8" text-anchor="start" font-weight="400">V_Cc = VOR = 50.2 V,   Cc &#8805; 5.3 uF  (T_res &#8805; 3 x Toff,max)</text>
+<text x="196" y="126" font-size="9.5" fill="#1d4ed8" text-anchor="start" font-weight="400">100 V X7R 은 50 V 바이어스에서 용량이 절반 &#8594; 18 uF 실장</text>
+<polyline points="508,214 704,214" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<circle cx="704" cy="214" r="3.4" fill="#1d4ed8"/>
+<path d="M 704,218 a 9,9 0 0 0 0,18 a 9,9 0 0 0 0,18 a 9,9 0 0 0 0,18 a 9,9 0 0 0 0,18 a 9,9 0 0 0 0,18 a 9,9 0 0 0 0,18" fill="none" stroke="#1d4ed8" stroke-width="1.9"/>
+<circle cx="691" cy="226" r="3.2" fill="#0f172a"/>
+<text x="678" y="270" font-size="10" fill="#0f172a" text-anchor="end" font-weight="700">Np 9 T</text>
+<polyline points="704,326 704,338" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<circle cx="704" cy="338" r="3.4" fill="#1d4ed8"/>
+<line x1="762" y1="214" x2="762" y2="330" stroke="#64748b" stroke-width="3"/>
+<line x1="772" y1="214" x2="772" y2="330" stroke="#64748b" stroke-width="3"/>
+<text x="767" y="204" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">ETD44</text>
+<path d="M 806,218 a 9,9 0 0 1 0,18 a 9,9 0 0 1 0,18 a 9,9 0 0 1 0,18 a 9,9 0 0 1 0,18 a 9,9 0 0 1 0,18 a 9,9 0 0 1 0,18" fill="none" stroke="#dc2626" stroke-width="1.9"/>
+<circle cx="819" cy="318" r="3.2" fill="#0f172a"/>
+<text x="834" y="270" font-size="10" fill="#0f172a" text-anchor="start" font-weight="700">Ns 72 T</text>
+<polyline points="806,218 806,152 950,152" fill="none" stroke="#dc2626" stroke-width="2.3"/>
+<path d="M 950,140 L 950,164 L 972,152 Z" fill="#fff" stroke="#dc2626" stroke-width="1.7"/>
+<line x1="972" y1="140" x2="972" y2="164" stroke="#dc2626" stroke-width="2.6"/>
+<polyline points="972,152 1290,152" fill="none" stroke="#dc2626" stroke-width="2.3"/>
+<polyline points="806,326 806,434 1290,434" fill="none" stroke="#dc2626" stroke-width="2.3"/>
+<text x="961" y="130" font-size="10.5" fill="#0f172a" text-anchor="middle" font-weight="700">D1  1200 V SiC</text>
+<text x="961" y="116" font-size="9" fill="#dc2626" text-anchor="middle" font-weight="400">VR = 800 V  (1200 V 의 67 %)</text>
+<circle cx="1060" cy="152" r="3.4" fill="#dc2626"/>
+<circle cx="1060" cy="434" r="3.4" fill="#dc2626"/>
+<circle cx="1210" cy="152" r="3.4" fill="#dc2626"/>
+<circle cx="1210" cy="434" r="3.4" fill="#dc2626"/>
+<polyline points="1060,152 1060,194" fill="none" stroke="#dc2626" stroke-width="2.3"/>
+<line x1="1046" y1="194" x2="1074" y2="194" stroke="#dc2626" stroke-width="2.6"/>
+<line x1="1046" y1="204" x2="1074" y2="204" stroke="#dc2626" stroke-width="2.6"/>
+<text x="1080" y="203" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">Cout 4.7 uF / 630 V</text>
+<polyline points="1060,204 1060,434" fill="none" stroke="#dc2626" stroke-width="2.3"/>
+<polyline points="1210,152 1210,188" fill="none" stroke="#dc2626" stroke-width="2.3"/>
+<rect x="1203" y="188" width="14" height="64" fill="#fff" stroke="#dc2626" stroke-width="1.5"/>
+<text x="1223" y="224.0" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">R_bleed 440 k&#937;</text>
+<polyline points="1210,252 1210,434" fill="none" stroke="#dc2626" stroke-width="2.3"/>
+<text x="1300" y="148" font-size="11.5" fill="#dc2626" text-anchor="start" font-weight="700">VOUT+  400 V</text>
+<text x="1300" y="164" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">하류 인버터 DC-link</text>
+<text x="1300" y="438" font-size="11.5" fill="#dc2626" text-anchor="start" font-weight="700">SGND</text>
+<g transform="translate(704,412) rotate(0)">
+<line x1="0" y1="0" x2="0" y2="-14" stroke="#1d4ed8" stroke-width="1.7"/>
+<line x1="-15" y1="-14" x2="15" y2="-14" stroke="#1d4ed8" stroke-width="1.7"/>
+<line x1="-15" y1="-14" x2="-15" y2="-34" stroke="#1d4ed8" stroke-width="1.7"/>
+<line x1="-15" y1="-34" x2="15" y2="-34" stroke="#1d4ed8" stroke-width="1.7"/>
+<line x1="0" y1="-34" x2="0" y2="-48" stroke="#1d4ed8" stroke-width="1.7"/>
+<line x1="-24" y1="-11" x2="-24" y2="-37" stroke="#1d4ed8" stroke-width="2.4"/>
+<line x1="-24" y1="-24" x2="-40" y2="-24" stroke="#1d4ed8" stroke-width="1.7"/>
+<path d="M 9,-14 L 9,-25 L 16,-19.5 Z" fill="#1d4ed8"/>
+<line x1="9" y1="-14" x2="16" y2="-14" stroke="#1d4ed8" stroke-width="1.4"/>
+</g>
+<polyline points="704,338 704,364" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<polyline points="704,412 704,418" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<circle cx="704" cy="434" r="15" fill="none" stroke="#0891b2" stroke-width="1.9"/>
+<circle cx="727" cy="434" r="15" fill="none" stroke="#0891b2" stroke-width="1.9"/>
+<polyline points="704,449 704,468" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+<circle cx="704" cy="468" r="3.4" fill="#1d4ed8"/>
+<line x1="693" y1="468" x2="723" y2="468" stroke="#1d4ed8" stroke-width="2.4"/>
+<line x1="699" y1="474" x2="717" y2="474" stroke="#1d4ed8" stroke-width="2.1"/>
+<line x1="704" y1="480" x2="712" y2="480" stroke="#1d4ed8" stroke-width="2.1"/>
+<text x="708" y="494" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">PGND</text>
+<text x="750" y="430" font-size="10" fill="#0891b2" text-anchor="start" font-weight="700">CT1  1:100</text>
+<text x="750" y="443" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">&#8594; Rb 10 &#937; (2차측)</text>
+<text x="750" y="382" font-size="10.5" fill="#0f172a" text-anchor="start" font-weight="700">Q1  주스위치</text>
+<text x="750" y="395" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">150 V, Rds(on) &#8804; 7 m&#937;</text>
+<text x="726" y="330" font-size="11" fill="#1d4ed8" text-anchor="start" font-weight="700">SW</text>
+<text x="726" y="344" font-size="9" fill="#dc2626" text-anchor="start" font-weight="400">Vds,max 100.2 V</text>
+<rect x="440" y="326" width="204" height="56" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.6"/>
+<text x="542.0" y="346.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">T1   ETD44 / N97</text>
+<text x="542.0" y="361.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">Lm 26.3 uH &#177;7 %,  Llk &#8804; 0.30 uH</text>
+<text x="542.0" y="373.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">Np:Ns:Naux = 9 : 72 : 4</text>
+<rect x="24" y="544" width="1552" height="524" rx="10" fill="#fbfcfe" stroke="#cbd5e1"/>
+<text x="40" y="566" font-size="13" fill="#0f172a" text-anchor="start" font-weight="800">B.  센싱 및 제어   PSIM Simplified C Block 기반 디지털 제어</text>
+<rect x="56" y="590" width="176" height="58" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="144.0" y="617.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">Vpv 센싱</text>
+<text x="144.0" y="632.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">분압 1/20 + RC 10 kHz</text>
+<rect x="56" y="664" width="176" height="58" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="144.0" y="691.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">Ipv 센싱</text>
+<text x="144.0" y="706.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">션트 3 m&#937; + 차동증폭</text>
+<rect x="56" y="738" width="176" height="58" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.6"/>
+<text x="144.0" y="765.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">Vout 센싱 (절연)</text>
+<text x="144.0" y="780.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">TL431 + 포토커플러</text>
+<text x="56" y="816" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">* MPPT 는 1차측, 버스전압은 2차측 &#8594; Vout 만 절연 전달</text>
+<text x="56" y="828" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">* 리미터 기준 420 V : 하류 인버터(400 V)보다 높게 두어야</text>
+<text x="56" y="840" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">  두 레귤레이터가 서로 싸우지 않는다</text>
+<rect x="56" y="864" width="300" height="62" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.6"/>
+<text x="206.0" y="887.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">보호</text>
+<text x="206.0" y="902.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">출력 OVP 440 V  /  입력 OVP 55 V</text>
+<text x="206.0" y="914.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">1차 OCP 18.9 A 히컵  /  NTC 과온</text>
+<rect x="56" y="942" width="300" height="62" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="206.0" y="965.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">바이어스</text>
+<text x="206.0" y="980.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">Vin(18-50 V) &#8594; 65 V급 벅 &#8594; 12 V &#8594; 3.3 V</text>
+<text x="206.0" y="992.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">UVLO 기동 16 V / 정지 13 V (야간 채터링 방지)</text>
+<rect x="388" y="578" width="306" height="268" rx="6" fill="#ffffff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="541.0" y="716.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700"></text>
+<text x="541.0" y="602" font-size="12.5" fill="#0891b2" text-anchor="middle" font-weight="800">Simplified C Block</text>
+<text x="541.0" y="617" font-size="9.5" fill="#64748b" text-anchor="middle" font-weight="400">psim_control.c   |   fs = 25 kHz</text>
+<rect x="400" y="634" width="282" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="408" y="646" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="700">1. 전역 MPP 스캔</text>
+<text x="408" y="657" font-size="8.5" fill="#64748b" text-anchor="start" font-weight="400">0.95&#8594;0.30 x Voc,  1.2 V / 2 ms</text>
+<rect x="400" y="668" width="282" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="408" y="680" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="700">2. 개선형 P&amp;O MPPT</text>
+<text x="408" y="691" font-size="8.5" fill="#64748b" text-anchor="start" font-weight="400">적응스텝 + 일사량 급변 검출</text>
+<rect x="400" y="702" width="282" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="408" y="714" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="700">3. 루프 A : Vpv PI</text>
+<text x="408" y="725" font-size="8.5" fill="#64748b" text-anchor="start" font-weight="400">Kp 2.0 / Ki 4000   (~760 Hz)</text>
+<rect x="400" y="736" width="282" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="408" y="748" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="700">4. 루프 B : Vout 리미트 PI</text>
+<text x="408" y="759" font-size="8.5" fill="#64748b" text-anchor="start" font-weight="400">Kp 3.5 / Ki 1100, 비대칭 적분</text>
+<rect x="400" y="770" width="282" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="408" y="782" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="700">5. min-select + 백캘큘레이션</text>
+<text x="408" y="793" font-size="8.5" fill="#64748b" text-anchor="start" font-weight="400">SS / MPPT / VO 모드 선택</text>
+<rect x="400" y="804" width="282" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="408" y="816" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="700">6. 소프트스타트 20 ms</text>
+<text x="408" y="827" font-size="8.5" fill="#64748b" text-anchor="start" font-weight="400">전류지령 상한 램프</text>
+<polyline points="232,619 310,619 310,674 388,674" fill="none" stroke="#0891b2" stroke-width="1.5"/>
+<text x="238" y="613" font-size="9" fill="#0891b2" text-anchor="start" font-weight="400">in[0]</text>
+<polyline points="232,693 310,693 310,718 388,718" fill="none" stroke="#0891b2" stroke-width="1.5"/>
+<text x="238" y="687" font-size="9" fill="#0891b2" text-anchor="start" font-weight="400">in[1]</text>
+<polyline points="232,767 310,767 310,762 388,762" fill="none" stroke="#0891b2" stroke-width="1.5"/>
+<text x="238" y="761" font-size="9" fill="#0891b2" text-anchor="start" font-weight="400">in[2]</text>
+<text x="702" y="690" font-size="9.5" fill="#0891b2" text-anchor="start" font-weight="700">out[0]</text>
+<text x="702" y="702" font-size="9.5" fill="#0891b2" text-anchor="start" font-weight="400">Ipk*</text>
+<polyline points="694,718 760,718" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+<rect x="760" y="694" width="104" height="48" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="812.0" y="716.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">DAC</text>
+<text x="812.0" y="731.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">0 ~ 27.8 A</text>
+<polyline points="864,718 906,718" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+<circle cx="924" cy="718" r="18" fill="#fff" stroke="#0891b2" stroke-width="1.7"/>
+<text x="924" y="724" font-size="17" fill="#0891b2" text-anchor="middle" font-weight="700">&#8722;</text>
+<rect x="856" y="786" width="140" height="46" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="926.0" y="807.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">슬로프 램프</text>
+<text x="926.0" y="822.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">Se = 0.60 x Sf</text>
+<polyline points="924,786 924,736" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+<text x="856" y="850" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">Sf = VOR / Lm = 1.91 A/us</text>
+<text x="856" y="862" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">Se = 1.14 A/us  &#8594; &#955; = &#8722;0.41</text>
+<text x="856" y="874" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">(전 듀티영역 무조건 안정)</text>
+<path d="M 976,686 L 976,750 L 1030,718 Z" fill="#fff" stroke="#0891b2" stroke-width="1.8"/>
+<text x="989" y="712" font-size="13" fill="#0891b2" text-anchor="middle" font-weight="400">&#8722;</text>
+<text x="989" y="736" font-size="13" fill="#0891b2" text-anchor="middle" font-weight="400">+</text>
+<text x="996" y="674" font-size="9.5" fill="#0891b2" text-anchor="middle" font-weight="700">비교기</text>
+<polyline points="942,718 976,702" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+<rect x="740" y="918" width="220" height="48" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="850.0" y="940.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">CT1 버든 + LEB</text>
+<text x="850.0" y="955.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">10 &#937;,  리딩엣지 블랭킹 200 ns</text>
+<polyline points="960,942 952,942 952,734 976,734" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+<text x="740" y="982" font-size="9" fill="#dc2626" text-anchor="start" font-weight="400">OCP 비교기(18.9 A)는 이 raw 센스에 별도로 건다.</text>
+<text x="740" y="994" font-size="9" fill="#dc2626" text-anchor="start" font-weight="400">보상램프가 섞인 신호로 OCP 를 걸면 저입력 전부하에 도달하지 못한다.</text>
+<rect x="1072" y="684" width="96" height="78" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="1120.0" y="721.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">RS 래치</text>
+<text x="1120.0" y="736.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">R / S</text>
+<polyline points="1030,718 1072,706" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+<rect x="968" y="792" width="100" height="46" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="1018.0" y="813.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">클록 100 kHz</text>
+<text x="1018.0" y="828.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">Dmax 0.78</text>
+<polyline points="1018,792 1018,744 1072,744" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+<rect x="1230" y="670" width="178" height="106" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="1319.0" y="715.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">하프브리지 게이트드라이버</text>
+<text x="1319.0" y="730.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">HO / LO + 부트스트랩</text>
+<text x="1319.0" y="742.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">적응 데드타임 100 ~ 200 ns</text>
+<polyline points="1168,723 1230,723" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+<polyline points="1408,698 1448,698" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+<polyline points="1408,748 1448,748" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+<text x="1454" y="694" font-size="9.5" fill="#0891b2" text-anchor="start" font-weight="400">&#8594; Q2 게이트  (HO, SW 기준)</text>
+<text x="1454" y="744" font-size="9.5" fill="#0891b2" text-anchor="start" font-weight="400">&#8594; Q1 게이트  (LO, PGND 기준)</text>
+<text x="1230" y="806" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">* 2차 바이어스 : T1 보조권선 4 T &#8594; 22.2 V &#8594; LDO 12 V</text>
+<text x="1230" y="818" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">* 스위칭 100 kHz / 제어루프 25 kHz / MPPT 2 ms</text>
+</svg>
