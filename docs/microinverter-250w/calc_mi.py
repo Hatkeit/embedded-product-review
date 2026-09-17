@@ -161,6 +161,14 @@ def decoupling():
     return e_swing, rows, act, i_rip, p_proc
 
 
+# ---------------------------------------------------------------- 실장 전해 뱅크
+class Bank:
+    """실장된 입력 전해 : 60 V 27,000 uF x 5"""
+    n, cu, vr = 5, 27000e-6, 60.0
+    c = n * cu
+    derate = 0.80                      # 전해 전압 디레이팅 관용 기준
+
+
 def cap_life(base_h, base_t, t_core):
     return base_h * 2 ** ((base_t - t_core) / 10.0)
 
@@ -317,6 +325,51 @@ def main():
         life_f = cap_life(100000, 85, tcore - 8)          # 필름 (자기발열 작음)
         ln(f"  {ta:10d}{tcore:15d} C{life_e/8760:15.1f} 년"
            f"{min(life_f/8760, 40.0):13.0f} 년+")
+    ln("")
+
+    # ---------------- 실장 전해 뱅크
+    Bk = Bank()
+    ln("\n" + "=" * 86)
+    ln(f" 실장 입력 전해 뱅크 : {Bk.vr:.0f} V {Bk.cu*1e6:.0f} uF x {Bk.n} "
+       f"= {Bk.c*1e6:.0f} uF")
+    ln("=" * 86)
+    dv_pp = e_sw / (Bk.c * S.vmp)
+    voc_cold = S.voc * (1 + 0.0032 * 50)
+    v_abs = Bk.derate * Bk.vr
+    ln(f"  설계 최소요구(10 %pp) 7,129 uF 대비           : {Bk.c/7129e-6:5.1f} 배")
+    ln(f"  2w 리플 = E/(C x Vmp)                       : {dv_pp*1e3:5.0f} mVpp "
+       f"({100*dv_pp/S.vmp:.2f} % of Vmp)  -> MPPT 이용률 ~100 %")
+    ln(f"  리플전류 개당 : 120 Hz {i_rip/Bk.n:.2f} A + 100 kHz {6.28/Bk.n:.2f} A "
+       f"= {(i_rip+6.28)/Bk.n:.2f} Arms")
+    for esr in (0.010, 0.020, 0.030):
+        pl = (i_rip / Bk.n) ** 2 * esr + (6.28 / Bk.n) ** 2 * esr * 1.3
+        ln(f"    ESR {esr*1e3:2.0f} mOhm -> 개당 {pl*1e3:3.0f} mW, 자기발열 ~{pl*6:.1f} K")
+    ln("")
+    ln(f"  [전압 디레이팅]  {Bk.derate*100:.0f} % 기준 입력 절대최대 = {v_abs:.0f} V")
+    for v, lbl in ((S.vmp, "Vmp 운전"), (S.voc, "Voc STC"),
+                   (voc_cold, "Voc -25 C"), (50.0, "기존 선언 입력정격")):
+        d = 100 * v / Bk.vr
+        ln(f"    {lbl:20s} {v:5.1f} V = {d:5.1f} %  "
+           f"{'OK' if d <= Bk.derate*100 else '<-- 관용기준 초과'}")
+    ln(f"    -> 패널 Voc(STC) <= {v_abs/(1+0.0032*50):.1f} V 로 관리하거나 63 V 품목으로 변경")
+    ln("")
+    ln(f"  [저장에너지]  1/2 C V^2 @Voc(-25 C) = {0.5*Bk.c*voc_cold**2:.0f} J "
+       f"(2w 필요량의 {0.5*Bk.c*voc_cold**2/e_sw:.0f} 배)")
+    ln(f"    -> 단락 시 아크/용착 위험. 정비용 방전회로 + 경고표시 필수")
+    ln(f"    충전시간 C x V / Isc = {Bk.c*voc_cold/S.isc:.2f} s (PV 전류제한이라 돌입 무해)")
+    ln("")
+    ln(f"  [제어 영향]  진폭루프 플랜트 게인 ∝ 1/C -> 게인을 "
+       f"{Bk.c/7129e-6:.0f} 배로 재조정 필요")
+    ln(f"    미조정 시 대역 8 Hz -> {8*7129e-6/Bk.c:.2f} Hz, 구름 급변에서 Vpv 변동 6.9 V")
+    ln(f"    재조정 후(KP_A 1.33 / KI_A 22.8) Vpv 변동 1.4 V  [sim_mi.py T9]")
+    ln("")
+    ln(f"  [수명]  리플 자기발열 <1 K 이므로 코어온도 ~= 주위온도")
+    ln("  {:>10}{:>22}{:>22}".format("주위[C]", "105 C/5000 h 품", "85 C/2000 h 품"))
+    for ta in (45, 60, 75):
+        tc = ta + 2
+        ln(f"  {ta:10d}{cap_life(5000,105,tc)/8760:19.1f} 년"
+           f"{cap_life(2000,85,tc)/8760:19.1f} 년")
+    ln(f"    -> 옥외 패널 배면 60 C 기준, 105 C/5000 h 급이 아니면 수명이 1 년대로 붕괴한다.")
     ln("")
 
     # ---------------- 언폴더 / 출력필터

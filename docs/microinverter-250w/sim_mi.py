@@ -175,11 +175,11 @@ class Filt:
     sub = 8                               # 필터 적분 서브스텝
 
 
-def run(t_end=0.0834 * 5, c_dec=7129e-6, active_dec=False, irr=1000.0,
+def run(t_end=0.0834 * 5, c_dec=135000e-6, active_dec=False, irr=1000.0,
         kp=1.0, ki=1.0e4, zc_blank_deg=0.0, phase_err_deg=0.0,
-        interleave=True, decim=1):
+        interleave=True, decim=1, kp_a=None, ki_a=None):
     F = Filt()
-    pmp, vmp = PV.mpp(irr)
+    pmp, vmp = PV.mpp(irr(0.0) if callable(irr) else irr)
     v_pv = vmp
     i_m = [0.0] * S.nph
     v_cf, i_l, v_lp, v_aa = 0.0, 0.0, 0.0, 0.0
@@ -187,10 +187,14 @@ def run(t_end=0.0834 * 5, c_dec=7129e-6, active_dec=False, irr=1000.0,
     # Vpv 를 반주기 이동평균하여 2w 리플이 진폭지령을 변조하지 못하게 한다
     navg = max(1, int(round(1.0 / (2 * S.f_line * TSW))))
     buf, bsum, bi = [vmp] * navg, vmp * navg, 0
-    KP_A, KI_A = 0.07, 1.2
+    # 진폭루프 게인은 디커플링 커패시턴스에 비례해 키워야 한다.
+    #   실장 135,000 uF 는 설계 7,129 uF 의 19배 -> 게인도 19배
+    KP_A = 1.33 if kp_a is None else kp_a
+    KI_A = 22.8 if ki_a is None else ki_a
 
     n = int(t_end / TSW)
-    tr = dict(t=[], vg=[], ig=[], iref=[], vpv=[], ipk=[], vo=[], mode=[], cmd=[])
+    tr = dict(t=[], vg=[], ig=[], iref=[], vpv=[], ipk=[], vo=[], mode=[],
+              cmd=[], irr=[])
     st = dict(ipk_max=0.0, vds_max=0.0, over=0, ocp_hit=0)
     for k in range(n):
         t = k * TSW
@@ -200,7 +204,8 @@ def run(t_end=0.0834 * 5, c_dec=7129e-6, active_dec=False, irr=1000.0,
         v_o_grid = abs(vg)
         sgn = 1.0 if sn >= 0 else -1.0
 
-        i_pv = PV.current(v_pv, irr)
+        irr_t = irr(t) if callable(irr) else irr
+        i_pv = PV.current(v_pv, irr_t)
 
         bsum += v_pv - buf[bi]
         buf[bi] = v_pv
@@ -274,6 +279,7 @@ def run(t_end=0.0834 * 5, c_dec=7129e-6, active_dec=False, irr=1000.0,
             tr["iref"].append(sgn * i_ref_rect); tr["vpv"].append(v_pv)
             tr["ipk"].append(ipk_c); tr["vo"].append(v_cf)
             tr["mode"].append(mode); tr["cmd"].append(ipk_cmd)
+            tr["irr"].append(irr_t)
     tr["pmp"], tr["vmp"] = pmp, vmp
     return tr, st
 
@@ -423,30 +429,35 @@ def t3():
 
 
 def t4():
-    hdr("T4. 2w 디커플링 : 수동 전해 vs 능동 필름")
+    hdr("T4. 2w 디커플링 용량별 특성  (실장은 135,000 uF 로 확정 - 참고 비교)")
+    # 진폭루프 게인은 용량에 비례해야 대역폭이 같아진다.  고정 게인으로 비교하면
+    # 작은 용량 쪽이 불공정하게 나쁘게 나온다.
+    def g(c):
+        k = c / 7129e-6
+        return dict(kp_a=0.07 * k, ki_a=1.2 * k)
+
     rows = []
-    for lbl, kw in (("수동 3564 uF (20 %pp)", dict(c_dec=3564e-6)),
-                    ("수동 7129 uF (10 %pp)", dict(c_dec=7129e-6)),
-                    ("수동 14257 uF (5 %pp)", dict(c_dec=14257e-6)),
-                    ("능동 필름 (11 uF/450 V)", dict(active_dec=True))):
-        tr, _ = run(t_end=0.0834 * 5, **kw)
+    # 능동 디커플링은 실장이 수동으로 확정되어 비교 대상에서 제외한다
+    # (Rev.A system-spec.md 4장에 트레이드 스터디 기록 보존).
+    for lbl, c in (("수동 7,129 uF (설계 최소)", 7129e-6),
+                   ("수동 14,257 uF", 14257e-6),
+                   ("수동 135,000 uF (실장)", 135000e-6)):
+        tr, _ = run(t_end=0.0834 * 5, c_dec=c, **g(c))
         idx = last_cycle(tr)
         r = harmonics(tr, idx)
         vp = [tr["vpv"][i] for i in idx]
         rip = max(vp) - min(vp)
-        ppv = sum(v * PV.current(v) for v in vp) / len(vp)
-        util = ppv / tr["pmp"]
-        rows.append((lbl, rip, util, r["thd"], r["p"]))
-        print(f"    {lbl:26s} Vpv 리플 {rip:5.2f} Vpp ({100*rip/S.vmp:4.1f} %), "
-              f"MPPT 이용률 {util*100:6.2f} %, THD {r['thd']*100:5.2f} %")
-    check("수동 7129 uF(10 %pp) MPPT 이용률", rows[1][2] >= 0.985,
-          f"{rows[1][2]*100:.2f} %", ">= 98.5 %")
-    check("수동 14257 uF(5 %pp) MPPT 이용률", rows[2][2] >= 0.994,
-          f"{rows[2][2]*100:.2f} %", ">= 99.4 %")
-    check("능동 디커플링 Vpv 리플", rows[3][1] <= 0.5,
-          f"{rows[3][1]:.2f} Vpp", "<= 0.5 Vpp")
-    check("디커플링 방식이 THD 에 미치는 영향", abs(rows[1][3] - rows[3][3]) <= 0.02,
-          f"차이 {abs(rows[1][3]-rows[3][3])*100:.2f} %p", "<= 2 %p")
+        util = (sum(v * PV.current(v) for v in vp) / len(vp)) / tr["pmp"]
+        rows.append((lbl, rip, util, r["thd"]))
+        print(f"    {lbl:28s} Vpv 리플 {rip*1e3:6.0f} mVpp ({100*rip/S.vmp:5.2f} %), "
+              f"MPPT 이용률 {util*100:7.3f} %, THD {r['thd']*100:5.2f} %")
+    check("실장 135,000 uF MPPT 이용률", rows[2][2] >= 0.999,
+          f"{rows[2][2]*100:.3f} %", ">= 99.9 %")
+    check("실장 용량이 설계 최소 대비 개선", rows[2][2] > rows[0][2],
+          f"{rows[0][2]*100:.2f} -> {rows[2][2]*100:.3f} %", "이용률 향상")
+    check("디커플링 용량이 THD 에 미치는 영향", max(x[3] for x in rows) -
+          min(x[3] for x in rows) <= 0.005,
+          f"편차 {(max(x[3] for x in rows)-min(x[3] for x in rows))*100:.2f} %p", "<= 0.5 %p")
 
 
 def t5():
@@ -596,11 +607,75 @@ def waveforms():
         ("플라이백 출력전압 (정류정현파) 과 상당 피크전류", "V , A x10", [
             ("Vout [V]", "#0891b2", tt, [tr["vo"][i] for i in idx]),
             ("Ipk x10 [A]", "#1d4ed8", tt, [tr["ipk"][i] * 10 for i in idx])], None),
-        ("PV 전압 2w(120 Hz) 리플  (수동 디커플링 7129 uF)", "V", [
+        ("PV 전압 2w(120 Hz) 리플  (실장 135,000 uF -> 159 mVpp)", "V", [
             ("Vpv [V]", "#1d4ed8", tt, [tr["vpv"][i] for i in idx]),
             ("Vmp", "#dc2626", tt, [tr["vmp"]] * len(idx))], None),
     ])
     print("  파형 : sim-mi-waveforms.svg")
+
+
+def t9():
+    hdr("T9. 구름 급변 응답  (실장 135,000 uF, 일사 1000 -> 300 -> 1000 W/m^2)")
+
+    def irr(t):
+        return 300.0 if 0.15 <= t < 0.45 else 1000.0
+
+    rows = []
+    for kp_a, ki_a, lbl in ((0.07, 1.2, "설계 7,129 uF 용 게인 (미조정)"),
+                            (1.33, 22.8, "19배 재조정 (사양)"),
+                            (2.66, 45.6, "38배")):
+        tr, st = run(t_end=0.70, irr=irr, kp_a=kp_a, ki_a=ki_a)
+        lo = [i for i, t in enumerate(tr["t"]) if 0.16 <= t < 0.45]
+        hi = [i for i, t in enumerate(tr["t"]) if t >= 0.46]
+        vp = [tr["vpv"][i] for i in lo + hi]
+        swing = max(vp) - min(vp)
+        bw = 8.0 * (kp_a / 0.07) * (7129e-6 / 135000e-6)
+        rows.append((lbl, swing, min(vp), max(vp), st["ocp_hit"], bw))
+        print(f"    {lbl:28s} 대역 {bw:5.2f} Hz, Vpv {min(vp):5.2f} ~ {max(vp):5.2f} V "
+              f"(변동 {swing:4.2f} V), OCP {st['ocp_hit']}")
+    base, tuned = rows[0], rows[1]
+    check("미조정 게인의 Vpv 변동", base[1] > 3.0, f"{base[1]:.2f} V",
+          "> 3 V (재조정 필요성 확인)")
+    check("재조정 후 Vpv 변동", tuned[1] <= 1.5, f"{tuned[1]:.2f} V", "<= 1.5 V")
+    check("Vpv 가 운전범위 이탈 없음", tuned[2] >= 18.0 and tuned[3] <= 50.0,
+          f"{tuned[2]:.1f} ~ {tuned[3]:.1f} V", "18 ~ 50 V")
+    check("급변 중 OCP 미발생", tuned[4] == 0, f"{tuned[4]} 회", "0 회")
+
+    # 정상상태 THD 가 게인 상향으로 나빠지지 않는지
+    tr, _ = run(t_end=0.0834 * 5, kp_a=1.33, ki_a=22.8)
+    r = harmonics(tr, last_cycle(tr))
+    check("게인 상향 후 정격 THD 유지", r["thd"] <= 0.05, f"{r['thd']*100:.2f} %", "<= 5 %")
+
+
+def t10():
+    hdr("T10. 실장 전해 뱅크 검증  (60 V 27,000 uF x 5 = 135,000 uF)")
+    C, N, VR = 135000e-6, 5, 60.0
+    E = S.p_ac / W_LINE
+    dv = E / (C * S.vmp)
+    tr, _ = run(t_end=0.0834 * 5)
+    idx = last_cycle(tr)
+    vp = [tr["vpv"][i] for i in idx]
+    rip = max(vp) - min(vp)
+    ppv = sum(v * PV.current(v) for v in vp) / len(vp)
+    util = ppv / tr["pmp"]
+    i120 = S.p_ac / (math.sqrt(2) * S.vmp)
+    voc_cold = S.voc * (1 + 0.0032 * 50)
+    print(f"    설계요구 7,129 uF 대비 {C/7129e-6:.1f} 배")
+    print(f"    2w 리플 : 해석 {dv*1e3:.0f} mVpp / 실측 {rip*1e3:.0f} mVpp")
+    print(f"    리플전류 : 120 Hz {i120/N:.2f} A + 100 kHz {6.28/N:.2f} A (개당)")
+    print(f"    저장에너지 {0.5*C*voc_cold**2:.0f} J @Voc(-25 C) {voc_cold:.1f} V")
+    check("2w 리플", rip <= 0.5, f"{rip*1e3:.0f} mVpp", "<= 500 mVpp")
+    check("MPPT 이용률", util >= 0.999, f"{util*100:.3f} %", ">= 99.9 %")
+    v_abs = 0.80 * VR                              # 전해 80 % 디레이팅 한계
+    print(f"    -> 전해 80 % 디레이팅 기준 입력 절대최대 = {v_abs:.0f} V")
+    print(f"       기존 선언값 50 V 는 {100*50/VR:.1f} % 로 관용기준 초과 "
+          f"-> 입력정격을 {v_abs:.0f} V 로 하향하거나 63 V 품목으로 변경할 것")
+    check("지정 패널 Voc(-25 C) 가 디레이팅 이내", voc_cold <= v_abs,
+          f"{voc_cold:.1f} V", f"<= {v_abs:.0f} V")
+    check("패널 선정 상한 (Voc STC)", S.voc <= v_abs / (1 + 0.0032 * 50),
+          f"{S.voc:.1f} V", f"<= {v_abs/(1+0.0032*50):.1f} V")
+    check("개당 리플전류 여유", (i120 + 6.28) / N <= 3.0,
+          f"{(i120+6.28)/N:.2f} A", "<= 3 A (일반 스냅인 정격 이내)")
 
 
 def main():
@@ -611,7 +686,7 @@ def main():
     pmp, vmp = PV.mpp()
     print(f"  PV 모델 : Pmp {pmp:.1f} W @ {vmp:.2f} V (피팅오차 {PV.cost:.1e})")
     print(f"  정격 계통전류 {I_RATED:.3f} Arms,  순시 피크전력 {2*S.p_ac:.0f} W")
-    t1(); t2(); t3(); t4(); t5(); t6(); t7(); t8()
+    t1(); t2(); t3(); t4(); t5(); t6(); t7(); t8(); t9(); t10()
     waveforms()
     print(chr(10) + "=" * 92)
     n = sum(1 for _, ok in RESULTS if ok)
