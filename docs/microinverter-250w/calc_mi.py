@@ -163,8 +163,9 @@ def decoupling():
 
 # ---------------------------------------------------------------- 실장 전해 뱅크
 class Bank:
-    """실장된 입력 전해 : 60 V 27,000 uF x 5"""
-    n, cu, vr = 5, 27000e-6, 60.0
+    """실장된 입력 전해 : 63 V 2,700 uF x 5"""
+    n, cu, vr = 5, 2700e-6, 63.0
+    k_hf = 1.40                        # 리플 주파수보정 (100 kHz / 120 Hz) - 데이터시트 확인
     c = n * cu
     derate = 0.80                      # 전해 전압 디레이팅 관용 기준
 
@@ -339,11 +340,15 @@ def main():
     ln(f"  설계 최소요구(10 %pp) 7,129 uF 대비           : {Bk.c/7129e-6:5.1f} 배")
     ln(f"  2w 리플 = E/(C x Vmp)                       : {dv_pp*1e3:5.0f} mVpp "
        f"({100*dv_pp/S.vmp:.2f} % of Vmp)  -> MPPT 이용률 ~100 %")
-    ln(f"  리플전류 개당 : 120 Hz {i_rip/Bk.n:.2f} A + 100 kHz {6.28/Bk.n:.2f} A "
-       f"= {(i_rip+6.28)/Bk.n:.2f} Arms")
-    for esr in (0.010, 0.020, 0.030):
-        pl = (i_rip / Bk.n) ** 2 * esr + (6.28 / Bk.n) ** 2 * esr * 1.3
-        ln(f"    ESR {esr*1e3:2.0f} mOhm -> 개당 {pl*1e3:3.0f} mW, 자기발열 ~{pl*6:.1f} K")
+    i_eq = math.sqrt((i_rip / Bk.n) ** 2 + ((6.28 / Bk.n) / Bk.k_hf) ** 2)
+    ln(f"  리플전류 개당 : 120 Hz {i_rip/Bk.n:.2f} A, 100 kHz {6.28/Bk.n:.2f} A "
+       f"(보정 {Bk.k_hf:.1f} -> {(6.28/Bk.n)/Bk.k_hf:.2f} A)")
+    ln(f"    120 Hz 등가 합성 = {i_eq:.2f} Arms  <- 데이터시트 정격과 비교할 값")
+    ln(f"    세라믹 뱅크가 100 kHz 를 흡수하면 {i_rip/Bk.n:.2f} A 로 감소")
+    for e1, e2, rth in ((0.060, 0.035, 18.0), (0.040, 0.025, 15.0), (0.025, 0.018, 12.0)):
+        pl = (i_rip / Bk.n) ** 2 * e1 + (6.28 / Bk.n) ** 2 * e2
+        ln(f"    ESR {e1*1e3:2.0f}/{e2*1e3:2.0f} mOhm, Rth {rth:2.0f} K/W -> "
+           f"{pl*1e3:3.0f} mW, 자기발열 {pl*rth:.1f} K")
     ln("")
     ln(f"  [전압 디레이팅]  {Bk.derate*100:.0f} % 기준 입력 절대최대 = {v_abs:.0f} V")
     for v, lbl in ((S.vmp, "Vmp 운전"), (S.voc, "Voc STC"),
@@ -351,7 +356,7 @@ def main():
         d = 100 * v / Bk.vr
         ln(f"    {lbl:20s} {v:5.1f} V = {d:5.1f} %  "
            f"{'OK' if d <= Bk.derate*100 else '<-- 관용기준 초과'}")
-    ln(f"    -> 패널 Voc(STC) <= {v_abs/(1+0.0032*50):.1f} V 로 관리하거나 63 V 품목으로 변경")
+    ln(f"    -> 패널 Voc(STC) <= {v_abs/(1+0.0032*50):.1f} V 로 관리")
     ln("")
     ln(f"  [저장에너지]  1/2 C V^2 @Voc(-25 C) = {0.5*Bk.c*voc_cold**2:.0f} J "
        f"(2w 필요량의 {0.5*Bk.c*voc_cold**2/e_sw:.0f} 배)")
@@ -360,10 +365,9 @@ def main():
     ln("")
     ln(f"  [제어 영향]  진폭루프 플랜트 게인 ∝ 1/C -> 게인을 "
        f"{Bk.c/7129e-6:.0f} 배로 재조정 필요")
-    ln(f"    미조정 시 대역 8 Hz -> {8*7129e-6/Bk.c:.2f} Hz, 구름 급변에서 Vpv 변동 6.9 V")
-    ln(f"    재조정 후(KP_A 1.33 / KI_A 22.8) Vpv 변동 1.4 V  [sim_mi.py T9]")
+    ln(f"    KP_A {0.07*Bk.c/7129e-6:.3f} / KI_A {1.2*Bk.c/7129e-6:.2f}  [sim_mi.py T9 검증]")
     ln("")
-    ln(f"  [수명]  리플 자기발열 <1 K 이므로 코어온도 ~= 주위온도")
+    ln(f"  [수명]  코어온도 = 주위 + 자기발열(1~2.4 K)")
     ln("  {:>10}{:>22}{:>22}".format("주위[C]", "105 C/5000 h 품", "85 C/2000 h 품"))
     for ta in (45, 60, 75):
         tc = ta + 2

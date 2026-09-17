@@ -8,9 +8,9 @@
 <text x="114.0" y="254.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">PV Module</text>
 <text x="114.0" y="269.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">250 W 60셀</text>
 <text x="114.0" y="281.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">Vmp 30.5 V / Imp 8.2 A</text>
-<text x="56" y="326" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">Voc(STC) 37.6 V  (상한 41.4 V)</text>
+<text x="56" y="326" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">Voc(STC) 37.6 V  (상한 43.4 V)</text>
 <text x="56" y="338" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">저온 -25 C : 43.6 V</text>
-<text x="56" y="350" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">-&gt; 입력 절대최대 48 V</text>
+<text x="56" y="350" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">-&gt; 입력 절대최대 50 V</text>
 <polyline points="172,240 250,240 250,182 500,182" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
 <polyline points="172,284 190,284 190,502 530,502" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
 <polyline points="250,240 250,332 500,332" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
@@ -23,11 +23,11 @@
 <circle cx="208" cy="502" r="3.4" fill="#7c3aed"/>
 <text x="208" y="232" font-size="10" fill="#7c3aed" text-anchor="middle" font-weight="700">2w 디커플링</text>
 <rect x="56" y="542" width="356" height="92" rx="6" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.6"/>
-<text x="234.0" y="568.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">2w 디커플링 663 mJ  -  60 V 27,000 uF x 5 실장</text>
-<text x="234.0" y="583.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">= 135,000 uF  (설계 최소요구 7,129 uF 의 18.9 배)</text>
-<text x="234.0" y="595.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">2w 리플 159 mVpp (0.52 %),  MPPT 이용률 99.997 %</text>
-<text x="234.0" y="607.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">리플전류 개당 2.42 Arms,  자기발열 &lt; 1 K</text>
-<text x="234.0" y="619.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">저장에너지 128 J -&gt; 방전회로 필수,  입력 절대최대 48 V</text>
+<text x="234.0" y="568.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">2w 디커플링 663 mJ  -  63 V 2,700 uF x 5 실장</text>
+<text x="234.0" y="583.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">= 13,500 uF  (설계 최소요구 7,129 uF 의 1.89 배)</text>
+<text x="234.0" y="595.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">2w 리플 1,589 mVpp (5.2 %),  MPPT 이용률 99.75 %</text>
+<text x="234.0" y="607.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">리플전류 개당 1.47 Arms(120 Hz 등가) - 정격 대조 필수</text>
+<text x="234.0" y="619.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">입력 절대최대 50 V (63 V 의 79.4 %),  저장에너지 12.8 J</text>
 <circle cx="500" cy="182" r="3.4" fill="#1d4ed8"/>
 <path d="M 500,186 a 8,8 0 0 0 0,16 a 8,8 0 0 0 0,16 a 8,8 0 0 0 0,16 a 8,8 0 0 0 0,16 a 8,8 0 0 0 0,16" fill="none" stroke="#1d4ed8" stroke-width="1.9"/>
 <circle cx="489" cy="193" r="3" fill="#0f172a"/>
@@ -165,8 +165,8 @@
 <text x="360" y="751" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="700">1. MPPT (P&amp;O + 전역스캔)</text>
 <text x="360" y="763" font-size="8.5" fill="#64748b" text-anchor="start" font-weight="400">반주기 이동평균 Vpv 사용</text>
 <rect x="352" y="778" width="306" height="32" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
-<text x="360" y="791" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="700">2. 진폭루프 kp 1.33 / ki 22.8</text>
-<text x="360" y="803" font-size="8.5" fill="#64748b" text-anchor="start" font-weight="400">~8 Hz (135,000 uF 기준)</text>
+<text x="360" y="791" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="700">2. 진폭루프 kp 0.42 / ki 7.2</text>
+<text x="360" y="803" font-size="8.5" fill="#64748b" text-anchor="start" font-weight="400">~25 Hz (상한 f_line/2 = 30 Hz)</text>
 <rect x="352" y="818" width="306" height="32" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
 <text x="360" y="831" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="700">3. 전류기준 A x |sin(wt)|</text>
 <text x="360" y="843" font-size="8.5" fill="#64748b" text-anchor="start" font-weight="400">PLL 위상 동기</text>

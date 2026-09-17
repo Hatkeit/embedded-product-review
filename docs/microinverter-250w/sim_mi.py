@@ -175,7 +175,7 @@ class Filt:
     sub = 8                               # 필터 적분 서브스텝
 
 
-def run(t_end=0.0834 * 5, c_dec=135000e-6, active_dec=False, irr=1000.0,
+def run(t_end=0.0834 * 5, c_dec=13500e-6, active_dec=False, irr=1000.0,
         kp=1.0, ki=1.0e4, zc_blank_deg=0.0, phase_err_deg=0.0,
         interleave=True, decim=1, kp_a=None, ki_a=None):
     F = Filt()
@@ -188,9 +188,12 @@ def run(t_end=0.0834 * 5, c_dec=135000e-6, active_dec=False, irr=1000.0,
     navg = max(1, int(round(1.0 / (2 * S.f_line * TSW))))
     buf, bsum, bi = [vmp] * navg, vmp * navg, 0
     # 진폭루프 게인은 디커플링 커패시턴스에 비례해 키워야 한다.
-    #   실장 135,000 uF 는 설계 7,129 uF 의 19배 -> 게인도 19배
-    KP_A = 1.33 if kp_a is None else kp_a
-    KI_A = 22.8 if ki_a is None else ki_a
+    #   용량 비례(1.89배)만으로는 구름 급변에서 Vpv 가 10.4 V 흔들린다.
+    #   6배까지 올려 25 Hz 로 확보한다.  단 상한이 있다 : 대역이 계통주파수
+    #   60 Hz 에 근접하면 라인주기 안에서 진폭을 변조해 THD 가 폭발한다
+    #   (16배/68 Hz 에서 THD 31.75 %).  f_line/2 이하로 유지할 것.
+    KP_A = 0.42 if kp_a is None else kp_a
+    KI_A = 7.2 if ki_a is None else ki_a
 
     n = int(t_end / TSW)
     tr = dict(t=[], vg=[], ig=[], iref=[], vpv=[], ipk=[], vo=[], mode=[],
@@ -440,8 +443,8 @@ def t4():
     # 능동 디커플링은 실장이 수동으로 확정되어 비교 대상에서 제외한다
     # (Rev.A system-spec.md 4장에 트레이드 스터디 기록 보존).
     for lbl, c in (("수동 7,129 uF (설계 최소)", 7129e-6),
-                   ("수동 14,257 uF", 14257e-6),
-                   ("수동 135,000 uF (실장)", 135000e-6)):
+                   ("수동 13,500 uF (실장)", 13500e-6),
+                   ("수동 14,257 uF", 14257e-6)):
         tr, _ = run(t_end=0.0834 * 5, c_dec=c, **g(c))
         idx = last_cycle(tr)
         r = harmonics(tr, idx)
@@ -451,10 +454,10 @@ def t4():
         rows.append((lbl, rip, util, r["thd"]))
         print(f"    {lbl:28s} Vpv 리플 {rip*1e3:6.0f} mVpp ({100*rip/S.vmp:5.2f} %), "
               f"MPPT 이용률 {util*100:7.3f} %, THD {r['thd']*100:5.2f} %")
-    check("실장 135,000 uF MPPT 이용률", rows[2][2] >= 0.999,
-          f"{rows[2][2]*100:.3f} %", ">= 99.9 %")
-    check("실장 용량이 설계 최소 대비 개선", rows[2][2] > rows[0][2],
-          f"{rows[0][2]*100:.2f} -> {rows[2][2]*100:.3f} %", "이용률 향상")
+    check("실장 13,500 uF MPPT 이용률", rows[1][2] >= 0.995,
+          f"{rows[1][2]*100:.3f} %", ">= 99.5 %")
+    check("실장 용량이 설계 최소 대비 개선", rows[1][2] > rows[0][2],
+          f"{rows[0][2]*100:.2f} -> {rows[1][2]*100:.3f} %", "이용률 향상")
     check("디커플링 용량이 THD 에 미치는 영향", max(x[3] for x in rows) -
           min(x[3] for x in rows) <= 0.005,
           f"편차 {(max(x[3] for x in rows)-min(x[3] for x in rows))*100:.2f} %p", "<= 0.5 %p")
@@ -607,7 +610,7 @@ def waveforms():
         ("플라이백 출력전압 (정류정현파) 과 상당 피크전류", "V , A x10", [
             ("Vout [V]", "#0891b2", tt, [tr["vo"][i] for i in idx]),
             ("Ipk x10 [A]", "#1d4ed8", tt, [tr["ipk"][i] * 10 for i in idx])], None),
-        ("PV 전압 2w(120 Hz) 리플  (실장 135,000 uF -> 159 mVpp)", "V", [
+        ("PV 전압 2w(120 Hz) 리플  (실장 13,500 uF)", "V", [
             ("Vpv [V]", "#1d4ed8", tt, [tr["vpv"][i] for i in idx]),
             ("Vmp", "#dc2626", tt, [tr["vmp"]] * len(idx))], None),
     ])
@@ -615,41 +618,46 @@ def waveforms():
 
 
 def t9():
-    hdr("T9. 구름 급변 응답  (실장 135,000 uF, 일사 1000 -> 300 -> 1000 W/m^2)")
+    hdr("T9. 구름 급변 응답 및 진폭루프 대역 상한  (실장 13,500 uF)")
 
     def irr(t):
         return 300.0 if 0.15 <= t < 0.45 else 1000.0
 
+    print("    {:>22}{:>10}{:>19}{:>8}{:>10}{:>6}".format(
+        "진폭루프 게인", "대역[Hz]", "Vpv 범위[V]", "변동", "정격THD", "OCP"))
     rows = []
-    for kp_a, ki_a, lbl in ((0.07, 1.2, "설계 7,129 uF 용 게인 (미조정)"),
-                            (1.33, 22.8, "19배 재조정 (사양)"),
-                            (2.66, 45.6, "38배")):
-        tr, st = run(t_end=0.70, irr=irr, kp_a=kp_a, ki_a=ki_a)
-        lo = [i for i, t in enumerate(tr["t"]) if 0.16 <= t < 0.45]
-        hi = [i for i, t in enumerate(tr["t"]) if t >= 0.46]
-        vp = [tr["vpv"][i] for i in lo + hi]
-        swing = max(vp) - min(vp)
-        bw = 8.0 * (kp_a / 0.07) * (7129e-6 / 135000e-6)
-        rows.append((lbl, swing, min(vp), max(vp), st["ocp_hit"], bw))
-        print(f"    {lbl:28s} 대역 {bw:5.2f} Hz, Vpv {min(vp):5.2f} ~ {max(vp):5.2f} V "
-              f"(변동 {swing:4.2f} V), OCP {st['ocp_hit']}")
-    base, tuned = rows[0], rows[1]
-    check("미조정 게인의 Vpv 변동", base[1] > 3.0, f"{base[1]:.2f} V",
-          "> 3 V (재조정 필요성 확인)")
-    check("재조정 후 Vpv 변동", tuned[1] <= 1.5, f"{tuned[1]:.2f} V", "<= 1.5 V")
-    check("Vpv 가 운전범위 이탈 없음", tuned[2] >= 18.0 and tuned[3] <= 50.0,
-          f"{tuned[2]:.1f} ~ {tuned[3]:.1f} V", "18 ~ 50 V")
-    check("급변 중 OCP 미발생", tuned[4] == 0, f"{tuned[4]} 회", "0 회")
-
-    # 정상상태 THD 가 게인 상향으로 나빠지지 않는지
-    tr, _ = run(t_end=0.0834 * 5, kp_a=1.33, ki_a=22.8)
-    r = harmonics(tr, last_cycle(tr))
-    check("게인 상향 후 정격 THD 유지", r["thd"] <= 0.05, f"{r['thd']*100:.2f} %", "<= 5 %")
+    for k, lbl in ((1.0, "Rev.A 기준 (미조정)"), (6.0, "6배 (사양)"),
+                   (16.0, "16배 (과대)")):
+        kp, ki = 0.07 * k, 1.2 * k
+        tr, st = run(t_end=0.70, irr=irr, kp_a=kp, ki_a=ki)
+        vp = [tr["vpv"][i] for i, tt in enumerate(tr["t"])
+              if 0.16 <= tt < 0.45 or tt >= 0.46]
+        tr2, _ = run(t_end=0.0834 * 5, kp_a=kp, ki_a=ki)
+        thd = harmonics(tr2, last_cycle(tr2))["thd"]
+        bw = 8.0 * k * (7129e-6 / 13500e-6)
+        rows.append((lbl, bw, min(vp), max(vp), max(vp) - min(vp), thd, st["ocp_hit"]))
+        print("    {:>22}{:10.1f}{:9.2f} ~{:7.2f}{:8.2f}{:9.2f}%{:6d}".format(
+            lbl, bw, min(vp), max(vp), max(vp) - min(vp), thd * 100, st["ocp_hit"]))
+    base, spec, over = rows
+    print(f"    -> 13,500 uF 는 설계 최소요구의 1.89 배뿐이라 급변 시 Vpv 스윙이 크다.")
+    print(f"       진폭루프로 줄일 수 있으나 대역이 계통 60 Hz 에 근접하면 라인주기 안에서")
+    print(f"       진폭이 변조되어 THD 가 붕괴한다 -> 대역 상한 f_line/2 = 30 Hz")
+    check("미조정 게인의 Vpv 변동", base[4] > 8.0, f"{base[4]:.2f} V",
+          "> 8 V (재조정 필요성 확인)")
+    check("사양 게인 Vpv 변동", spec[4] <= 7.0, f"{spec[4]:.2f} V", "<= 7 V")
+    check("사양 게인 대역이 f_line/2 이하", spec[1] <= 30.0, f"{spec[1]:.1f} Hz",
+          "<= 30 Hz")
+    check("Vpv 가 운전범위 이탈 없음", spec[2] >= 18.0 and spec[3] <= 50.0,
+          f"{spec[2]:.1f} ~ {spec[3]:.1f} V", "18 ~ 50 V")
+    check("사양 게인에서 THD 유지", spec[5] <= 0.05, f"{spec[5]*100:.2f} %", "<= 5 %")
+    check("급변 중 OCP 미발생", spec[6] == 0, f"{spec[6]} 회", "0 회")
+    check("과대 게인이 THD 를 붕괴시킴(상한 확인)", over[5] > 0.05,
+          f"{over[5]*100:.2f} %", "> 5 % (대역 상한 실증)")
 
 
 def t10():
-    hdr("T10. 실장 전해 뱅크 검증  (60 V 27,000 uF x 5 = 135,000 uF)")
-    C, N, VR = 135000e-6, 5, 60.0
+    hdr("T10. 실장 전해 뱅크 검증  (63 V 2,700 uF x 5 = 13,500 uF)")
+    C, N, VR, K_HF = 13500e-6, 5, 63.0, 1.40
     E = S.p_ac / W_LINE
     dv = E / (C * S.vmp)
     tr, _ = run(t_end=0.0834 * 5)
@@ -662,20 +670,25 @@ def t10():
     voc_cold = S.voc * (1 + 0.0032 * 50)
     print(f"    설계요구 7,129 uF 대비 {C/7129e-6:.1f} 배")
     print(f"    2w 리플 : 해석 {dv*1e3:.0f} mVpp / 실측 {rip*1e3:.0f} mVpp")
-    print(f"    리플전류 : 120 Hz {i120/N:.2f} A + 100 kHz {6.28/N:.2f} A (개당)")
     print(f"    저장에너지 {0.5*C*voc_cold**2:.0f} J @Voc(-25 C) {voc_cold:.1f} V")
-    check("2w 리플", rip <= 0.5, f"{rip*1e3:.0f} mVpp", "<= 500 mVpp")
-    check("MPPT 이용률", util >= 0.999, f"{util*100:.3f} %", ">= 99.9 %")
+    check("2w 리플", rip <= 2.0, f"{rip*1e3:.0f} mVpp",
+          "<= 2000 mVpp (7 % of Vmp)")
+    check("MPPT 이용률", util >= 0.995, f"{util*100:.3f} %", ">= 99.5 %")
     v_abs = 0.80 * VR                              # 전해 80 % 디레이팅 한계
     print(f"    -> 전해 80 % 디레이팅 기준 입력 절대최대 = {v_abs:.0f} V")
-    print(f"       기존 선언값 50 V 는 {100*50/VR:.1f} % 로 관용기준 초과 "
-          f"-> 입력정격을 {v_abs:.0f} V 로 하향하거나 63 V 품목으로 변경할 것")
-    check("지정 패널 Voc(-25 C) 가 디레이팅 이내", voc_cold <= v_abs,
-          f"{voc_cold:.1f} V", f"<= {v_abs:.0f} V")
+    print(f"       선언 입력정격 50 V = {100*50/VR:.1f} % -> 관용기준 80 % 이내로 적합")
+    print(f"       (Rev.B 의 48 V 하향은 60 V 오인에 따른 것이며 철회)")
+    check("입력정격 50 V 가 디레이팅 이내", 50.0 <= v_abs,
+          f"{100*50/VR:.1f} %", "<= 80 %")
+    check("지정 패널 Voc(-25 C)", voc_cold <= v_abs,
+          f"{voc_cold:.1f} V", f"<= {v_abs:.1f} V")
     check("패널 선정 상한 (Voc STC)", S.voc <= v_abs / (1 + 0.0032 * 50),
           f"{S.voc:.1f} V", f"<= {v_abs/(1+0.0032*50):.1f} V")
-    check("개당 리플전류 여유", (i120 + 6.28) / N <= 3.0,
-          f"{(i120+6.28)/N:.2f} A", "<= 3 A (일반 스냅인 정격 이내)")
+    i_eq = math.sqrt((i120 / N) ** 2 + ((6.28 / N) / K_HF) ** 2)
+    print(f"    리플전류 개당 : 120 Hz {i120/N:.2f} A + 100 kHz {6.28/N:.2f} A "
+          f"-> 120 Hz 등가 {i_eq:.2f} Arms")
+    check("개당 리플전류 (120 Hz 등가)", i_eq <= 2.0, f"{i_eq:.2f} Arms",
+          "<= 2 A (실장품 데이터시트 대조 필수)")
 
 
 def main():
