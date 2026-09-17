@@ -37,7 +37,7 @@ class S:
     rds_on = 0.075         # 1차 MOSFET 열간 Rds(on)
     qsw = 40e-9            # 스위칭 전이시간 등가 [s]
     k_llk = 0.02           # 누설 / Lp
-    v_cs = 0.5             # 컨트롤러 전류센스 문턱 [V]
+    v_cs = 0.1             # 컨트롤러 전류센스 문턱 [V]  (LM5156 : 100 mV +-7 %)
     p_ctrl = 0.07          # 컨트롤러 자체 소비 [W]
     dcm_margin = 1.20                # DCM 유지 여유 (Ipk = 한계 x margin)
     #  RCD 클램프 전압은 VOR 에 비례한다.  고정 스파이크로 모델링하면
@@ -308,11 +308,13 @@ def main():
     print(f"    R = {r_clamp/1e3:.1f} kOhm / {math.ceil(p_clamp*2*10)/10:.1f} W, "
           f"C = {c_clamp*1e9:.0f} nF / 100 V, 클램프 다이오드 200 V 초고속")
     # ---------------- 전류센스
-    for vcs in (1.0, 0.5):
+    # CS 문턱별 전류센스 손실 : 컨트롤러 선정의 정량 근거 (controller-selection.md)
+    for vcs in (1.0, 0.5, 0.3, 0.1):
         r = vcs / D["ipk"]
         print(f"    전류센스 : CS 문턱 {vcs:.1f} V -> Rcs {r:.3f} Ohm, "
               f"손실 {D['irms_min']**2*r:.2f} W"
-              + ("   <= 채택" if abs(vcs - S.v_cs) < 1e-9 else ""))
+              + {1.0: "   UCC28C43", 0.5: "   LM5021 (18 V 기동불가)",
+                 0.3: "   MAX17596", 0.1: "   LM5156  <= 채택"}.get(vcs, ""))
 
     # ---------------- 교차조정
     print("\n-- 교차조정 (S2 는 피드백 대상이 아님) " + "-" * 45)
