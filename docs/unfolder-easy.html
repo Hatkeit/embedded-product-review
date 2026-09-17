@@ -1,0 +1,641 @@
+<title>스위치 네 개와 줄 하나</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#FAF9F7; --card:#FFFFFF; --ink:#17191F; --muted:#5E6472; --faint:#9399A6;
+    --line:#E3E1DC; --line2:#C9C6C0;
+    --pos:#0E7C86; --neg:#C05621; --stop:#A8232F; --off:#B7B5B0; --accent:#2E3A8C;
+    --posbg:#E6F4F4; --negbg:#FBEEE4; --stopbg:#FBECEC;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#101218; --card:#181B23; --ink:#E9EAEE; --muted:#9AA0AE; --faint:#767D8C;
+      --line:#262A34; --line2:#3C4150;
+      --pos:#3FC5C9; --neg:#F0904E; --stop:#F0737F; --off:#565B66; --accent:#93A5F7;
+      --posbg:#0D2A2C; --negbg:#2C1B10; --stopbg:#2B1214;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#101218; --card:#181B23; --ink:#E9EAEE; --muted:#9AA0AE; --faint:#767D8C;
+    --line:#262A34; --line2:#3C4150;
+    --pos:#3FC5C9; --neg:#F0904E; --stop:#F0737F; --off:#565B66; --accent:#93A5F7;
+    --posbg:#0D2A2C; --negbg:#2C1B10; --stopbg:#2B1214;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-size:16px;line-height:1.8;
+    -webkit-font-smoothing:antialiased;word-break:keep-all}
+  .wrap{max-width:940px;margin:0 auto;padding-block:40px 80px;padding-left:18px;padding-right:18px}
+
+  .eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 14px}
+  h1{font-family:"Gothic A1","IBM Plex Sans KR",sans-serif;font-weight:800;
+    font-size:clamp(34px,7vw,58px);line-height:1.08;letter-spacing:-.02em;margin:0 0 20px;text-wrap:balance}
+  .kicker{font-size:19px;color:var(--muted);margin:0;max-width:32em;line-height:1.7}
+  .kicker b{color:var(--ink);font-weight:600}
+
+  .oneline{margin:34px 0 0;padding:22px 26px;background:var(--card);
+    border:1.5px solid var(--line2);border-left:6px solid var(--accent)}
+  .oneline p{margin:0;font-family:"Gothic A1","IBM Plex Sans KR",sans-serif;
+    font-weight:700;font-size:clamp(19px,3.4vw,25px);line-height:1.55;letter-spacing:-.01em}
+
+  section{margin-top:64px}
+  h2{font-family:"Gothic A1","IBM Plex Sans KR",sans-serif;font-weight:800;
+    font-size:clamp(23px,4vw,32px);line-height:1.28;letter-spacing:-.02em;margin:0 0 6px;text-wrap:balance}
+  .qnum{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--accent);
+    letter-spacing:.14em;display:block;margin-bottom:8px}
+  h2 + p{margin-top:14px}
+  p{max-width:62ch;margin:0 0 16px}
+  p.sub{color:var(--muted)}
+  b{font-weight:600}
+
+  figure{margin:26px 0 0;background:var(--card);border:1.5px solid var(--line)}
+  .canvas{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 4px}
+  .canvas svg{display:block;width:100%;height:auto;color:var(--ink)}
+  figcaption{padding:14px 20px 18px;border-top:1px solid var(--line);
+    color:var(--muted);font-size:14.5px;line-height:1.65}
+  figcaption b{color:var(--ink)}
+
+  .pull{margin:26px 0 0;padding:18px 22px;background:var(--stopbg);border:1.5px solid var(--stop);color:var(--ink)}
+  .pull p{margin:0;font-size:15.5px}
+  .pull strong{color:var(--stop);font-weight:600}
+
+  .note{margin:22px 0 0;padding:16px 20px;border:1px solid var(--line2);background:var(--card)}
+  .note p{margin:0;font-size:15px;color:var(--muted)}
+  .note p + p{margin-top:10px}
+
+  table{width:100%;border-collapse:collapse;font-size:15px;margin-top:22px}
+  .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th,td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  thead th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--faint);font-weight:600;border-bottom:1.5px solid var(--line2);white-space:nowrap}
+  td:first-child{font-weight:600;white-space:nowrap}
+  tbody tr:last-child td{border-bottom:none}
+
+  .mono{font-family:"IBM Plex Mono",monospace;font-size:.92em}
+  footer{margin-top:72px;padding-top:22px;border-top:1.5px solid var(--line2);
+    font-size:14px;color:var(--muted)}
+  footer a{color:var(--accent)}
+  @media (prefers-reduced-motion:no-preference){a{transition:opacity .15s}}
+</style>
+
+<div class="wrap">
+
+  <p class="eyebrow">S2G1812 · 00.AC INPUT</p>
+  <h1>스위치 네 개와<br>줄 하나</h1>
+  <p class="kicker">앞서 드린 설명이 어려웠습니다. 이번에는 <b>그림으로</b> 다시 갑니다. 이 회로에는 사실 두 가지밖에 없습니다 — <b>파형을 펴는 스위치 네 개</b>, 그리고 <b>누구든 당기면 전부 멈추는 줄 하나.</b></p>
+
+  <div class="oneline">
+    <p>DC-DC가 접어 놓은 파형을, 스위치 네 개가 60분의 1초마다 번갈아 펴서 계통으로 내보낸다.</p>
+  </div>
+
+  <!-- ============ Q1 ============ -->
+  <section>
+    <span class="qnum">질문 1</span>
+    <h2>왜 &lsquo;펴는&rsquo; 회로가 필요한가</h2>
+    <p>앞단 DC-DC는 <b>음(−)을 만들지 못합니다.</b> 그래서 봉우리만 줄줄이 나옵니다. 계통이 원하는 건 위아래로 출렁이는 파형인데 말이죠.</p>
+    <p>그래서 이렇게 생각하면 쉽습니다 — 정현파의 아래쪽 절반을 <b>위로 접어 올려 둔 것</b>이 DC-DC 출력입니다. 언폴더(unfolder, 펴는 사람)가 할 일은 <b>접힌 것을 도로 펴는 것</b>뿐입니다. 이름 그대로입니다.</p>
+
+    <figure>
+      <div class="canvas">
+        <svg viewBox="0 0 900 380" role="img" aria-label="왼쪽은 DC-DC가 만드는 봉우리만 있는 파형이고, 오른쪽은 한 칸 걸러 아래로 뒤집어 만든 보통의 교류 정현파다. 언폴더가 그 뒤집기를 담당한다.">
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="14" font-weight="600" fill="currentColor">
+            <text x="200" y="34" text-anchor="middle">DC-DC가 만드는 것</text>
+            <text x="700" y="34" text-anchor="middle">계통으로 나가는 것</text>
+          </g>
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" fill="var(--muted)">
+            <text x="200" y="54" text-anchor="middle">봉우리만 있는 파형 · 초당 120개</text>
+            <text x="700" y="54" text-anchor="middle">보통의 교류 · 초당 60주기</text>
+          </g>
+
+          <!-- panel A -->
+          <line x1="40" y1="210" x2="370" y2="210" stroke="currentColor" stroke-width="1.5" opacity=".45"/>
+          <path d="M45,210 C68,100 107,100 130,210" fill="none" stroke="var(--pos)" stroke-width="3.5"/>
+          <path d="M130,210 C153,100 192,100 215,210" fill="none" stroke="var(--neg)" stroke-width="3.5"/>
+          <path d="M215,210 C238,100 277,100 300,210" fill="none" stroke="var(--pos)" stroke-width="3.5"/>
+          <path d="M300,210 C323,100 362,100 385,210" fill="none" stroke="var(--neg)" stroke-width="3.5"/>
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" font-weight="600" text-anchor="middle">
+            <text x="87" y="245" fill="var(--pos)">그대로</text>
+            <text x="172" y="245" fill="var(--neg)">뒤집기</text>
+            <text x="257" y="245" fill="var(--pos)">그대로</text>
+            <text x="342" y="245" fill="var(--neg)">뒤집기</text>
+          </g>
+          <text x="36" y="215" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--faint)">0 V</text>
+
+          <!-- arrow -->
+          <line x1="410" y1="210" x2="480" y2="210" stroke="currentColor" stroke-width="2.5"/>
+          <polygon points="492,210 476,203 476,217" fill="currentColor"/>
+          <text x="448" y="192" text-anchor="middle" font-family="Gothic A1, sans-serif" font-size="15" font-weight="800" fill="var(--accent)">언폴더</text>
+          <text x="448" y="235" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="12" fill="var(--muted)">한 칸 걸러 뒤집기</text>
+
+          <!-- panel B -->
+          <line x1="520" y1="210" x2="870" y2="210" stroke="currentColor" stroke-width="1.5" opacity=".45"/>
+          <path d="M530,210 C553,100 592,100 615,210" fill="none" stroke="var(--pos)" stroke-width="3.5"/>
+          <path d="M615,210 C638,320 677,320 700,210" fill="none" stroke="var(--neg)" stroke-width="3.5"/>
+          <path d="M700,210 C723,100 762,100 785,210" fill="none" stroke="var(--pos)" stroke-width="3.5"/>
+          <path d="M785,210 C808,320 847,320 870,210" fill="none" stroke="var(--neg)" stroke-width="3.5"/>
+
+          <g stroke="var(--neg)" stroke-width="1.6" stroke-dasharray="4 4" fill="none" opacity=".75">
+            <path d="M657,120 C690,120 690,300 657,300"/>
+          </g>
+          <polygon points="657,300 671,292 671,308" fill="var(--neg)" opacity=".75"/>
+          <text x="700" y="350" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" fill="var(--neg)" font-weight="600">이 봉우리를 통째로 아래로 내린다</text>
+        </svg>
+      </div>
+      <figcaption>같은 파형입니다. <b>한 칸 걸러 하나씩 아래로 내린 것</b>이 전부입니다. 파형의 모양을 만드는 일은 앞단 DC-DC가 이미 끝냈고, 언폴더는 방향만 바꿉니다 — 그래서 <b>초당 60번만 움직이면 됩니다.</b></figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ Q2 ============ -->
+  <section>
+    <span class="qnum">질문 2</span>
+    <h2>어떻게 뒤집는가 — 스위치 네 개의 대각선</h2>
+    <p>방향을 바꾸는 방법은 의외로 단순합니다. 계통을 가운데 두고 <b>스위치 네 개를 네모로 배치</b>한 다음, <b>대각선으로 두 개씩</b> 번갈아 닫습니다. 그러면 가운데를 지나는 전류의 방향이 반대가 됩니다.</p>
+
+    <figure>
+      <div class="canvas">
+        <svg viewBox="0 0 880 420" role="img" aria-label="스위치 네 개를 네모로 배치한 회로의 두 가지 상태. 왼쪽 양의 반주기에는 왼쪽 위와 오른쪽 아래 스위치가 닫혀 전류가 왼쪽에서 오른쪽으로 흐르고, 오른쪽 음의 반주기에는 오른쪽 위와 왼쪽 아래가 닫혀 전류가 반대로 흐른다.">
+          <line x1="440" y1="70" x2="440" y2="400" stroke="var(--line2)" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+          <!-- ===== panel 1: positive ===== -->
+          <g>
+            <text x="170" y="32" text-anchor="middle" font-family="Gothic A1, sans-serif" font-size="17" font-weight="800" fill="var(--pos)">양(+) 반주기</text>
+            <text x="170" y="52" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" fill="var(--muted)">왼쪽 위 + 오른쪽 아래를 닫는다</text>
+
+            <g fill="none" stroke="var(--pos)" stroke-width="10" opacity=".28" stroke-linecap="round">
+              <path d="M110,110 V240 H148"/>
+              <path d="M192,240 H230 V370"/>
+            </g>
+            <g fill="var(--pos)" opacity=".85">
+              <polygon points="110,192 103,176 117,176"/>
+              <polygon points="146,240 130,233 130,247"/>
+              <polygon points="230,322 223,306 237,306"/>
+            </g>
+
+            <g stroke="currentColor" stroke-width="2.2" fill="none">
+              <line x1="40" y1="110" x2="300" y2="110"/>
+              <line x1="40" y1="370" x2="300" y2="370"/>
+              <line x1="110" y1="170" x2="110" y2="240"/>
+              <line x1="230" y1="170" x2="230" y2="240"/>
+              <line x1="110" y1="240" x2="148" y2="240"/>
+              <line x1="192" y1="240" x2="230" y2="240"/>
+              <line x1="110" y1="240" x2="110" y2="300"/>
+              <line x1="230" y1="240" x2="230" y2="300"/>
+            </g>
+            <!-- closed top-left -->
+            <line x1="110" y1="110" x2="110" y2="170" stroke="var(--pos)" stroke-width="3.5"/>
+            <!-- open top-right -->
+            <line x1="230" y1="170" x2="204" y2="118" stroke="var(--off)" stroke-width="3.5"/>
+            <!-- open bottom-left -->
+            <line x1="110" y1="370" x2="136" y2="308" stroke="var(--off)" stroke-width="3.5"/>
+            <!-- closed bottom-right -->
+            <line x1="230" y1="300" x2="230" y2="370" stroke="var(--pos)" stroke-width="3.5"/>
+            <g fill="currentColor">
+              <circle cx="110" cy="110" r="4"/><circle cx="110" cy="170" r="4"/>
+              <circle cx="230" cy="110" r="4"/><circle cx="230" cy="170" r="4"/>
+              <circle cx="110" cy="300" r="4"/><circle cx="110" cy="370" r="4"/>
+              <circle cx="230" cy="300" r="4"/><circle cx="230" cy="370" r="4"/>
+            </g>
+            <circle cx="170" cy="240" r="22" fill="var(--card)" stroke="currentColor" stroke-width="2.2"/>
+            <path d="M156,240 Q163,226 170,240 Q177,254 184,240" fill="none" stroke="currentColor" stroke-width="2"/>
+
+            <g font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600">
+              <text x="92" y="146" text-anchor="end" fill="var(--pos)">Q300</text>
+              <text x="248" y="146" fill="var(--off)">Q301</text>
+              <text x="92" y="342" text-anchor="end" fill="var(--off)">S300</text>
+              <text x="248" y="342" fill="var(--pos)">S301</text>
+              <text x="34" y="115" text-anchor="end" fill="var(--faint)">+HV</text>
+              <text x="34" y="375" text-anchor="end" fill="var(--faint)">HGND</text>
+            </g>
+            <g font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--faint)">
+              <text x="104" y="228" text-anchor="end">AC-L</text>
+              <text x="236" y="228">AC-N</text>
+            </g>
+            <text x="170" y="404" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="var(--pos)" font-weight="600">전류: 계통을 왼쪽 → 오른쪽으로</text>
+          </g>
+
+          <!-- ===== panel 2: negative ===== -->
+          <g transform="translate(500,0)">
+            <text x="170" y="32" text-anchor="middle" font-family="Gothic A1, sans-serif" font-size="17" font-weight="800" fill="var(--neg)">음(−) 반주기</text>
+            <text x="170" y="52" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" fill="var(--muted)">오른쪽 위 + 왼쪽 아래를 닫는다</text>
+
+            <g fill="none" stroke="var(--neg)" stroke-width="10" opacity=".28" stroke-linecap="round">
+              <path d="M230,110 V240 H192"/>
+              <path d="M148,240 H110 V370"/>
+            </g>
+            <g fill="var(--neg)" opacity=".85">
+              <polygon points="230,192 223,176 237,176"/>
+              <polygon points="194,240 210,233 210,247"/>
+              <polygon points="110,322 103,306 117,306"/>
+            </g>
+
+            <g stroke="currentColor" stroke-width="2.2" fill="none">
+              <line x1="40" y1="110" x2="300" y2="110"/>
+              <line x1="40" y1="370" x2="300" y2="370"/>
+              <line x1="110" y1="170" x2="110" y2="240"/>
+              <line x1="230" y1="170" x2="230" y2="240"/>
+              <line x1="110" y1="240" x2="148" y2="240"/>
+              <line x1="192" y1="240" x2="230" y2="240"/>
+              <line x1="110" y1="240" x2="110" y2="300"/>
+              <line x1="230" y1="240" x2="230" y2="300"/>
+            </g>
+            <line x1="110" y1="170" x2="136" y2="118" stroke="var(--off)" stroke-width="3.5"/>
+            <line x1="230" y1="110" x2="230" y2="170" stroke="var(--neg)" stroke-width="3.5"/>
+            <line x1="110" y1="300" x2="110" y2="370" stroke="var(--neg)" stroke-width="3.5"/>
+            <line x1="230" y1="370" x2="204" y2="308" stroke="var(--off)" stroke-width="3.5"/>
+            <g fill="currentColor">
+              <circle cx="110" cy="110" r="4"/><circle cx="110" cy="170" r="4"/>
+              <circle cx="230" cy="110" r="4"/><circle cx="230" cy="170" r="4"/>
+              <circle cx="110" cy="300" r="4"/><circle cx="110" cy="370" r="4"/>
+              <circle cx="230" cy="300" r="4"/><circle cx="230" cy="370" r="4"/>
+            </g>
+            <circle cx="170" cy="240" r="22" fill="var(--card)" stroke="currentColor" stroke-width="2.2"/>
+            <path d="M156,240 Q163,226 170,240 Q177,254 184,240" fill="none" stroke="currentColor" stroke-width="2"/>
+
+            <g font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600">
+              <text x="92" y="146" text-anchor="end" fill="var(--off)">Q300</text>
+              <text x="248" y="146" fill="var(--neg)">Q301</text>
+              <text x="92" y="342" text-anchor="end" fill="var(--neg)">S300</text>
+              <text x="248" y="342" fill="var(--off)">S301</text>
+              <text x="34" y="115" text-anchor="end" fill="var(--faint)">+HV</text>
+              <text x="34" y="375" text-anchor="end" fill="var(--faint)">HGND</text>
+            </g>
+            <g font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--faint)">
+              <text x="104" y="228" text-anchor="end">AC-L</text>
+              <text x="236" y="228">AC-N</text>
+            </g>
+            <text x="170" y="404" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="var(--neg)" font-weight="600">전류: 계통을 오른쪽 → 왼쪽으로</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>가운데 동그라미가 계통(전력망)입니다. <b>위아래 전원은 그대로인데 가운데를 지나는 화살표만 방향이 바뀌었습니다.</b> 이것이 &lsquo;뒤집기&rsquo;의 실체입니다. 회색 스위치는 열려 있는 것이고, 실제 부품 이름이 Q300 · Q301 · S300 · S301입니다.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ Q3 ============ -->
+  <section>
+    <span class="qnum">질문 3</span>
+    <h2>왜 위 두 개와 아래 두 개가 다른 부품인가</h2>
+    <p>같은 역할인데 <b>위쪽은 SCR, 아래쪽은 MOSFET</b>입니다. 이유는 하나 — <b>스위치를 켜려면 &ldquo;자기 발 밑&rdquo;을 기준으로 전압을 걸어줘야 하는데, 위 두 개는 발 밑이 가만히 있지 않기 때문</b>입니다.</p>
+
+    <figure>
+      <div class="canvas">
+        <svg viewBox="0 0 880 330" role="img" aria-label="아래쪽 스위치 두 개는 움직이지 않는 바닥 위에 서 있어 12볼트 전원 하나로 둘 다 구동할 수 있다. 위쪽 두 개는 60헤르츠로 출렁이는 교류선 위에 서 있어 전원을 놓을 수 없고, 그래서 빛으로 신호만 보내는 SCR을 쓴다.">
+          <g font-family="Gothic A1, sans-serif" font-size="16" font-weight="800" fill="currentColor">
+            <text x="220" y="34" text-anchor="middle">아래 두 개 — 바닥이 고정</text>
+            <text x="660" y="34" text-anchor="middle">위 두 개 — 바닥이 출렁</text>
+          </g>
+
+          <!-- left -->
+          <rect x="164" y="76" width="112" height="40" rx="4" fill="var(--posbg)" stroke="var(--pos)" stroke-width="1.8"/>
+          <text x="220" y="102" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="600" fill="var(--pos)">12 V 전원 1개</text>
+          <g stroke="var(--pos)" stroke-width="2.2" fill="none">
+            <path d="M180,116 V140 H128"/>
+            <path d="M260,116 V140 H312"/>
+          </g>
+          <polygon points="122,140 136,133 136,147" fill="var(--pos)"/>
+          <polygon points="318,140 304,133 304,147" fill="var(--pos)"/>
+          <g fill="var(--card)" stroke="currentColor" stroke-width="2.2">
+            <rect x="96" y="158" width="64" height="62" rx="4"/>
+            <rect x="280" y="158" width="64" height="62" rx="4"/>
+          </g>
+          <g font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600" fill="currentColor" text-anchor="middle">
+            <text x="128" y="195">S300</text>
+            <text x="312" y="195">S301</text>
+          </g>
+          <line x1="60" y1="234" x2="380" y2="234" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+          <g stroke="currentColor" stroke-width="2" opacity=".5">
+            <line x1="96" y1="220" x2="96" y2="234"/><line x1="160" y1="220" x2="160" y2="234"/>
+            <line x1="280" y1="220" x2="280" y2="234"/><line x1="344" y1="220" x2="344" y2="234"/>
+          </g>
+          <text x="220" y="262" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="var(--muted)">HGND — 움직이지 않는 바닥</text>
+          <text x="220" y="298" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13.5" font-weight="600" fill="var(--pos)">둘 다 발이 같은 바닥에 → 전원 하나로 해결</text>
+
+          <line x1="440" y1="60" x2="440" y2="310" stroke="var(--line2)" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+          <!-- right -->
+          <g opacity=".4">
+            <rect x="604" y="76" width="112" height="40" rx="4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-dasharray="5 4"/>
+            <text x="660" y="102" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="currentColor">전원 2개 필요</text>
+          </g>
+          <g stroke="var(--stop)" stroke-width="3" stroke-linecap="round">
+            <line x1="612" y1="82" x2="708" y2="110"/><line x1="708" y1="82" x2="612" y2="110"/>
+          </g>
+          <text x="736" y="100" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="600" fill="var(--stop)">놓을 자리가 없음</text>
+
+          <g fill="var(--card)" stroke="currentColor" stroke-width="2.2">
+            <rect x="536" y="158" width="64" height="62" rx="4"/>
+            <rect x="720" y="158" width="64" height="62" rx="4"/>
+          </g>
+          <g font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600" fill="currentColor" text-anchor="middle">
+            <text x="568" y="195">Q300</text>
+            <text x="752" y="195">Q301</text>
+          </g>
+          <g stroke="var(--neg)" stroke-width="2" fill="none" stroke-linecap="round">
+            <path d="M486,168 L520,180"/><path d="M486,180 L520,192"/>
+            <path d="M670,168 L704,180"/><path d="M670,180 L704,192"/>
+          </g>
+          <polygon points="524,182 512,177 514,187" fill="var(--neg)"/>
+          <polygon points="708,182 696,177 698,187" fill="var(--neg)"/>
+          <text x="482" y="152" text-anchor="end" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" font-weight="600" fill="var(--neg)">빛으로</text>
+          <text x="482" y="170" text-anchor="end" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" font-weight="600" fill="var(--neg)">신호만</text>
+
+          <path d="M500,234 C530,214 560,254 590,234 C620,214 650,254 680,234 C710,214 740,254 770,234 C790,221 806,236 820,234"
+                fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+          <g stroke="currentColor" stroke-width="2" opacity=".5">
+            <line x1="536" y1="220" x2="536" y2="240"/><line x1="600" y1="220" x2="600" y2="234"/>
+            <line x1="720" y1="220" x2="720" y2="240"/><line x1="784" y1="220" x2="784" y2="232"/>
+          </g>
+          <text x="660" y="268" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="var(--muted)">AC 선 — 초당 60번 출렁이는 바닥</text>
+          <text x="660" y="298" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13.5" font-weight="600" fill="var(--neg)">발 밑이 흔들려 → 빛으로 신호만 보낸다</text>
+        </svg>
+      </div>
+      <figcaption>왼쪽은 두 사람이 같은 마룻바닥에 서 있는 것과 같습니다 — 콘센트 하나면 둘 다 씁니다. 오른쪽은 파도 위의 배에 서 있는 격이라 콘센트를 놓을 수가 없습니다. 그래서 <b>전선 대신 빛으로 신호만 건네고</b>, 스위치는 <b>한 번 켜면 전류가 0이 될 때까지 알아서 켜져 있는 SCR</b>을 씁니다 — 끄는 신호가 아예 필요 없어집니다.</figcaption>
+    </figure>
+
+    <div class="note">
+      <p><b>덤으로 따라오는 이득</b> — 언폴더가 방향을 바꾸는 순간은 파형이 <span class="mono">0 V</span>를 지나는 때, 즉 전류도 0인 때입니다. SCR은 전류가 0이면 저절로 꺼지므로 <b>타이밍이 알아서 맞습니다.</b></p>
+    </div>
+  </section>
+
+  <!-- ============ Q4 ============ -->
+  <section>
+    <span class="qnum">질문 4</span>
+    <h2>MCU의 명령이 스위치까지 가는 길</h2>
+    <p>명령은 부품 네 개를 거쳐 갑니다. 그런데 <b>그중 세 개가 신호를 뒤집습니다.</b> 세 번 뒤집으면 결국 한 번 뒤집은 것과 같아서, <b>MCU가 0을 내보낼 때 스위치가 켜집니다.</b></p>
+
+    <figure>
+      <div class="canvas">
+        <svg viewBox="0 0 880 330" role="img" aria-label="MCU 신호가 HC14, 옵토커플러, 40106B를 거치며 세 번 반전되어 스위치에 도달하는 표. 1을 내보내면 스위치는 꺼지고, 0을 내보내면 켜지며, MCU가 아무것도 안 하면 풀업 저항 때문에 1이 되어 꺼진다.">
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" font-weight="600" fill="currentColor" text-anchor="middle">
+            <text x="120" y="38">MCU 핀</text>
+            <text x="290" y="38">HC14</text>
+            <text x="450" y="38">옵토커플러</text>
+            <text x="610" y="38">40106B</text>
+            <text x="790" y="38">스위치</text>
+          </g>
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="11" fill="var(--neg)" font-weight="600" text-anchor="middle">
+            <text x="290" y="56">뒤집음</text>
+            <text x="450" y="56">뒤집음</text>
+            <text x="610" y="56">뒤집음</text>
+          </g>
+          <line x1="40" y1="70" x2="850" y2="70" stroke="var(--line2)" stroke-width="1.5"/>
+
+          <g stroke="var(--line2)" stroke-width="2" fill="none">
+            <line x1="158" y1="110" x2="246" y2="110"/><line x1="330" y1="110" x2="406" y2="110"/>
+            <line x1="494" y1="110" x2="566" y2="110"/><line x1="654" y1="110" x2="738" y2="110"/>
+            <line x1="158" y1="182" x2="246" y2="182"/><line x1="330" y1="182" x2="406" y2="182"/>
+            <line x1="494" y1="182" x2="566" y2="182"/><line x1="654" y1="182" x2="738" y2="182"/>
+            <line x1="158" y1="254" x2="246" y2="254"/><line x1="330" y1="254" x2="406" y2="254"/>
+            <line x1="494" y1="254" x2="566" y2="254"/><line x1="654" y1="254" x2="738" y2="254"/>
+          </g>
+
+          <g font-family="IBM Plex Mono, monospace" font-size="17" font-weight="600" text-anchor="middle">
+            <g fill="var(--card)" stroke="var(--line2)" stroke-width="1.6">
+              <rect x="82" y="90" width="76" height="40" rx="5"/><rect x="252" y="90" width="76" height="40" rx="5"/>
+              <rect x="412" y="90" width="76" height="40" rx="5"/><rect x="572" y="90" width="76" height="40" rx="5"/>
+              <rect x="82" y="162" width="76" height="40" rx="5"/><rect x="252" y="162" width="76" height="40" rx="5"/>
+              <rect x="412" y="162" width="76" height="40" rx="5"/><rect x="572" y="162" width="76" height="40" rx="5"/>
+              <rect x="82" y="234" width="76" height="40" rx="5"/><rect x="252" y="234" width="76" height="40" rx="5"/>
+              <rect x="412" y="234" width="76" height="40" rx="5"/><rect x="572" y="234" width="76" height="40" rx="5"/>
+            </g>
+            <g fill="currentColor">
+              <text x="120" y="117">1</text><text x="290" y="117">0</text><text x="450" y="117">1</text><text x="610" y="117">0</text>
+              <text x="120" y="189">0</text><text x="290" y="189">1</text><text x="450" y="189">0</text><text x="610" y="189">1</text>
+              <text x="120" y="261">1</text><text x="290" y="261">0</text><text x="450" y="261">1</text><text x="610" y="261">0</text>
+            </g>
+            <g stroke-width="1.8">
+              <rect x="744" y="90" width="98" height="40" rx="5" fill="var(--card)" stroke="var(--off)"/>
+              <rect x="744" y="162" width="98" height="40" rx="5" fill="var(--posbg)" stroke="var(--pos)"/>
+              <rect x="744" y="234" width="98" height="40" rx="5" fill="var(--card)" stroke="var(--off)"/>
+            </g>
+            <g font-family="Gothic A1, sans-serif" font-size="16" font-weight="800">
+              <text x="793" y="117" fill="var(--off)">꺼짐</text>
+              <text x="793" y="189" fill="var(--pos)">켜짐</text>
+              <text x="793" y="261" fill="var(--off)">꺼짐</text>
+            </g>
+          </g>
+
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" fill="var(--muted)">
+            <text x="74" y="117" text-anchor="end">보냄</text>
+            <text x="74" y="189" text-anchor="end">보냄</text>
+            <text x="74" y="255" text-anchor="end">MCU가</text>
+            <text x="74" y="272" text-anchor="end">손 뗌</text>
+          </g>
+
+          <line x1="40" y1="296" x2="850" y2="296" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="40" y="320" font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="var(--stop)" font-weight="600">세 번째 줄이 안전장치입니다 — MCU가 멈추면 풀업 저항이 핀을 1로 붙들어, 스위치는 저절로 꺼집니다.</text>
+        </svg>
+      </div>
+      <figcaption>세 번 뒤집히므로 <b>0을 보낼 때 켜집니다.</b> 얼핏 거꾸로 같지만 의도된 설계입니다 — MCU가 리셋되거나 멈춰서 <b>아무 신호도 안 내보내는 상태</b>가 곧 <b>꺼진 상태</b>가 되기 때문입니다. 전력 회로에서 &ldquo;아무 일도 안 하면 안전하다&rdquo;는 가장 중요한 성질입니다.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ Q5 ============ -->
+  <section>
+    <span class="qnum">질문 5</span>
+    <h2>고장 나면 어떻게 멈추는가 — 비상 정지 줄</h2>
+    <p>이 회로에서 제일 중요한 부분입니다. 그리고 <b>MCU와 아무 상관없이 동작합니다.</b></p>
+    <p>기차 객실 천장에 달린 비상 정지 줄을 떠올리면 정확합니다. <b>줄은 하나</b>인데, <b>여섯 명이 각자 줄을 잡고</b> 있습니다. 누구든 당기면 줄이 내려가고, 줄이 내려가면 <b>세 가지가 동시에</b> 일어납니다.</p>
+
+    <figure>
+      <div class="canvas">
+        <svg viewBox="0 0 880 360" role="img" aria-label="비상 정지 줄 비유. 12볼트로 줄을 위로 당기는 스프링 하나가 있고, 줄 아래에 여섯 개의 감시 회로가 손처럼 매달려 있다. 누구든 당기면 줄이 내려가고, 오른쪽의 세 가지 동작이 동시에 일어난다.">
+          <g stroke="var(--pos)" stroke-width="2.2" fill="none">
+            <line x1="330" y1="40" x2="330" y2="58"/>
+            <path d="M330,58 l12,9 -24,9 24,9 -24,9 24,9 -12,9"/>
+            <line x1="330" y1="112" x2="330" y2="130"/>
+          </g>
+          <text x="352" y="76" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--pos)">R314</text>
+          <text x="352" y="94" font-family="IBM Plex Sans KR, sans-serif" font-size="12" fill="var(--muted)">약한 힘으로 줄을 위로 당김</text>
+          <text x="330" y="32" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--faint)">12 V</text>
+
+          <line x1="60" y1="130" x2="600" y2="130" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+          <text x="60" y="118" font-family="Gothic A1, sans-serif" font-size="15" font-weight="800" fill="currentColor">고장 줄</text>
+
+          <g stroke="currentColor" stroke-width="2.4" fill="none">
+            <line x1="110" y1="130" x2="110" y2="196"/><line x1="170" y1="130" x2="170" y2="196"/>
+            <line x1="270" y1="130" x2="270" y2="196"/><line x1="330" y1="130" x2="330" y2="196"/>
+            <line x1="430" y1="130" x2="430" y2="196"/><line x1="490" y1="130" x2="490" y2="196"/>
+          </g>
+          <g fill="var(--card)" stroke="currentColor" stroke-width="2.2">
+            <circle cx="110" cy="206" r="11"/><circle cx="170" cy="206" r="11"/>
+            <circle cx="270" cy="206" r="11"/><circle cx="330" cy="206" r="11"/>
+            <circle cx="430" cy="206" r="11"/><circle cx="490" cy="206" r="11"/>
+          </g>
+          <g font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--faint)" text-anchor="middle">
+            <text x="110" y="210">+</text><text x="170" y="210">−</text>
+            <text x="270" y="210">+</text><text x="330" y="210">−</text>
+            <text x="430" y="210">+</text><text x="490" y="210">−</text>
+          </g>
+          <g stroke="var(--line2)" stroke-width="1.5" fill="none">
+            <path d="M96,228 v12 h88 v-12"/><path d="M256,228 v12 h88 v-12"/><path d="M416,228 v12 h88 v-12"/>
+          </g>
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="600" fill="currentColor" text-anchor="middle">
+            <text x="140" y="262">AC-N 전류</text><text x="300" y="262">AC-L 전류</text><text x="460" y="262">+HV 전압</text>
+          </g>
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="middle">
+            <text x="140" y="280">너무 세면 당김</text><text x="300" y="280">너무 세면 당김</text><text x="460" y="280">너무 높으면 당김</text>
+          </g>
+
+          <g stroke="var(--stop)" stroke-width="2.2" fill="none">
+            <line x1="270" y1="300" x2="270" y2="322"/>
+          </g>
+          <polygon points="270,332 262,316 278,316" fill="var(--stop)"/>
+          <text x="292" y="322" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="600" fill="var(--stop)">누구든 당기면 줄이 내려간다</text>
+
+          <g stroke="currentColor" stroke-width="2.2" fill="none">
+            <path d="M600,130 H640 V66 H676"/>
+            <path d="M640,130 H676"/>
+            <path d="M640,130 V194 H676"/>
+          </g>
+          <g fill="currentColor"><circle cx="640" cy="130" r="4"/></g>
+          <g fill="currentColor">
+            <polygon points="688,66 672,59 672,73"/><polygon points="688,130 672,123 672,137"/><polygon points="688,194 672,187 672,201"/>
+          </g>
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="13.5" font-weight="600" fill="currentColor">
+            <text x="698" y="62">언폴더 스위치 2개</text>
+            <text x="698" y="80" fill="var(--stop)">즉시 꺼짐</text>
+            <text x="698" y="126">남은 전류를 받아줄</text>
+            <text x="698" y="144" fill="var(--stop)">덤프 스위치 켜짐</text>
+            <text x="698" y="190">MCU에 고장 알림</text>
+            <text x="698" y="208" fill="var(--muted)" font-weight="400" font-family="IBM Plex Mono, monospace" font-size="12">GPIO12</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>여섯 개의 감시 회로가 <b>줄을 당길 수만 있고 올릴 수는 없습니다.</b> 그래서 배선이 딱 한 가닥이면 충분합니다 — 여섯 개를 따로 연결할 필요가 없습니다. 위로 당기는 힘은 <span class="mono">R314</span> 저항 하나가 담당합니다.</figcaption>
+    </figure>
+
+    <div class="pull">
+      <p><strong>여기가 핵심입니다.</strong> 이 줄은 MCU를 거치지 않습니다. MCU가 폭주하든, 멈추든, 엉뚱한 명령을 내보내든 — <b>줄이 내려가면 언폴더 스위치는 무조건 꺼집니다.</b> MCU에게는 &ldquo;방금 고장 났었다&rdquo;고 나중에 알려줄 뿐입니다.</p>
+    </div>
+  </section>
+
+  <!-- ============ Q6 ============ -->
+  <section>
+    <span class="qnum">질문 6</span>
+    <h2>&ldquo;너무 세다&rdquo;는 어떻게 판단하나</h2>
+    <p>전류는 직접 못 잽니다. 그래서 <b>아주 작은 저항</b>(<span class="mono">40 mΩ</span>)에 흘려서 <b>전압으로 바꿉니다.</b> 그 전압이 <span class="mono">0.6 V</span>를 넘으면 트랜지스터가 켜지고, 그게 곧 &lsquo;손이 줄을 당기는&rsquo; 동작입니다.</p>
+    <p class="sub">전류가 반대로도 흐를 수 있으니 <b>양쪽 모두</b> 감시해야 합니다. 그래서 손이 레그마다 두 개씩 있습니다.</p>
+
+    <figure>
+      <div class="canvas">
+        <svg viewBox="0 0 840 250" role="img" aria-label="전류 눈금자. 가운데 0을 기준으로 마이너스 5암페어에서 플러스 5암페어까지가 정상 운전 범위이고, 플러스 15암페어와 마이너스 15암페어를 넘으면 트립 구간이 되어 각각 다른 트랜지스터가 줄을 당긴다.">
+          <rect x="60" y="112" width="88" height="34" fill="var(--stopbg)"/>
+          <rect x="673" y="112" width="87" height="34" fill="var(--stopbg)"/>
+          <rect x="323" y="112" width="175" height="34" fill="var(--posbg)"/>
+          <line x1="60" y1="129" x2="760" y2="129" stroke="currentColor" stroke-width="2.5"/>
+
+          <g stroke="currentColor" stroke-width="1.8">
+            <line x1="60" y1="129" x2="60" y2="152"/><line x1="147" y1="129" x2="147" y2="156"/>
+            <line x1="235" y1="129" x2="235" y2="152"/><line x1="323" y1="129" x2="323" y2="152"/>
+            <line x1="410" y1="112" x2="410" y2="152"/>
+            <line x1="498" y1="129" x2="498" y2="152"/><line x1="585" y1="129" x2="585" y2="152"/>
+            <line x1="673" y1="129" x2="673" y2="156"/><line x1="760" y1="129" x2="760" y2="152"/>
+          </g>
+          <g font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--muted)" text-anchor="middle">
+            <text x="60" y="174">−20</text><text x="235" y="174">−10</text><text x="323" y="174">−5</text>
+            <text x="410" y="174">0</text><text x="498" y="174">+5</text><text x="585" y="174">+10</text><text x="760" y="174">+20 A</text>
+          </g>
+          <g font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--stop)" text-anchor="middle">
+            <text x="147" y="178">−15</text><text x="673" y="178">+15</text>
+          </g>
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" fill="var(--stop)" text-anchor="middle">
+            <text x="147" y="196">−0.6 V</text><text x="673" y="196">+0.6 V</text>
+          </g>
+
+          <text x="410" y="100" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13.5" font-weight="600" fill="var(--pos)">정상 운전 범위</text>
+          <text x="103" y="100" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" font-weight="600" fill="var(--stop)">역방향 트립</text>
+          <text x="717" y="100" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" font-weight="600" fill="var(--stop)">정방향 트립</text>
+          <g font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--faint)" text-anchor="middle">
+            <text x="103" y="78">Q304A</text><text x="717" y="78">Q304B</text>
+          </g>
+          <g stroke="var(--stop)" stroke-width="1.8" fill="none">
+            <path d="M103,58 V48 H147"/><path d="M717,58 V48 H673"/>
+          </g>
+          <g fill="var(--stop)"><polygon points="147,48 135,42 135,54"/><polygon points="673,48 685,42 685,54"/></g>
+          <text x="410" y="52" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="600" fill="var(--stop)">이 선을 넘으면 손이 줄을 당긴다</text>
+
+          <line x1="60" y1="216" x2="760" y2="216" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="60" y="240" font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="var(--muted)">전압 = 전류 × 40 mΩ  ·  정격 출력 전류는 이 눈금의 한가운데 근처에 있습니다</text>
+        </svg>
+      </div>
+      <figcaption>눈금 한가운데가 평소 운전 구간이고, <b>양 끝이 사고 구간</b>입니다. 이 방식은 간단하지만 <b>정밀하지는 않습니다</b> — 기준이 되는 <span class="mono">0.6 V</span>가 온도가 오르면 조금씩 낮아져, 60&#8202;°C 오르면 트립 전류가 약 18&#8202;% 내려갑니다. 그래서 이건 &lsquo;정밀 제한기&rsquo;가 아니라 <b>마지막 방어선</b>이고, 정밀한 제어는 MCU가 따로 합니다.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ Q7 ============ -->
+  <section>
+    <span class="qnum">질문 7</span>
+    <h2>고장 나고 나서 벌어지는 일의 순서</h2>
+
+    <figure>
+      <div class="canvas">
+        <svg viewBox="0 0 860 250" role="img" aria-label="고장 타임라인. 사고 발생 후 0.5마이크로초 만에 잡음 필터를 통과하고, 1마이크로초 안에 줄이 내려가 스위치가 꺼지며, 약 220마이크로초 뒤 줄이 다시 올라가 재시도한다.">
+          <line x1="70" y1="120" x2="800" y2="120" stroke="currentColor" stroke-width="2.5"/>
+          <polygon points="812,120 796,113 796,127" fill="currentColor"/>
+          <g stroke="currentColor" stroke-width="2">
+            <line x1="100" y1="104" x2="100" y2="136"/><line x1="290" y1="104" x2="290" y2="136"/>
+            <line x1="470" y1="104" x2="470" y2="136"/><line x1="700" y1="104" x2="700" y2="136"/>
+          </g>
+          <g fill="var(--stop)"><circle cx="100" cy="120" r="7"/><circle cx="470" cy="120" r="7"/></g>
+          <g fill="var(--pos)"><circle cx="700" cy="120" r="7"/></g>
+
+          <g font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600" fill="currentColor" text-anchor="middle">
+            <text x="100" y="92">0</text><text x="290" y="92">0.5 µs</text><text x="470" y="92">1 µs 이내</text><text x="700" y="92">220 µs 뒤</text>
+          </g>
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="currentColor" text-anchor="middle">
+            <text x="100" y="166">사고 발생</text>
+            <text x="290" y="166">잡음인지 확인</text>
+            <text x="470" y="166">줄이 내려감</text>
+            <text x="700" y="166">줄이 다시 올라감</text>
+          </g>
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" fill="var(--muted)" text-anchor="middle">
+            <text x="100" y="184">전류가 15 A를</text><text x="100" y="200">넘어섬</text>
+            <text x="290" y="184">작은 필터가</text><text x="290" y="200">스위칭 잡음을 거름</text>
+            <text x="470" y="184">스위치 꺼짐</text><text x="470" y="200">+ 덤프 켜짐</text>
+            <text x="700" y="184">한 번 더 시도</text><text x="700" y="200">(사고가 계속되면 반복)</text>
+          </g>
+
+          <line x1="70" y1="224" x2="800" y2="224" stroke="var(--line)" stroke-width="1.5"/>
+          <text x="70" y="246" font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="var(--muted)">그동안 MCU는 고장 신호를 읽고 정식 정지 절차를 밟습니다 — 하드웨어는 그때까지 버텨 주는 역할입니다.</text>
+        </svg>
+      </div>
+      <figcaption><b>끄는 건 순식간, 되살리는 건 느립니다.</b> 이 비대칭이 설계 의도입니다 — 사고가 계속되면 회로는 초당 수천 번 껐다 켰다를 반복하며 전류를 눌러 놓고, 그 사이에 MCU가 상황을 파악해 제대로 멈춥니다.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ glossary ============ -->
+  <section>
+    <span class="qnum">덧붙임</span>
+    <h2>어려운 말 &rarr; 쉬운 말</h2>
+    <p class="sub">앞선 문서에서 쓴 용어들입니다. 뜻만 알면 그 문서도 읽힙니다.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>용어</th><th>쉽게 말하면</th></tr></thead>
+        <tbody>
+          <tr><td>언폴더</td><td>접어 놓은 파형을 도로 펴는 스위치 묶음. 초당 60번만 움직임</td></tr>
+          <tr><td>와이어드-OR</td><td>비상 정지 줄. 여러 명이 한 줄을 잡고, 누구든 당기면 내려감</td></tr>
+          <tr><td>오픈 컬렉터</td><td>줄을 <b>당기기만</b> 하고 올리지는 못하는 손</td></tr>
+          <tr><td>풀업 저항</td><td>줄을 위로 당겨 놓는 약한 스프링. 아무도 안 당기면 올라가 있음</td></tr>
+          <tr><td>션트</td><td>전류를 전압으로 바꿔 주는 아주 작은 저항 (여기선 40 mΩ)</td></tr>
+          <tr><td>SCR (사이리스터)</td><td>한 번 켜면 전류가 0이 될 때까지 알아서 켜져 있는 스위치. 끄는 신호가 필요 없음</td></tr>
+          <tr><td>옵토커플러</td><td>빛으로 신호만 건네는 부품. 전기적으로는 완전히 끊겨 있음</td></tr>
+          <tr><td>HGND / GND</td><td>계통 쪽 바닥 / MCU 쪽 바닥. <b>서로 다른 바닥</b>이라 직접 연결하면 안 됨</td></tr>
+          <tr><td>슈미트 트리거</td><td>흐물흐물한 신호를 딱 떨어지는 0/1로 정리해 주는 문지기</td></tr>
+          <tr><td>액티브 로우</td><td>0일 때 켜지는 방식. 신호가 없으면 꺼지므로 더 안전함</td></tr>
+          <tr><td>히컵 모드</td><td>사고가 계속되면 껐다 켰다를 반복하며 버티는 동작</td></tr>
+          <tr><td>덤프</td><td>갈 곳 없어진 전류를 저항에 흘려 열로 태워 버리는 비상 통로</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    부품 번호·저항값·배선 연결까지 들어간 상세 문서는 <a href="https://claude.ai/artifact/JEqWgP4bLD7E5vpv9daenF">언폴더 구동 · 보호 회로</a>에 있습니다. 이 그림 설명은 같은 내용을 쉬운 순서로 다시 푼 것입니다. 회로 출처는 S2G1812 리버스 스키매틱 <span class="mono">00.AC INPUT</span> 시트입니다.
+  </footer>
+
+</div>
