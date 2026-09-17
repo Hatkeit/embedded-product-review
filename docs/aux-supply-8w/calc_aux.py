@@ -30,14 +30,19 @@ class S:
     # 플라이백 출력
     v_s1, vf_s1 = 6.0, 0.45          # 주 출력 + 쇼트키 Vf
     v_s2, vf_s2 = 16.0, 0.60         # 보조 출력(12 V LDO 입력)
-    v_aux, vf_aux = 13.0, 0.70       # 컨트롤러 VCC 보조권선 (1차 GND 기준)
+    #  LM5156H 외부 VCC 급전 조건 : > 6.85 V(내부 레귤레이터 목표), <= 16 V 권장, abs 18 V.
+    #  무부하 교차조정 상승(~1.8배)을 고려해 공칭 8 V (Naux 4 T -> 7.9 V, 무부하 14 V) 로 낮춘다.
+    v_aux, vf_aux = 8.0, 0.70        # 컨트롤러 VCC 보조권선 (1차 GND 기준)
     i_aux = 0.005                    # 컨트롤러 소비전류 [A]
     #  교차조정 -15 % 에서도 LDO 드롭아웃(12.5 V)을 확보하려면 공칭 16 V 필요
     eta_fb = 0.85          # 초기 추정.  main() 에서 손실 합산으로 역산해 갱신한다.
     rds_on = 0.075         # 1차 MOSFET 열간 Rds(on)
     qsw = 40e-9            # 스위칭 전이시간 등가 [s]
     k_llk = 0.02           # 누설 / Lp
-    v_cs = 0.1             # 컨트롤러 전류센스 문턱 [V]  (LM5156 : 100 mV +-7 %)
+    v_cs = 0.1             # 컨트롤러 전류센스 문턱 [V]  (LM5156H : 100 mV +-7 %, DS 8.5)
+    cs_tol = 0.07          # 문턱 공차
+    cs_margin = 1.15       # I_CL(min) >= Ipk x margin  (Lp/fsw 공차 흡수)
+    rcs = 0.033            # 선정 Rcs [Ohm]  (calc_lm5156.py 에서 도출 : 93 mV / (2.38 x 1.15) = 34 -> E24 33 mOhm)
     p_ctrl = 0.07          # 컨트롤러 자체 소비 [W]
     dcm_margin = 1.20                # DCM 유지 여유 (Ipk = 한계 x margin)
     #  RCD 클램프 전압은 VOR 에 비례한다.  고정 스파이크로 모델링하면
@@ -184,7 +189,7 @@ def main():
         llk0 = S.k_llk * d0["lp"]
         p_cl = (0.5 * llk0 * d0["ipk"] ** 2 * S.fsw
                 * d0["vclamp"] / (d0["vclamp"] - d0["vor"]))
-        rcs0 = S.v_cs / d0["ipk"]
+        rcs0 = S.rcs
         loss_fb = (d0["irms_min"] ** 2 * S.rds_on
                    + 0.5 * S.vin_max * d0["ipk"] * S.qsw * S.fsw
                    + S.vf_s1 * I_s1 + S.vf_s2 * I_s2
@@ -269,7 +274,7 @@ def main():
     llk = S.k_llk * D["lp"]
     p_clamp = (0.5 * llk * D["ipk"] ** 2 * S.fsw
                * D["vclamp"] / (D["vclamp"] - D["vor"]))
-    rcs = S.v_cs / D["ipk"]
+    rcs = S.rcs
     p_cs = D["irms_min"] ** 2 * rcs
     p_d1 = S.vf_s1 * I_s1
     p_d2 = S.vf_s2 * I_s2
@@ -281,7 +286,7 @@ def main():
     for nm, v in (("1차 MOSFET 도통 (Rds 75 mOhm)", p_cond),
                   ("1차 MOSFET 스위칭", p_sw),
                   ("RCD 클램프 (Llk 2 % 가정)", p_clamp),
-                  ("전류센스 Rcs (문턱 0.5 V)", p_cs),
+                  ("전류센스 Rcs (LM5156H 33 mOhm)", p_cs),
                   ("트랜스포머 (동손+코어손)", best["p_cu"] + best["p_core"]),
                   ("컨트롤러", S.p_ctrl),
                   ("S1 쇼트키 (Vf 0.45 V)", p_d1),
@@ -365,10 +370,11 @@ def main():
     print("\n-- 공통 GND 확정 (같은 기준의 부하) 에 따른 단순화 " + "-" * 34)
     print("  적용 범위 : Np / Ns1 / Naux 가 공통 GND.  Ns2 만 독립(플로팅).")
     print("\n  (1) 피드백 : TL431 + 포토커플러 -> 직접 분압")
-    vref = 2.50
-    r_top, r_bot = 14.0e3, vref / (S.v_s1 - vref) * 14.0e3
+    vref = 1.00                                   # LM5156H VREF 1.0 V +-1 % (DS 8.5)
+    r_bot = 10.0e3
+    r_top = 49.9e3                                # E96 : 6.0 V x 10 k / 1.0 V - 10 k = 50 k -> 49.9 k
     print(f"      S1 {S.v_s1:.1f} V 를 컨트롤러 VFB({vref:.2f} V)로 직접 분압")
-    print(f"      Rtop {r_top/1e3:.1f} k / Rbot {r_bot/1e3:.2f} k (E96 1 %), "
+    print(f"      R_FBT {r_top/1e3:.1f} k / R_FBB {r_bot/1e3:.1f} k (E96 1 %) -> {vref*(1+r_top/r_bot):.2f} V, "
           f"분압 전류 {S.v_s1/(r_top+r_bot)*1e6:.0f} uA")
     print("      절감 : TL431 + 옵토 + 바이어스저항 (부품 3~5점)")
     print("      개선 : 옵토 극점(약 10 kHz) 제거 -> 루프 대역 확보, CTR 경년변화 리스크 소멸")
@@ -385,7 +391,8 @@ def main():
     # ---------------- 판정
     print("\n-- 설계 검증 판정 " + "-" * 67)
     b = best["b"]
-    b_ocp = D["lp"] * D["ipk"] * 1.3 / (best["np"] * best["core"].ae)
+    i_cl_max = S.v_cs * (1 + S.cs_tol) / S.rcs            # 전류제한 최대 (107 mV / Rcs)
+    b_ocp = D["lp"] * i_cl_max / (best["np"] * best["core"].ae)
     chk("전 입력범위 DCM 유지", D["tsum_min"] <= 0.92 and D["tsum_max"] <= 0.92,
         f"{max(D['tsum_min'],D['tsum_max']):.2f} T", "<= 0.92 T")
     chk("최대 듀티", D["d_min"] <= 0.70, f"{D['d_min']:.3f}", "<= 0.70")
@@ -396,7 +403,9 @@ def main():
     chk("권선 창 점유율 (부분절연)", best["fill_part"] <= 0.60,
         f"{best['fill_part']*100:.0f} %", "<= 60 % (양산 여유)")
     chk("트랜스 온도상승", best["dt"] <= 45.0, f"{best['dt']:.0f} K", "<= 45 K")
-    chk("Bpk (OCP 130 %)", b_ocp <= 0.33, f"{b_ocp:.3f} T", f"<= 0.33 T (Bsat {BSAT})")
+    chk(f"Bpk (전류제한 최대 {i_cl_max:.2f} A)", b_ocp <= 0.33, f"{b_ocp:.3f} T", f"<= 0.33 T (Bsat {BSAT})")
+    chk("전류제한 최소 >= Ipk x 1.15", S.v_cs * (1 - S.cs_tol) / S.rcs >= D["ipk"] * S.cs_margin,
+        f"{S.v_cs*(1-S.cs_tol)/S.rcs:.2f} A", f">= {D['ipk']*S.cs_margin:.2f} A")
     chk("12 V LDO 입력 여유", lo >= 12.0 + S.vdo_12, f"{lo:.2f} V",
         f">= {12.0+S.vdo_12:.1f} V")
     chk("12 V LDO 최악 손실", (hi - 12.0) / 12.0 <= 0.60,
