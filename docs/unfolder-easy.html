@@ -434,9 +434,122 @@
     </figure>
   </section>
 
-  <!-- ============ Q5 ============ -->
+  <!-- ============ Q5 : 0/1 ============ -->
   <section>
     <span class="qnum">질문 5</span>
+    <h2>그럼 명령은 0과 1 두 가지뿐인가</h2>
+    <p><b>네, 값은 그것뿐입니다.</b> 세기도 없고 중간값도 없습니다. 옵토커플러의 LED는 저항으로 아예 포화시켜 놓아서 &ldquo;켠다 / 끈다&rdquo; 말고는 건너갈 게 없습니다.</p>
+    <p>그런데 두 가지가 더 있습니다. 첫째, <b>선이 네 개</b>입니다 — 스위치 하나당 한 줄. 둘째, 그리고 이쪽이 진짜인데, <b>정보는 &lsquo;값&rsquo;이 아니라 &lsquo;언제 바뀌는가&rsquo;에 실려 있습니다.</b></p>
+
+    <figure>
+      <div class="canvas">
+        <svg viewBox="0 0 900 480" role="img" aria-label="한 주기 동안의 네 개 지령선 타이밍도. 위에 DC-DC 출력 파형과 계통 출력 파형이 있고, 아래에 GPIO41, 44, 42, 43 네 줄이 있다. 양의 반주기에는 GPIO41과 44가 0이 되어 Q300과 S301이 켜지고, 음의 반주기에는 GPIO42와 43이 0이 되어 Q301과 S300이 켜진다. 두 반주기 사이에는 넷 다 꺼지는 데드타임이 있다.">
+          <rect x="450" y="100" width="20" height="324" fill="var(--stop)" opacity=".1"/>
+          <line x1="460" y1="44" x2="460" y2="424" stroke="var(--stop)" stroke-width="1.5" stroke-dasharray="5 4" opacity=".7"/>
+
+          <line x1="90" y1="110" x2="830" y2="110" stroke="currentColor" stroke-width="1.2" opacity=".3"/>
+          <path d="M90,110 H110 C202,30 358,30 450,110 H470 C562,30 718,30 810,110 H830"
+                fill="none" stroke="var(--muted)" stroke-width="3"/>
+
+          <line x1="90" y1="190" x2="830" y2="190" stroke="currentColor" stroke-width="1.2" opacity=".3"/>
+          <path d="M90,190 H110 C202,123 358,123 450,190" fill="none" stroke="var(--pos)" stroke-width="3.5"/>
+          <path d="M450,190 H470" fill="none" stroke="var(--muted)" stroke-width="3.5"/>
+          <path d="M470,190 C562,257 718,257 810,190 H830" fill="none" stroke="var(--neg)" stroke-width="3.5"/>
+
+          <g font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="var(--muted)">
+            <text x="96" y="106" text-anchor="end">+HV</text>
+          </g>
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" fill="var(--faint)">
+            <text x="96" y="124" text-anchor="end">DC-DC 출력</text>
+            <text x="96" y="178" text-anchor="end">계통 출력</text>
+          </g>
+          <text x="478" y="136" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" font-weight="600" fill="var(--stop)">여기가 영교차 — 모든 전환이 이 순간에</text>
+
+          <g stroke="var(--off)" stroke-width="1.5" stroke-dasharray="4 4">
+            <line x1="90" y1="288" x2="830" y2="288"/><line x1="90" y1="324" x2="830" y2="324"/>
+            <line x1="90" y1="360" x2="830" y2="360"/><line x1="90" y1="396" x2="830" y2="396"/>
+          </g>
+
+          <g stroke-width="1.8">
+            <rect x="110" y="276" width="340" height="24" rx="3" fill="var(--posbg)" stroke="var(--pos)"/>
+            <rect x="110" y="312" width="340" height="24" rx="3" fill="var(--posbg)" stroke="var(--pos)"/>
+            <rect x="470" y="348" width="340" height="24" rx="3" fill="var(--negbg)" stroke="var(--neg)"/>
+            <rect x="470" y="384" width="340" height="24" rx="3" fill="var(--negbg)" stroke="var(--neg)"/>
+          </g>
+
+          <g font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" font-weight="600" text-anchor="middle">
+            <text x="280" y="292" fill="var(--pos)">Q300 켜짐 · 핀 = 0</text>
+            <text x="280" y="328" fill="var(--pos)">S301 켜짐 · 핀 = 0</text>
+            <text x="640" y="364" fill="var(--neg)">Q301 켜짐 · 핀 = 0</text>
+            <text x="640" y="400" fill="var(--neg)">S300 켜짐 · 핀 = 0</text>
+          </g>
+          <g fill="var(--card)">
+            <rect x="592" y="277" width="104" height="20"/><rect x="592" y="313" width="104" height="20"/>
+            <rect x="226" y="349" width="104" height="20"/><rect x="226" y="385" width="104" height="20"/>
+          </g>
+          <g font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--faint)" text-anchor="middle">
+            <text x="644" y="292">핀 = 1 · 꺼짐</text>
+            <text x="644" y="328">핀 = 1 · 꺼짐</text>
+            <text x="278" y="364">핀 = 1 · 꺼짐</text>
+            <text x="278" y="400">핀 = 1 · 꺼짐</text>
+          </g>
+          <g font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" fill="currentColor" text-anchor="end">
+            <text x="96" y="292">GPIO41</text><text x="96" y="328">GPIO44</text>
+            <text x="96" y="364">GPIO42</text><text x="96" y="400">GPIO43</text>
+          </g>
+          <text x="460" y="262" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" font-weight="600" fill="var(--stop)">데드타임 — 넷 다 꺼짐</text>
+
+          <line x1="90" y1="424" x2="830" y2="424" stroke="currentColor" stroke-width="1.8"/>
+          <g stroke="currentColor" stroke-width="1.5">
+            <line x1="110" y1="424" x2="110" y2="432"/><line x1="460" y1="424" x2="460" y2="432"/><line x1="810" y1="424" x2="810" y2="432"/>
+          </g>
+          <g font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--muted)" text-anchor="middle">
+            <text x="110" y="448">0</text><text x="460" y="448">8.3 ms</text><text x="810" y="448">16.7 ms</text>
+          </g>
+          <text x="90" y="470" font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" fill="var(--faint)">한 주기 = 16.7 ms · 계통 60 Hz</text>
+        </svg>
+      </div>
+      <figcaption>네 줄 모두 <b>0 아니면 1</b>입니다. 그런데 그림에서 실제로 의미를 갖는 건 블록의 &lsquo;높이&rsquo;가 아니라 <b>블록이 시작하고 끝나는 위치</b>입니다. 그 위치가 계통의 영교차에서 어긋나면 파형이 일그러지고, 크게 어긋나면 브리지가 단락됩니다. <b>값은 두 가지지만 타이밍은 연속량입니다</b> — 정밀도가 여기에 다 들어갑니다.</figcaption>
+    </figure>
+
+    <h3 style="font-family:'Gothic A1',sans-serif;font-weight:700;font-size:19px;margin:34px 0 4px">실제로 쓰는 조합은 세 가지</h3>
+    <p class="sub">선이 네 개니 조합은 16가지지만, 쓰는 건 이것뿐입니다.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>상태</th><th>GPIO41</th><th>GPIO44</th><th>GPIO42</th><th>GPIO43</th><th>결과</th></tr></thead>
+        <tbody>
+          <tr><td>양(+) 반주기</td><td class="mono">0</td><td class="mono">0</td><td class="mono">1</td><td class="mono">1</td><td>Q300 + S301 켜짐</td></tr>
+          <tr><td>음(−) 반주기</td><td class="mono">1</td><td class="mono">1</td><td class="mono">0</td><td class="mono">0</td><td>Q301 + S300 켜짐</td></tr>
+          <tr><td>전부 꺼짐</td><td class="mono">1</td><td class="mono">1</td><td class="mono">1</td><td class="mono">1</td><td>전환 순간 · 정지 · 고장</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <p><b>네 핀 모두 풀업이 달려 있습니다</b> — R508 · R509 · R511 · R512, 전부 10 kΩ. 그래서 MCU가 손을 떼면 네 줄이 저절로 <span class="mono">1 1 1 1</span>, 즉 <b>세 번째 줄(전부 꺼짐)</b>이 됩니다. 질문 4에서 본 안전장치가 네 개 전부에 똑같이 걸려 있는 셈입니다.</p>
+    </div>
+
+    <h3 style="font-family:'Gothic A1',sans-serif;font-weight:700;font-size:19px;margin:34px 0 4px">앞단 DC-DC와 비교하면 차이가 분명합니다</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th></th><th>앞단 DC-DC 게이트</th><th>이 언폴더 게이트</th></tr></thead>
+        <tbody>
+          <tr><td>보내는 것</td><td>0/1이지만 <b>초당 수만 번</b> — 켜져 있는 시간의 비율(듀티)이 정보</td><td>0/1, <b>초당 60번</b> — 바뀌는 시점이 정보</td></tr>
+          <tr><td>하는 일</td><td>파형의 <b>모양</b>을 만듦</td><td>파형의 <b>방향</b>만 바꿈</td></tr>
+          <tr><td>필요한 것</td><td>전용 PWM 주변장치</td><td>일반 GPIO 토글로 충분</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:18px">모양을 만드는 쪽은 &lsquo;얼마나&rsquo;라는 연속량이 필요해서 듀티를 씁니다. 언폴더는 모양을 만들지 않으니 <b>&lsquo;지금 뒤집어&rsquo; 한 마디면 됩니다.</b> 그래서 0과 1로 충분합니다.</p>
+
+    <div class="pull">
+      <p><strong>대신 데드타임이 반드시 필요합니다.</strong> 위쪽 SCR은 <b>끌 수가 없습니다</b> — 전류가 0이 되어 스스로 꺼질 때까지 기다려야 합니다. 그 전에 반대쪽을 켜면 <b>+HV가 HGND로 직결되는 브리지 단락</b>입니다. 그래서 반주기가 바뀌는 순간에 네 줄이 모두 <span class="mono">1</span>이 되는 빈 구간을 두어야 합니다. 그 길이는 펌웨어가 정하는 값이라 <b>회로도만으로는 알 수 없습니다.</b></p>
+    </div>
+  </section>
+
+  <!-- ============ Q6 ============ -->
+  <section>
+    <span class="qnum">질문 6</span>
     <h2>고장 나면 어떻게 멈추는가 — 비상 정지 줄</h2>
     <p>이 회로에서 제일 중요한 부분입니다. 그리고 <b>MCU와 아무 상관없이 동작합니다.</b></p>
     <p>기차 객실 천장에 달린 비상 정지 줄을 떠올리면 정확합니다. <b>줄은 하나</b>인데, <b>여섯 명이 각자 줄을 잡고</b> 있습니다. 누구든 당기면 줄이 내려가고, 줄이 내려가면 <b>세 가지가 동시에</b> 일어납니다.</p>
@@ -514,9 +627,9 @@
     </div>
   </section>
 
-  <!-- ============ Q6 ============ -->
+  <!-- ============ Q7 ============ -->
   <section>
-    <span class="qnum">질문 6</span>
+    <span class="qnum">질문 7</span>
     <h2>&ldquo;너무 세다&rdquo;는 어떻게 판단하나</h2>
     <p>전류는 직접 못 잽니다. 그래서 <b>아주 작은 저항</b>(<span class="mono">40 mΩ</span>)에 흘려서 <b>전압으로 바꿉니다.</b> 그 전압이 <span class="mono">0.6 V</span>를 넘으면 트랜지스터가 켜지고, 그게 곧 &lsquo;손이 줄을 당기는&rsquo; 동작입니다.</p>
     <p class="sub">전류가 반대로도 흐를 수 있으니 <b>양쪽 모두</b> 감시해야 합니다. 그래서 손이 레그마다 두 개씩 있습니다.</p>
@@ -567,9 +680,9 @@
     </figure>
   </section>
 
-  <!-- ============ Q7 ============ -->
+  <!-- ============ Q8 ============ -->
   <section>
-    <span class="qnum">질문 7</span>
+    <span class="qnum">질문 8</span>
     <h2>고장 나고 나서 벌어지는 일의 순서</h2>
 
     <figure>
