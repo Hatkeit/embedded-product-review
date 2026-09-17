@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1720" height="1300" viewBox="0 0 1720 1300" font-family="ui-monospace,Menlo,Consolas,monospace">
 <rect width="1720" height="1300" fill="#fff"/>
 <text x="24" y="34" font-size="17" fill="#0f172a" text-anchor="start" font-weight="800">PV 보조전원 8 W 다출력 플라이백   외부 컨트롤러 + 외부 MOSFET, DCM 100 kHz</text>
-<text x="24" y="54" font-size="10.5" fill="#64748b" text-anchor="start" font-weight="400">PS-AUX-8W Rev.A  |  입력 PV 18~50 V  |  출력 VCC_3V3 5 W / VDDA_3V3 1 W / VCC_5V0 1 W / VCC_12V0 1 W  |  calc_aux.py 12/12 PASS, 실측효율 68.6 %</text>
+<text x="24" y="54" font-size="10.5" fill="#64748b" text-anchor="start" font-weight="400">PS-AUX-8W Rev.B  |  입력 PV 18~50 V  |  출력 VCC_3V3 5 W / VDDA_3V3 1 W / VCC_5V0 1 W / VCC_12V0 1 W  |  calc_aux.py 12/12 PASS, 실측효율 68.6 %</text>
 <rect x="24" y="72" width="1672" height="648" rx="10" fill="#fbfcfe" stroke="#cbd5e1"/>
 <text x="40" y="94" font-size="13" fill="#0f172a" text-anchor="start" font-weight="800">A.  플라이백 전력단   (DCM, Np:Ns1:Ns2:Naux = 15 : 3 : 8 : 6)</text>
 <rect x="56" y="220" width="104" height="64" rx="6" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.6"/>
@@ -90,6 +90,7 @@
 <circle cx="840" cy="552" r="3.3" fill="#7c3aed"/>
 <text x="1006" y="352" font-size="11" fill="#7c3aed" text-anchor="start" font-weight="700">S2  16.6 V / 1.2 W</text>
 <text x="1006" y="365" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">교차조정 14.1 ~ 19.1 V</text>
+<text x="1006" y="378" font-size="9" fill="#dc2626" text-anchor="start" font-weight="700">Ns2 만 절연 (HGND 기준)</text>
 <rect x="904" y="384" width="12" height="40" fill="#fff" stroke="#7c3aed" stroke-width="1.5"/>
 <text x="922" y="408.0" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">R_pre 1.7 k / 0.25 W</text>
 <polyline points="910,356 910,384" fill="none" stroke="#7c3aed" stroke-width="2.2"/>
@@ -133,12 +134,13 @@
 <polyline points="240,436 240,462 370,462 370,384" fill="none" stroke="#1d4ed8" stroke-width="1.5" stroke-dasharray="4,3"/>
 <circle cx="370" cy="384" r="3.3" fill="#b45309"/>
 <text x="170" y="480" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">기동 : Vin -&gt; R_st -&gt; VCC,  정상운전 : Naux 인계</text>
-<rect x="860" y="462" width="210" height="62" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.6"/>
-<text x="965.0" y="485.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">피드백</text>
-<text x="965.0" y="500.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">절연형 : TL431 + 포토커플러</text>
-<text x="965.0" y="512.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">비절연형 : 직접 분압 (옵토 불요)</text>
-<polyline points="860,493 275,493 275,370" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,3"/>
+<rect x="860" y="462" width="230" height="66" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="975.0" y="487.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">피드백  (공통 GND 확정)</text>
+<text x="975.0" y="502.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">직접 분압 Rtop 14 k / Rbot 10 k</text>
+<text x="975.0" y="514.0" font-size="9" fill="#64748b" text-anchor="middle" font-weight="400">TL431 + 옵토 불요 (부품 3~5점 절감)</text>
+<polyline points="860,495 275,495 275,370" fill="none" stroke="#0891b2" stroke-width="1.5" stroke-dasharray="5,3"/>
 <text x="848" y="552" font-size="9" fill="#64748b" text-anchor="end" font-weight="400">S1 을 피드백 -&gt; 5 W 레일이 직접 레귤레이션됨</text>
+<text x="860" y="544" font-size="9" fill="#0891b2" text-anchor="start" font-weight="400">옵토 극점(약 10 kHz) 제거 -&gt; 루프 대역 확보, CTR 경년변화 리스크 소멸</text>
 <rect x="24" y="740" width="1672" height="520" rx="10" fill="#fbfcfe" stroke="#cbd5e1"/>
 <text x="40" y="762" font-size="13" fill="#0f172a" text-anchor="start" font-weight="800">B.  POL 후단 레귤레이터</text>
 <text x="70" y="790" font-size="11.5" fill="#0891b2" text-anchor="start" font-weight="700">S1 6.0 V</text>
@@ -177,31 +179,31 @@
 <text x="616" y="1107" font-size="11" fill="#0f172a" text-anchor="start" font-weight="700">VCC_12V0  1 W</text>
 <text x="70" y="1136" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">* SOT-23 LDO 는 두 레일 모두 불가 (Tj 189 C / 208 C).  SOT-223 + 방열동박 필수.</text>
 <text x="70" y="1148" font-size="9" fill="#64748b" text-anchor="start" font-weight="400">* VDDA 는 아날로그 전용 별도 LDO + 스타그라운드.  3.3 V 에서 페라이트 분기하면 0.52 W 절약되나 노이즈 공유.</text>
-<rect x="880" y="780" width="400" height="200" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.6"/>
-<text x="1080.0" y="884.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700"></text>
-<text x="1080" y="804" font-size="12.5" fill="#dc2626" text-anchor="middle" font-weight="800">1차·2차 공통 GND, 써도 되는가?</text>
-<text x="896" y="824" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">동작은 한다 - 트랜스가 결합인덕터가 될 뿐이다.</text>
-<text x="896" y="836" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">다만 세 가지가 걸린다 :</text>
-<text x="896" y="848" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400"></text>
-<text x="896" y="860" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">1. 공통 GND 레일은 떠 있는 부하를 못 돌린다.</text>
-<text x="896" y="872" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">   언폴더 하이사이드는 반주기(8.33 ms) ON 이라</text>
-<text x="896" y="884" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">   부트스트랩 드룹 = Iq x 8.33ms / Cboot.</text>
-<text x="896" y="896" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">   Iq 0.2 mA / 10 uF -&gt; 0.17 V (성립)</text>
-<text x="896" y="908" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">   Iq 1 mA / 10 uF   -&gt; 0.83 V (한계)</text>
-<text x="896" y="920" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">2. 계통 220 V / DC링크 400 V 측과는 절대 불가</text>
-<text x="896" y="932" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">   (강화절연 위반).  PV측 내부끼리면 무방.</text>
-<text x="896" y="944" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">3. 1차 스위칭 리턴전류가 2차 기준을 흔든다.</text>
-<text x="896" y="956" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">   -&gt; VDDA 는 별도 LDO + 스타그라운드 필수</text>
-<rect x="880" y="996" width="400" height="150" rx="6" fill="#fff" stroke="#dc2626" stroke-width="1.6"/>
-<text x="1080.0" y="1075.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700"></text>
-<text x="1080" y="1018" font-size="12" fill="#dc2626" text-anchor="middle" font-weight="800">결론</text>
-<text x="896" y="1036" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">VCC_3V3 / VDDA_3V3 / VCC_5V0  -&gt; 공통 GND 무방</text>
-<text x="896" y="1048" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">VCC_12V0                      -&gt; S2 독립권선 유지</text>
-<text x="896" y="1060" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400"></text>
-<text x="896" y="1072" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">S2 를 SGND 에 묶으면 비절연, 띄우면 플로팅.</text>
-<text x="896" y="1084" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">배선만 바꾸면 되도록 설계했다 (트랜스 동일).</text>
-<text x="896" y="1096" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">절연 불필요가 확정이면 플라이백 대신 광입력 벅이</text>
-<text x="896" y="1108" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">더 효율적이다 - 플라이백의 유일한 근거가 이것이다.</text>
+<rect x="880" y="780" width="400" height="196" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="1080.0" y="882.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700"></text>
+<text x="1080" y="804" font-size="12.5" fill="#0891b2" text-anchor="middle" font-weight="800">GND 구성 - 확정</text>
+<text x="896" y="824" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">결론 : 같은 기준의 부하는 공통 GND 사용.</text>
+<text x="896" y="836" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400"></text>
+<text x="896" y="848" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">  VCC_3V3 / VDDA_3V3 / VCC_5V0  -&gt; 공통 GND</text>
+<text x="896" y="860" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">  VCC_12V0 (Ns2)                -&gt; 독립 / 플로팅</text>
+<text x="896" y="872" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400"></text>
+<text x="896" y="884" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">이에 따른 단순화 :</text>
+<text x="896" y="896" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">  1. 피드백을 직접 분압으로  (TL431+옵토 삭제)</text>
+<text x="896" y="908" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">     옵토 극점 제거 -&gt; 루프 대역 확보</text>
+<text x="896" y="920" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">  2. Np/Ns1/Naux 는 일반 에나멜선 가능</text>
+<text x="896" y="932" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">     창 점유율 43 % -&gt; 36 % (Ku 0.25 -&gt; 0.30)</text>
+<text x="896" y="944" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">  3. Np-Ns1 간 연면/내압 시험 대상에서 제외</text>
+<rect x="880" y="992" width="400" height="150" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.6"/>
+<text x="1080.0" y="1071.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700"></text>
+<text x="1080" y="1014" font-size="12" fill="#dc2626" text-anchor="middle" font-weight="800">남은 확인사항 - Ns2 절연 등급</text>
+<text x="896" y="1032" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">HGND 가 무엇이냐로 Ns2 사양이 갈린다.</text>
+<text x="896" y="1044" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400"></text>
+<text x="896" y="1056" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">  PV측 스위치노드  -&gt; 기능절연, 수십 V</text>
+<text x="896" y="1068" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">  계통측(언폴더)   -&gt; PV측 대비 +-342 V 스윙</text>
+<text x="896" y="1080" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">                     강화절연 + 연면/공간거리</text>
+<text x="896" y="1092" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">                     + 내압시험 대상</text>
+<text x="896" y="1104" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400"></text>
+<text x="896" y="1116" font-size="9.5" fill="#0f172a" text-anchor="start" font-weight="400">-&gt; Ns2 의 TIW 필수 여부와 시험사양이 여기서 결정</text>
 <rect x="1320" y="780" width="370" height="350" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.6"/>
 <text x="1505.0" y="959.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700"></text>
 <text x="1505" y="804" font-size="12" fill="#0f172a" text-anchor="middle" font-weight="800">손실 배분 (입력 11.67 W)</text>

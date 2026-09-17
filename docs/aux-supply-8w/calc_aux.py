@@ -103,8 +103,9 @@ CORES = [Core("EE13/EF13", 17.1e-6, 1.10e-6, 8.0e-3, 3.0e-3, 26e-3, 75.0),
          Core("EFD25", 58.0e-6, 3.30e-6, 17.6e-3, 4.3e-3, 48e-3, 33.0)]
 BSAT = 0.39
 J_MAX = 5.0e6                                        # 전류밀도 상한 [A/m^2]
-KU_ISO = 0.25                                        # 절연형(TIW) 창 이용률
-KU_NON = 0.35                                        # 비절연 창 이용률
+KU_ISO = 0.25          # 전권선 절연(TIW/마진테이프) 창 이용률
+KU_PART = 0.30         # 부분절연 : Ns2 만 절연, Np/Ns1/Naux 는 공통 GND  <= 채택
+KU_NON = 0.35          # 전 비절연
 
 
 def wind(core, d, bmax=0.28):
@@ -132,6 +133,7 @@ def wind(core, d, bmax=0.28):
         a_aux = (S.i_aux * 2.0) / J_MAX
         cu = np_t * a_p + ns1 * a_s1 + ns2_i * a_s2 + na_i * a_aux
         fill_iso = cu / (core.aw * KU_ISO)
+        fill_part = cu / (core.aw * KU_PART)
         fill_non = cu / (core.aw * KU_NON)
         # --- 손실/온도상승 (동손 + 코어손 개략)
         rho = RHO20 * 1.31                            # 100 C
@@ -144,7 +146,7 @@ def wind(core, d, bmax=0.28):
         return dict(core=core, np=np_t, ns1=ns1, ns2=ns2_i, naux=na_i,
                     v_aux=v_aux_real, b=b, v_s2=v_s2_real,
                     lg=lg, al=d["lp"] / np_t ** 2, cu=cu,
-                    fill_iso=fill_iso, fill_non=fill_non,
+                    fill_iso=fill_iso, fill_part=fill_part, fill_non=fill_non,
                     p_cu=p_cu, p_core=p_core, dt=dt,
                     a_p=a_p, a_s1=a_s1, a_s2=a_s2)
     return None
@@ -216,22 +218,23 @@ def main():
 
     # ---------------- 코어/권선
     print(f"\n-- 자기설계  (n = {n_sel}, Lp = {D['lp']*1e6:.1f} uH, Ipk = {D['ipk']:.2f} A) " + "-" * 22)
-    print("{:>10}{:>5}{:>5}{:>5}{:>6}{:>8}{:>8}{:>11}{:>11}{:>7}".format(
-        "코어", "Np", "Ns1", "Ns2", "Naux", "Bpk[T]", "갭[mm]", "점유율(절연)",
-        "점유율(비절연)", "dT[K]"))
+    print("{:>10}{:>5}{:>5}{:>5}{:>6}{:>8}{:>8}{:>9}{:>11}{:>10}{:>7}".format(
+        "코어", "Np", "Ns1", "Ns2", "Naux", "Bpk[T]", "갭[mm]",
+        "전절연", "부분절연(채택)", "전비절연", "dT[K]"))
     best = None
     for c in CORES:
         w = wind(c, D)
         if not w:
             print(f"{c.name:>10}   해 없음 (Bpk 초과)")
             continue
-        ok = w["b"] <= 0.28 and w["fill_iso"] <= 0.70 and w["dt"] <= 45.0
+        # 채택 기준은 부분절연(Ns2 만 절연).  양산 여유로 60 % 이하.
+        ok = w["b"] <= 0.28 and w["fill_part"] <= 0.60 and w["dt"] <= 45.0
         mark = ""
         if best is None and ok:
             best, mark = w, "  <= 채택"
         print(f"{c.name:>10}{w['np']:5d}{w['ns1']:5d}{w['ns2']:5d}{w['naux']:6d}"
-              f"{w['b']:8.3f}{w['lg']*1e3:8.3f}{w['fill_iso']:10.0%}"
-              f"{w['fill_non']:11.0%}{w['dt']:7.0f}{mark}")
+              f"{w['b']:8.3f}{w['lg']*1e3:8.3f}{w['fill_iso']:9.0%}"
+              f"{w['fill_part']:11.0%}{w['fill_non']:10.0%}{w['dt']:7.0f}{mark}")
     if best is None:
         print("   !! 모든 후보 탈락 - 코어 확대 또는 전류밀도 재검토 필요")
         return 1
@@ -356,6 +359,27 @@ def main():
           f"(드롭아웃 {S.vdo_12:.1f} V 대비 {'확보' if lo-12 >= S.vdo_12 else '부족'})")
     print(f"      LDO 입력 커패시터 정격 : S2 측 >= {v2_nl*1.2:.0f} V (무부하 과전압 고려)")
 
+    # ---------------- 공통 GND 확정에 따른 단순화
+    print("\n-- 공통 GND 확정 (같은 기준의 부하) 에 따른 단순화 " + "-" * 34)
+    print("  적용 범위 : Np / Ns1 / Naux 가 공통 GND.  Ns2 만 독립(플로팅).")
+    print("\n  (1) 피드백 : TL431 + 포토커플러 -> 직접 분압")
+    vref = 2.50
+    r_top, r_bot = 14.0e3, vref / (S.v_s1 - vref) * 14.0e3
+    print(f"      S1 {S.v_s1:.1f} V 를 컨트롤러 VFB({vref:.2f} V)로 직접 분압")
+    print(f"      Rtop {r_top/1e3:.1f} k / Rbot {r_bot/1e3:.2f} k (E96 1 %), "
+          f"분압 전류 {S.v_s1/(r_top+r_bot)*1e6:.0f} uA")
+    print("      절감 : TL431 + 옵토 + 바이어스저항 (부품 3~5점)")
+    print("      개선 : 옵토 극점(약 10 kHz) 제거 -> 루프 대역 확보, CTR 경년변화 리스크 소멸")
+    print("\n  (2) 트랜스포머 : 전권선 절연 -> Ns2 만 절연")
+    print(f"      창 이용률 Ku {KU_ISO:.2f} -> {KU_PART:.2f},  "
+          f"점유율 {best['fill_iso']*100:.0f} % -> {best['fill_part']*100:.0f} %")
+    print("      Np/Ns1/Naux 는 일반 에나멜선 가능 (TIW/마진테이프 불요)")
+    print("\n  (3) 남는 확인사항 : Ns2 의 절연 등급은 HGND 가 무엇이냐로 갈린다")
+    print("      - HGND 가 PV측 스위치노드 (예: 자체 하이사이드) -> 기능절연, 수십 V")
+    print(f"      - HGND 가 계통측 (언폴더 하이사이드)          -> Ns2 는 PV측 대비")
+    print(f"        +-{342:.0f} V 로 스윙.  **강화절연 + 연면/공간거리 + 내압시험 대상**")
+    print("      -> 이 한 가지가 Ns2 권선 방식(TIW 필수 여부)과 시험사양을 결정한다.")
+
     # ---------------- 판정
     print("\n-- 설계 검증 판정 " + "-" * 67)
     b = best["b"]
@@ -367,8 +391,8 @@ def main():
     chk("S1 다이오드 <= 40 V x 0.8", D["vd1"] <= 32.0, f"{D['vd1']:.1f} V", "<= 32 V")
     chk("S2 다이오드 <= 60 V x 0.8", D["vd2"] <= 48.0, f"{D['vd2']:.1f} V", "<= 48 V")
     chk("Bpk (정상)", b <= 0.28, f"{b:.3f} T", "<= 0.28 T")
-    chk("권선 창 점유율 (절연형)", best["fill_iso"] <= 0.70,
-        f"{best['fill_iso']*100:.0f} %", "<= 70 % (양산 여유)")
+    chk("권선 창 점유율 (부분절연)", best["fill_part"] <= 0.60,
+        f"{best['fill_part']*100:.0f} %", "<= 60 % (양산 여유)")
     chk("트랜스 온도상승", best["dt"] <= 45.0, f"{best['dt']:.0f} K", "<= 45 K")
     chk("Bpk (OCP 130 %)", b_ocp <= 0.33, f"{b_ocp:.3f} T", f"<= 0.33 T (Bsat {BSAT})")
     chk("12 V LDO 입력 여유", lo >= 12.0 + S.vdo_12, f"{lo:.2f} V",
