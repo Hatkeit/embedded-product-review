@@ -152,7 +152,7 @@ dot(X_CL, RAIL, R)
 wire([(X_CL, RAIL), (X_CL, RAIL - 62)], R, 1.8)
 res_h(X_CL - 60, RAIL - 62, 44, "R_cl 4.3 k / 2 W", R)
 cap_h(X_CL + 30, RAIL - 62, None, R)
-txt(X_CL + 44, RAIL - 46, "C_cl 22 nF/100 V", 9, K, "start")
+txt(X_CL + 44, RAIL - 46, "C_cl 47 nF/100 V X7R", 9, K, "start")
 wire([(X_CL - 16, RAIL - 62), (X_CL, RAIL - 62)], R, 1.8)
 wire([(X_CL, RAIL - 62), (X_CL + 30, RAIL - 62)], R, 1.8)
 wire([(X_CL - 60, RAIL - 62), (X_CL - 90, RAIL - 62), (X_CL - 90, RAIL)], R, 1.8)
@@ -161,7 +161,7 @@ wire([(X_CL + 39, RAIL - 62), (X_CL + 70, RAIL - 62), (X_CL + 70, RAIL - 100)], 
 diode_h(X_CL + 70, RAIL - 100, R, True)
 wire([(X_CL + 90, RAIL - 100), (X_T, RAIL - 100), (X_T, RAIL + 4)], R, 1.8)
 txt(X_CL + 118, RAIL - 108, "D_cl 200 V 초고속", 9, R, "start")
-txt(X_CL - 150, RAIL - 134, "RCD 클램프 : tau = R_cl·C_cl = 95 us (9.5 T), 손실 0.62 W (Llk 2 %)", 9.5, R, "start", "700")
+txt(X_CL - 150, RAIL - 134, "RCD 클램프 : Vcl 51.6 V, t_reset 100 ns, R·C_eff 121 us (12 T, 리플 8 %), 손실 0.62 W, 무부하 0.24 W  (calc_rcd.py 9/9)", 9.5, R, "start", "700")
 
 # ---- 트랜스포머 T1
 dot(X_T, RAIL, B)
@@ -410,7 +410,8 @@ lines(IX + 16, IY + 44, [
     "정격 t_on @18 V / @50 V      5.35 / 1.93 us",
     "t_off (2차 도통, Lp·Ipk/VOR)      2.99 us   0.83 T DCM",
     "CS 필터 R_F·C_F                    47 ns   CL 무효 < 94 ns",
-    "RCD 클램프 R_cl·C_cl               95 us   9.5 T",
+    "RCD 누설 리셋 t_reset             100 ns   Llk·Ipk/(Vcl-VOR)",
+    "RCD 클램프 R_cl·C_eff             121 us   12 T, 리플 8 %",
     "BIAS 필터 R_BIAS·C_BIAS            10 us",
     "UVLO 필터 (R_T||R_B)·C_UVLO       273 us   채터링 방지",
     "내부 기동 지연 (UVLO > 1.5 V)       65 us   DS 9.3.1",

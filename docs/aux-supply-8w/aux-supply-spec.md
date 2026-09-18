@@ -125,6 +125,31 @@ S2 16.6 V ── LDO      → VCC_12V0 12 V / 83 mA
 | D2 | VR 41.7 V | 60 V | 70 % |
 | Co1 | **리플 2.82 Arms** | 22 µF × 3 + 100 µF 폴리머 (Rev.D) | — |
 
+### 3.4 RCD 클램프 시정수 (`calc_rcd.py` 9/9 PASS)
+
+| 항목 | 값 | 근거 |
+|---|---|---|
+| 누설 Llk (2 % of Lp) | 0.81 µH | E_lk = 0.5·Llk·Ipk² = 2.29 µJ/cycle, P0 = 0.23 W |
+| 클램프 전압 Vcl | **51.6 V** (1.6 × VOR) | 승수 Vcl/(Vcl−VOR) = 2.67 → **P_cl 0.62 W** (누설 0.23 + 리셋 중 새는 자화 0.38) |
+| **t_reset** (D_cl 도통) | **100 ns** = Llk·Ipk/(Vcl−VOR) | 1 % of T → D_cl trr ≤ 33 ns 초고속 |
+| **R_cl·C_eff** | **121 µs = 12 T** | 4.3 k × 28 nF (47 nF X7R @55 V 바이어스 60 %). 리플 ΔV = Q/C = 119 nC/28 nF = **4.2 V (8 %)** |
+| Llk–C_cl 공진 | 1.05 MHz, ¼주기 237 ns | t_reset 100 ns < 237 ns → 리셋 중 C_cl은 정전압원 |
+| 리셋 후 링잉 | ~14 MHz (C_par 150 pF 가정), Z0 73 Ω | RCD가 감쇠 못 함 → v_ring 10 V로 Vds에 가산. RC 스너버는 0.23 W라 DNP |
+| 부하과도 정착 | 5τ = 0.6 ms | SS 10 ms·루프 fc 4.5 kHz와 상호작용 없음 |
+| 기동 C_cl 충전 | ~3 사이클 (30 µs) | 그 동안 자화 에너지 전부 클램프행 — 무시 가능 |
+
+**R_cl 고정이면 Vcl은 Vcl(Vcl−VOR) = P0·R로 자기조정됩니다.** 누설 실측 후 R_cl을 다시 잡아야 합니다.
+
+| 누설 | Vcl | P_cl | Vds 피크 | 조치 |
+|---|---|---|---|---|
+| 1 % | 43.6 V | 0.44 W | 106 V | R_cl → 8.7 k로 올려야 Vcl 52 V 유지 (아니면 자화 에너지를 먹음) |
+| **2 %** | **51.4 V** | **0.62 W** | **113.5 V** | 설계점 |
+| 3 % | 57.8 V | 0.78 W | 119.9 V | Vds 상한 120 V 경계 — 이 이상이면 R_cl을 낮춘다 |
+
+**무부하 고정손실 VOR²/R_cl = 0.24 W** — 부하가 없어도 클램프가 VOR에 붙어 자화 에너지를 먹습니다. 경부하 효율이 중요하면 R_cl을 키우고 Vcl을 올리거나(Vds 여유 8 V 안에서) TVS 클램프로 바꿉니다.
+
+소자 정격: C_cl 최대 53.7 V·RMS 137 mA → 100 V (54 %); R_cl 최악 0.78 W → 2 W (2512 ×1 또는 1 W ×2); D_cl 역전압 120 V → 200 V (60 %), 피크 2.38 A / 평균 12 mA → 1 A 초고속 (ES1D/US1D 급).
+
 ---
 
 ## 4. 출력측 LDO 검토
@@ -179,7 +204,7 @@ S2는 피드백 대상이 아니므로 **무부하에서 Co2가 누설 링잉 �
 | **Rcs** | **33 mΩ 1 % / 0.25 W** — I_CL(min) 93 mV/33 mΩ = 2.82 A ≥ Ipk×1.15. (Rev.C 42 mΩ은 I_CL(min) 2.21 A < Ipk → 정정.) 켈빈 연결, 손실 0.03 W. CS 필터 100 Ω/470 pF |
 | **R_st** 기동저항 | **불요** — BIAS ← Vin (R_BIAS 10 Ω / C_BIAS 1 µF). 기동은 내부 6.85 V 레귤레이터, Naux 4 T (7.9 V)가 인계 |
 | **D_cl** 클램프 | 200 V 초고속, trr ≤ 50 ns, 1 A |
-| **R_cl / C_cl** | 4.3 kΩ / 2 W,  22 nF / 100 V (X7R 또는 필름) |
+| **R_cl / C_cl** | 4.3 kΩ / 2 W,  **47 nF / 100 V X7R 1210** (DC 바이어스 후 실효 28 nF, 또는 22 nF 필름·C0G). 시정수·정격은 3.4절 |
 | **T1** | 3.2절 |
 | **D1** | **40 V / 5 A 쇼트키** (SMB/SMC), Vf ≤ 0.45 V @3 A, **반복 피크 11.5 A 확인 필수** |
 | **D2** | 60 V / 1 A 쇼트키 (SMA) |
@@ -247,6 +272,7 @@ S2는 피드백 대상이 아니므로 **무부하에서 Co2가 누설 링잉 �
 ```bash
 python3 docs/aux-supply-8w/calc_aux.py            # 전력단 설계 계산 (16/16 PASS)
 python3 docs/aux-supply-8w/calc_lm5156.py         # LM5156H 주변회로·루프·기동 시뮬 (19/19 PASS)
+python3 docs/aux-supply-8w/calc_rcd.py            # RCD 클램프 시정수·소자 (9/9 PASS)
 python3 docs/aux-supply-8w/make_schematic_aux.py  # 회로도 재생성
 ```
 

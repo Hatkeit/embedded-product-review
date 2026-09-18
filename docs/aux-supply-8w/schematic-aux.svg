@@ -29,7 +29,7 @@
 <text x="462.0" y="179" font-size="9" fill="#0f172a" text-anchor="middle" font-weight="400">R_cl 4.3 k / 2 W</text>
 <line x1="530" y1="178" x2="530" y2="202" stroke="#dc2626" stroke-width="2.4"/>
 <line x1="539" y1="178" x2="539" y2="202" stroke="#dc2626" stroke-width="2.4"/>
-<text x="544" y="206" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">C_cl 22 nF/100 V</text>
+<text x="544" y="206" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">C_cl 47 nF/100 V X7R</text>
 <polyline points="484,190 500,190" fill="none" stroke="#dc2626" stroke-width="1.8"/>
 <polyline points="500,190 530,190" fill="none" stroke="#dc2626" stroke-width="1.8"/>
 <polyline points="440,190 410,190 410,252" fill="none" stroke="#dc2626" stroke-width="1.8"/>
@@ -39,7 +39,7 @@
 <line x1="570" y1="142" x2="570" y2="162" stroke="#dc2626" stroke-width="2.4"/>
 <polyline points="590,152 690,152 690,256" fill="none" stroke="#dc2626" stroke-width="1.8"/>
 <text x="618" y="144" font-size="9" fill="#dc2626" text-anchor="start" font-weight="400">D_cl 200 V 초고속</text>
-<text x="350" y="118" font-size="9.5" fill="#dc2626" text-anchor="start" font-weight="700">RCD 클램프 : tau = R_cl·C_cl = 95 us (9.5 T), 손실 0.62 W (Llk 2 %)</text>
+<text x="350" y="118" font-size="9.5" fill="#dc2626" text-anchor="start" font-weight="700">RCD 클램프 : Vcl 51.6 V, t_reset 100 ns, R·C_eff 121 us (12 T, 리플 8 %), 손실 0.62 W, 무부하 0.24 W  (calc_rcd.py 9/9)</text>
 <circle cx="690" cy="252" r="3.3" fill="#1d4ed8"/>
 <path d="M 690,258 a 8,8 0 0 0 0,16 a 8,8 0 0 0 0,16 a 8,8 0 0 0 0,16 a 8,8 0 0 0 0,16" fill="none" stroke="#1d4ed8" stroke-width="1.9"/>
 <circle cx="678" cy="265" r="3" fill="#0f172a"/>
@@ -335,24 +335,25 @@
 <text x="1346" y="175" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">정격 t_on @18 V / @50 V      5.35 / 1.93 us</text>
 <text x="1346" y="190" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">t_off (2차 도통, Lp·Ipk/VOR)      2.99 us   0.83 T DCM</text>
 <text x="1346" y="205" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">CS 필터 R_F·C_F                    47 ns   CL 무효 &lt; 94 ns</text>
-<text x="1346" y="220" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">RCD 클램프 R_cl·C_cl               95 us   9.5 T</text>
-<text x="1346" y="235" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">BIAS 필터 R_BIAS·C_BIAS            10 us</text>
-<text x="1346" y="250" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">UVLO 필터 (R_T||R_B)·C_UVLO       273 us   채터링 방지</text>
-<text x="1346" y="265" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">내부 기동 지연 (UVLO &gt; 1.5 V)       65 us   DS 9.3.1</text>
-<text x="1346" y="280" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">VCC UV 후 SS 시작 지연             50 us   DS 9.3.3</text>
-<text x="1346" y="295" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">소프트스타트 t_SS                  10 ms   C_SS 100 nF</text>
-<text x="1346" y="310" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">PGOOD 디글리치                     25 us   내부</text>
-<text x="1346" y="325" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">셧다운 지연 (UVLO &lt; 0.52 V)        35 us   내부</text>
-<text x="1346" y="340" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">보상 영점 R_COMP·C_COMP           598 us   266 Hz</text>
-<text x="1346" y="355" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">보상 극점 R_COMP·C_HF             3.2 us   49 kHz</text>
-<text x="1346" y="370" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">플랜트 극점 C_out·(G_conv+G_load)  304 us   523 Hz</text>
-<text x="1346" y="385" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400"></text>
-<text x="1346" y="400" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">기동 순서 : Vin &gt; 16.2 V -&gt; BIAS -&gt; 내부 VCC 6.85 V</text>
-<text x="1346" y="415" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">  -&gt; 65 us -&gt; SS 램프 10 ms -&gt; S1 5.4 V PGOOD</text>
-<text x="1346" y="430" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">  -&gt; POL 기동 -&gt; Naux 7.9 V 가 VCC 인계</text>
-<text x="1346" y="445" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400"></text>
-<text x="1346" y="460" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">시뮬 : 기동 9.9 ms, 오버슈트 +0.3 %, SS 후 CL 0 회,</text>
-<text x="1346" y="475" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">  부하 50-&gt;100 % 언더슈트 3.6 %, 정착 470 us</text>
+<text x="1346" y="220" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">RCD 누설 리셋 t_reset             100 ns   Llk·Ipk/(Vcl-VOR)</text>
+<text x="1346" y="235" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">RCD 클램프 R_cl·C_eff             121 us   12 T, 리플 8 %</text>
+<text x="1346" y="250" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">BIAS 필터 R_BIAS·C_BIAS            10 us</text>
+<text x="1346" y="265" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">UVLO 필터 (R_T||R_B)·C_UVLO       273 us   채터링 방지</text>
+<text x="1346" y="280" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">내부 기동 지연 (UVLO &gt; 1.5 V)       65 us   DS 9.3.1</text>
+<text x="1346" y="295" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">VCC UV 후 SS 시작 지연             50 us   DS 9.3.3</text>
+<text x="1346" y="310" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">소프트스타트 t_SS                  10 ms   C_SS 100 nF</text>
+<text x="1346" y="325" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">PGOOD 디글리치                     25 us   내부</text>
+<text x="1346" y="340" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">셧다운 지연 (UVLO &lt; 0.52 V)        35 us   내부</text>
+<text x="1346" y="355" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">보상 영점 R_COMP·C_COMP           598 us   266 Hz</text>
+<text x="1346" y="370" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">보상 극점 R_COMP·C_HF             3.2 us   49 kHz</text>
+<text x="1346" y="385" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">플랜트 극점 C_out·(G_conv+G_load)  304 us   523 Hz</text>
+<text x="1346" y="400" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400"></text>
+<text x="1346" y="415" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">기동 순서 : Vin &gt; 16.2 V -&gt; BIAS -&gt; 내부 VCC 6.85 V</text>
+<text x="1346" y="430" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">  -&gt; 65 us -&gt; SS 램프 10 ms -&gt; S1 5.4 V PGOOD</text>
+<text x="1346" y="445" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">  -&gt; POL 기동 -&gt; Naux 7.9 V 가 VCC 인계</text>
+<text x="1346" y="460" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400"></text>
+<text x="1346" y="475" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">시뮬 : 기동 9.9 ms, 오버슈트 +0.3 %, SS 후 CL 0 회,</text>
+<text x="1346" y="490" font-size="9" fill="#0f172a" text-anchor="start" font-weight="400">  부하 50-&gt;100 % 언더슈트 3.6 %, 정착 470 us</text>
 <rect x="1330" y="532" width="396" height="330" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.6"/>
 <text x="1528.0" y="701.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700"></text>
 <text x="1528" y="554" font-size="12" fill="#dc2626" text-anchor="middle" font-weight="800">데이터시트로 확정된 항목 (SNVSBV2)</text>

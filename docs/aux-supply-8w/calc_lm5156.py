@@ -405,14 +405,14 @@ def main():
 
     # ------------------------------------------------ 8. 시정수 요약
     print("\n-- 8. 시정수 · 타이밍 요약 " + "-" * 66)
-    r_cl, c_cl = 4.3e3, 22e-9
+    r_cl, c_cl = 4.3e3, 47e-9 * 0.6                     # C_eff : X7R DC 바이어스 60 % (calc_rcd.py)
     rows = [
         ("스위칭 주기 T = 1/fsw", 1 / f_rt, "RT 220 k"),
         ("정격 t_on @18 V", D["d_min"] / fsw, f"D {D['d_min']:.3f}"),
         ("정격 t_on @50 V", D["d_max"] / fsw, f"D {D['d_max']:.3f}"),
         ("t_off (2차 도통) ", lp * ipk / vor, "Lp·Ipk/VOR"),
         ("CS 필터 R_F·C_F", tau_cs, "리딩엣지 스파이크"),
-        ("RCD 클램프 R_cl·C_cl", r_cl * c_cl, f"{r_cl*c_cl*fsw:.1f} T"),
+        ("RCD 클램프 R_cl·C_eff", r_cl * c_cl, f"{r_cl*c_cl*fsw:.1f} T (calc_rcd.py)"),
         ("BIAS 필터 R_BIAS·C_BIAS", r_bias * c_bias, ""),
         ("UVLO 필터 (R_T||R_B)·C_UVLO", tau_uvlo, ""),
         ("내부 기동 지연", DS.t_start, "DS 9.3.1"),

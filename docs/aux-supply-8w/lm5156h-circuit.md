@@ -133,7 +133,8 @@ Vin ↑ 16.2 V ─ BIAS ─ 내부 VCC 6.85 V ─ VCC UV(2.85 V) + 50 µs ─ UV
 | 정격 t_on @18 V / @50 V | 5.35 / 1.93 µs | D 0.535 / 0.193 |
 | t_off (2차 도통) | 2.99 µs | Lp·Ipk/VOR, 합 0.83 T (DCM) |
 | CS 필터 R_F·C_F | 47 ns | CL 무효 t_on < 94 ns |
-| RCD 클램프 R_cl·C_cl | 95 µs | 9.5 T |
+| RCD 누설 리셋 t_reset | 100 ns | Llk·Ipk/(Vcl−VOR), D_cl 도통 시간 |
+| RCD 클램프 R_cl·C_eff | 121 µs | 12 T, 리플 8 % (`calc_rcd.py`) |
 | BIAS 필터 | 10 µs | |
 | UVLO 필터 (R_T∥R_B)·C_UVLO | 273 µs | 채터링 방지 |
 | 내부 기동 지연 | 65 µs | DS 9.3.1 |
@@ -209,6 +210,7 @@ SS 램프 → gm 오차증폭기 → Type-2 → COMP 클램프(1.15–2.5 V) →
 ```bash
 python3 docs/aux-supply-8w/calc_aux.py            # 전력단 (16/16 PASS)
 python3 docs/aux-supply-8w/calc_lm5156.py         # 컨트롤러 주변회로 + 루프 + 기동 시뮬 (19/19 PASS)
+python3 docs/aux-supply-8w/calc_rcd.py            # RCD 클램프 시정수·소자 (9/9 PASS)
 python3 docs/aux-supply-8w/make_schematic_aux.py  # 회로도 재생성
 ```
 
