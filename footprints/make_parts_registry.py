@@ -72,6 +72,11 @@ fp_rows = [
      "벤더랜드 0.65 오프셋 (규칙4 칩 조항)", "있음",
      "규칙2로 토 0.505 연장(벤더 0.65→1.03). 이탈 없음. 데이터시트 전면 'Reference Only' 워터마크",
      None, "미검증", "buildindc1608.il", "Murata JENF243A_0003AM-01 p.5 외형 / p.10 12.1 Land dimensions"],
+    ["SOT95P280X145-5M", "SMD", "DBV0005A (SOT-23-5)", 5, 0.95,
+     "1.25 x 0.60", None, "1.75 x 3.05 x 1.45max", "x ±2.10 / y ±1.675",
+     "벤더 스텐실 1.1 오프셋", "있음",
+     "규칙2로 토 0.15 연장(벤더 1.1→1.25). 이탈 없음. 마스크는 규칙6에 따라 데이터시트값(NSMD, 동판+0.07/변) 우선 → 웹 0.21",
+     None, "미검증", "buildsot95p280.il", "TI SLVSE13J p.3 Pin Functions / p.59 Package Outline / p.60 Board Layout / p.61 Stencil"],
 ]
 for r, row in enumerate(fp_rows, start=2):
     for c, v in enumerate(row, start=1):
@@ -86,18 +91,19 @@ fp["G5"] = "—"; fp["G5"].font = IN_FONT
 fp["G6"] = "—"; fp["G6"].font = IN_FONT
 fp["G7"] = "—"; fp["G7"].font = IN_FONT
 fp["G8"] = "—"; fp["G8"].font = IN_FONT
+fp["G9"] = "—"; fp["G9"].font = IN_FONT
 fp["E8"] = "—"; fp["E8"].font = IN_FONT
 fp["E4"] = "—"; fp["E4"].font = IN_FONT
-for rr in (2,3,4,5,6,7,8):
+for rr in (2,3,4,5,6,7,8,9):
     fp.cell(row=rr, column=13, value="미실행").font = IN_FONT
-for rr in (2,3,4,5,6,7,8):
+for rr in (2,3,4,5,6,7,8,9):
     fp.cell(row=rr, column=13).fill = WARN
     fp.cell(row=rr, column=14).fill = WARN
 
-fp["A10"] = "※ DRC / 검증상태는 axlDRCUpdate(t) 와 extracta 대조를 실제로 돌린 뒤에만 갱신할 것."
-fp["A10"].font = Font(name=F, size=9, italic=True, color="C00000")
-fp["A11"] = "※ 일곱 풋프린트 모두 이 세션에서는 빌드하지 못했습니다 (Allegro/extracta 부재). 스크립트만 작성된 상태입니다."
+fp["A11"] = "※ DRC / 검증상태는 axlDRCUpdate(t) 와 extracta 대조를 실제로 돌린 뒤에만 갱신할 것."
 fp["A11"].font = Font(name=F, size=9, italic=True, color="C00000")
+fp["A12"] = "※ 여덟 풋프린트 모두 이 세션에서는 빌드하지 못했습니다 (Allegro/extracta 부재). 스크립트만 작성된 상태입니다."
+fp["A12"].font = Font(name=F, size=9, italic=True, color="C00000")
 fp.freeze_panes = "A2"
 
 fp["L2"].comment = Comment(
@@ -176,6 +182,11 @@ v_rows = [
      "1608 메트릭 (0603)", "INDC1608X95M", None, "있음",
      "Murata JENF243A_0003AM-01 (Reference Only)", "buildindc1608.il", "미검증",
      "무극성. 정격전류가 커서 연결 패턴 폭 d 요구: 35µm 동박에서 6.4mm (18µm·70µm은 규정 없음) — 레이아웃에서 확보할 것"],
+    ["TLV7041DBVR", "Texas Instruments", "나노파워 비교기 (싱글)",
+     "1.6~6.5V / Iq 315nA / 오픈드레인 출력(704x) / 전파지연 3µs / 레일투레일 입력 / -40~+125°C",
+     "SOT-23-5 (DBV0005A)", "SOT95P280X145-5M", None, "있음",
+     "TI SLVSE13J (2024-11 rev)", "buildsot95p280.il", "미검증",
+     "1 OUT/2 V-/3 IN+/4 IN-/5 V+ (표준 'North West' 핀아웃). 같은 SOT-23-5 에 7041S·7041L 핀아웃 변형이 있으나 랜드는 동일 — 풋프린트는 1개, 구분은 심볼에서"],
 ]
 for r, row in enumerate(v_rows, start=HR+1):
     v.cell(row=r, column=1, value=f"=ROW()-{HR}").font = FX_FONT

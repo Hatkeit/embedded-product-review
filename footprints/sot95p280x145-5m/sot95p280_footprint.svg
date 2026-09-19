@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="890" height="750" viewBox="0 0 890 750">
+<rect width="890" height="750" fill="#fff"/>
+<rect x="77.8" y="82.1" width="735.0" height="586.2" fill="none" stroke="#c8b8e8" stroke-width="1.5" stroke-dasharray="7 4"/>
+<rect x="83.0" y="144.2" width="243.2" height="129.5" fill="none" stroke="#2a6fd6" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="95.3" y="156.5" width="218.8" height="105.0" fill="#d98f3f"/>
+<rect x="121.5" y="156.5" width="192.5" height="105.0" fill="#5a5f6a" opacity="0.92"/>
+<text x="89.3" y="213.0" font-family="Helvetica" font-size="13" text-anchor="end" fill="#2a6fd6">1 OUT</text>
+<rect x="83.0" y="310.5" width="243.2" height="129.5" fill="none" stroke="#2a6fd6" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="95.3" y="322.8" width="218.8" height="105.0" fill="#d98f3f"/>
+<rect x="121.5" y="322.8" width="192.5" height="105.0" fill="#5a5f6a" opacity="0.92"/>
+<text x="89.3" y="379.2" font-family="Helvetica" font-size="13" text-anchor="end" fill="#2a6fd6">2 V-</text>
+<rect x="83.0" y="476.7" width="243.2" height="129.5" fill="none" stroke="#2a6fd6" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="95.3" y="489.0" width="218.8" height="105.0" fill="#d98f3f"/>
+<rect x="121.5" y="489.0" width="192.5" height="105.0" fill="#5a5f6a" opacity="0.92"/>
+<text x="89.3" y="545.5" font-family="Helvetica" font-size="13" text-anchor="end" fill="#2a6fd6">3 IN+</text>
+<rect x="564.2" y="476.7" width="243.2" height="129.5" fill="none" stroke="#2a6fd6" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="576.5" y="489.0" width="218.8" height="105.0" fill="#d98f3f"/>
+<rect x="576.5" y="489.0" width="192.5" height="105.0" fill="#5a5f6a" opacity="0.92"/>
+<text x="801.2" y="545.5" font-family="Helvetica" font-size="13" text-anchor="start" fill="#2a6fd6">4 IN-</text>
+<rect x="564.2" y="144.2" width="243.2" height="129.5" fill="none" stroke="#2a6fd6" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="576.5" y="156.5" width="218.8" height="105.0" fill="#d98f3f"/>
+<rect x="576.5" y="156.5" width="192.5" height="105.0" fill="#5a5f6a" opacity="0.92"/>
+<text x="801.2" y="213.0" font-family="Helvetica" font-size="13" text-anchor="start" fill="#2a6fd6">5 V+</text>
+<line x1="292.1" y1="108.4" x2="598.4" y2="108.4" stroke="#111" stroke-width="17.5"/>
+<line x1="292.1" y1="642.1" x2="598.4" y2="642.1" stroke="#111" stroke-width="17.5"/>
+<circle cx="366.5" cy="174.0" r="21.0" fill="none" stroke="#111" stroke-width="17.5"/>
+<rect x="292.1" y="108.4" width="306.2" height="533.8" fill="none" stroke="#999" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="147.8" y="99.2" font-family="Helvetica" font-size="13" fill="#111">REFDES</text>
+<text x="445.2" y="690.2" font-family="Helvetica" font-size="11" text-anchor="middle" fill="#888">orange = copper 1.25 · grey = paste (TI stencil 1.1) · blue dash = mask NSMD +0.07/side</text>
+</svg>

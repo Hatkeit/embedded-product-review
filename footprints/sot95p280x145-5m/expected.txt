@@ -1,0 +1,20 @@
+SOT95P280X145-5M  expected values  (mm, TOP view per datasheet p.3, origin = package centre)
+  vendor land   : 1.1 x 0.6  row centre-to-centre 2.6 -> inner 0.75  outer 1.85
+  applied land  : 1.25 x 0.6  centre +/-1.375  inner 0.75  outer 2.0
+  mask (NSMD)   : 1.39 x 0.74   (datasheet: copper + 0.07/side min)
+  paste         : 1.1 x 0.6  offset +0.075  lands at +/-1.3  (= p.61 stencil)
+  lead tip (max): 1.5  toe exposed = 0.50  (rule >=0.50 OK)
+  copper gap    : 0.35  (rule >=0.20 OK)
+  mask web      : 0.21  (>=0.20 OK)
+  body          : E1 1.75 (x) x D 3.05 (y) max, height 1.45 max
+  silk          : y=+/-1.525 lines, x -0.875..0.875; clearance to pad 0.225
+  pin-1 dot     : (-0.45, 1.15) r0.12; clearance to pad 0.13
+  place bound   : x +/-2.10  y +/-1.675  filled
+  refdes        : (-1.70, 1.60)
+
+pin       name        x        y  rot   pasteX
+  1        OUT   -1.375    0.950    0    -1.30
+  2   V- (VEE)   -1.375    0.000    0    -1.30
+  3        IN+   -1.375   -0.950    0    -1.30
+  4        IN-    1.375   -0.950  180     1.30
+  5   V+ (VCC)    1.375    0.950  180     1.30
