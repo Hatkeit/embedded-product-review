@@ -186,7 +186,7 @@ GPIO41~44는 뒤의 언폴더 구동 분석(docs/ac-unfolder-drive-protection.ht
 | GPIO10 / GPIO11 | 상태 LED D501(RED) / D503(GREEN) (02) | 없음 → LED_ST1 / LED_ST2 제안 | PD3 (113/85) / PD4 (114/86) | GPIO | 제안 |
 | GPIO28 / GPIO29 (SCI-A) | HM2401 RF 모듈 UART (02) | ESP32-S3 UART0 | PD6 (116/88) RX / PD5 (115/87) TX | USART2 | 대체 |
 | GPIO8, 16, 17, 18, 19, 25 | RF 모듈 SPI·제어·리셋 (02) | 무선은 ESP32가 담당, TPM은 ESP32 SPI | — | — | 삭제 |
-| GPIO32 / GPIO33 (I²C) | 24AA64 EEPROM (02) | 없음. 필요 시 I2C1 | PA15 (99/77) SCL / PB7 (122/93) SDA | I2C1 | 선택 |
+| GPIO32 / GPIO33 (I²C) | 24AA64 EEPROM (02) | 없음. 필요 시 I2C1 | PA15 (99/78) SCL / PB7 (122/94) SDA | I2C1 | 선택 |
 | GPIO39, 40, 9, 15 | 확장 헤더 P503 (02) | 없음. 예비 | PE0 (125/97) / PE1 (126/98) / PD7 (117/89) / PB4 (119/91) | GPIO | 예비 |
 | TCK / TMS / TDI / TDO / TRST_N | JTAG (02) | SWD | PA14 (98/77) SWCLK / PA13 (96/76) SWDIO / PB3 (118/90) SWO | SWD | 대체 |
 | XRS_N | 리셋 | /RESET_C | NRST (21/14) | NRST | 동일 |
