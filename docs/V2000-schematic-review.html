@@ -1,0 +1,387 @@
+<title>V2000 회로도 검토</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#FCFCFD; --sheet:#FFFFFF; --ink:#0F1729; --muted:#5A6473; --faint:#8A93A3;
+    --rule:#DCE2EB; --rule-strong:#B9C2D0; --sym:#1B3A8F; --wire:#C81E1E; --sig:#0E7490;
+    --ok-bg:#ECFDF5; --ok-line:#34A47C; --ok-ink:#0B5B44;
+    --gap-bg:#F4F1FB; --gap-line:#8B6FC4; --gap-ink:#4A3282;
+    --ref-bg:#FFF7E6; --ref-line:#D9A441; --ref-ink:#7A5200;
+    --bad-bg:#FEF2F2; --bad-line:#DC6A6A; --bad-ink:#8C2020;
+    --shadow:0 1px 2px rgba(15,23,41,.05), 0 8px 24px rgba(15,23,41,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0B0F16; --sheet:#121824; --ink:#E7ECF4; --muted:#9AA5B6; --faint:#7A8496;
+      --rule:#243044; --rule-strong:#35435C; --sym:#7FA6F5; --wire:#FF7A7A; --sig:#38D6E8;
+      --ok-bg:#0A2219; --ok-line:#2E7D5F; --ok-ink:#7EE0B8;
+      --gap-bg:#1C1630; --gap-line:#6B54A0; --gap-ink:#C4AEF0;
+      --ref-bg:#2A2110; --ref-line:#9C7A2E; --ref-ink:#F0CC7A;
+      --bad-bg:#2A1113; --bad-line:#9C4444; --bad-ink:#F2A5A5;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0B0F16; --sheet:#121824; --ink:#E7ECF4; --muted:#9AA5B6; --faint:#7A8496;
+    --rule:#243044; --rule-strong:#35435C; --sym:#7FA6F5; --wire:#FF7A7A; --sig:#38D6E8;
+    --ok-bg:#0A2219; --ok-line:#2E7D5F; --ok-ink:#7EE0B8;
+    --gap-bg:#1C1630; --gap-line:#6B54A0; --gap-ink:#C4AEF0;
+    --ref-bg:#2A2110; --ref-line:#9C7A2E; --ref-ink:#F0CC7A;
+    --bad-bg:#2A1113; --bad-line:#9C4444; --bad-ink:#F2A5A5;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans KR","IBM Plex Sans Condensed",system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;word-break:keep-all}
+  .wrap{max-width:1240px;margin:0 auto;padding-block:28px 64px;padding-left:16px;padding-right:16px}
+  .masthead{border:1.5px solid var(--rule-strong);background:var(--sheet);box-shadow:var(--shadow)}
+  .masthead-body{padding:26px 24px 20px}
+  .eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--sig);font-weight:600;margin:0 0 10px}
+  h1{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:clamp(27px,5vw,42px);line-height:1.12;letter-spacing:-.015em;font-weight:700;margin:0 0 12px;text-wrap:balance}
+  .standfirst{margin:0;max-width:72ch;color:var(--muted);font-size:16px}
+  .titleblock{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1.5px solid var(--rule-strong);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px}
+  .titleblock div{padding:9px 14px;border-right:1px solid var(--rule)}
+  .titleblock div:last-child{border-right:none}
+  .titleblock span{display:block;color:var(--faint);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+  .titleblock b{font-weight:500;color:var(--ink)}
+  .part{margin-top:36px}
+  .part-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+  .part-no{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--sheet);background:var(--sym);padding:3px 9px;border-radius:3px;white-space:nowrap}
+  .part-head h2{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:23px;font-weight:700;margin:0;letter-spacing:-.015em}
+  .part-head .sub{color:var(--muted);font-size:13.5px}
+  .card{border:1.5px solid var(--rule-strong);background:var(--sheet);box-shadow:var(--shadow);margin-bottom:18px}
+  .card.crit{border-left:6px solid var(--bad-line)}
+  .card.high{border-left:6px solid var(--ref-line)}
+  .card.mid{border-left:6px solid var(--gap-line)}
+  .card.good{border-left:6px solid var(--ok-line)}
+  .card-head{padding:13px 20px;border-bottom:1.5px solid var(--rule-strong);font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-weight:700;font-size:16px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .card-head .pn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:500;color:var(--muted)}
+  .card-body{padding:18px 20px}
+  .card-body > :first-child{margin-top:0}
+  .card-body > :last-child{margin-bottom:0}
+  .card-body h3{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:15px;margin:22px 0 10px;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th,td{padding:9px 12px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+  thead th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);font-weight:600;white-space:nowrap;border-bottom:1.5px solid var(--rule-strong)}
+  tbody tr:last-child td{border-bottom:none}
+  td.mono,th.mono,.mono{font-family:"IBM Plex Mono",monospace;font-size:13px;font-variant-numeric:tabular-nums}
+  .badge{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 6px;border-radius:3px;border:1px solid currentColor;white-space:nowrap;font-weight:500}
+  .b-ok{color:var(--ok-ink);background:var(--ok-bg)} .b-gap{color:var(--gap-ink);background:var(--gap-bg)} .b-ref{color:var(--ref-ink);background:var(--ref-bg)} .b-bad{color:var(--bad-ink);background:var(--bad-bg)}
+  .sev{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:3px;white-space:nowrap}
+  .s-c{background:var(--bad-bg);color:var(--bad-ink);border:1px solid var(--bad-line)}
+  .s-h{background:var(--ref-bg);color:var(--ref-ink);border:1px solid var(--ref-line)}
+  .s-m{background:var(--gap-bg);color:var(--gap-ink);border:1px solid var(--gap-line)}
+  .s-g{background:var(--ok-bg);color:var(--ok-ink);border:1px solid var(--ok-line)}
+  .eqbox{font-family:"IBM Plex Mono",monospace;font-size:13px;background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--sig);padding:14px 16px;margin:16px 0;overflow-x:auto;line-height:1.8;white-space:pre-wrap;tab-size:2}
+  .eqbox b{color:var(--sig)}
+  .find{display:grid;grid-template-columns:110px 1fr;gap:6px 14px;font-size:14px;margin:0}
+  .find dt{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding-top:3px}
+  .find dd{margin:0;max-width:86ch}
+  .find dd b{font-weight:700}
+  .badcard{border:1.5px solid var(--bad-line);background:var(--bad-bg);color:var(--bad-ink);padding:18px 22px;margin:18px 0}
+  .badcard h3{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:18px;margin:0 0 8px;font-weight:700}
+  .badcard p{margin:0 0 8px;font-size:14.5px;max-width:82ch}
+  .badcard p:last-child{margin-bottom:0}
+  .gapcard{border:1.5px solid var(--gap-line);background:var(--gap-bg);color:var(--gap-ink);padding:18px 20px;margin-bottom:18px}
+  .gapcard h3{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:16px;margin:0 0 8px;font-weight:700}
+  .gapcard p{margin:0 0 10px;font-size:14px;max-width:82ch} .gapcard p:last-child{margin-bottom:0}
+  .steps{display:grid;gap:2px;background:var(--rule)}
+  .step{background:var(--sheet);padding:16px 18px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+  .step .n{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;color:var(--sheet);background:var(--sym);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;margin-top:1px}
+  .step b{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-weight:700;display:block;font-size:15.5px}
+  .step span{font-size:13.5px;color:var(--muted)}
+  p.lead{font-size:14.5px;color:var(--muted);max-width:84ch}
+  .src{font-size:13px;color:var(--muted)}
+  @media (max-width:620px){.titleblock{grid-template-columns:repeat(2,minmax(0,1fr))}.titleblock div{border-bottom:1px solid var(--rule)}.card-body{padding:14px}.masthead-body{padding:20px 16px 16px}.find{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="masthead-body">
+      <p class="eyebrow">V2000 · sch_microinv_v2000.pdf (10 sheets) vs S2G1812 Reverse-engineered (6 sheets)</p>
+      <h1>V2000 회로도 검토</h1>
+      <p class="standfirst">S2G1812 리버스 도면을 토대로 그린 V2000 재설계도를 <b>소자 사양 · 배선 · 결선</b> 수준에서 원본과 대조했습니다. PDF의 글자가 Type3 벡터 폰트라 텍스트 추출이 불가능해, 10장 전부를 260~300 dpi로 렌더링해 <b>시각 판독</b>했고 확대본 17장으로 의심 지점을 확정했습니다. 원본 S2G1812는 앞서 벡터 넷리스트로 복원해 둔 결과를 기준으로 썼습니다.</p>
+    </div>
+    <div class="titleblock">
+      <div><span>치명 (블로커)</span><b>8건</b></div>
+      <div><span>높음</span><b>8건</b></div>
+      <div><span>중 · 낮음</span><b>9건</b></div>
+      <div><span>Rev</span><b>0.1 · 2026-09-19</b></div>
+    </div>
+  </header>
+
+  <div class="badcard">
+    <h3>결론 — 이 도면은 아직 보드로 만들 수 없습니다</h3>
+    <p><b>MCU에서 전력단으로 가는 지령선이 한 가닥도 결선되어 있지 않습니다.</b> HRTIM 출력 12개, 언폴더 MOSFET 게이트 2개, SCR 점호 2개, 하드웨어 고장 플래그, PV/계통 전압·전류 ADC 대부분이 MCU 시트에서 빈 핀입니다. 언폴더 두 레그는 CAD 기본 오프페이지명 <span class="mono">OFFPAGELEFT-L</span> 하나에 같이 물려 있습니다.</p>
+    <p>그 위에 <b>절연 경계가 세 곳에서 무너져 있습니다</b> — 릴레이 코일(PGND 12 V ↔ GND 스위치), 페이지 1의 비절연 op-amp가 AC 라인에 직결, 누설감지 Y-캡이 PV_B+에 연결. 그리고 원본을 옮기다 생긴 단위 오류(<b>20 MΩ → 20 mΩ</b>)와 보조전원 값 오류(CS 1 mΩ, FB 5.75 V)가 있습니다.</p>
+    <p>반대로 <b>센싱 체인(AMC3301/3302 · INA240 · TLV9062), 게이트 드라이버(2EDN7524R), 보조전원 컨트롤러 교체(LM5156), 릴레이 구동 구현</b>은 원본보다 확실히 나아진 부분입니다. 아래 순서대로 고치면 됩니다.</p>
+  </div>
+
+  <!-- ===== PART 0 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 0</span><h2>한눈에</h2><span class="sub">심각도순 · 시트 번호는 PDF 0부터</span></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>등급</th><th>시트</th><th>지적</th><th>결과</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">C1</td><td><span class="sev s-c">치명</span></td><td class="mono">p5 MCU</td><td>HRTIM·언폴더·SCR·고장플래그·ADC 대부분 <b>MCU 미결선</b></td><td>전력단 동작 불가</td></tr>
+              <tr><td class="mono">C2</td><td><span class="sev s-c">치명</span></td><td class="mono">p2</td><td>언폴더 양 레그가 동일 포트 <span class="mono">OFFPAGELEFT-L</span>, 고장 플래그도 <span class="mono">OFFPAGELEFT-R</span> (CAD 기본명)</td><td>두 MOSFET 동시 ON → 계통 단락</td></tr>
+              <tr><td class="mono">C3</td><td><span class="sev s-c">치명</span></td><td class="mono">p1 ADC</td><td>원본 U400A의 <b>20 MΩ 감쇠 저항이 20 mΩ 션트</b>로 이식, 63 kΩ 피드백이 입력 위치, U11A 개방루프, 비절연 op-amp가 AC_N/AC_L에 직결</td><td>op-amp 파괴 · 장벽 붕괴</td></tr>
+              <tr><td class="mono">C4</td><td><span class="sev s-c">치명</span></td><td class="mono">p7 GRID</td><td>릴레이 코일 <span class="mono">VCC_12V0</span>(PGND 도메인) ↔ BSS316N 소스 GND(MCU 도메인)</td><td>절연 장벽 단락</td></tr>
+              <tr><td class="mono">C5</td><td><span class="sev s-c">치명</span></td><td class="mono">p5 MCU</td><td><span class="mono">STM32G474QET6</span> — <b>T6 = −40~+85 ℃</b>. 옥외 105 ℃ 요구 미달. 128핀도 불필요</td><td>사양 미달 부품</td></tr>
+              <tr><td class="mono">C6</td><td><span class="sev s-c">치명</span></td><td class="mono">p2</td><td>과전압 검출 TVS 체인(SMBJ400CAL→SMBJ5.0CA)이 <b>PHV가 아니라 12 V 고장 버스</b>에 연결</td><td>+HV 과전압 보호 무효</td></tr>
+              <tr><td class="mono">C7</td><td><span class="sev s-c">치명</span></td><td class="mono">p6 AUX</td><td>CS 1 mΩ(전류제한 ~100 A) · FB 47.5k/10k = 5.75 V(3.3 V 아님) · RCD 클램프 다이오드 PMEG3020ER 30 V</td><td>보조전원 보호·전압 오류</td></tr>
+              <tr><td class="mono">C8</td><td><span class="sev s-c">치명</span></td><td class="mono">p4 · p6</td><td><span class="mono">VCC_3V3</span>(ESP32·TPM·USB) 네트에 전원 소스 없음 — 보조전원은 <span class="mono">VDD_3V3</span>만 생성</td><td>통신부 무전원</td></tr>
+              <tr><td class="mono">H1</td><td><span class="sev s-h">높음</span></td><td class="mono">p9 DC-DC</td><td>1차 MOSFET IAUCN10S7L040 <b>100 V</b> (원본 150 V) · 스너버 캡 4.7 nF/100 V</td><td>V_DS 100~150 V 예상 → 파괴 위험</td></tr>
+              <tr><td class="mono">H2</td><td><span class="sev s-h">높음</span></td><td class="mono">p3</td><td>U2B(PV_B 전류) 피드백 없음 + PV_B+(18~50 V) 직결 + U2A와 이득 비대칭(75k/51.1k). INA240과 중복</td><td>블록 삭제 권고</td></tr>
+              <tr><td class="mono">H3</td><td><span class="sev s-h">높음</span></td><td class="mono">p4 CAN</td><td>TLE9251 <b>VIO = 5 V</b>, STM32는 3.3 V 구동 → VIH(0.7·VIO=3.5 V) 미달</td><td>송신 도미넌트 고착</td></tr>
+              <tr><td class="mono">H4</td><td><span class="sev s-h">높음</span></td><td class="mono">p2</td><td>FOD817 LED 직렬저항 누락 (원본 R336 3.3 kΩ)</td><td>40106B 출력·LED 과전류</td></tr>
+              <tr><td class="mono">H5</td><td><span class="sev s-h">높음</span></td><td class="mono">p2 · p7</td><td>누설감지: 네트명 <span class="mono">I_GRID_Lk ≠ I_GIRD_Lk</span>(오타) · 4.7 nF Y-캡·4 MΩ이 PV_B+에 연결 · U4B 입력 플로팅</td><td>미완성 + 장벽 침범</td></tr>
+              <tr><td class="mono">H6</td><td><span class="sev s-h">높음</span></td><td class="mono">전체</td><td>PV_B 전력단 시트 없음 (PV_B+는 보조전원·누설감지에만 등장)</td><td>2채널 구조 미완</td></tr>
+              <tr><td class="mono">H7</td><td><span class="sev s-h">높음</span></td><td class="mono">p9</td><td>2EDN7524R 풋프린트 SOIC127P600X175-8N ≠ 실물 PG-TSSOP-8(노출 패드) · ENA/ENB 0 Ω 스터브 미결선</td><td>실장 불가</td></tr>
+              <tr><td class="mono">H8</td><td><span class="sev s-h">높음</span></td><td class="mono">p7</td><td>SCR 점호용 MOC3063S = <b>제로크로스형</b> (원본 ELM3053 랜덤위상)</td><td>점호 지연 시 반주기 손실</td></tr>
+              <tr><td class="mono">M1~M9</td><td><span class="sev s-m">중·낮음</span></td><td class="mono">—</td><td>전 부품 미주석(R?/C?/U?) · p0 타이틀 V1200 · p8 잔여 TP5592 · NTC 분압 · ESP32 벌크캡 · 션트 중복 · CST 결선 · ADC1/2 중복 탭 · SCS205KNHR 품번</td><td>PART 4</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 1 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 1</span><h2>시트 대응표</h2><span class="sub">V2000 10장 ↔ S2G1812 6장</span></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th class="mono">V2000</th><th>내용</th><th class="mono">S2G1812 원본</th><th>이식 상태</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">p0</td><td>NTC 온도 4채널 (DC/DC FET · DC/AC FET · PV CAP · DCLINK CAP)</td><td class="mono">—(신규)</td><td><span class="badge b-ok">양호</span> 분압값 재검토(M3) · 타이틀 V1200(M2)</td></tr>
+              <tr><td class="mono">p1 ADC</td><td>AC_N/AC_L 라인 센싱 op-amp ×3 + 비교기 U12 → ADC1~4, IO1</td><td class="mono">02.MCU U400A · U404A</td><td><span class="badge b-bad">오이식</span> C3 — 삭제 또는 전면 재설계</td></tr>
+              <tr><td class="mono">p2</td><td>언폴더 저압측 MOSFET ×2 구동 · 고장 버스 · OV/OC 검출 · 버스 덤프 · 고장 플래그 옵토 · 누설감지</td><td class="mono">00.AC INPUT</td><td><span class="badge b-ref">부분</span> 구조 충실, C2·C6·H4·H5</td></tr>
+              <tr><td class="mono">p3</td><td>PV 전압 버퍼(TLV9062) · PV 전류(OPA2387 ×2, INA240 ×2) · 계통 V/I 절연 앰프(AMC3301/3302)</td><td class="mono">02.MCU 아날로그</td><td><span class="badge b-ok">개선</span> 단 H2(OPA2387 블록)</td></tr>
+              <tr><td class="mono">p4</td><td>ESP32-S3 · TPM SLB9670 · USB-C · CAN TLE9251 · 버튼/리셋</td><td class="mono">—(신규)</td><td><span class="badge b-ref">부분</span> C8·H3·M4</td></tr>
+              <tr><td class="mono">p5 MCU</td><td>STM32G474QET6 LQFP-128 · SWD · easyDSP · 크리스털</td><td class="mono">02.MCU TMS320F28034</td><td><span class="badge b-bad">미완</span> C1·C5</td></tr>
+              <tr><td class="mono">p6 AUX</td><td>LM5156H 플라이백 보조전원 · 입력 OR-ing · 12 V 절연 권선</td><td class="mono">01.DC POWER NCP1031</td><td><span class="badge b-ref">부분</span> 구조 타당, 값 오류 C7·C8·M5</td></tr>
+              <tr><td class="mono">p7 GRID</td><td>SCR 고압측 ×2 · EMI 필터 · 릴레이 · 계통 V 분압 · 10 mΩ 션트 · 퓨즈/MOV/가스관 · 단자</td><td class="mono">00.AC INPUT 우측</td><td><span class="badge b-ref">부분</span> C4·H5·H8</td></tr>
+              <tr><td class="mono">p8</td><td>빈 시트 + 미결선 TP5592 반쪽</td><td class="mono">—</td><td><span class="badge b-gap">잔여</span> M2</td></tr>
+              <tr><td class="mono">p9 DC-DC</td><td>PV_A 입력(7×2700 µF, 3 mΩ, TVS) · 2상 인터리브 플라이백 · CST 전류센스 · 2EDN7524R · SiC 정류</td><td class="mono">04.PVA GDRV</td><td><span class="badge b-ref">부분</span> H1·H6·H7·M7</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 2 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 2</span><h2>치명 — 보드를 만들기 전에 반드시</h2></div>
+
+    <div class="card crit"><div class="card-head"><span>C1 · MCU에서 전력단으로 가는 지령이 결선되지 않음</span><span class="pn">p5 STM32G474 · p2 · p7 · p9</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>MCU 시트에서 결선된 것은 SWD(PA13/14/15), USART2(PD5/PD6), USART3(PC10/PC11), FDCAN1(PD0/PD1, PD2=NEN), BOOT0(PB8), NRST, 크리스털(PF0/PF1), <span class="mono">ADC_I_GRID_P/N</span>(PA6/PA7), <span class="mono">AIN1~4</span>(PC4/PC5/PB0/PB1), <span class="mono">RELAY_GRID</span>(PB10)뿐입니다. <b>PA8~PA11 · PB12~PB15 · PC6~PC9(HRTIM1 CHA~CHF 12출력)는 전부 빈 핀</b>입니다.</dd>
+        <dt>영향</dt><dd>p9의 <span class="mono">PWM_A1/PWM_A2</span>, p7의 <span class="mono">GATE_AC_N/GATE_AC_L</span>, p2의 언폴더 MOSFET 지령·고장 플래그, p3의 <span class="mono">ADC_V_PA/PB · ADC_I_PA/PB · ADC_I_PV_A/B · ADC_V_GRID_P/N</span>, p2의 <span class="mono">ADC_I_GRID_Lk</span>, p1의 <span class="mono">ADC1~4 · IO1</span>, p9의 <span class="mono">ADC_I_PV_A1/A2</span> — 소스 핀이 없습니다. 전력단은 기동조차 못 합니다.</dd>
+        <dt>원본 대조</dt><dd>S2G1812 02.MCU는 EPWM1A/B~4A/B, GPIO41~44(SCR·언폴더), GPIO12(고장), ADCINA0~B7 16채널이 모두 결선되어 있었고, 제가 만든 이식 검토서(§3 핀 매핑표)에 G474 대응 핀이 정리되어 있습니다.</dd>
+        <dt>수정</dt><dd>이식 검토서의 핀 매핑표대로 결선. 특히 HRTIM 출력은 <b>CHA1/CHA2 → PWM_A1/A2</b>, CHB → PV_B 상, 언폴더 MOSFET 2개와 SCR 2개는 일반 GPIO(60 Hz), 고장 플래그는 EXTI 가능한 핀. CubeMX로 충돌 검사 후 반영.</dd>
+      </dl></div></div>
+
+    <div class="card crit"><div class="card-head"><span>C2 · 언폴더 두 레그가 같은 신호에 물려 있음</span><span class="pn">p2 OFFPAGELEFT-L / OFFPAGELEFT-R</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>U5A(AC_N 레그)와 U5B(AC_L 레그)의 입력 포트가 둘 다 <span class="mono">OFFPAGELEFT-L</span>입니다. 고장 플래그 출력 포트는 <span class="mono">OFFPAGELEFT-R</span>. 두 이름 모두 CAD 오프페이지 심볼의 기본 이름이며 다른 시트 어디에도 없습니다.</dd>
+        <dt>영향</dt><dd>같은 이름이면 같은 넷입니다. AC_N 레그와 AC_L 레그 MOSFET이 <b>동시에 켜지고 동시에 꺼집니다</b>. 양쪽이 동시에 켜지면 계통 L–N이 두 MOSFET을 통해 단락됩니다. 원본은 GPIO44→S301(AC_N), GPIO43→S300(AC_L)로 분리되어 있었습니다.</dd>
+        <dt>수정</dt><dd>포트명을 <span class="mono">GATE_UNF_N</span>, <span class="mono">GATE_UNF_L</span>, <span class="mono">FAULT_HW</span>(예)로 바꾸고 MCU 핀에 결선. 원본과 같이 <b>액티브 로우 + 10 kΩ 풀업</b>(이미 있음)을 유지.</dd>
+      </dl></div></div>
+
+    <div class="card crit"><div class="card-head"><span>C3 · 페이지 1 ADC 시트 — 20 MΩ이 20 mΩ로, 비절연 op-amp가 AC 라인에</span><span class="pn">p1 U11A · U10A · U10B · U12</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd><span class="mono">AC_N_IN → R 20m RESC6431 → 노드 → R 63KF∥100pF → U11A 핀2(−)</span>. RESC6431은 2512 션트 풋프린트이고 값은 20 mΩ입니다. U11A 출력(핀1)에서 핀2로 돌아오는 피드백이 없습니다. 핀2 노드는 U12 비교기 입력으로도 갑니다. U10A/U10B/U12 모두 <span class="mono">GND</span>(MCU 도메인) 기준이고, 입력 노드는 계통 라인 <span class="mono">AC_N_IN / AC_L_IN</span>입니다.</dd>
+        <dt>원본 대조</dt><dd>S2G1812 U400A는 <b>입력 20 MΩ(R? 20M)</b>, 피드백 62 kΩ의 반전 감쇠기(322:1)로, 계통 전압을 op-amp가 견딜 수준으로 나누는 회로였습니다. 여기서는 감쇠 저항이 <b>20 mΩ 션트</b>가 되어 계통 전압이 그대로 op-amp 입력에 걸립니다. 63 kΩ은 피드백이 아니라 입력에 놓였습니다.</dd>
+        <dt>영향</dt><dd>op-amp 즉시 파괴. 그보다 근본적으로 — p3에 AMC3301(계통 전압)·AMC3302(계통 전류) <b>절연 앰프가 이미 있으므로 이 시트는 기능적으로 중복</b>이고, 비절연 op-amp를 AC 라인에 붙이는 순간 AMC로 확보한 절연이 무의미해집니다.</dd>
+        <dt>수정</dt><dd><b>페이지 1 전체 삭제</b>를 권합니다. 계통 V/I는 p3 AMC3301/3302로, 언폴더 전류 보호는 p2의 40 mΩ 션트 + BC847 하드웨어 검출로 충분합니다. 원본 U404A(클램프 노드 버퍼)의 역할이 필요하면 AMC3301 OUTP/OUTN 후단에 두십시오.</dd>
+      </dl></div></div>
+
+    <div class="card crit"><div class="card-head"><span>C4 · 릴레이 코일이 절연 장벽을 가로지름</span><span class="pn">p7 GR2G-2A4-DC12 · BSS316N · VCC_12V0</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>릴레이 코일 상단 <span class="mono">VCC_12V0</span>, 하단 → BAS100AS 프리휠 → Q? BSS316NH6327 드레인, 소스 → <span class="mono">GND</span>. p6에서 <span class="mono">VCC_12V0</span>은 T? 핀 9-10 절연 권선의 출력이며 기준이 <b>PGND</b>입니다(p2의 HEF40106B 전원도 동일). p5 MCU와 <span class="mono">RELAY_GRID</span>는 <b>GND</b>입니다.</dd>
+        <dt>영향</dt><dd>코일 전류가 PGND 도메인 12 V → 코일 → 스위치 → GND로 흐릅니다. 두 그라운드가 저항으로 연결되어 <b>강화 절연이 사라집니다</b>. 원본은 FT-10V(GND 도메인)로 K300을 구동했습니다.</dd>
+        <dt>수정</dt><dd>코일 전원을 GND 도메인 레일(<span class="mono">VCC_10V0</span> 또는 12 V 비절연 권선)로 바꾸거나, 릴레이 구동 자체를 PGND 측에 두고 지령만 옵토로 넘기십시오. 어느 쪽이든 <b>PGND–GND 사이에 부품이 하나도 없어야</b> 합니다 — 도면 전체에서 PGND와 GND를 잇는 경로를 검색하십시오(C3·H5도 같은 종류).</dd>
+      </dl></div></div>
+
+    <div class="card crit"><div class="card-head"><span>C5 · STM32G474QET6 — 온도 등급 미달, 패키지 과잉</span><span class="pn">p5</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>U? <span class="mono">STM32G474QET6 LQFP-128</span>.</dd>
+        <dt>영향</dt><dd>ST 접미 <b>T6 = −40~+85 ℃</b>. 현행 F28034<b>PNT</b>는 105 ℃ 등급이고, IP67 무팬 옥외 제품은 105 ℃ 이상이 필수입니다(이식 검토서 §3.2 온도 등급 표). 그리고 LQFP-128은 앞서 확인한 대로 아날로그·HRTIM 핀이 LQFP-100과 완전히 동일하며, 얻는 것은 PF/PG 범용 21핀과 FMC뿐입니다. 이 설계는 FMC를 쓰지 않습니다.</dd>
+        <dt>수정</dt><dd><span class="mono">STM32G474VET7</span>(LQFP-100, 105 ℃) 권장. 128핀을 굳이 유지하려면 <span class="mono">QET7</span>. 현재 결선된 핀은 100핀 범위 안에 모두 있습니다.</dd>
+      </dl></div></div>
+
+    <div class="card crit"><div class="card-head"><span>C6 · 과전압 검출기가 PHV를 보지 않음</span><span class="pn">p2 D? SMBJ400CAL · SMBJ5.0CA · U9A/B</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>TVS 체인 상단(SMBJ400CAL)이 <b>고장 버스</b>(R? 100KF 풀업 아래 노드, VCC_12V0 도메인)에 연결되어 있습니다. <span class="mono">PHV</span> 라벨은 덤프 FET(R 1.5F)에만 있습니다.</dd>
+        <dt>원본 대조</dt><dd>S2G1812 D305의 상단은 <b>+HV</b>였습니다. 400 V TVS + 5 V TVS 직렬로 +HV ≥ ~400 V에서만 도통하는 손실 0의 문턱 회로입니다.</dd>
+        <dt>영향</dt><dd>12 V 버스에 400 V TVS를 달아 둔 셈이라 <b>영원히 도통하지 않습니다</b>. +HV 과전압 보호가 없습니다.</dd>
+        <dt>수정</dt><dd>SMBJ400CAL 상단을 <span class="mono">PHV</span>로. 나머지(R302 10Ω / R305 10Ω / R318 1kΩ / C318 1nF / Q303 쌍)는 원본과 동일하게 그려져 있어 그대로 두면 됩니다.</dd>
+      </dl></div></div>
+
+    <div class="card crit"><div class="card-head"><span>C7 · 보조전원 값 오류 세 가지</span><span class="pn">p6 LM5156H · IAUCN10S7L040 · T? CUSTOM</span></div>
+      <div class="card-body">
+        <dl class="find">
+          <dt>CS 1 mΩ</dt><dd><span class="mono">R? 1m RESC6432</span>가 FET 소스–CS. LM5156 계열의 전류제한 문턱은 100 mV 급이므로 <b>I_lim ≈ 100 A</b> — 사실상 전류 제한이 없습니다. 6 W급 플라이백의 1차 피크는 2 A 안팎이므로 <b>40~50 mΩ</b>이 맞습니다.</dd>
+          <dt>FB 분압</dt><dd><span class="mono">47.5KB / 10KB</span> → FB. LM5156 V_FB = 1.0 V 기준 V_out = 1.0 × (1 + 47.5/10) = <b>5.75 V</b>. 그 노드에 <span class="mono">VDDA_3V3 / VDD_3V3</span> 라벨이 붙어 있습니다. 3.3 V가 목표면 상단 <b>23 kΩ</b>. 단, MCU 전원을 <b>플라이백 출력에서 직접</b> 뽑는 구조 자체를 재고하십시오 — 교차 조정으로 3.3 V가 흔들립니다. 원본도 FT-3.3V는 별도 레귤레이터였습니다. 5 V 권선 + 3.3 V LDO가 정석입니다.</dd>
+          <dt>클램프 다이오드</dt><dd>1차 RCD 클램프(4.99 kΩ/2 W ∥ 1 nF/100 V)의 다이오드가 <span class="mono">PMEG3020ER</span>(<b>30 V</b> 쇼트키)입니다. 클램프 다이오드는 V_in + 반사전압 + 스파이크(60 V 입력에서 100 V 이상)를 막아야 합니다. <b>≥150 V 고속 정류기</b>(ES1D · MURS160 급)로 교체. 같은 PMEG3020ER이 게이트 턴오프 경로(R 1F 병렬)에 쓰인 건 정상입니다.</dd>
+        </dl>
+        <div class="eqbox" style="margin-bottom:0">I_lim = 100 mV / R_cs :   1 mΩ → 100 A ✗     40 mΩ → 2.5 A ✓
+I_pk(6 W, 18 V, D 0.45, η 0.85) ≈ 2·6/(18·0.45·0.85) ≈ 1.7 A
+V_out = 1.0 V × (1 + 47.5k/10k) = 5.75 V  ← "3V3" 라벨과 불일치
+※ LM5156 V_FB · CS 문턱은 데이터시트 대조 필요(이 세션 접근 차단)</div>
+      </div></div>
+
+    <div class="card crit"><div class="card-head"><span>C8 · VCC_3V3 네트에 전원이 없음</span><span class="pn">p4 ESP32 · TPM · USB-C · EX_Enable · /RESET</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>p4 전체가 <span class="mono">VCC_3V3</span>, p5 MCU·p3 아날로그·p0은 <span class="mono">VDD_3V3 / VDDA_3V3</span>. p6 보조전원이 만드는 3.3 V 계열은 <span class="mono">VDD_3V3 / VDDA_3V3</span>뿐이고, 어디에도 <span class="mono">VCC_3V3</span>를 생성하는 레귤레이터가 없습니다.</dd>
+        <dt>영향</dt><dd>ESP32·TPM·USB·리셋 회로가 통째로 무전원입니다. 의도적으로 분리한 레일이라면 LDO가 필요하고, 같은 레일이라면 이름을 통일해야 합니다.</dd>
+        <dt>수정</dt><dd>Wi-Fi 송신 피크(수백 mA)를 감안하면 <b>VCC_5V0 → 3.3 V LDO(≥600 mA)</b>로 <span class="mono">VCC_3V3</span>를 별도 생성하는 편이 낫습니다. MCU 레일과 분리되어 노이즈 면에서도 유리합니다.</dd>
+      </dl></div></div>
+  </section>
+
+  <!-- ===== PART 3 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 3</span><h2>높음</h2></div>
+
+    <div class="card high"><div class="card-head"><span>H1 · DC-DC 1차 MOSFET 100 V — 원본은 150 V</span><span class="pn">p9 IAUCN10S7L040 ×2/상 · C 4.7 nF/100 V</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>상당 IAUCN10S7L040(100 V, 4 mΩ, PQFN 5×6) 2병렬. 원본 BSC190N15NS3(150 V, 19 mΩ) 2병렬. PV 입력 캡은 원본과 같은 63 V(63ZLJ2700).</dd>
+        <dt>계산</dt><dd>플라이백 오프 시 V_DS = V_in + n·V_PHV + 누설 스파이크. OVP 50 V, V_PHV 피크 ~330 V에서 권선비 n = 0.15~0.30이면 <b>100~149 V + 스파이크</b>. 100 V 정격은 어떤 권선비에서도 마진이 없고, 150 V도 n ≥ 0.25면 빠듯합니다(원본이 150 V를 택한 이유).</dd>
+        <dt>수정</dt><dd>권선비와 클램프 동작을 확정한 뒤 <b>150 V급</b>(예: BSC0xxN15NS5, IAUC…15 계열)으로. 드레인 노드의 4.7 nF/100 V 스너버 캡 두 개도 같은 전압을 보므로 <b>200 V 이상</b>으로. 2차 정류 다이오드 <span class="mono">SCS205KNHR</span>(품번 미확인, 650 V SiC로 추정)은 V_PHV + V_in/n을 보므로 원본 1200 V(B1D02120E) 대비 마진 계산이 필요합니다(M7).</dd>
+      </dl></div></div>
+
+    <div class="card high"><div class="card-head"><span>H2 · OPA2387 PV 전류 블록 — 개방루프·입력 과전압·중복</span><span class="pn">p3 U2A · U2B</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>U2A: PV_A- → 1 kΩ → (−), 51.1 kΩ∥1 nF 피드백, (+)에 51.1 kΩ/1 kΩ/1 nF → 정상 차동 51배. U2B: <b>PV_B+ → 1 kΩ → (−)</b>, 출력→(−) 피드백 <b>없음</b>, (+)에 75 kΩ/1 kΩ/1 nF만. 이득도 75 vs 51.1로 다릅니다.</dd>
+        <dt>영향</dt><dd>U2B는 비교기처럼 레일-투-레일로 튀고, 입력 PV_B+(18~50 V)가 1 kΩ을 통해 3.3 V op-amp에 걸립니다. 그리고 같은 시트에 <b>INA240A2 ×2(ADC_I_PV_A/B)</b>가 3 mΩ 션트 기준으로 PV 전류를 이미 정확히 재고 있습니다(8.3 A → 1.25 V, 15 A → 2.25 V ✓).</dd>
+        <dt>수정</dt><dd>OPA2387 블록(ADC_I_PA/PB) <b>삭제</b>. INA240 경로만 남기고 MCU에 결선.</dd>
+      </dl></div></div>
+
+    <div class="card high"><div class="card-head"><span>H3 · CAN 트랜시버 VIO = 5 V</span><span class="pn">p4 TLE9251VSJ 핀 5</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>핀 3 VCC = VCC_5V0, <b>핀 5 VIO = VCC_5V0</b>. TXD/RXD는 1 kΩ을 거쳐 STM32 PD1/PD0.</dd>
+        <dt>영향</dt><dd>VIO는 로직 레벨 기준입니다. VIO = 5 V면 TXD의 VIH ≈ 0.7·VIO = 3.5 V인데 STM32는 3.3 V까지만 냅니다 → TXD가 High로 인식되지 않아 <b>버스가 도미넌트에 고착</b>될 수 있고, RXD는 5 V로 나옵니다(PD0은 5 V 내성 핀이라 파괴는 면함).</dd>
+        <dt>수정</dt><dd>VIO → <span class="mono">VDD_3V3</span>. NEN(핀 8)의 10 kΩ 풀다운이 정상 모드인지는 데이터시트 대조 필요 — 미확인.</dd>
+      </dl></div></div>
+
+    <div class="card high"><div class="card-head"><span>H4 · 고장 플래그 옵토 LED 직렬저항 누락</span><span class="pn">p2 U6-6 → FOD817D3SD</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>U6-6 출력(핀 12)이 저항 없이 FOD817 LED 애노드(핀 1)로 직결. 원본은 U301B → <b>R336 3.3 kΩ</b> → LED.</dd>
+        <dt>영향</dt><dd>12 V CMOS 출력이 LED에 직결되면 출력단 전류 한계까지 흐릅니다(HEF40106B 수십 mA) → 게이트 출력 손상·LED 수명 단축, 고장 시 플래그 자체가 죽을 수 있습니다.</dd>
+        <dt>수정</dt><dd>3.3 kΩ 삽입 (I_F ≈ (12−1.2)/3.3k ≈ 3.3 mA).</dd>
+      </dl></div></div>
+
+    <div class="card high"><div class="card-head"><span>H5 · 누설감지 — 오타로 끊김 + 장벽 침범 + 플로팅 op-amp</span><span class="pn">p2 U4A/U4B · p7 I_GIRD_Lk</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>p7 포트 <span class="mono">I_GIRD_Lk</span>(오타) ↔ p2 포트 <span class="mono">I_GRID_Lk</span>. p2 회로: 그 노드가 2 MΩ+2 MΩ으로 <span class="mono">PV_B+</span>에, <b>4.7 nF/300VAC 두 개도 PV_B+</b>에, 1 MΩ+1 MΩ → 51 kΩ/2.2 µF → U4A 버퍼 → ADC. U4B 반쪽은 입력 개방.</dd>
+        <dt>영향</dt><dd>이름이 달라 애초에 연결되지 않고, 연결되더라도 계통 PE측 노드를 Y-캡으로 PV DC 레일에 묶어 절연을 침범합니다. 무엇을 재려는 회로인지(절연저항? 누설전류?) 정의가 없습니다. U4B 개방 입력은 발진·소비전류 원인입니다.</dd>
+        <dt>수정</dt><dd>누설전류는 <b>CT(영상변류기)</b>로 L·N을 함께 통과시켜 잽니다 — 원본에도 없던 기능이니 KS C 8565 요구(RCMU)를 확인한 뒤 설계. 현 회로는 삭제. U4B는 (+)→GND, (−)→출력 단락으로 처리.</dd>
+      </dl></div></div>
+
+    <div class="card high"><div class="card-head"><span>H6 · PV_B 채널 전력단이 없음</span><span class="pn">전체</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>p9는 PV_A 입력과 2상 플라이백만 있습니다. <span class="mono">PV_B+</span>는 p6(OR-ing 다이오드)와 p2(누설감지)에만 등장하고, p3에는 V_PB/I_PV_B 센싱이 있습니다.</dd>
+        <dt>영향</dt><dd>원본은 PVA/PVB 2채널 4상. V2000 사양서도 2채널 전제입니다. 센싱과 보조전원은 B를 기대하는데 전력단이 없어 <b>구조가 반쪽</b>입니다. 의도적 1채널이면 사양서·센싱·OR-ing 모두 정리해야 합니다.</dd>
+        <dt>수정</dt><dd>p9를 복제해 PV_B 시트 추가(HRTIM CHC/CHD), 또는 1채널로 확정하고 B 관련 회로 제거. 결정이 먼저입니다.</dd>
+      </dl></div></div>
+
+    <div class="card high"><div class="card-head"><span>H7 · 2EDN7524R 풋프린트 불일치 · ENA/ENB 스터브</span><span class="pn">p9</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>풋프린트 <span class="mono">SOIC127P600X175-8N</span>(1.27 mm 피치 SOIC, 노출 패드 없음). 앞선 게이트 구동 검토에서 확인한 실물은 <b>PG-TSSOP-8(0.65 mm 피치, 2.05×1.71 mm 노출 패드 = GND)</b>입니다. ENA/ENB에 0 Ω 두 개가 붙어 있으나 반대편이 ×(미결선)입니다.</dd>
+        <dt>수정</dt><dd>풋프린트 교체(노출 패드 GND 필수). ENA/ENB는 내부 풀업으로 기본 활성이므로 0 Ω 스터브를 지우거나 VDD에 결선.</dd>
+      </dl></div></div>
+
+    <div class="card high"><div class="card-head"><span>H8 · SCR 점호 옵토가 제로크로스형</span><span class="pn">p7 MOC3063S-TA ×2</span></div>
+      <div class="card-body"><dl class="find">
+        <dt>확인</dt><dd>원본 ELM3053(MOC3053 상당, <b>랜덤 위상</b>) → V2000 MOC3063S(<b>제로크로스</b>, |V| &lt; ~20 V에서만 점호). 나머지(200 Ω from PHV, MURS1JAL, 47 nF, 1 nF, S8008D)는 동일.</dd>
+        <dt>영향</dt><dd>언폴더는 영교차에서 점호하므로 보통은 통과합니다. 그러나 MCU 지령이 조금이라도 늦어 PHV가 이미 20 V를 넘으면 옵토가 점호를 <b>다음 영교차까지 거부</b>합니다 → 반주기 동안 DC-DC 출력이 갈 곳을 잃고 버스 덤프가 동작합니다. 랜덤 위상형은 늦어도 즉시 점호합니다.</dd>
+        <dt>수정</dt><dd>MOC3053S(랜덤 위상)로 환원하거나, 제로크로스형을 유지할 거면 점호 타이밍 마진을 펌웨어에서 보장하고 실측으로 확인.</dd>
+      </dl></div></div>
+  </section>
+
+  <!-- ===== PART 4 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 4</span><h2>중 · 낮음</h2></div>
+    <div class="card mid"><div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>시트</th><th>지적</th><th>수정</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">M1</td><td class="mono">전체</td><td><b>모든 부품이 미주석</b>(R? · C? · U? · D? · Q? · J? · T?). BOM·PCB 동기화·리뷰 참조가 불가능합니다.</td><td>주석(Annotate) 실행 후 재출도. 이 검토도 위치로만 지칭할 수밖에 없었습니다.</td></tr>
+          <tr><td class="mono">M2</td><td class="mono">p0 · p8</td><td>p0 타이틀블록 Revision이 <b>V1200</b>(다른 시트는 V2000). p8은 빈 시트에 미결선 TP5592 반쪽(U?A)만 남아 있음.</td><td>타이틀 통일, p8 삭제.</td></tr>
+          <tr><td class="mono">M3</td><td class="mono">p0</td><td>NTC 분압: 16.5 kΩ 상단 + 10 kΩ NTC 하단. 최대 감도점이 ~10 ℃로, 관심 구간(85~105 ℃)은 ADC 범위 하위 8 %에 몰림(101 mV, 6.3 LSB/℃).</td><td>상단 <b>3.9~4.7 kΩ</b>이면 85~105 ℃가 260~290 mV(16~18 LSB/℃), 25 ℃ 2.3 V, 125 ℃ 0.4 V로 전 구간 사용 가능. NTC B값(3435 가정)은 품번 확정 후 재계산.</td></tr>
+          <tr><td class="mono">M4</td><td class="mono">p4</td><td>ESP32-S3-WROOM-1 3V3 핀에 100 nF만. Wi-Fi 송신 피크 전류에 벌크 캡 없음.</td><td>≥10 µF(권장 22 µF) 모듈 직근 추가. C8의 LDO와 함께.</td></tr>
+          <tr><td class="mono">M5</td><td class="mono">p6 · p9</td><td>PV_A- 라인에 션트 두 개: p9 <b>3 mΩ</b>(I_PV_A+/−, INA240) + p6 <b>2 mΩ</b>(라벨 I_PV_A, 2 MΩ 분압 하단). 이름도 충돌.</td><td>p6의 2 mΩ·분압 제거(PV 전압은 p3 V_PA 경로가 담당).</td></tr>
+          <tr><td class="mono">M6</td><td class="mono">p1</td><td>ADC1은 U11A 출력 직결, ADC2는 510 Ω/10 nF 후단 — 같은 신호의 중복 탭.</td><td>C3로 시트 삭제 시 함께 소멸.</td></tr>
+          <tr><td class="mono">M7</td><td class="mono">p9</td><td>PA1005.100NLT 전류센스 트랜스 1차 핀(8·7·6·5·4)에 루프가 그려져 있어 어느 핀 쌍이 1차인지 불명확. 2차 정류 <span class="mono">SCS205KNHR</span>는 표준 품번으로 확인되지 않음(ROHM SCS205KG?).</td><td>CST 데이터시트로 1차 핀 확정(1:100, 부담 2 Ω → 20 A에서 0.4 V ✓). 정류기 품번·정격(V_RRM ≥ V_PHV + V_in/n) 확정.</td></tr>
+          <tr><td class="mono">M8</td><td class="mono">p9</td><td>PV_A 입력 7×2700 µF/63 V = 18.9 mF. 채널당 250 W 기준 <b>76 µF/W</b>, 120 Hz 리플 0.84 A/개.</td><td>충분합니다(IQ7+ 44.7 µF/W). 수명 계산 시 리플 전류 정격 대조만.</td></tr>
+          <tr><td class="mono">M9</td><td class="mono">p7</td><td>퓨즈 <span class="mono">0678L9100-02</span> 정격 미확인(0678L 시리즈 표기 관행상 9.1 A?) · TH?(NC) 돌입전류 제한 미실장 · MOV14D431K 3개 중 하나 NC.</td><td>정격 확정. 돌입 제한은 릴레이 투입 시 X-캡(660 nF) 충전 전류 검토 후 결정.</td></tr>
+        </tbody>
+      </table></div>
+    </div></div>
+  </section>
+
+  <!-- ===== PART 5 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 5</span><h2>원본보다 나아진 것</h2><span class="sub">유지할 결정</span></div>
+    <div class="card good"><div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>항목</th><th>S2G1812</th><th>V2000</th><th>평가</th></tr></thead>
+        <tbody>
+          <tr><td>계통 전압·전류 센싱</td><td>비절연 op-amp 감쇠기(U400A, 20 MΩ)</td><td><b>AMC3301 / AMC3302 강화절연 앰프</b>, 3×680 kΩ/1 kΩ → 152 mV pk(±250 mV 범위 61 %) ✓, 10 mΩ → 32 mV pk(±50 mV) ✓</td><td><span class="badge b-ok">개선</span> C3 시트만 지우면 완성</td></tr>
+          <tr><td>PV 전류</td><td>op-amp 차동</td><td><b>INA240A2</b> + 3 mΩ, REF=GND 단방향 ✓</td><td><span class="badge b-ok">개선</span></td></tr>
+          <tr><td>PV 전압</td><td>U404A 버퍼</td><td>TLV9062 + 1 MΩ/20 kΩ(51:1) + 1 nF ✓ 동일 구조</td><td><span class="badge b-ok">유지</span></td></tr>
+          <tr><td>DC-DC 게이트 구동</td><td>디스크리트</td><td><b>2EDN7524R</b> + 6.65∥6.65 Ω 온 / 1+1 Ω+PMEG3020ER 오프 — 앞선 구동 검토안과 일치</td><td><span class="badge b-ok">개선</span> H7만</td></tr>
+          <tr><td>보조전원 컨트롤러</td><td>NCP1031 (단종)</td><td><b>LM5156H + 외부 FET</b>, PV_A/PV_B OR-ing 입력, 12 V 절연 권선 유지</td><td><span class="badge b-ok">방향 옳음</span> C7 값 수정</td></tr>
+          <tr><td>계통 릴레이</td><td>구동단 미실장(Q307 NC)</td><td>GR2G-2A4 2극 + BSS316N + 프리휠 구현</td><td><span class="badge b-ref">구현했으나 C4</span></td></tr>
+          <tr><td>보호</td><td>MOV·가스관·퓨즈</td><td>MOV ×5 · SIDACtor P2600 · 가스관 SL1411A600 · Y-캡 · SMCJ64A(PV) · OVP/UVP 명시</td><td><span class="badge b-ok">강화</span></td></tr>
+          <tr><td>통신·보안</td><td>PLC 없음(원본 미식별)</td><td>ESP32-S3(Wi-Fi/BLE/USB) · TPM 2.0 · CAN FD 트랜시버 · easyDSP</td><td><span class="badge b-ok">신규</span> C8·H3·M4</td></tr>
+          <tr><td>온도 감시</td><td>없음</td><td>NTC 4채널(FET ×2, 캡 ×2)</td><td><span class="badge b-ok">신규</span> M3</td></tr>
+          <tr><td>언폴더·고장 버스</td><td>SCR+MOSFET, 40106B, BC847 ±검출, 덤프</td><td>동일 구조로 충실 이식 (IPB80R290C3A, OSG65R360DEF, 80 m∥80 m)</td><td><span class="badge b-ok">유지</span> C2·C6·H4 수정</td></tr>
+        </tbody>
+      </table></div>
+    </div></div>
+  </section>
+
+  <!-- ===== PART 6 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 6</span><h2>수정 순서</h2><span class="sub">앞 단계가 뒤 단계의 전제</span></div>
+    <div class="card"><div class="steps">
+      <div class="step"><span class="n">1</span><div><b>절연 경계를 먼저 그린다</b><span>GND(PV·MCU) / PGND(계통·언폴더) / AMC HGND(센싱 핫사이드)를 도면에 선으로 긋고, 경계를 넘는 부품이 옵토·AMC·변압기·Y-캡뿐인지 검사. C4·C3·H5가 여기서 잡힙니다.</span></div></div>
+      <div class="step"><span class="n">2</span><div><b>페이지 1 삭제, OPA2387 블록 삭제, 누설감지 삭제</b><span>중복이거나 잘못된 센싱을 걷어내면 ADC 채널이 12개로 줄어 MCU 핀 배치가 쉬워집니다.</span></div></div>
+      <div class="step"><span class="n">3</span><div><b>PV_B 채널 여부 확정 → MCU 핀 배치 → 모든 포트명 결선</b><span>이식 검토서 §3 핀표 기준. OFFPAGELEFT-* 제거. CubeMX 충돌 0 확인 후 회로도 반영. QET6 → VET7.</span></div></div>
+      <div class="step"><span class="n">4</span><div><b>보조전원 값·구조</b><span>CS 40~50 mΩ, 클램프 다이오드 ≥150 V, 3.3 V는 LDO로, VCC_3V3 생성, 권선표 작성(핀 1-2 / 3-4 / 5-6 / 9-10 전압·전류·극성).</span></div></div>
+      <div class="step"><span class="n">5</span><div><b>전력 소자 정격</b><span>권선비 확정 → 1차 FET 150 V, 스너버 캡 200 V, 2차 정류기 V_RRM 계산. OV 검출을 PHV에 연결. FOD817 직렬저항. CAN VIO 3.3 V. MOC3063 → 3053 결정.</span></div></div>
+      <div class="step"><span class="n">6</span><div><b>주석·풋프린트·타이틀</b><span>Annotate, 2EDN7524R 풋프린트 교체, p8 삭제, p0 타이틀 V2000, NTC 분압 재계산, ESP32 벌크캡.</span></div></div>
+    </div></div>
+  </section>
+
+  <!-- ===== PART 7 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 7</span><h2>검토 방법과 한계</h2></div>
+    <div class="card"><div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>항목</th><th>상태</th></tr></thead>
+        <tbody>
+          <tr><td>V2000 결선·부품값·포트명</td><td><span class="badge b-ok">확인</span> 10장 260~300 dpi 렌더 + 확대 17장 시각 판독 (Type3 폰트라 텍스트 추출 불가)</td></tr>
+          <tr><td>S2G1812 원본 결선</td><td><span class="badge b-ok">확인</span> 앞선 세션의 벡터 넷리스트 복원 결과</td></tr>
+          <tr><td>계산치 (NTC · FB · CS · FET 응력 · 디커플링 · 분압)</td><td><span class="badge b-ok">확인</span> 본 문서 수식. FET 응력은 권선비 미확보로 범위 제시</td></tr>
+          <tr><td>LM5156 V_FB · CS 문턱, TLE9251 VIH · NEN 극성, MOC3063 점호 창, SCS205KNHR · 0678L9100 정격, NTC B값</td><td><span class="badge b-gap">미확보</span> 부품사 도메인 차단 — 관행값으로 판단, 데이터시트 대조 필요</td></tr>
+          <tr><td>T? CUSTOM 보조 변압기 권선 매핑(핀 2·3·4·5)</td><td><span class="badge b-gap">불명확</span> 도면만으로 3.3/5/10 V 권선 귀속 판독 불가</td></tr>
+          <tr><td>시각 판독 오인 가능성</td><td><span class="badge b-ref">참고</span> 넷 이름은 글자 판독이므로 C2·H5 같은 이름 문제는 CAD에서 ERC로 재확인 권장</td></tr>
+        </tbody>
+      </table></div>
+      <p class="src" style="margin-top:14px"><b>참고 문서</b> — V2000 MCU 이식 검토(핀 매핑·패키지·온도 등급) <span class="mono">docs/V2000-MCU-migration-STM32G474.md</span> · 2EDN7524R 게이트 구동 설계 · NCP1031 대체 보조전원 선정 · 언폴더 구동·보호 회로 · S2G1812 AC 입력단 분석.</p>
+    </div></div>
+  </section>
+
+</div>
