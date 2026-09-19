@@ -230,14 +230,14 @@ AMC3301/3302 출력 스윙은 데이터시트 미확보 — 3.0 V 이내로 알�
       <tr><td class="mono">H5</td><td>누설감지 오타·구조</td><td><span class="sev s-h">미해결</span></td><td>03 시트 I_GIRD_Lk(C58·F2·J18) ≠ 08 시트 I_GRID_Lk(R182·C162·C164). 4 MΩ은 PV_B+ 기준</td></tr>
       <tr><td class="mono">H6</td><td>PV_B 전력단 없음</td><td><span class="sev s-g">해결</span></td><td>02 시트 추가. 단 N1(PV_A+ 오결선) 발생</td></tr>
       <tr><td class="mono">H7</td><td>2EDN7524R 풋프린트·ENA/ENB</td><td><span class="sev s-h">미해결</span></td><td>SOIC127P600X175-8N 그대로. R16/R19/R53/R56 0 Ω 반대편 개방</td></tr>
-      <tr><td class="mono">H8</td><td>MOC3063S 제로크로스</td><td><span class="sev s-h">미해결</span></td><td>ISO2/ISO3 MOC3063S-TA</td></tr>
+      <tr><td class="mono">H8</td><td>MOC3063S 제로크로스</td><td><span class="sev s-h">미해결 (수치 확정)</span></td><td>Lite-On 데이터시트: V_INH 5 V typ / 20 V max, I_FT ≤ 5 mA. 60 Hz 영교차 기울기 117 V/ms → 점호 허용 창 43~170 µs. LED 전류 5.7 mA(R78 300 Ω)는 I_FT 대비 여유 14 % → 220 Ω 권장</td></tr>
       <tr><td class="mono">M1</td><td>부품 미주석</td><td><span class="sev s-g">해결</span></td><td>R1~R248, C1~C198 등 전부 번호 부여</td></tr>
       <tr><td class="mono">M2</td><td>타이틀·잔여 부품</td><td><span class="sev s-m">일부</span></td><td>빈 시트·TP5592 제거됨. 10 시트(NTC) 타이틀 블록 Revision은 아직 <b>V1200</b></td></tr>
       <tr><td class="mono">M3</td><td>NTC 분압 16.5 kΩ</td><td><span class="sev s-m">미해결</span></td><td>R232/R233/R240/R241 16.5 kΩ, NTC R236/R238/R244/R246 10 kΩ</td></tr>
       <tr><td class="mono">M4</td><td>ESP32 벌크 캡</td><td><span class="sev s-m">미해결</span></td><td>U17.3 3V3에 C111 100 nF만</td></tr>
       <tr><td class="mono">M5</td><td>PV_A- 션트 중복</td><td><span class="sev s-h">격상 → N4</span></td><td>병렬 연결이 넷리스트로 확정됨</td></tr>
       <tr><td class="mono">M6</td><td>ADC1/ADC2 중복 탭</td><td><span class="sev s-m">미해결</span></td><td>C180 한 노드에 ADC1·ADC2 포트</td></tr>
-      <tr><td class="mono">M7</td><td>CST 1차 핀·SCS205KNHR</td><td><span class="sev s-m">미해결</span></td><td>CST 1차 8→7·6→5·4 직렬 경로는 원본 TR100과 동일 구조로 확인. 품번 미확인</td></tr>
+      <tr><td class="mono">M7</td><td>CST 1차 핀·SCS205KNHR</td><td><span class="sev s-g">해결</span></td><td>CST 1차 8→7·6→5·4 직렬 경로는 원본 TR100과 동일 구조. SCS205KNHR은 ROHM 데이터시트(TSQ50244)로 SiC 1200 V / 5 A, 핀 1·2 K, 3 A 확인 — 심볼 일치, 원본 B1D02120E와 동급</td></tr>
       <tr><td class="mono">M8</td><td>입력 캡 용량</td><td><span class="sev s-g">이상 없음</span></td><td>EC1~EC6 / EC7~EC12 7×2700 µF ×2채널</td></tr>
       <tr><td class="mono">M9</td><td>퓨즈 정격·돌입 제한</td><td><span class="sev s-m">미해결</span></td><td>F1 0678L9100-02, TH1은 서미스터가 아니라 P2600SDLRP SIDACtor(RV1과 직렬, 정상 구성)</td></tr>
     </tbody></table></div></div></div>
@@ -368,7 +368,8 @@ AMC3301/3302 출력 스윙은 데이터시트 미확보 — 3.0 V 이내로 알�
       <tr><td>핀 기능</td><td><span class="badge b-ok">확인</span> ST CubeMX 핀 데이터 XML(QB-C-ETx, VB-C-ETx)</td></tr>
       <tr><td>REF3030A</td><td><span class="badge b-ok">확인</span> 업로드 데이터시트 SBVS032K: 3.0 V ±0.2 %, 75 ppm/℃, 25 mA, VIN ≥ VOUT + 0.2 V</td></tr>
       <tr><td>자동 추출 한계</td><td><span class="badge b-ref">참고</span> 2핀 수동소자의 핀 귀속은 인접 부품과 섞일 수 있어 IC·포트·전원 넷 중심으로 판독했고, 지적 항목은 전부 확대 이미지로 재확인했습니다. 변압기 핀 번호는 시각 판독입니다</td></tr>
-      <tr><td>미확보</td><td><span class="badge b-gap">미확보</span> LM5156 FB 기준·CS 문턱, AMC3301/3302 출력 스윙, LF19S 권선 핀, SCS205KNHR, IAUCN10S7L040 Qg, PA1005 V·s 정격, MOC3063 점호 창</td></tr>
+      <tr><td>데이터시트 확인 (9/20 추가)</td><td><span class="badge b-ok">확인</span> INA240 PW 핀 배열·출력 스윙, AMC3301/3302 핀 배열·CM 1.44 V·클리핑 ±2.49 V, SCS205KNHR 1200 V/5 A, MOC3063 I_FT 5 mA·V_INH 5~20 V, REF3030A 핀 배열. 상세는 docs/V2000-MCU-pinmap.md 부록 D</td></tr>
+      <tr><td>미확보</td><td><span class="badge b-gap">미확보</span> LM5156 FB 기준·CS 문턱, LF19S 권선 핀, IAUCN10S7L040 Qg, PA1005 V·s 정격</td></tr>
     </tbody></table></div>
     <p class="src" style="margin-top:14px"><b>참고 문서</b> — V2000 회로도 검토 Rev 1 · V2000 MCU 이식 검토 · docs/V2000-MCU-pinmap.md · 언폴더 구동·보호 회로 · NCP1031 대체 보조전원.</p>
   </div></div>

@@ -245,7 +245,7 @@ PDF 복원 넷리스트가 아니라 **실제 넷리스트**이므로 이 부록
 | G1 | **GND 넷에 01·02 시트 부품이 하나도 없다.** Q1~Q8 소스, U13/U14 GND, EC2~EC6·EC8~EC12 (−), C10~C20 등 30핀이 **I_PV_A+ / I_PV_B+** 넷에만 있고, 그 넷의 시트 밖 연결은 U21/U22 IN+ 한 핀뿐 | DC-DC 전력단 귀환이 시스템 GND에서 떠 있다. PV 전류의 귀환 경로도, 보조전원(04 시트, GND 기준)의 귀환 경로도 없다. R6/R43 션트의 GND 측(I_PV_A+ / I_PV_B+)을 GND에 한 점으로 연결해야 한다 |
 | G2 | **PV_A-** 넷 = C68·C70·R101(04 시트) + R159(07 시트)뿐, **PV_B-** 넷 = R158 한 핀. PV 단자 J3/J4/J8/J9 는 I_PV_A- / I_PV_B- 넷 | 04·07 시트의 PV_A-/PV_B- 전원 심볼이 PV 단자와 다른 넷. R101 2 mΩ은 어디에도 이어지지 않은 GND 션트가 됐고, U2A/U2B 입력도 떠 있다 | 
 | G3 | **PV_A+** 넷에 02 시트 C35·C36·T7 핀 4·5·6·8 포함 (PV_B+ 넷은 T5만) | 전회 N1 그대로. PV_B 2상 1차가 PV_A+ |
-| G4 | U21/U22 INA240 심볼 핀 번호: 2=IN+, 3=IN−, 8=OUT, 5=VCC, 6=REF2, 7=REF1 | INA240 TSSOP-8 실물은 2=IN−, 3=IN+, 7=OUT, 8=VS 로 알려져 있다. 심볼이 맞으면 PCB에서 입력 극성 반전·출력이 REF1(GND)에 단락된다. **데이터시트로 심볼 핀 번호 확인 필수** |
+| G4 | U21/U22 INA240 심볼 핀 번호: 2=IN+, 3=IN−, 8=OUT, 5=VS, 6=REF2, 7=REF1 | **해결 — 데이터시트(SBOS662C, PW 패키지) 핀 배열과 정확히 일치.** 앞서 "실물과 반대로 보인다"고 한 것은 제 오류(SOIC D 패키지 배열과 혼동). IN+ = 션트 GND측(I_PV_A+), IN− = PV 단자측(I_PV_A-)이므로 귀환 전류에 대해 출력은 양(+) |
 | G5 | 'NC' 넷 131핀 (U16 미사용 핀, U17 IO, U19 NC 핀, T1.2 등) | OrCAD 무접속 의사 넷으로 보이나(경로 없는 C_SIGNAL='NC'), Allegro에서 NC 넷 래츠가 생기지 않는지 확인 |
 | G6 | 그 밖에 전회 지적이 그대로임: VCC_3V3 소스 없음(C8), Q9 소스 GND ↔ LS1 코일 VCC_12V0(C4), USB VBUS = VCC_5V0(N5), TLE9251 VIO = 5 V(H3) | |
 
@@ -257,4 +257,16 @@ PDF 복원 넷리스트가 아니라 **실제 넷리스트**이므로 이 부록
 | 추가 결선 (C-2) | PB15 ADC_V_GRID_N · PC2 ADC_I_PA · PC3 ADC_I_PB · PA12 FAULT_HW · PC8 GATE_UNF_N · PC9 GATE_UNF_L |
 | 예비 (미결선 유지) | PC0/PA3 PV 직접 전압, PE13 10 V 감시, PD3/PD4 LED, PA15/PB7 I2C |
 
-수정 순서: G1·G2·G3 (접지·전원 넷) → X1~X5 (핀 결선·삭제) → X6·X7 → G4 심볼 확인.
+수정 순서: G1·G2·G3 (접지·전원 넷) → X1~X5 (핀 결선·삭제) → X6·X7.
+
+## 부록 D. 데이터시트 대조로 닫은 항목 (2026-09-20 업로드분)
+
+| 부품 | 데이터시트 | 확인 내용 | 넷리스트 심볼 대조 | 검토 항목 |
+|---|---|---|---|---|
+| INA240A2PWR | TI SBOS662C (2021-12) | PW(TSSOP-8): 1 NC, 2 IN+, 3 IN−, 4 GND, 5 VS, 6 REF2, 7 REF1, 8 OUT. 게인 50 V/V, 출력 스윙 VS−0.2 V ~ GND+10 mV, BW 400 kHz | U21/U22 핀 번호·이름 **일치** | G4 해결. 3.3 V 공급에서 출력 상한 3.1 V > ADC 풀스케일 3.0 V, 15 A → 2.25 V 이내 |
+| AMC3301-Q1 (DWE) | TI SBASA73A (2021-05) | 1 DCDC_OUT … 6 INP, 7 INN, 8 HGND, 9 GND, 10 OUTN, 11 OUTP, 12 VDD, 13 LDO_OUT, 14 DIAG, 15 DCDC_GND, 16 DCDC_IN. 게인 8.2 V/V, 출력 CM 1.44 V(1.39~1.49), 클리핑 ±2.49 V 차동 | U23 핀 번호·이름 **일치**. HGND/DCDC_HGND/INN = V_GRID_L, INP = V_GRID_N, DCDC_GND/GND = GND | 각 출력 단자 스윙 0.20~2.69 V → 3.0 V 풀스케일 이내. 152 mV pk 입력 → ±1.25 V 차동 |
+| AMC3302 (DWE) | TI SBASA11B (2021-07) | 핀 배열 AMC3301과 동일. 게인 41 V/V, CM 1.44 V, 클리핑 ±2.49 V | U24 **일치**. HGND = I_GRID_N, INP = I_GRID_P | 32 mV pk 입력 → ±1.31 V 차동, 여유 충분 |
+| SCS205KNHR | ROHM TSQ50244 Rev.001 (2024-09) | SiC SBD 1200 V / 5 A (Tc 148 ℃), I_FRM 26 A, V_F 1.4 V typ @5 A, Q_C 12 nC, TO-263-2L: 1 K, 2 K, 3 A | D3/D8/D14/D19 1=K1, 2=K2, 3=A **일치** | 전회 M7 해결. 원본 B1D02120E(1200 V)와 동급. 2차 평균 전류 ≈ 0.8 A, 피크 수 A 이내 |
+| MOC3063S-TA | Lite-On DS70-2001-026 Rev.F (2019-05) | 제로크로스 트라이액 드라이버. I_FT ≤ 5 mA, V_F 1.2~1.4 V, V_DRM 600 V, dv/dt 1000 V/µs, V_TM 3 V @100 mA, **억제 전압 V_INH 5 V typ / 20 V max**, I_H 200 µA. 핀 1 A, 2 K, 3 NC, 4 MT1, 5 NC, 6 MT2 | ISO2/ISO3 **일치** (2 → GND, 4 → D25/D26 MURS1JAL, 6 → R79/R81 200 Ω ← PHV) | LED 전류: SN74HC14 3.3 V, R78 300 Ω → ≈ (3.0−1.3)/300 = 5.7 mA, I_FT 5 mA 대비 여유 14 %. **R78/R80 → 220 Ω(≈7.7 mA) 권장**. H8 수치화: 60 Hz 311 V pk의 영교차 기울기 117 V/ms → V_INH 5 V(typ)는 영교차 후 43 µs, 20 V(max)는 170 µs. 이 창을 놓치면 다음 반주기까지 점호 불가 |
+
+남은 미확보: LM5156 (FB 기준·CS 문턱), LF19S-102-8A (권선 핀 대응), PA1005.100NLT (V·s 정격), IAUCN10S7L040 (Qg).
