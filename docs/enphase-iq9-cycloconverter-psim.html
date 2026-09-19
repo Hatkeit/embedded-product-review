@@ -1,0 +1,498 @@
+<title>IQ9 사이클로컨버터</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#FCFCFD; --sheet:#FFFFFF; --ink:#0F1729; --muted:#5A6473; --faint:#8A93A3;
+    --rule:#DCE2EB; --rule-strong:#B9C2D0;
+    --sym:#1B3A8F; --wire:#C81E1E; --sig:#0E7490; --node:#B026C9; --gan:#7A3E9D;
+    --ok-bg:#ECFDF5; --ok-line:#34A47C; --ok-ink:#0B5B44;
+    --gap-bg:#F4F1FB; --gap-line:#8B6FC4; --gap-ink:#4A3282;
+    --ref-bg:#FFF7E6; --ref-line:#D9A441; --ref-ink:#7A5200;
+    --shadow:0 1px 2px rgba(15,23,41,.05), 0 8px 24px rgba(15,23,41,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0B0F16; --sheet:#121824; --ink:#E7ECF4; --muted:#9AA5B6; --faint:#7A8496;
+      --rule:#243044; --rule-strong:#35435C;
+      --sym:#7FA6F5; --wire:#FF7A7A; --sig:#38D6E8; --node:#E27BF5; --gan:#C99AE6;
+      --ok-bg:#0A2219; --ok-line:#2E7D5F; --ok-ink:#7EE0B8;
+      --gap-bg:#1C1630; --gap-line:#6B54A0; --gap-ink:#C4AEF0;
+      --ref-bg:#2A2110; --ref-line:#9C7A2E; --ref-ink:#F0CC7A;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0B0F16; --sheet:#121824; --ink:#E7ECF4; --muted:#9AA5B6; --faint:#7A8496;
+    --rule:#243044; --rule-strong:#35435C;
+    --sym:#7FA6F5; --wire:#FF7A7A; --sig:#38D6E8; --node:#E27BF5; --gan:#C99AE6;
+    --ok-bg:#0A2219; --ok-line:#2E7D5F; --ok-ink:#7EE0B8;
+    --gap-bg:#1C1630; --gap-line:#6B54A0; --gap-ink:#C4AEF0;
+    --ref-bg:#2A2110; --ref-line:#9C7A2E; --ref-ink:#F0CC7A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans KR","IBM Plex Sans Condensed",system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;word-break:keep-all}
+  .wrap{max-width:1280px;margin:0 auto;padding-block:28px 64px;padding-left:16px;padding-right:16px}
+  .masthead{border:1.5px solid var(--rule-strong);background:var(--sheet);box-shadow:var(--shadow)}
+  .masthead-body{padding:26px 24px 20px}
+  .eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--sig);font-weight:600;margin:0 0 10px}
+  h1{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:clamp(27px,5vw,42px);line-height:1.12;letter-spacing:-.015em;font-weight:700;margin:0 0 12px;text-wrap:balance}
+  .standfirst{margin:0;max-width:72ch;color:var(--muted);font-size:16px}
+  .titleblock{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1.5px solid var(--rule-strong);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px}
+  .titleblock div{padding:9px 14px;border-right:1px solid var(--rule)}
+  .titleblock div:last-child{border-right:none}
+  .titleblock span{display:block;color:var(--faint);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+  .titleblock b{font-weight:500;color:var(--ink)}
+  .part{margin-top:36px}
+  .part-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+  .part-no{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--sheet);background:var(--sym);padding:3px 9px;border-radius:3px;white-space:nowrap}
+  .part-head h2{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:23px;font-weight:700;margin:0;letter-spacing:-.015em}
+  .part-head .sub{color:var(--muted);font-size:13.5px}
+  .card{border:1.5px solid var(--rule-strong);background:var(--sheet);box-shadow:var(--shadow);margin-bottom:18px}
+  .card-head{padding:13px 20px;border-bottom:1.5px solid var(--rule-strong);font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-weight:700;font-size:16px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .card-head .pn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:500;color:var(--muted)}
+  .card-body{padding:18px 20px}
+  .card-body > :first-child{margin-top:0}
+  .card-body > :last-child{margin-bottom:0}
+  .card-body h3{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:15px;margin:22px 0 10px;font-weight:700}
+  .canvas{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  .canvas svg{display:block;min-width:820px;width:100%;height:auto}
+  figure{margin:0}
+  figcaption{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);color:var(--muted);font-size:13.5px;max-width:86ch}
+  figcaption b{color:var(--ink);font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th,td{padding:9px 12px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+  thead th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);font-weight:600;white-space:nowrap;border-bottom:1.5px solid var(--rule-strong)}
+  tbody tr:last-child td{border-bottom:none}
+  td.mono,th.mono,.mono{font-family:"IBM Plex Mono",monospace;font-size:13px;font-variant-numeric:tabular-nums}
+  tr.pick td{background:var(--ok-bg);font-weight:700}
+  tr.pick td:first-child{box-shadow:inset 3px 0 0 var(--ok-line)}
+  .badge{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 6px;border-radius:3px;border:1px solid currentColor;white-space:nowrap;font-weight:500}
+  .b-ok{color:var(--ok-ink);background:var(--ok-bg)}
+  .b-gap{color:var(--gap-ink);background:var(--gap-bg)}
+  .b-ref{color:var(--ref-ink);background:var(--ref-bg)}
+  .eqbox{font-family:"IBM Plex Mono",monospace;font-size:13px;background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--sig);padding:14px 16px;margin:16px 0;overflow-x:auto;line-height:1.8;white-space:pre-wrap;tab-size:2}
+  .eqbox b{color:var(--sig)}
+  .gapcard{border:1.5px solid var(--gap-line);background:var(--gap-bg);color:var(--gap-ink);padding:18px 20px;margin-bottom:18px}
+  .refcard{border:1.5px solid var(--ref-line);background:var(--ref-bg);color:var(--ref-ink);padding:18px 20px;margin-bottom:18px}
+  .gapcard h3,.refcard h3{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:16px;margin:0 0 8px;font-weight:700}
+  .gapcard p,.refcard p{margin:0 0 10px;font-size:14px;max-width:82ch}
+  .gapcard p:last-child,.refcard p:last-child{margin-bottom:0}
+  p.lead{font-size:14.5px;color:var(--muted);max-width:84ch}
+  ul,ol{max-width:84ch}
+  li{margin-bottom:6px}
+  .src{font-size:13px;color:var(--muted)}
+  .src a{word-break:break-all;color:var(--sig)}
+  @media (max-width:620px){.titleblock{grid-template-columns:repeat(2,minmax(0,1fr))}.titleblock div{border-bottom:1px solid var(--rule)}.card-body{padding:14px}.masthead-body{padding:20px 16px 16px}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="nmos" fill="none" stroke="var(--sym)" stroke-width="2">
+    <line x1="0" y1="0" x2="26" y2="0"/><line x1="26" y1="-28" x2="26" y2="28"/>
+    <line x1="36" y1="-28" x2="36" y2="-12"/><line x1="36" y1="-8" x2="36" y2="8"/><line x1="36" y1="12" x2="36" y2="28"/>
+    <line x1="36" y1="-20" x2="70" y2="-20"/><line x1="36" y1="20" x2="70" y2="20"/><line x1="36" y1="0" x2="70" y2="0"/>
+    <line x1="70" y1="-45" x2="70" y2="45"/><polygon points="46,0 58,-6 58,6" fill="var(--sym)" stroke="none"/>
+  </g>
+  <g id="bds" fill="none" stroke="var(--gan)" stroke-width="2">
+    <line x1="0" y1="0" x2="14" y2="0"/><line x1="66" y1="0" x2="80" y2="0"/>
+    <rect x="14" y="-15" width="52" height="30" rx="3" fill="var(--sheet)"/>
+    <line x1="22" y1="-6" x2="34" y2="-6"/><line x1="46" y1="-6" x2="58" y2="-6"/>
+    <line x1="22" y1="6" x2="58" y2="6"/>
+    <line x1="28" y1="-15" x2="28" y2="-30"/><line x1="52" y1="-15" x2="52" y2="-30"/>
+    <line x1="40" y1="15" x2="40" y2="28"/>
+  </g>
+  <g id="resh" fill="none" stroke="var(--sym)" stroke-width="2"><line x1="0" y1="0" x2="12" y2="0"/><rect x="12" y="-9" width="32" height="18" fill="var(--sheet)"/><line x1="44" y1="0" x2="56" y2="0"/></g>
+  <g id="indh" fill="none" stroke="var(--sym)" stroke-width="2"><line x1="0" y1="0" x2="8" y2="0"/><path d="M8,0 a7,7 0 0 1 14,0 a7,7 0 0 1 14,0 a7,7 0 0 1 14,0 a7,7 0 0 1 14,0"/><line x1="64" y1="0" x2="72" y2="0"/></g>
+  <g id="caph" fill="none" stroke="var(--sym)" stroke-width="2"><line x1="0" y1="0" x2="14" y2="0"/><line x1="14" y1="-13" x2="14" y2="13"/><line x1="21" y1="-13" x2="21" y2="13"/><line x1="21" y1="0" x2="35" y2="0"/></g>
+  <g id="capv" fill="none" stroke="var(--sym)" stroke-width="2"><line x1="0" y1="0" x2="0" y2="14"/><line x1="-13" y1="14" x2="13" y2="14"/><line x1="-13" y1="21" x2="13" y2="21"/><line x1="0" y1="21" x2="0" y2="35"/></g>
+  <g id="coilv" fill="none" stroke="var(--sym)" stroke-width="2"><path d="M0,0 a7,7 0 0 1 0,14 a7,7 0 0 1 0,14 a7,7 0 0 1 0,14 a7,7 0 0 1 0,14"/></g>
+  <g id="gnd" fill="none" stroke="var(--sym)" stroke-width="2"><line x1="0" y1="0" x2="0" y2="10"/><line x1="-13" y1="10" x2="13" y2="10"/><line x1="-8" y1="15" x2="8" y2="15"/><line x1="-3" y1="20" x2="3" y2="20"/></g>
+  <g id="diodeV" fill="none" stroke="var(--sym)" stroke-width="2"><line x1="0" y1="0" x2="0" y2="10"/><polygon points="-9,10 9,10 0,26" fill="var(--sym)" stroke="none"/><line x1="-9" y1="26" x2="9" y2="26"/><line x1="0" y1="26" x2="0" y2="36"/></g>
+</defs></svg>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="masthead-body">
+      <p class="eyebrow">Enphase IQ9 Series · GaN BDS · Single-stage Series-resonant Cycloconverter</p>
+      <h1>IQ9 사이클로컨버터</h1>
+      <p class="standfirst">Enphase의 최신 세대 IQ9는 IQ7·IQ8의 &ldquo;플라이백/포워드 + 언폴더&rdquo; 구조를 버리고 <b>단일단 · 듀얼 액티브 브리지 · 직렬공진 사이클로컨버터</b>로 갔습니다. DC 링크도, 2차 정류기도, 언폴더도 없습니다. 계통측 스위치는 Infineon CoolGaN <b>양방향 스위치(BDS)</b>이고 제어는 22 nm 자체 ASIC <b>Kestrel</b>입니다. 분해기가 아직 없어 Enphase 백서·Infineon 공개 레퍼런스 설계(같은 토폴로지)·소자 데이터시트를 교차해 PSIM 심볼로 회로를 복원했습니다.</p>
+    </div>
+    <div class="titleblock">
+      <div><span>대상</span><b>IQ9N (240 V 주거용)</b></div>
+      <div><span>정격</span><b>427 VA · 1.78 A</b></div>
+      <div><span>구조</span><b>DAB 직렬공진 사이클로컨버터</b></div>
+      <div><span>Rev</span><b>0.1</b></div>
+    </div>
+  </header>
+
+  <!-- ===== PART 1 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 1</span><h2>전체 회로 — PSIM 심볼</h2><span class="sub">전력 경로 · 절연 장벽 · 게이트 구동 · 센싱</span></div>
+    <div class="card">
+      <div class="card-head"><span>IQ9 단일단 사이클로컨버터 복원 회로도</span><span class="pn">보라색 = GaN BDS · 파랑 = Si · 점선 = 추정</span></div>
+      <div class="card-body">
+        <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1310 640" role="img" aria-label="IQ9 사이클로컨버터 회로도. PV 입력이 입력 커패시터를 거쳐 80볼트 MOSFET 네 개의 1차 풀브리지에 들어가고, 직렬 공진 인덕터와 커패시터를 지나 고주파 변압기로 절연된다. 2차측에는 GaN 양방향 스위치 네 개가 풀브리지로 배치되어 고주파 교류를 직접 60헤르츠 교류로 만들고, LC 필터를 거쳐 계통으로 나간다. Kestrel ASIC이 1차측에서 탱크 전류와 전압, PV, 계통을 감지해 1차 게이트를 직접, 2차 BDS 게이트를 절연 드라이버로 구동한다.">
+            <!-- barrier -->
+            <line x1="548" y1="40" x2="548" y2="600" stroke="var(--faint)" stroke-width="1.6" stroke-dasharray="7 5"/>
+            <text x="540" y="56" text-anchor="end" font-family="Noto Sans KR, sans-serif" font-size="12" fill="var(--faint)">PV 측</text>
+            <text x="556" y="56" font-family="Noto Sans KR, sans-serif" font-size="12" fill="var(--faint)">계통 측 · HF AC 링크 (DC 링크 없음)</text>
+
+            <!-- PV source -->
+            <circle cx="70" cy="280" r="26" fill="var(--sheet)" stroke="var(--sym)" stroke-width="2"/>
+            <text x="70" y="275" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600" fill="var(--sym)">PV</text>
+            <text x="70" y="291" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">28~45 V</text>
+            <g stroke="var(--wire)" stroke-width="2.2" fill="none">
+              <line x1="70" y1="254" x2="70" y2="100"/><line x1="70" y1="100" x2="250" y2="100"/>
+              <line x1="70" y1="306" x2="70" y2="470"/><line x1="70" y1="470" x2="250" y2="470"/>
+              <line x1="150" y1="100" x2="150" y2="240"/><line x1="150" y1="275" x2="150" y2="470"/>
+              <line x1="250" y1="100" x2="420" y2="100"/><line x1="250" y1="470" x2="420" y2="470"/>
+              <!-- leg 1 -->
+              <line x1="250" y1="100" x2="250" y2="115"/><line x1="250" y1="205" x2="250" y2="355"/><line x1="250" y1="445" x2="250" y2="470"/>
+              <!-- leg 2 -->
+              <line x1="420" y1="100" x2="420" y2="115"/><line x1="420" y1="205" x2="420" y2="355"/><line x1="420" y1="445" x2="420" y2="470"/>
+              <!-- A run (y=250) with tank -->
+              <line x1="250" y1="280" x2="250" y2="250"/><line x1="250" y1="250" x2="412" y2="250"/>
+              <line x1="428" y1="250" x2="440" y2="250"/><line x1="512" y1="250" x2="516" y2="250"/><line x1="551" y1="250" x2="522" y2="250"/>
+              <!-- B run (y=310) -->
+              <line x1="420" y1="280" x2="420" y2="310"/><line x1="420" y1="310" x2="522" y2="310"/>
+            </g>
+            <!-- hop at (420,250) -->
+            <path d="M412,250 a8,8 0 0 1 16,0" fill="none" stroke="var(--wire)" stroke-width="2.2"/>
+            <!-- C_in -->
+            <use href="#capv" x="150" y="240"/>
+            <text x="166" y="252" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--sym)">C_in</text>
+            <text x="166" y="266" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">전해 뱅크 · 값 미확보</text>
+            <!-- primary FETs: gate at left; drain top -->
+            <use href="#nmos" x="180" y="160"/><use href="#nmos" x="180" y="400"/>
+            <use href="#nmos" x="350" y="160"/><use href="#nmos" x="350" y="400"/>
+            <g font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--sym)">
+              <text x="176" y="150" text-anchor="end">S1</text><text x="176" y="390" text-anchor="end">S2</text>
+              <text x="346" y="150" text-anchor="end">S3</text><text x="346" y="390" text-anchor="end">S4</text>
+            </g>
+            <text x="335" y="84" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12.5" font-weight="700" fill="var(--ink)">1차 풀브리지 (DAB 1차)</text>
+            <text x="335" y="500" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">OptiMOS 6 80 V · ISC014N08NM6 1.45 mΩ / ISC056N08NM6 5.6 mΩ (레퍼런스 설계)</text>
+            <!-- tank -->
+            <use href="#indh" x="440" y="250"/>
+            <text x="476" y="232" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--sym)">L_r</text>
+            <!-- C_r placed on A run before transformer: shift -->
+            <g transform="translate(0,0)">
+              <use href="#caph" x="516" y="250"/>
+            </g>
+            <text x="533" y="232" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--sym)">C_r</text>
+            <text x="470" y="200" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11.5" fill="var(--muted)">직렬 공진 탱크 · f_s 수백 kHz</text>
+            <text x="470" y="215" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--faint)">L_r · C_r 값 미확보</text>
+            <!-- transformer -->
+            <g stroke="var(--wire)" stroke-width="2.2" fill="none">
+              <line x1="551" y1="250" x2="560" y2="250"/><line x1="522" y1="310" x2="560" y2="310"/>
+            </g>
+            <line x1="560" y1="250" x2="560" y2="252" stroke="var(--wire)" stroke-width="2.2"/>
+            <use href="#coilv" x="560" y="252" transform="scale(-1,1) translate(-1120,0)"/>
+            <line x1="560" y1="308" x2="560" y2="310" stroke="var(--wire)" stroke-width="2.2"/>
+            <g stroke="var(--sym)" stroke-width="2"><line x1="574" y1="246" x2="574" y2="314"/><line x1="580" y1="246" x2="580" y2="314"/></g>
+            <use href="#coilv" x="594" y="252"/>
+            <g fill="var(--sym)"><circle cx="553" cy="246" r="3"/><circle cx="601" cy="246" r="3"/></g>
+            <text x="577" y="336" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--sym)">T1 · 1 : n</text>
+            <text x="577" y="350" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">HF 절연 · n 미확보</text>
+            <!-- secondary to cyclo rails -->
+            <g stroke="var(--wire)" stroke-width="2.2" fill="none">
+              <line x1="594" y1="252" x2="594" y2="250"/><line x1="594" y1="250" x2="640" y2="250"/><line x1="640" y1="250" x2="640" y2="180"/><line x1="640" y1="180" x2="860" y2="180"/>
+              <line x1="594" y1="308" x2="594" y2="310"/><line x1="594" y1="310" x2="640" y2="310"/><line x1="640" y1="310" x2="640" y2="380"/><line x1="640" y1="380" x2="860" y2="380"/>
+              <!-- leg P (x=750) -->
+              <line x1="750" y1="180" x2="750" y2="190"/><line x1="750" y1="270" x2="750" y2="290"/><line x1="750" y1="370" x2="750" y2="380"/>
+              <!-- leg Q (x=860) -->
+              <line x1="860" y1="180" x2="860" y2="190"/><line x1="860" y1="270" x2="860" y2="290"/><line x1="860" y1="370" x2="860" y2="380"/>
+              <!-- output L from leg Q midpoint -->
+              <line x1="860" y1="280" x2="930" y2="280"/><line x1="1002" y1="280" x2="1040" y2="280"/><line x1="1040" y1="280" x2="1120" y2="280"/>
+              <line x1="1120" y1="280" x2="1120" y2="349"/>
+              <!-- output N from leg P midpoint via left/down with hop over N rail -->
+              <line x1="750" y1="280" x2="700" y2="280"/><line x1="700" y1="280" x2="700" y2="372"/><line x1="700" y1="388" x2="700" y2="500"/><line x1="700" y1="500" x2="1120" y2="500"/>
+              <line x1="1120" y1="500" x2="1120" y2="401"/>
+              <!-- C_f -->
+              <line x1="1040" y1="280" x2="1040" y2="360"/><line x1="1040" y1="395" x2="1040" y2="500"/>
+            </g>
+            <path d="M700,372 a8,8 0 0 1 0,16" fill="none" stroke="var(--wire)" stroke-width="2.2"/>
+            <!-- BDS devices vertical: rotate 90 about (0,0): x→y -->
+            <g transform="translate(750,190) rotate(90)"><use href="#bds" x="0" y="0"/></g>
+            <g transform="translate(750,290) rotate(90)"><use href="#bds" x="0" y="0"/></g>
+            <g transform="translate(860,190) rotate(90)"><use href="#bds" x="0" y="0"/></g>
+            <g transform="translate(860,290) rotate(90)"><use href="#bds" x="0" y="0"/></g>
+            <g font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--gan)">
+              <text x="712" y="234" text-anchor="end">B1</text><text x="712" y="334" text-anchor="end">B2</text>
+              <text x="898" y="234">B3</text><text x="898" y="334">B4</text>
+            </g>
+            <text x="805" y="150" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12.5" font-weight="700" fill="var(--ink)">사이클로컨버터 (DAB 2차 · 4 × GaN BDS)</text>
+            <text x="805" y="166" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--gan)">IGLT65R055B2 · 650 V · 55 mΩ · 게이트 2개/소자</text>
+            <g fill="var(--node)"><circle cx="750" cy="280" r="4"/><circle cx="860" cy="280" r="4"/><circle cx="1040" cy="280" r="4"/><circle cx="1040" cy="500" r="4"/></g>
+            <!-- output filter -->
+            <use href="#indh" x="930" y="280"/>
+            <text x="966" y="264" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--sym)">L_f</text>
+            <use href="#capv" x="1040" y="360"/>
+            <text x="1056" y="382" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--sym)">C_f</text>
+            <!-- grid -->
+            <circle cx="1120" cy="375" r="26" fill="var(--sheet)" stroke="var(--sym)" stroke-width="2"/>
+            <path d="M1106,375 Q1113,360 1120,375 Q1127,390 1134,375" fill="none" stroke="var(--sym)" stroke-width="2"/>
+            <text x="1170" y="371" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--wire)">계통 240 V</text>
+            <text x="1170" y="387" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">1.78 A · 427 VA</text>
+            <text x="1170" y="403" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--faint)">퓨즈·MOV·릴레이 생략</text>
+
+            <!-- control -->
+            <rect x="180" y="540" width="330" height="76" rx="4" fill="var(--sheet)" stroke="var(--sig)" stroke-width="2"/>
+            <text x="345" y="564" text-anchor="middle" font-family="IBM Plex Sans Condensed, Noto Sans KR, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">Kestrel ASIC (5세대 · 22 nm)</text>
+            <text x="345" y="582" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">4 × 100 Msps ADC · 하드웨어 제어루프 &gt;100 kHz · PLC 내장</text>
+            <text x="345" y="598" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">레퍼런스 설계에서는 PSoC Control C3</text>
+            <g stroke="var(--sig)" stroke-width="1.6" fill="none" stroke-dasharray="5 3">
+              <path d="M250,540 V520 H215 V445"/>
+              <path d="M300,540 V525 H385 V445"/>
+              <path d="M150,540 V300"/>
+              <path d="M470,540 V520 H476 V262"/>
+            </g>
+            <text x="150" y="530" text-anchor="end" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--sig)">PV V·I</text>
+            <text x="484" y="520" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--sig)">탱크 전류 CT · 탱크 전압</text>
+            <text x="232" y="516" text-anchor="end" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--sig)">1차 게이트 ×4</text>
+            <text x="395" y="516" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--sig)">1EDN8550B</text>
+            <!-- isolated drivers -->
+            <rect x="618" y="540" width="344" height="76" rx="4" fill="var(--sheet)" stroke="var(--sig)" stroke-width="2"/>
+            <text x="790" y="564" text-anchor="middle" font-family="IBM Plex Sans Condensed, Noto Sans KR, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">절연 게이트 드라이버 → BDS 게이트 8개</text>
+            <text x="790" y="582" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--muted)">2EDR7259X ×4 (2ch 강화절연 · 5 A/9 A · 38 ns · 150 V/ns)</text>
+            <text x="790" y="598" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--muted)">BDS 1개 = 게이트 2개 (각 소스 기준) + 기판 단자</text>
+            <g stroke="var(--sig)" stroke-width="1.6" fill="none" stroke-dasharray="5 3">
+              <path d="M510,578 H638"/>
+              <path d="M720,540 V430 H778 V300"/>
+              <path d="M860,540 V430 H888 V300"/>
+            </g>
+            <text x="574" y="572" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--sig)">장벽 통과</text>
+            <g stroke="var(--sig)" stroke-width="1.6" fill="none" stroke-dasharray="5 3">
+              <path d="M1080,500 V560 H942"/>
+            </g>
+            <text x="1090" y="548" font-family="Noto Sans KR, sans-serif" font-size="10.5" fill="var(--sig)">계통 V·I (절연 감지)</text>
+          </svg>
+        </div>
+        <figcaption><b>IQ7과 자리를 대 보면 세 블록이 사라졌습니다.</b> 2차 정류기 · DC 링크 · 언폴더가 없고, 그 자리에 <b>GaN BDS 네 개</b>가 앉아 고주파 교류를 <b>직접</b> 60 Hz 교류로 자릅니다. 1차 브리지는 DAB의 1차이고, 사이클로컨버터는 DAB의 2차 브리지가 <b>양방향 스위치로 바뀐 것</b>입니다 — 그래서 출력이 DC가 아니라 AC가 됩니다. 소자 품번은 Enphase가 공개하지 않아 <b>Infineon의 동일 토폴로지 레퍼런스 설계(REF_500W_CYCLO_BDSGAN)</b> 품번을 대표값으로 썼습니다. BDS는 Infineon CoolGaN이라는 것만 Enphase가 확인했습니다.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 2 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 2</span><h2>양방향 스위치의 정체</h2><span class="sub">왜 사이클로컨버터에 이 소자가 필요한가</span></div>
+    <div class="card">
+      <div class="card-head"><span>Si 2석 back-to-back vs 단일 GaN BDS</span><span class="pn">IGLT65R055B2 · CoolGaN 650 V G5</span></div>
+      <div class="card-body">
+        <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1100 340" role="img" aria-label="왼쪽은 실리콘 MOSFET 두 개를 소스끼리 맞붙여 만든 종래의 양방향 스위치, 오른쪽은 게이트 두 개와 기판 단자를 가진 단일 GaN 양방향 스위치. 종래 방식은 두 소자의 도통저항과 게이트 전하가 더해지고, GaN BDS는 하나의 채널로 양방향을 차단·도통한다.">
+            <text x="270" y="40" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="14" font-weight="700" fill="var(--ink)">종래 — Si MOSFET 2석 back-to-back</text>
+            <text x="820" y="40" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="14" font-weight="700" fill="var(--gan)">IQ9 — 단일 GaN BDS (dual-gate GIT)</text>
+            <!-- left: two nmos back to back, drawn horizontally: use rotate -->
+            <g transform="translate(150,190) rotate(-90)"><use href="#nmos" x="0" y="0"/></g>
+            <g transform="translate(390,190) rotate(90)"><use href="#nmos" x="0" y="0"/></g>
+            <g stroke="var(--wire)" stroke-width="2.2" fill="none">
+              <line x1="60" y1="120" x2="105" y2="120"/><line x1="195" y1="120" x2="345" y2="120"/><line x1="435" y1="120" x2="480" y2="120"/>
+            </g>
+            <text x="56" y="124" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--wire)">A</text>
+            <text x="486" y="124" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--wire)">B</text>
+            <g font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)" text-anchor="middle">
+              <text x="150" y="238">Q1 · G1</text><text x="390" y="238">Q2 · G2</text>
+              <text x="270" y="106">공통 소스</text>
+            </g>
+            <g font-family="Noto Sans KR, sans-serif" font-size="12" fill="var(--muted)">
+              <text x="60" y="290">R_on = 2 × R_DS(on)  ·  Q_g = 2 × Q_g  ·  패키지 2개  ·  바디 다이오드 2개 직렬</text>
+              <text x="60" y="310">차단: 각 소자가 한 방향씩  ·  게이트 기준 = 공통 소스 하나</text>
+            </g>
+            <!-- right: BDS -->
+            <g transform="translate(730,120)"><use href="#bds" x="0" y="0" transform="scale(2.2)"/></g>
+            <g stroke="var(--wire)" stroke-width="2.2" fill="none"><line x1="640" y1="120" x2="730" y2="120"/><line x1="906" y1="120" x2="980" y2="120"/></g>
+            <text x="636" y="124" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--wire)">S1</text>
+            <text x="986" y="124" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--wire)">S2</text>
+            <g font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--gan)" text-anchor="middle">
+              <text x="792" y="46">G1</text><text x="844" y="46">G2</text><text x="818" y="200">SC (기판)</text>
+            </g>
+            <g font-family="Noto Sans KR, sans-serif" font-size="12" fill="var(--muted)">
+              <text x="620" y="250">양방향 차단 650 V (서지 850 V)  ·  Rss(on) 55 mΩ typ  ·  ±73 A  ·  TOLT 상면 방열</text>
+              <text x="620" y="270">게이트 2개, 각각 자기 소스 기준 → 절연 드라이브 2채널/소자  ·  GIT: 정상 오프, V_th 0.8~1.6 V</text>
+              <text x="620" y="290">Q_g 5.4 nC (게이트) · 72 nC (400 V 스위칭)  ·  한 채널로 양방향 도통 — 직렬 저항 없음</text>
+              <text x="620" y="310">주의: AC 전용 — DC 전압을 연속 차단하는 용도로 쓸 수 없음 (Infineon 명시)</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption>사이클로컨버터의 스위치는 <b>양쪽 극성의 전압을 막고 양쪽 방향의 전류를 흘려야</b> 합니다. 종래에는 MOSFET 두 개를 맞붙여 만들었고 그만큼 저항·전하·면적이 두 배였습니다. GaN BDS는 <b>채널 하나에 게이트 두 개</b>를 두어 같은 일을 소자 하나로 합니다. Enphase 백서는 이 소자가 Si 대비 손실 68 %, 단방향 GaN 대비 42 % 낮다고 밝혔습니다. 대가는 <b>게이트 드라이브가 소자당 2채널</b>이 된다는 것 — 그래서 절연 드라이버가 8채널 필요합니다.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 3 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 3</span><h2>동작 원리</h2><span class="sub">고주파 링크를 직접 60 Hz로 자른다</span></div>
+    <div class="card">
+      <div class="card-body">
+        <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1100 420" role="img" aria-label="세 개의 파형. 위: 1차 브리지가 만드는 수백 킬로헤르츠 구형파. 가운데: 공진 탱크를 흐르는 정현파 전류로 진폭이 60헤르츠 포락선을 따른다. 아래: 사이클로컨버터가 고주파 교류의 극성을 반주기마다 골라 붙여 만든 60헤르츠 정현파 출력.">
+            <g font-family="Noto Sans KR, sans-serif" font-size="12.5" font-weight="700" fill="var(--ink)">
+              <text x="30" y="60">① 1차 브리지 출력 v_AB</text>
+              <text x="30" y="180">② 탱크 전류 i_r (공진 · ZVS)</text>
+              <text x="30" y="300">③ 사이클로컨버터 출력 v_o</text>
+            </g>
+            <g font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">
+              <text x="30" y="76">f_s 수백 kHz · 위상/주파수 변조</text>
+              <text x="30" y="196">진폭이 |sin 60 Hz| 포락선</text>
+              <text x="30" y="316">BDS가 HF 반주기의 극성을 선택 → 60 Hz</text>
+            </g>
+            <!-- axes -->
+            <g stroke="currentColor" stroke-width="1.2" opacity=".35"><line x1="300" y1="90" x2="1060" y2="90"/><line x1="300" y1="210" x2="1060" y2="210"/><line x1="300" y1="330" x2="1060" y2="330"/></g>
+            <!-- ① square wave, amplitude modulated slightly by duty (draw constant) -->
+            <path d="M300,110 H312 V70 H324 V110 H336 V70 H348 V110 H360 V70 H372 V110 H384 V70 H396 V110 H408 V70 H420 V110 H432 V70 H444 V110 H456 V70 H468 V110 H480 V70 H492 V110 H504 V70 H516 V110 H528 V70 H540 V110 H552 V70 H564 V110 H576 V70 H588 V110 H600 V70 H612 V110 H624 V70 H636 V110 H648 V70 H660 V110 H672 V70 H684 V110 H696 V70 H708 V110 H720 V70 H732 V110 H744 V70 H756 V110 H768 V70 H780 V110 H792 V70 H804 V110 H816 V70 H828 V110 H840 V70 H852 V110 H864 V70 H876 V110 H888 V70 H900 V110 H912 V70 H924 V110 H936 V70 H948 V110 H960 V70 H972 V110 H984 V70 H996 V110 H1008 V70 H1020 V110 H1032 V70 H1044 V110 H1056" fill="none" stroke="var(--sym)" stroke-width="1.8"/>
+            <!-- ② envelope sine * HF sine: draw envelope + HF fill -->
+            <path d="M300,210 C420,90 560,90 680,210 C800,330 940,330 1060,210" fill="none" stroke="var(--wire)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <path d="M300,210 C420,330 560,330 680,210 C800,90 940,90 1060,210" fill="none" stroke="var(--wire)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <path d="M300,210 q6,-6 12,0 t12,0 q6,-14 12,0 t12,0 q6,-26 12,0 t12,0 q6,-40 12,0 t12,0 q6,-54 12,0 t12,0 q6,-66 12,0 t12,0 q6,-76 12,0 t12,0 q6,-82 12,0 t12,0 q6,-84 12,0 t12,0 q6,-82 12,0 t12,0 q6,-76 12,0 t12,0 q6,-66 12,0 t12,0 q6,-54 12,0 t12,0 q6,-40 12,0 t12,0 q6,-26 12,0 t12,0 q6,-14 12,0 t12,0 q6,-6 12,0 t12,0 q6,6 12,0 t12,0 q6,14 12,0 t12,0 q6,26 12,0 t12,0 q6,40 12,0 t12,0 q6,54 12,0 t12,0 q6,66 12,0 t12,0 q6,76 12,0 t12,0 q6,82 12,0 t12,0 q6,84 12,0 t12,0 q6,82 12,0 t12,0 q6,76 12,0 t12,0 q6,66 12,0 t12,0 q6,54 12,0 t12,0 q6,40 12,0 t12,0 q6,26 12,0 t12,0 q6,14 12,0 t12,0 q6,6 12,0" fill="none" stroke="var(--wire)" stroke-width="1.6"/>
+            <!-- ③ output sine -->
+            <path d="M300,330 C420,210 560,210 680,330 C800,450 940,450 1060,330" fill="none" stroke="var(--gan)" stroke-width="3"/>
+            <text x="1062" y="334" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--gan)">60 Hz</text>
+            <text x="680" y="400" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="12" fill="var(--muted)">양의 반주기: B1·B4 계열 도통 방향  ·  음의 반주기: B2·B3 계열 — BDS 게이트 쌍이 HF 주기마다 극성을 고른다</text>
+          </svg>
+        </div>
+        <figcaption><b>DC 링크가 없다는 것의 뜻.</b> IQ7은 &ldquo;정류된 정현파 버스&rdquo;를 만든 뒤 언폴더가 60 Hz로 뒤집었습니다. IQ9는 그런 버스가 없습니다. 1차 브리지가 수백 kHz 구형파를 만들고, 공진 탱크가 그것을 정현파 전류로 바꾸며, 2차의 BDS 네 개가 <b>고주파 반주기 하나하나의 극성을 골라 붙여</b> 60 Hz 정현파를 직접 합성합니다. 그래서 대용량 저장 소자가 사라지고, 공진이라 <b>넓은 범위에서 ZVS</b>가 됩니다. 대신 제어기는 <b>매 스위칭 주기의 탱크 전류·전압을 알아야</b> 하고 게이트 타이밍이 ns급이어야 합니다 — Kestrel의 100 Msps ADC 4개와 하드웨어 제어루프가 그 요구입니다.</figcaption>
+        </figure>
+
+        <div class="gapcard" style="margin-top:14px;margin-bottom:0">
+          <h3>파형은 개념도입니다</h3>
+          <p>스위칭 주파수, 변조 방식(위상 이동·주파수·듀티의 조합), 탱크 Q, 버스트 모드 진입 조건은 Enphase가 공개하지 않았고 Infineon 앱노트 원문도 이 세션에서 열지 못했습니다. 세 파형의 <b>관계</b>(구형파 → 공진 정현 → 극성 선택)는 토폴로지에서 필연적으로 따라오지만, <b>비율과 형태</b>는 실측 대상입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 4 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 4</span><h2>소자 사양</h2><span class="sub">확인된 값만 · 출처별 구분</span></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>회로 위치</th><th>품번</th><th>확인된 사양</th><th>근거</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr class="pick"><td>사이클로컨버터 BDS ×4</td><td class="mono">Infineon IGLT65R055B2</td><td>650 V (서지 850 V) · Rss(on) 55 mΩ typ · ±73 A · Qg 5.4 nC / 72 nC@400 V · V_th 0.8~1.6 V · GIT 정상오프 · 듀얼 게이트 + 듀얼 소스 + 기판 · TOLT 상면 방열 · AC 전용</td><td>Enphase가 &ldquo;Infineon CoolGaN BDS&rdquo;를 명시. 정확한 품번은 미공개 — Infineon 앱노트의 소자</td><td><span class="badge b-ok">확인</span> 품번 <span class="badge b-ref">참고</span></td></tr>
+              <tr><td>동일 계열 대안</td><td class="mono">IGLT65R110B2</td><td>110 mΩ typ</td><td>저출력 변형에 적합</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr class="pick"><td>1차 풀브리지 ×4</td><td class="mono">Infineon ISC014N08NM6 / ISC056N08NM6</td><td>OptiMOS 6 80 V · 1.45 mΩ, Qg 79 nC / 5.6 mΩ, Qg 21 nC · SuperSO8 5×6</td><td>Infineon 레퍼런스 설계. Enphase 실제 소자 미확인 (IQ8X는 AON6276 80 V 2.2 mΩ)</td><td><span class="badge b-ref">참고</span></td></tr>
+              <tr><td>1차 게이트 드라이버</td><td class="mono">Infineon 1EDN8550B</td><td>단채널 비절연 · 완전 차동 입력(TDI) · CMR ±150 V 동적 · UVLO 8 V · SOT-23-6</td><td>레퍼런스 설계. 80 V 하이사이드 구동에 차동 입력으로 접지 바운스 면역</td><td><span class="badge b-ref">참고</span></td></tr>
+              <tr class="pick"><td>BDS 절연 드라이버 ×4</td><td class="mono">Infineon 2EDR7259X</td><td>2ch 강화절연 · 5 A / 9 A · 38 ns · CMTI 150 V/ns · 8 kV 절연 · 1200 V 클래스 · GIT용</td><td>레퍼런스 설계. BDS 4개 × 게이트 2 = 8ch → 4개</td><td><span class="badge b-ref">참고</span> 수량 산정</td></tr>
+              <tr><td>제어기</td><td class="mono">Enphase Kestrel ASIC</td><td>5세대 자체 ASIC · 22 nm CMOS · 4 × 100 Msps ADC · 하드웨어 제어루프 &gt;100 kHz · PLC/LVDS 컨트롤러 · 보안부팅 · 기능안전</td><td>Enphase 백서 (2026-07)</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>제어기 (레퍼런스)</td><td class="mono">Infineon PSoC Control C3</td><td>MPPT · 계통연계/독립운전 · 유효/무효전력 · 버스트 모드 · PF 0.8~1.0</td><td>Infineon 앱노트</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>공진 탱크 L_r · C_r, 변압기 n, C_in, L_f/C_f</td><td class="mono">—</td><td>—</td><td>어느 소스에도 값 없음</td><td><span class="badge b-gap">미확보</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span>IQ9N 공식 사양 (240 V 주거용)</span><span class="pn">Enphase 데이터시트 스니펫</span></div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>항목</th><th class="mono">IQ9N-A-US</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr class="pick"><td>피크 / 연속 출력</td><td class="mono">427 VA @240 V (405 VA @208 V)</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>연속 출력 전류</td><td class="mono">≈ 1.78 A @240 V</td><td><span class="badge b-ok">확인</span> 427/240 산출</td></tr>
+              <tr><td>MPPT 전압</td><td class="mono">28 ~ 45 V</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>동작 / 기동 전압</td><td class="mono">18 ~ 58 V / 21 ~ 58 V</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr class="pick"><td>연속 입력 전류 / 모듈 Isc</td><td class="mono">16 A / 25 A</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>모듈 호환</td><td class="mono">340 ~ 580 W</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>피크 효율</td><td class="mono">97.5 % (Enphase·Infineon 보도) · 97.95 % (일부 자료)</td><td><span class="badge b-ref">참고</span> 상충</td></tr>
+              <tr><td>주위 온도</td><td class="mono">−40 ~ +65 ℃</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>치수 / 무게</td><td class="mono">214 × 176 × 30.8 mm · 1.1 kg</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>상용 3상 변형</td><td class="mono">IQ9N-3P 427 VA @277 V · IQ9S-3P 548 VA, 입력 18 A · 480Y/277 V</td><td><span class="badge b-ok">확인</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="eqbox" style="margin-bottom:0">입력 25 A Isc · MPPT 28 V에서 427 W → I_in,avg = 15.3 A ≈ 연속 입력 정격 16 A  (일관성 확인)
+1차 rms ≈ 1.225 × 15.3 = 18.7 A → 80 V · 1.45 mΩ 직렬 2석: 2 × 1.45 mΩ × 18.7² = <b>1.0 W</b>
+BDS 도통 (직렬 2석 · 1.78 A): 2 × 55 mΩ × 1.78² = <b>0.35 W</b>   ← IQ7 언폴더(0.30 W)와 비슷한 수준을 '정류기 없이' 달성
+피크 효율 97.5 %에서 총 손실 427 × 0.025 = <b>10.7 W</b> · 외함 214 × 176 × 30.8 mm 자연대류</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 5 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 5</span><h2>IQ7 → IQ9, 무엇이 사라지고 무엇이 생겼나</h2><span class="sub">V2000 설계에 주는 함의</span></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>블록</th><th>IQ7+ (분해기 확인)</th><th>IQ9 (백서·레퍼런스 복원)</th><th>결과</th></tr></thead>
+            <tbody>
+              <tr><td>1차 스위치</td><td class="mono">60 V Si ×4 · 플라이백/포워드 혼합</td><td class="mono">80 V Si ×4 · DAB 1차 (공진)</td><td>하드 스위칭 → <b>ZVS</b></td></tr>
+              <tr class="pick"><td>2차 정류기</td><td>있음 (부품 미식별)</td><td><b>없음</b></td><td>다이오드 도통 손실 소멸</td></tr>
+              <tr class="pick"><td>DC 링크 / 정류 정현파 버스</td><td>있음</td><td><b>없음</b> — HF AC 링크</td><td>저장 소자 소멸</td></tr>
+              <tr class="pick"><td>언폴더</td><td class="mono">IPT60R102G7 600 V ×4 · 60 Hz</td><td><b>없음</b> — BDS 사이클로컨버터가 흡수</td><td>블록 하나 제거</td></tr>
+              <tr><td>계통측 스위치</td><td class="mono">Si 단방향 ×4</td><td class="mono">GaN BDS ×4 · 수백 kHz</td><td>손실 −68 % (Enphase)</td></tr>
+              <tr><td>절연 드라이버</td><td class="mono">2EDS7165H ×2 (4ch)</td><td class="mono">2EDR7259X급 ×4 (8ch)</td><td>채널 2배</td></tr>
+              <tr><td>제어</td><td class="mono">ASIC 480-00031-01</td><td class="mono">Kestrel · 4×100 Msps · HW 루프</td><td>주기별 탱크 센싱</td></tr>
+              <tr><td>효율 / 출력</td><td class="mono">97.6 % / 295 VA</td><td class="mono">97.5~97.95 % / 427 VA</td><td>같은 외형에서 +45 %</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="refcard" style="margin-top:18px">
+          <h3>V2000에 주는 함의</h3>
+          <p><b>언폴더 자체가 사라지는 세대가 왔습니다.</b> 우리가 S2G1812에서 분석한 SCR+MOSFET 언폴더도, IQ7의 MOSFET 언폴더도 IQ9에는 없습니다. 다만 그 대가는 큽니다 — <b>매 스위칭 주기의 탱크 전류를 100 Msps로 읽고 ns급으로 게이트를 치는 제어기</b>가 필요합니다. STM32G474의 HRTIM(184 ps)은 타이밍 쪽은 감당하지만, ADC(4 Msps급)로는 주기별 공진 전류 파형을 잡을 수 없습니다. 아날로그 비교기 + 피크 검출 같은 우회가 필요하고, 이건 별도 검토 주제입니다.</p>
+          <p><b>당장 가져갈 수 있는 것</b>은 두 가지입니다. 첫째, GaN BDS 자체 — 언폴더 브리지를 BDS 두 개로 줄이는 중간 단계(정류 정현파 버스는 유지)는 특허 위험이 낮고 부품 수를 줄입니다. 둘째, <b>절연 드라이버로 계통측 게이트만 넘기는 구조</b>(IQ7·IQ9 공통) — S2G1812의 FT-H12V·40106B·고장 버스 전체를 대체합니다.</p>
+          <p><b>주의</b> — 직렬공진 사이클로컨버터 구조는 Enphase 특허군(US 8,797,767 · US 9,479,082 · US 9,379,627 등, Fornage/Zimmanck)에 걸려 있습니다. 채택 전 청구항 검토가 먼저입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 6 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 6</span><h2>검증 상태</h2></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>항목</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr><td>토폴로지 — 단일단 DAB 직렬공진 사이클로컨버터, GaN BDS, DC 링크 없음</td><td><span class="badge b-ok">확인</span> Enphase 백서·보도 (스니펫)</td></tr>
+              <tr><td>BDS 공급사 = Infineon CoolGaN</td><td><span class="badge b-ok">확인</span> Infineon·Enphase 보도</td></tr>
+              <tr><td>IGLT65R055B2 · ISC0xxN08NM6 · 2EDR7259X · 1EDN8550B 사양</td><td><span class="badge b-ok">확인</span> 부품사 스니펫</td></tr>
+              <tr><td>Kestrel ASIC — 22 nm, 4×100 Msps, HW 루프 &gt;100 kHz</td><td><span class="badge b-ok">확인</span> 백서 보도 (한 스니펫은 55 nm로 표기 — 상충)</td></tr>
+              <tr><td>IQ9N 사양</td><td><span class="badge b-ok">확인</span> 데이터시트 스니펫. 효율 97.5 vs 97.95 % 상충</td></tr>
+              <tr><td>Enphase 실제 1차 FET · 드라이버 · BDS 품번</td><td><span class="badge b-gap">미확보</span> 분해기 없음 — 레퍼런스 설계 품번으로 대체</td></tr>
+              <tr><td>BDS 수량(2 또는 4) · 2차 권선 구조(센터탭 여부)</td><td><span class="badge b-gap">추정</span> 풀브리지 4석으로 그림</td></tr>
+              <tr><td>L_r · C_r · n · f_s · C_in · 출력 필터 값 · 변조 방식</td><td><span class="badge b-gap">미확보</span> 앱노트 원문 필요</td></tr>
+              <tr><td>PLC 결합 회로, 계통측 센싱 방식, 보호(퓨즈·MOV·릴레이)</td><td><span class="badge b-gap">미확보</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="gapcard" style="margin-top:18px">
+          <h3>다음 단계</h3>
+          <p>Infineon 앱노트 PDF(<span class="mono">infineon-650vg5-coolgan-bidirectional-switch-cycloconverter-based-solar-microinverter-applicationnotes-en.pdf</span>)와 IGLT65R055B2 데이터시트를 올려 주시면 탱크 값·권선비·주파수·변조 방식·BDS 배치를 확정해 이 회로도를 실측 수준으로 갱신하겠습니다. IQ9 분해기가 나오면 Enphase 실제 품번으로 교체합니다.</p>
+        </div>
+        <p class="src"><b>출처</b> —
+          <a href="https://investor.enphase.com/news-releases/news-release-details/enphase-energy-publishes-technical-white-paper-gan-technology">Enphase GaN BDS 백서 보도</a> ·
+          <a href="https://newsroom.enphase.com/news-releases/news-release-details/enphase-energy-publishes-white-paper-kestrel-asic-its-fifth">Kestrel ASIC 백서 보도</a> ·
+          <a href="https://www.pv-magazine.com/2026/06/03/enphase-explains-how-gallium-nitride-is-changing-its-microinverters/">pv magazine 인터뷰</a> ·
+          <a href="https://www.infineon.com/press-release/2025/infxx202511-022">Infineon–Enphase 보도</a> ·
+          <a href="https://www.infineon.com/evaluation-board/REF-500W-CYCLO-BDSGAN">REF_500W_CYCLO_BDSGAN</a> ·
+          <a href="https://www.infineon.com/assets/row/public/documents/24/42/infineon-650vg5-coolgan-bidirectional-switch-cycloconverter-based-solar-microinverter-applicationnotes-en.pdf">Infineon 앱노트</a> ·
+          <a href="https://www.infineon.com/part/IGLT65R055B2">IGLT65R055B2</a> ·
+          <a href="https://www.infineon.com/part/ISC056N08NM6">ISC056N08NM6</a> ·
+          <a href="https://www.infineon.com/part/2EDR7259X">2EDR7259X</a> ·
+          <a href="https://www.infineon.com/cms/en/product/power/gate-driver-ics/1edn8550b/">1EDN8550B</a> ·
+          <a href="https://enphase.com/download/iq9n-microinverters-data-sheet">IQ9N 데이터시트</a> ·
+          <a href="https://patents.google.com/patent/US8797767B2/en">US 8,797,767</a>.
+          모든 원문은 접근이 차단되어 검색 스니펫으로만 확인했습니다.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
