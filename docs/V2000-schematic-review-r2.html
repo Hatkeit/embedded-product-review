@@ -1,0 +1,379 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V2000 핀맵과 회로 재검토</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#FCFCFD; --sheet:#FFFFFF; --ink:#0F1729; --muted:#5A6473; --faint:#8A93A3;
+    --rule:#DCE2EB; --rule-strong:#B9C2D0; --sym:#1B3A8F; --wire:#C81E1E; --sig:#0E7490;
+    --ok-bg:#ECFDF5; --ok-line:#34A47C; --ok-ink:#0B5B44;
+    --gap-bg:#F4F1FB; --gap-line:#8B6FC4; --gap-ink:#4A3282;
+    --ref-bg:#FFF7E6; --ref-line:#D9A441; --ref-ink:#7A5200;
+    --bad-bg:#FEF2F2; --bad-line:#DC6A6A; --bad-ink:#8C2020;
+    --shadow:0 1px 2px rgba(15,23,41,.05), 0 8px 24px rgba(15,23,41,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0B0F16; --sheet:#121824; --ink:#E7ECF4; --muted:#9AA5B6; --faint:#7A8496;
+      --rule:#243044; --rule-strong:#35435C; --sym:#7FA6F5; --wire:#FF7A7A; --sig:#38D6E8;
+      --ok-bg:#0A2219; --ok-line:#2E7D5F; --ok-ink:#7EE0B8;
+      --gap-bg:#1C1630; --gap-line:#6B54A0; --gap-ink:#C4AEF0;
+      --ref-bg:#2A2110; --ref-line:#9C7A2E; --ref-ink:#F0CC7A;
+      --bad-bg:#2A1113; --bad-line:#9C4444; --bad-ink:#F2A5A5;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0B0F16; --sheet:#121824; --ink:#E7ECF4; --muted:#9AA5B6; --faint:#7A8496;
+    --rule:#243044; --rule-strong:#35435C; --sym:#7FA6F5; --wire:#FF7A7A; --sig:#38D6E8;
+    --ok-bg:#0A2219; --ok-line:#2E7D5F; --ok-ink:#7EE0B8;
+    --gap-bg:#1C1630; --gap-line:#6B54A0; --gap-ink:#C4AEF0;
+    --ref-bg:#2A2110; --ref-line:#9C7A2E; --ref-ink:#F0CC7A;
+    --bad-bg:#2A1113; --bad-line:#9C4444; --bad-ink:#F2A5A5;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans KR","IBM Plex Sans Condensed",system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;word-break:keep-all}
+  .wrap{max-width:1240px;margin:0 auto;padding-block:28px 64px;padding-left:16px;padding-right:16px}
+  .masthead{border:1.5px solid var(--rule-strong);background:var(--sheet);box-shadow:var(--shadow)}
+  .masthead-body{padding:26px 24px 20px}
+  .eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--sig);font-weight:600;margin:0 0 10px}
+  h1{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:clamp(27px,5vw,42px);line-height:1.12;letter-spacing:-.015em;font-weight:700;margin:0 0 12px;text-wrap:balance}
+  .standfirst{margin:0;max-width:72ch;color:var(--muted);font-size:16px}
+  .titleblock{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1.5px solid var(--rule-strong);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px}
+  .titleblock div{padding:9px 14px;border-right:1px solid var(--rule)}
+  .titleblock div:last-child{border-right:none}
+  .titleblock span{display:block;color:var(--faint);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+  .titleblock b{font-weight:500;color:var(--ink)}
+  .part{margin-top:36px}
+  .part-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+  .part-no{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--sheet);background:var(--sym);padding:3px 9px;border-radius:3px;white-space:nowrap}
+  .part-head h2{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:23px;font-weight:700;margin:0;letter-spacing:-.015em}
+  .part-head .sub{color:var(--muted);font-size:13.5px}
+  .card{border:1.5px solid var(--rule-strong);background:var(--sheet);box-shadow:var(--shadow);margin-bottom:18px}
+  .card.crit{border-left:6px solid var(--bad-line)}
+  .card.high{border-left:6px solid var(--ref-line)}
+  .card.mid{border-left:6px solid var(--gap-line)}
+  .card.good{border-left:6px solid var(--ok-line)}
+  .card-head{padding:13px 20px;border-bottom:1.5px solid var(--rule-strong);font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-weight:700;font-size:16px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .card-head .pn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:500;color:var(--muted)}
+  .card-body{padding:18px 20px}
+  .card-body > :first-child{margin-top:0}
+  .card-body > :last-child{margin-bottom:0}
+  .card-body h3{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:15px;margin:22px 0 10px;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th,td{padding:9px 12px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+  thead th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);font-weight:600;white-space:nowrap;border-bottom:1.5px solid var(--rule-strong)}
+  tbody tr:last-child td{border-bottom:none}
+  td.mono,th.mono,.mono{font-family:"IBM Plex Mono",monospace;font-size:13px;font-variant-numeric:tabular-nums}
+  .badge{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 6px;border-radius:3px;border:1px solid currentColor;white-space:nowrap;font-weight:500}
+  .b-ok{color:var(--ok-ink);background:var(--ok-bg)} .b-gap{color:var(--gap-ink);background:var(--gap-bg)} .b-ref{color:var(--ref-ink);background:var(--ref-bg)} .b-bad{color:var(--bad-ink);background:var(--bad-bg)}
+  .sev{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:3px;white-space:nowrap}
+  .s-c{background:var(--bad-bg);color:var(--bad-ink);border:1px solid var(--bad-line)}
+  .s-h{background:var(--ref-bg);color:var(--ref-ink);border:1px solid var(--ref-line)}
+  .s-m{background:var(--gap-bg);color:var(--gap-ink);border:1px solid var(--gap-line)}
+  .s-g{background:var(--ok-bg);color:var(--ok-ink);border:1px solid var(--ok-line)}
+  .eqbox{font-family:"IBM Plex Mono",monospace;font-size:13px;background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--sig);padding:14px 16px;margin:16px 0;overflow-x:auto;line-height:1.8;white-space:pre-wrap;tab-size:2}
+  .eqbox b{color:var(--sig)}
+  .find{display:grid;grid-template-columns:110px 1fr;gap:6px 14px;font-size:14px;margin:0}
+  .find dt{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding-top:3px}
+  .find dd{margin:0;max-width:86ch}
+  .find dd b{font-weight:700}
+  .badcard{border:1.5px solid var(--bad-line);background:var(--bad-bg);color:var(--bad-ink);padding:18px 22px;margin:18px 0}
+  .badcard h3{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:18px;margin:0 0 8px;font-weight:700}
+  .badcard p{margin:0 0 8px;font-size:14.5px;max-width:82ch}
+  .badcard p:last-child{margin-bottom:0}
+  .gapcard{border:1.5px solid var(--gap-line);background:var(--gap-bg);color:var(--gap-ink);padding:18px 20px;margin-bottom:18px}
+  .gapcard h3{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:16px;margin:0 0 8px;font-weight:700}
+  .gapcard p{margin:0 0 10px;font-size:14px;max-width:82ch} .gapcard p:last-child{margin-bottom:0}
+  .steps{display:grid;gap:2px;background:var(--rule)}
+  .step{background:var(--sheet);padding:16px 18px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+  .step .n{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;color:var(--sheet);background:var(--sym);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;margin-top:1px}
+  .step b{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-weight:700;display:block;font-size:15.5px}
+  .step span{font-size:13.5px;color:var(--muted)}
+  p.lead{font-size:14.5px;color:var(--muted);max-width:84ch}
+  .src{font-size:13px;color:var(--muted)}
+  @media (max-width:620px){.titleblock{grid-template-columns:repeat(2,minmax(0,1fr))}.titleblock div{border-bottom:1px solid var(--rule)}.card-body{padding:14px}.masthead-body{padding:20px 16px 16px}.find{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <div class="masthead-body">
+    <p class="eyebrow">V2000 · sch_microinv_v2000.pdf (2026-09-19, 10 sheets) vs S2G1812 reverse-engineered (6 sheets) · Rev 2</p>
+    <h1>V2000 핀맵과 회로 재검토</h1>
+    <p class="standfirst">새 판 도면은 부품 주석이 붙고 PV_B 전력단이 추가됐습니다. 이번에는 글자를 픽셀로 읽지 않고 PDF의 Type3 글리프를 해독해 <b>배선·접속점·핀 번호·넷 이름을 벡터로 복원</b>했고, 그 넷리스트를 원본 S2G1812 넷리스트와 대조했습니다. 1부는 MCU에 들어와야 하는 신호 전부의 역할 검증과 STM32G474 핀 배정, 2부는 소자·배선·결선 재검토입니다.</p>
+  </div>
+  <div class="titleblock">
+    <div><span>MCU 신호</span><b>38 핀 · HRTIM 8 · ADC 17</b></div>
+    <div><span>전회 지적</span><b>25건 중 3건 해결</b></div>
+    <div><span>신규 지적</span><b>치명 1 · 높음 4 · 중 6</b></div>
+    <div><span>Rev</span><b>2.0 · 2026-09-19</b></div>
+  </div>
+</header>
+
+<div class="badcard">
+  <h3>결론</h3>
+  <p><b>전력단 지령·센싱 신호는 여전히 MCU에 한 가닥도 연결되어 있지 않습니다.</b> 1부의 핀맵대로 결선하면 됩니다. 필요한 핀은 전부 LQFP-100(VET7, 105 ℃)에도 있으므로 128핀을 유지할 이유가 없습니다.</p>
+  <p>새로 찾은 치명 오류가 하나 있습니다. <b>PV_B 시트의 2상 변압기(T7·T8) 1차측이 PV_B+가 아니라 PV_A+에 묶여</b> 있습니다. 그리고 CST 출력 필터 C1·C13·C21·C33이 원본 100 pF 대신 <b>100 nF</b>로 들어가 피크 전류 파형이 68 µs로 뭉개지고, 보조전원 FB 분압은 <b>1.21 V</b>로 조정되며, PV_A- 션트가 두 시트에 병렬로 두 개 있습니다.</p>
+  <p>전회 치명 8건 중 해결된 것은 없습니다. 해결된 것은 부품 주석(M1), p8 잔여 부품(M2 일부), PV_B 전력단 부재(H6)입니다.</p>
+</div>
+
+<!-- ================= PART 1 ================= -->
+<section class="part">
+  <div class="part-head"><span class="part-no">PART 1</span><h2>MCU 핀맵</h2><span class="sub">신호 역할 검증 → STM32G474 핀 배정 · 기준전압 REF3030A</span></div>
+
+  <p class="lead">아래 신호는 V2000 도면의 오프페이지 포트를 넷리스트에서 추적해 <b>출처 부품·극성·풀업·대역</b>까지 확인한 것입니다. 핀 기능은 ST CubeMX 핀 데이터(STM32G474QB-C-ETx.xml, VB-C-ETx.xml)에서 읽었습니다. 핀 번호는 LQFP-128, 괄호는 LQFP-100입니다. 같은 표를 <span class="mono">docs/V2000-MCU-pinmap.md</span>에 CubeMX 입력용으로 두었습니다.</p>
+
+  <div class="card"><div class="card-head">1-A · 전력단 타이밍 — HRTIM1 한 블록에 전부 <span class="pn">Timer A/B = 플라이백 · Timer E = 언폴더 MOSFET · Timer F = SCR · FLT1 = 고장</span></div>
+  <div class="card-body"><div class="table-wrap"><table>
+    <thead><tr><th>신호 (도면 포트명)</th><th>역할 · 출처</th><th>전기 특성</th><th>G474 핀</th><th>기능</th><th>상태</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">PWM_A1</td><td>PV_A 1상 플라이백 게이트 — 01 시트 U13 2EDN7524R INA → Q1‖Q2</td><td>3.3 V, 22 Ω 직렬(R20) + 10 kΩ 풀다운(R25)</td><td class="mono">PA8 (89 / 67)</td><td class="mono">HRTIM1_CHA1</td><td><span class="badge b-bad">신규 결선</span></td></tr>
+      <tr><td class="mono">PWM_A2</td><td>PV_A 2상 — U13 INB → Q3‖Q4</td><td>A1 대비 180° 인터리브</td><td class="mono">PA9 (90 / 68)</td><td class="mono">HRTIM1_CHA2</td><td><span class="badge b-bad">신규 결선</span></td></tr>
+      <tr><td class="mono">PWM_B1</td><td>PV_B 1상 — 02 시트 U14 INA → Q5‖Q6</td><td>동일</td><td class="mono">PA10 (91 / 69)</td><td class="mono">HRTIM1_CHB1</td><td><span class="badge b-bad">신규 결선</span></td></tr>
+      <tr><td class="mono">PWM_B2</td><td>PV_B 2상 — U14 INB → Q7‖Q8</td><td>동일</td><td class="mono">PA11 (92 / 70)</td><td class="mono">HRTIM1_CHB2</td><td><span class="badge b-bad">신규 결선</span></td></tr>
+      <tr><td class="mono">GATE_UNF_N<br><small>구 OFFPAGELEFT-L</small></td><td>언폴더 저압측 MOSFET Q13(AC_N 레그) — 08 시트 U5A → R196 300 Ω → ISO1A ELD207 → U6B‖U6C</td><td><b>액티브 로우</b>, 10 kΩ 풀업 R192, 60 Hz</td><td class="mono">PC8 (87 / 65)</td><td class="mono">HRTIM1_CHE1</td><td><span class="badge b-ref">포트명 변경 + 결선</span></td></tr>
+      <tr><td class="mono">GATE_UNF_L<br><small>구 OFFPAGELEFT-L</small></td><td>언폴더 저압측 MOSFET Q14(AC_L 레그) — U5B → R209 → ISO1B → U6D‖U6E</td><td>액티브 로우, 10 kΩ 풀업 R205</td><td class="mono">PC9 (88 / 66)</td><td class="mono">HRTIM1_CHE2</td><td><span class="badge b-ref">포트명 변경 + 결선</span></td></tr>
+      <tr><td class="mono">GATE_AC_N</td><td>고압측 SCR D23 S8008D 점호 — 03 시트 U1B SN74HC14 → R78 300 Ω → ISO2 MOC3063 → R79 200 Ω/PHV → D25 → 게이트</td><td>액티브 로우, 10 kΩ 풀업 R76</td><td class="mono">PC6 (80 / 63)</td><td class="mono">HRTIM1_CHF1</td><td><span class="badge b-bad">신규 결선</span></td></tr>
+      <tr><td class="mono">GATE_AC_L</td><td>SCR D24 점호 — U1A → R80 → ISO3</td><td>액티브 로우, 10 kΩ 풀업 R77</td><td class="mono">PC7 (81 / 64)</td><td class="mono">HRTIM1_CHF2</td><td><span class="badge b-bad">신규 결선</span></td></tr>
+      <tr><td class="mono">FAULT_HW<br><small>구 OFFPAGELEFT-R</small></td><td>하드웨어 고장 플래그 — 08 시트 고장 버스(R190 100 kΩ 풀업) → U6F → ISO4 FOD817 → U5C → U5D → R187 510 Ω</td><td>액티브 로우, 3.3 V 도메인. 고장 시 HRTIM 출력 즉시 차단</td><td class="mono">PA12 (93 / 71)</td><td class="mono">HRTIM1_FLT1 + EXTI12</td><td><span class="badge b-ref">포트명 변경 + 결선</span></td></tr>
+      <tr><td class="mono">RELAY_GRID</td><td>계통 릴레이 LS1 — 03 시트 R91 510 Ω → Q9 BSS316N</td><td>액티브 하이 GPIO</td><td class="mono">PB10 (62 / 47)</td><td class="mono">GPIO</td><td><span class="badge b-ok">결선됨</span></td></tr>
+    </tbody></table></div>
+    <p class="src" style="margin-top:12px">Timer C/D는 쓰지 않으므로 PB12–PB15는 ADC4 입력으로 돌립니다. 언폴더 두 레그를 Timer E의 두 출력에 두면 데드타임을 하드웨어로 강제할 수 있습니다. 원본 F28034는 GPIO43/44를 소프트웨어로 토글했습니다.</p>
+  </div></div>
+
+  <div class="card"><div class="card-head">1-B · 아날로그 — ADC 17채널 · COMP 4 <span class="pn">풀스케일 3.0 V (REF3030A)</span></div>
+  <div class="card-body"><div class="table-wrap"><table>
+    <thead><tr><th>신호</th><th>역할 · 출처</th><th>범위 (3.0 V 기준)</th><th>G474 핀</th><th>기능</th><th>상태</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">ADC_I_PA1</td><td>PV_A 1상 CST T1 PA1005.100NLT 피크 전류 — D1 BAS100CS → R4 2 Ω 부담 → R1 680 Ω</td><td>20 mV/A, 18 A → 0.36 V</td><td class="mono">PA1 (28 / 24)</td><td class="mono">ADC1_IN2 · <b>COMP1_INP</b></td><td><span class="badge b-bad">신규</span></td></tr>
+      <tr><td class="mono">ADC_I_PA2</td><td>PV_A 2상 CST T3</td><td>동일</td><td class="mono">PA7 (36 / 32)</td><td class="mono">ADC2_IN4 · <b>COMP2_INP</b></td><td><span class="badge b-bad">신규</span></td></tr>
+      <tr><td class="mono">ADC_I_PB1</td><td>PV_B 1상 CST T5</td><td>동일</td><td class="mono">PC1 (23 / 9)</td><td class="mono">ADC1/2_IN7 · <b>COMP3_INP</b></td><td><span class="badge b-bad">신규</span></td></tr>
+      <tr><td class="mono">ADC_I_PB2</td><td>PV_B 2상 CST T7</td><td>동일</td><td class="mono">PE7 (53 / 38)</td><td class="mono">ADC3_IN4 · <b>COMP4_INP</b></td><td><span class="badge b-bad">신규</span></td></tr>
+      <tr><td class="mono">ADC_V_PA</td><td>PV_A 클램프 노드 전압 — 07 시트 U3A TLV9062, R164 1 MΩ / R163 20 kΩ (51:1). 원본 U404A·ADCINB5와 동일 구조</td><td>3.0 V ↔ 153 V</td><td class="mono">PA0 (27 / 23)</td><td class="mono">ADC1/2_IN1</td><td><span class="badge b-bad">신규</span></td></tr>
+      <tr><td class="mono">ADC_V_PB</td><td>PV_B — U3B</td><td>동일</td><td class="mono">PA2 (29 / 25)</td><td class="mono">ADC1_IN3</td><td><span class="badge b-bad">신규</span></td></tr>
+      <tr><td class="mono">ADC_I_PV_A</td><td>PV_A 입력 전류 — U21 INA240A2 (×50), IN+ = GND측, IN− = PV_A-측, REF = GND</td><td>0.15 V/A, 15 A → 2.25 V</td><td class="mono">PC2 (24 / 10)</td><td class="mono">ADC1/2_IN8</td><td><span class="badge b-bad">신규</span></td></tr>
+      <tr><td class="mono">ADC_I_PV_B</td><td>PV_B — U22</td><td>동일</td><td class="mono">PC3 (25 / 11)</td><td class="mono">ADC1/2_IN9</td><td><span class="badge b-bad">신규</span></td></tr>
+      <tr><td class="mono">ADC_V_GRID_P / N</td><td>계통 전압 — U23 AMC3301 OUTP/OUTN, R175/R177 1 kΩ + C156 4.7 nF. 입력측 3×680 kΩ / 1 kΩ(R87)</td><td>차동, CM 1.44 V</td><td class="mono">PB14 (68 / 53) / PB15 (69 / 54)</td><td class="mono">ADC4_IN4(+) · ADC4_IN5(−) 차동</td><td><span class="badge b-bad">신규</span></td></tr>
+      <tr><td class="mono">ADC_I_GRID_P / N</td><td>계통 전류 — U24 AMC3302, R90 10 mΩ</td><td>차동, 8.3 A → 32 mV pk 입력</td><td class="mono">PE14 (60 / 45) / PE15 (61 / 46)</td><td class="mono">ADC4_IN1(+) · ADC4_IN2(−) 차동</td><td><span class="badge b-bad">신규</span></td></tr>
+      <tr><td class="mono">ADC_I_GRID_Lk</td><td>절연·누설 감시 — 08 시트 U4A (03 시트 오타 수정 전제)</td><td>저속</td><td class="mono">PD12 (74 / 59)</td><td class="mono">ADC3/4/5_IN9</td><td><span class="badge b-bad">신규</span></td></tr>
+      <tr><td class="mono">AIN1 ~ AIN4</td><td>NTC 4채널 (10 시트)</td><td>25 ℃ 1.25 V</td><td class="mono">PC4 / PC5 / PB0 / PB1</td><td class="mono">ADC2_IN5 / ADC2_IN11 / ADC1_IN15 / ADC1_IN12</td><td><span class="badge b-ok">결선됨</span></td></tr>
+      <tr><td class="mono">ADC_V_10V0 (제안)</td><td>원본 ADCINB2의 보조 10 V 감시 복원, 100 k/20 k</td><td>3.0 V ↔ 18 V</td><td class="mono">PE13 (59 / 44)</td><td class="mono">ADC3_IN3</td><td><span class="badge b-gap">제안</span></td></tr>
+    </tbody></table></div>
+    <p class="src" style="margin-top:12px">COMP1~4의 반전 입력은 내부 DAC로 잡습니다. 원본이 COMP1A/2A/3A/3B 4채널로 하던 사이클별 피크 전류 제한을 4상 모두 하드웨어로 되살립니다. 차동 ADC 쌍은 INx(+)·INx+1(−) 규칙을 지켰습니다. 단일 종단으로 읽고 소프트웨어에서 빼도 됩니다.</p>
+    <div class="eqbox"><b>3.0 V 풀스케일 점검</b>
+INA240  15 A × 3 mΩ × 50 = 2.25 V ✓        V_PA  153 V / 51 = 3.0 V ✓ (클램프 노드 100~130 V 예상)
+CST     18 A × 20 mV/A = 0.36 V  — 12 % 사용. R4·R23·R41·R61 부담을 2 → 10 Ω(0.1 V/A)로 올리면 1.8 V. CST V·s 여유 확인 후 결정
+NTC     10 kΩ NTC(B 3435 가정) −40 ℃ ≈ 190 kΩ → 3.3 × 190/206.5 = 3.04 V — 극저온에서만 3.0 V 초과, 과열 보호에는 무관
+AMC3301/3302 출력 스윙은 데이터시트 미확보 — 3.0 V 이내로 알려져 있으나 대조 필요</div>
+  </div></div>
+
+  <div class="card"><div class="card-head">1-C · 통신 · 디버그 · 시스템 <span class="pn">전부 현 도면에 결선됨</span></div>
+  <div class="card-body"><div class="table-wrap"><table>
+    <thead><tr><th>신호</th><th>상대</th><th>G474 핀</th><th>기능</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">UART0_TXD / UART0_RXD</td><td>ESP32-S3 IO18 / IO17 (06 시트, 47 kΩ 풀업)</td><td class="mono">PD5 (115) / PD6 (116)</td><td class="mono">USART2_TX / RX</td><td>넷 이름이 양쪽에서 같으므로 ESP32 펌웨어에서 IO18 = RX, IO17 = TX로 잡아야 함</td></tr>
+      <tr><td class="mono">UART2_TXD_C / RXD_C</td><td>easyDSP J20</td><td class="mono">PC10 (100) / PC11 (101)</td><td class="mono">USART3_TX / RX</td><td>✓</td></tr>
+      <tr><td class="mono">CAN_TX / CAN_RX / CAN_NEN</td><td>TLE9251VSJ (R146/R147 1 kΩ, R150 10 kΩ 풀다운)</td><td class="mono">PD1 (109) / PD0 (108) / PD2 (112)</td><td class="mono">FDCAN1_TX / RX / GPIO</td><td>✓ (VIO 5 V 문제는 H3)</td></tr>
+      <tr><td class="mono">SWDIO_C / SWCLK_C / SWO_C</td><td>J19 1×6</td><td class="mono">PA13 (96) / PA14 (98) / PB3 (118)</td><td class="mono">SWD + SWO</td><td>✓</td></tr>
+      <tr><td class="mono">/BOOT_C</td><td>J20 핀 7, R112 10 kΩ 풀다운</td><td class="mono">PB8-BOOT0 (123)</td><td class="mono">BOOT0</td><td>✓ 풀다운 방향 확인</td></tr>
+      <tr><td class="mono">/RESET_C</td><td>J19 핀 6 / J20 핀 9, R118 10 kΩ 풀업, C105 NC</td><td class="mono">NRST (21)</td><td class="mono">NRST</td><td>✓ C105 100 nF 실장 권장</td></tr>
+      <tr><td class="mono">OSC_IN / OSC_OUT</td><td>Y1 NX5032GA 24 MHz, 8 pF ×2, 0 Ω</td><td class="mono">PF0 (19) / PF1 (20)</td><td class="mono">HSE</td><td>✓</td></tr>
+      <tr><td class="mono">LED_ST1 / LED_ST2 (제안)</td><td>원본 GPIO10/11 상태 LED</td><td class="mono">PD3 (113) / PD4 (114)</td><td class="mono">GPIO</td><td>제안</td></tr>
+    </tbody></table></div>
+  </div></div>
+
+  <div class="card"><div class="card-head">1-D · 기준전압 REF3030A와 VREF+ <span class="pn">데이터시트 SBVS032K (2025-12)</span></div>
+  <div class="card-body">
+    <dl class="find">
+      <dt>현재 도면</dt><dd>U16 핀 43 VREF+a, 44 VREF+b가 <b>미결선</b>입니다(확대 판독으로 확인). VDDA 45는 VDDA_3V3, VSSA 42는 GND입니다. VREF+가 뜨면 ADC 5개 전부 기준이 없습니다.</dd>
+      <dt>REF3030A 규격</dt><dd>3.0 V ±0.2 %, 75 ppm/℃, 출력 25 mA, SOT-23-3, 부하 커패시터 없이도 안정. 입력 전압 하한은 <b>V_OUT + 0.2 V = 3.2 V</b>(부하 시). 정밀이 필요하면 REF3030E(±0.1 %, 15 ppm/℃, ±10 mA)가 핀 호환 대체품입니다.</dd>
+      <dt>결선</dt><dd>REF3030A OUT → VREF+a·VREF+b 두 핀을 묶어 연결, 핀 바로 옆에 100 nF + 1 µF. <b>IN은 VDDA_3V3이 아니라 VCC_5V0</b>에서 10 Ω + 1 µF RC로 받으십시오. 3.3 V 레일은 3.2 V 하한에 100 mV밖에 여유가 없고, 현 도면의 3.3 V는 플라이백 출력 직결이라 리플이 더해집니다. 3.0 V &lt; VDDA 3.3 V 조건은 만족합니다.</dd>
+      <dt>영향</dt><dd>ADC 풀스케일이 3.3 V에서 3.0 V로 줄므로 위 1-B 표의 범위를 3.0 V 기준으로 다시 잡았습니다. 초과하는 채널은 없습니다.</dd>
+    </dl>
+  </div></div>
+
+  <div class="card good"><div class="card-head">1-E · 집계 <span class="pn">LQFP-100 호환</span></div>
+  <div class="card-body"><div class="table-wrap"><table>
+    <thead><tr><th>항목</th><th>수</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td>신호 핀 (예비 제외)</td><td class="mono">38</td><td>HRTIM 출력 8 + 고장 1 + 릴레이 1 + ADC 17 + 통신 7 + SWD 3 + BOOT0/HSE 3 (NRST 별도)</td></tr>
+      <tr><td>COMP 입력 겸용</td><td class="mono">4</td><td>CST 4채널 → 내부 DAC 문턱 → HRTIM 이벤트</td></tr>
+      <tr><td>LQFP-100(VET7)에 없는 핀</td><td class="mono">0</td><td>PG 포트·PF3~15 미사용. QET6(85 ℃) → VET7(105 ℃) 교체 가능</td></tr>
+      <tr><td>포트명 변경</td><td class="mono">4</td><td>OFFPAGELEFT-L ×2 → GATE_UNF_N/L, OFFPAGELEFT-R → FAULT_HW, I_GIRD_Lk → I_GRID_Lk</td></tr>
+    </tbody></table></div>
+  </div></div>
+</section>
+
+<!-- ================= PART 2 ================= -->
+<section class="part">
+  <div class="part-head"><span class="part-no">PART 2</span><h2>전회 지적 상태</h2><span class="sub">Rev 1 검토서 C1~C8 · H1~H8 · M1~M9 → 새 판 대조</span></div>
+  <div class="card"><div class="card-body"><div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>지적</th><th>새 판 상태</th><th>넷리스트 근거</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">C1</td><td>MCU 전력단 미결선</td><td><span class="sev s-c">미해결</span></td><td>U16에 결선된 것은 SWD·NRST·BOOT0·HSE·USART2/3·FDCAN1·AIN1~4·RELAY_GRID뿐. PWM/GATE/FAULT/ADC 포트 전부 편도</td></tr>
+      <tr><td class="mono">C2</td><td>언폴더 두 레그 같은 포트</td><td><span class="sev s-c">미해결</span></td><td>OFFPAGELEFT-L 넷에 R192·R205(두 레그 풀업) 동시 존재, OFFPAGELEFT-R은 C167만</td></tr>
+      <tr><td class="mono">C3</td><td>비절연 op-amp AC 직결 시트(구 p1 → 09 GRID_ProtectionB)</td><td><span class="sev s-c">미해결</span></td><td>R219·R228 20 mΩ이 AC_N_IN/AC_L_IN에서 U10A/U10B 입력으로, R220 63 kΩ 입력 위치 그대로. ADC1~4·IO1 포트도 편도</td></tr>
+      <tr><td class="mono">C4</td><td>릴레이 코일 절연 장벽 침범</td><td><span class="sev s-c">미해결</span></td><td>LS1.8 = VCC_12V0(C67·R97로 PGND 기준), Q9 소스 = GND</td></tr>
+      <tr><td class="mono">C5</td><td>STM32G474QET6 온도 등급</td><td><span class="sev s-c">미해결</span></td><td>U16 = QET6. 1부 핀맵은 VET7로 그대로 이식 가능</td></tr>
+      <tr><td class="mono">C6</td><td>과전압 TVS 상단이 12 V 고장 버스</td><td><span class="sev s-c">미해결</span></td><td>D40 SMBJ400CAL 상단 = R190/C169/U6F가 붙은 고장 버스. PHV는 R188에만</td></tr>
+      <tr><td class="mono">C7</td><td>보조전원 CS 1 mΩ · FB · 클램프 30 V</td><td><span class="sev s-c">미해결 (FB 값 정정)</span></td><td>R106 1 mΩ 그대로. FB는 R108 10 kΩ 상단 / R109 47.5 kΩ 하단으로 확인 → V_out = 1.0 × (1 + 10/47.5) = <b>1.21 V</b> (전회 5.75 V는 상하 반대로 읽은 것). D33 PMEG3020ER 그대로</td></tr>
+      <tr><td class="mono">C8</td><td>VCC_3V3 무전원</td><td><span class="sev s-c">미해결</span></td><td>VCC_3V3 넷: C111·J21·R119~R138·U17.3만. 04 PWR 시트는 VDD_3V3·VDDA_3V3·VCC_5V0·VCC_10V0·VCC_12V0만 생성</td></tr>
+      <tr><td class="mono">H1</td><td>1차 FET 100 V</td><td><span class="sev s-h">미해결</span></td><td>Q1~Q8 IAUCN10S7L040. 보조전원 Q10도 같은 품번(신규 N7)</td></tr>
+      <tr><td class="mono">H2</td><td>OPA2387 개방루프·중복</td><td><span class="sev s-h">미해결</span></td><td>U2B 출력→입력 귀환 없음, PV_B- 직결. INA240 U21/U22와 중복</td></tr>
+      <tr><td class="mono">H3</td><td>TLE9251 VIO = 5 V</td><td><span class="sev s-h">미해결</span></td><td>U20.5 VIO = VCC_5V0</td></tr>
+      <tr><td class="mono">H4</td><td>FOD817 LED 직렬저항 누락</td><td><span class="sev s-h">미해결</span></td><td>U6F.12 → ISO4.1 직결(확대 확인)</td></tr>
+      <tr><td class="mono">H5</td><td>누설감지 오타·구조</td><td><span class="sev s-h">미해결</span></td><td>03 시트 I_GIRD_Lk(C58·F2·J18) ≠ 08 시트 I_GRID_Lk(R182·C162·C164). 4 MΩ은 PV_B+ 기준</td></tr>
+      <tr><td class="mono">H6</td><td>PV_B 전력단 없음</td><td><span class="sev s-g">해결</span></td><td>02 시트 추가. 단 N1(PV_A+ 오결선) 발생</td></tr>
+      <tr><td class="mono">H7</td><td>2EDN7524R 풋프린트·ENA/ENB</td><td><span class="sev s-h">미해결</span></td><td>SOIC127P600X175-8N 그대로. R16/R19/R53/R56 0 Ω 반대편 개방</td></tr>
+      <tr><td class="mono">H8</td><td>MOC3063S 제로크로스</td><td><span class="sev s-h">미해결</span></td><td>ISO2/ISO3 MOC3063S-TA</td></tr>
+      <tr><td class="mono">M1</td><td>부품 미주석</td><td><span class="sev s-g">해결</span></td><td>R1~R248, C1~C198 등 전부 번호 부여</td></tr>
+      <tr><td class="mono">M2</td><td>타이틀·잔여 부품</td><td><span class="sev s-m">일부</span></td><td>빈 시트·TP5592 제거됨. 10 시트(NTC) 타이틀 블록 Revision은 아직 <b>V1200</b></td></tr>
+      <tr><td class="mono">M3</td><td>NTC 분압 16.5 kΩ</td><td><span class="sev s-m">미해결</span></td><td>R232/R233/R240/R241 16.5 kΩ, NTC R236/R238/R244/R246 10 kΩ</td></tr>
+      <tr><td class="mono">M4</td><td>ESP32 벌크 캡</td><td><span class="sev s-m">미해결</span></td><td>U17.3 3V3에 C111 100 nF만</td></tr>
+      <tr><td class="mono">M5</td><td>PV_A- 션트 중복</td><td><span class="sev s-h">격상 → N4</span></td><td>병렬 연결이 넷리스트로 확정됨</td></tr>
+      <tr><td class="mono">M6</td><td>ADC1/ADC2 중복 탭</td><td><span class="sev s-m">미해결</span></td><td>C180 한 노드에 ADC1·ADC2 포트</td></tr>
+      <tr><td class="mono">M7</td><td>CST 1차 핀·SCS205KNHR</td><td><span class="sev s-m">미해결</span></td><td>CST 1차 8→7·6→5·4 직렬 경로는 원본 TR100과 동일 구조로 확인. 품번 미확인</td></tr>
+      <tr><td class="mono">M8</td><td>입력 캡 용량</td><td><span class="sev s-g">이상 없음</span></td><td>EC1~EC6 / EC7~EC12 7×2700 µF ×2채널</td></tr>
+      <tr><td class="mono">M9</td><td>퓨즈 정격·돌입 제한</td><td><span class="sev s-m">미해결</span></td><td>F1 0678L9100-02, TH1은 서미스터가 아니라 P2600SDLRP SIDACtor(RV1과 직렬, 정상 구성)</td></tr>
+    </tbody></table></div></div></div>
+</section>
+
+<!-- ================= PART 3 ================= -->
+<section class="part">
+  <div class="part-head"><span class="part-no">PART 3</span><h2>신규 발견</h2><span class="sub">넷리스트 복원으로 새로 잡힌 것 · 치명 1 · 높음 4 · 중 6</span></div>
+
+  <div class="card crit"><div class="card-head">N1 · PV_B 2상 변압기 1차가 PV_A+에 연결 <span class="pn">02 시트 · T7 PA1005 · T8 CUSTOM · C35 · C36</span></div>
+  <div class="card-body"><dl class="find">
+    <dt>확인</dt><dd>02 시트 하단 2상 블록의 상단 레일 라벨이 <b>PV_A+</b>입니다. 넷리스트: PV_A+ 넷에 p2의 C35·C36(4.7 nF/100 V 스너버)과 T7 1차 핀 8·7·6·5·4가 들어 있고, PV_B+ 넷에는 1상 블록(T5·T6·C25·C26)만 있습니다. 01 시트의 같은 자리는 PV_A+가 맞습니다.</dd>
+    <dt>영향</dt><dd>PV_B 채널 2상은 PV_B 입력이 아니라 PV_A 입력에서 전력을 끌어옵니다. PV_A 전류 센싱(R6·INA240)에 PV_B 2상 전류가 섞이고, 두 채널 MPPT가 서로 간섭하며, PV_A- 션트 전류가 정격의 1.5배가 됩니다.</dd>
+    <dt>수정</dt><dd>02 시트의 해당 전원 심볼을 PV_B+로 교체. 복사한 시트의 전원 심볼 라벨을 전수 검색(PV_A±, V_PA, I_PV_A±, ADC_I_PA1/2 등)해 채널 접미사를 확인하십시오. 02 시트의 나머지는 PWM_B1/B2·ADC_I_PB1/PB2·V_PB·I_PV_B±로 정상입니다.</dd>
+  </dl></div></div>
+
+  <div class="card high"><div class="card-head">N2 · CST 출력 필터 100 nF — 원본은 100 pF <span class="pn">C1 · C13 · C21 · C33 (100nF CAPC2012) vs 원본 C107 · C120 (100PF/1608)</span></div>
+  <div class="card-body"><dl class="find">
+    <dt>확인</dt><dd>4개 CST 블록 모두 D1 → R4 2 Ω 부담 → R1 680 Ω → ADC 포트, 포트 노드에 C1 <b>100 nF</b>. 원본 04.PVA 시트는 같은 위치에 100 pF입니다. 부담 2 Ω과 댐핑 510 Ω, 다이오드 BAS100CS, 680 Ω은 원본과 같습니다.</dd>
+    <dt>영향</dt><dd>τ = 680 Ω × 100 nF = <b>68 µs</b>. 100 kHz급 스위칭 주기 10 µs에서 피크 전류 파형이 평균값으로 뭉개져 사이클별 피크 전류 제한(COMP)과 상별 전류 균형 제어가 불가능합니다. 원본은 68 ns입니다.</dd>
+    <dt>수정</dt><dd>C1·C13·C21·C33 → 100 pF. 아울러 3.0 V 풀스케일 대비 신호가 0.36 V뿐이므로 부담 R4·R23·R41·R61을 2 → 10 Ω으로 올리는 것을 검토(1부 1-B 계산).</dd>
+  </dl></div></div>
+
+  <div class="card high"><div class="card-head">N3 · 보조전원 FB 분압 → 3.3 V 레일이 1.21 V로 조정 <span class="pn">04 시트 · R108 10 kΩ(상) · R109 47.5 kΩ(하) · U15 FB</span></div>
+  <div class="card-body"><dl class="find">
+    <dt>확인</dt><dd>확대 판독: FB 핀 10 → R108 10 kΩ 상단은 VDD_3V3/VDDA_3V3 레일, R109 47.5 kΩ 하단은 GND. 전회는 상하를 반대로 읽어 5.75 V로 적었습니다.</dd>
+    <dt>영향</dt><dd>LM5156 FB 기준 1.0 V 기준 V_out = 1.0 × (1 + 10/47.5) = <b>1.21 V</b>. 3.3 V 레일과 그 뒤 MCU·센싱 전부 기동 불가.</dd>
+    <dt>수정</dt><dd>R108 23.2 kΩ / R109 10 kΩ → 3.32 V. 근본적으로는 5 V 권선을 조정 대상으로 두고 3.3 V는 LDO로 만드는 편이 맞습니다(전회 C7). LM5156 FB 기준 1.0 V는 데이터시트 대조 필요.</dd>
+  </dl></div></div>
+
+  <div class="card high"><div class="card-head">N4 · PV_A- 션트 두 개가 병렬 <span class="pn">01 시트 R6 3 mΩ ∥ 04 시트 R101 2 mΩ</span></div>
+  <div class="card-body"><dl class="find">
+    <dt>확인</dt><dd>R6(01)와 R101(04)이 둘 다 PV_A- 와 GND 사이에 있습니다. 전원 심볼이 같은 넷이므로 병렬입니다. INA240 U21은 R6 양단(I_PV_A+ = GND측, I_PV_A- = PV_A-측)을 봅니다. PV_B에는 04 시트에 대응 션트가 없습니다.</dd>
+    <dt>영향</dt><dd>유효 저항 3 ∥ 2 = 1.2 mΩ → 전류 판독이 <b>40 %</b>로 나옵니다(15 A가 6 A로). 두 시트의 션트가 PCB에서 서로 다른 위치에 놓이면 반환 전류가 갈라져 오차가 예측 불가능해집니다.</dd>
+    <dt>수정</dt><dd>R101과 04 시트의 I_PV_A 라벨 제거. 04 시트 PV_A- 는 보조전원 입력 귀환만 담당.</dd>
+  </dl></div></div>
+
+  <div class="card high"><div class="card-head">N5 · USB-C VBUS가 내부 5 V 레일에 직결 <span class="pn">06 시트 · U18 VBUS(A4·A9·B4·B9) = VCC_5V0</span></div>
+  <div class="card-body"><dl class="find">
+    <dt>확인</dt><dd>U18 VBUS 4핀이 VCC_5V0 넷입니다. VCC_5V0는 04 시트 D35에서 만드는 보조전원 출력이고 TLE9251 VCC/VIO도 같은 레일입니다. CC1/CC2에 5.1 kΩ 풀다운(R143/R144)이 있어 호스트는 이 포트를 싱크로 보고 VBUS 5 V를 공급합니다.</dd>
+    <dt>영향</dt><dd>PC를 꽂으면 호스트 5 V와 보조전원 5 V가 맞붙습니다. 보조전원이 꺼진 상태에서는 USB가 CAN 트랜시버·(C8 해결 후) ESP32까지 역급전합니다. 옥외 절연 제품에서 PE 없는 노트북과 PV 귀환이 USB GND로 묶이는 경로이기도 합니다.</dd>
+    <dt>수정</dt><dd>VBUS는 ESP32 USB의 VBUS 검출(분압)에만 쓰고 레일에서 분리. 급전이 필요하면 VBUS → 아이디얼 다이오드/쇼트키 OR → VCC_3V3 LDO 입력으로 제한.</dd>
+  </dl></div></div>
+
+  <div class="card mid"><div class="card-head">N6 · 클램프 경로 비드가 원본 30 Ω → 600 Ω·0.5 A <span class="pn">L1 · L3 · L4 · L6 BLM18KG601SN1D vs 원본 L101/L102 30ohm/1608</span></div>
+  <div class="card-body"><dl class="find">
+    <dt>확인</dt><dd>D4 DR2G → C10 22 nF → GND 클램프 경로에 직렬로 L1(600 Ω @100 MHz, 정격 500 mA)이 있습니다. 원본은 30 Ω 비드입니다. 이 경로에는 매 사이클 누설 인덕턴스 에너지가 수 A 피크로 흐릅니다.</dd>
+    <dt>영향</dt><dd>비드 포화·발열, 클램프 전압 상승, V_PA 센싱 노드(L1/L3 접점)의 파형 왜곡.</dd>
+    <dt>수정</dt><dd>원본과 같은 30 Ω급·3 A 이상 비드로 교체. 값 확정은 클램프 피크 전류 실측 후.</dd>
+  </dl></div></div>
+
+  <div class="card mid"><div class="card-head">N7 · 보조전원 FET·정류기 정격 <span class="pn">Q10 IAUCN10S7L040 100 V · D31 BAS100CS-AU</span></div>
+  <div class="card-body"><dl class="find">
+    <dt>확인</dt><dd>Q10은 주 전력단과 같은 100 V FET. 입력 PV OR-ing 최대 50 V + 반사전압 + 누설 스파이크가 드레인에 걸립니다. 12 V 권선 정류기 D31은 BAS100CS(소신호 100 V)이고 부하는 HEF40106B 6개 + 릴레이 코일 GR2G 12 V + 게이트 전하입니다.</dd>
+    <dt>영향</dt><dd>H1과 같은 논리로 100 V 마진 부족. 원본 NCP1031은 200 V 내장 FET입니다. D31 평균 전류(릴레이 코일만 수십 mA)와 피크 전류를 확인해야 합니다.</dd>
+    <dt>수정</dt><dd>권선비 확정 후 Q10을 150 V급으로, D31은 1 A급 쇼트키(예: PMEG10010ELR과 동일 계열)로 통일.</dd>
+  </dl></div></div>
+
+  <div class="card mid"><div class="card-head">N8 · CM 초크 심볼-풋프린트 권선 대응 <span class="pn">L7 · L8 LF19S-102-8A</span></div>
+  <div class="card-body"><dl class="find">
+    <dt>확인</dt><dd>심볼은 권선을 2–3(N선), 1–4(L선)으로 그렸고, 넷리스트에서도 L7 1=AC_L·4=LS1.5, 2=AC_N·3=LS1.3, L8 2=AC_N_IN·3=출력 N, 1=R90측·4=출력 L로 일관됩니다.</dd>
+    <dt>영향</dt><dd>실제 부품 권선이 1–2, 3–4이면 L선과 N선이 권선 하나로 단락됩니다. LF19S 데이터시트는 미확보입니다.</dd>
+    <dt>수정</dt><dd>풋프린트 핀 배열과 부품 핀 대응을 데이터시트로 확정하고 심볼에 권선 도트를 표기.</dd>
+  </dl></div></div>
+
+  <div class="card mid"><div class="card-head">N9 · LM5156 주변 값 <span class="pn">C77 SS 10 µF · R107 PGOOD 0 Ω → GND · R99 0 Ω</span></div>
+  <div class="card-body"><dl class="find">
+    <dt>확인</dt><dd>SS 핀에 10 µF, PGOOD(오픈 드레인)이 R107 0 Ω으로 GND, BIAS/입력에 R99 0 Ω. EN/UVLO는 R102 121 kΩ / R104 11 kΩ으로 18 V 문턱(시트 주기와 일치).</dd>
+    <dt>영향</dt><dd>SS 10 µF는 소프트스타트가 수 초 단위가 되어 UVLO 히스테리시스 동작 시 재기동이 느립니다. PGOOD를 GND에 묶는 것은 무의미하며 핀을 태울 수는 없지만 감시 기능을 버립니다.</dd>
+    <dt>수정</dt><dd>SS 47~220 nF, PGOOD는 MCU 감시 입력 또는 NC.</dd>
+  </dl></div></div>
+
+  <div class="card mid"><div class="card-head">N10 · UART0 넷 이름 방향 <span class="pn">06 시트 · UART0_TXD = PD5(MCU TX) ↔ ESP32 IO18 · UART0_RXD = PD6 ↔ IO17</span></div>
+  <div class="card-body"><dl class="find">
+    <dt>확인</dt><dd>같은 이름의 넷이 양단에 붙어 있어 어느 쪽 TX인지 도면만으로는 모호합니다. 넷리스트상 MCU USART2_TX(PD5)가 ESP32 IO18에, USART2_RX(PD6)가 IO17에 갑니다.</dd>
+    <dt>수정</dt><dd>전기적 오류는 아닙니다. 넷 이름을 MCU_TX_ESP_RX / MCU_RX_ESP_TX처럼 방향이 보이게 바꾸고 ESP32 펌웨어의 UART 핀 매핑을 그에 맞추십시오.</dd>
+  </dl></div></div>
+
+  <div class="card mid"><div class="card-head">N11 · 10 시트 타이틀 V1200 · NC 부품 <span class="pn">Revision 블록 · C81/C82/C64/R237… NC</span></div>
+  <div class="card-body"><p style="margin:0;font-size:14px">NTC 시트의 타이틀 블록 Revision이 V1200입니다. 또 NC로 표기된 부품(C64, C81, C82, C105, R113, R114, R237/R239/R245/R247 등)은 BOM 속성으로 실장 제외를 걸어 두어야 DRC/BOM에서 빠집니다.</p></div></div>
+</section>
+
+<!-- ================= PART 4 ================= -->
+<section class="part">
+  <div class="part-head"><span class="part-no">PART 4</span><h2>넷리스트로 확인된 정상 결선</h2><span class="sub">원본과 같거나 나은 것 · 유지</span></div>
+  <div class="card good"><div class="card-body"><div class="table-wrap"><table>
+    <thead><tr><th>블록</th><th>확인 내용</th><th>판정</th></tr></thead>
+    <tbody>
+      <tr><td>SCR 점호 체인</td><td>GATE_AC_N → R76 10 kΩ 풀업 → U1B SN74HC14 → R78 300 Ω → ISO2 LED(캐소드 GND) / ISO2 출력 6 ← R79 200 Ω ← PHV, 4 → D25 MURS1JAL → D23 게이트, C44 47 nF 게이트–AC_N, C42 1 nF PHV–AC_N. 원본 R3xx/ELM3053 체인과 값·구조 동일</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>언폴더 MOSFET 구동</td><td>U5A/U5B → 300 Ω → ELD207 → 5.1 kΩ 풀업(VCC_12V0)·100 pF → BAV70 OR(공통 캐소드, 30 kΩ 풀다운) → HEF40106B 2개 병렬 → 51 Ω → 게이트. 고장 시 U6A 출력이 OR에 실려 강제 OFF. 원본 논리와 동일</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>과전류 검출 극성</td><td>U7A/U7B·U8A/U8B BC847S: (E=션트, B=PGND, C=버스) + (C=버스, E=PGND, B=션트) 쌍. 80 mΩ ∥ 80 mΩ 션트, 5.1 kΩ + 100 pF. 원본 Q304/Q305와 동일</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>버스 덤프</td><td>Q12 OSG65R360DEF 드레인 ← R188 1.5 Ω ← PHV, 게이트 ← R189 1.5 kΩ ← U6A 출력, 소스 PGND. 원본 S302/R325/R301과 동일</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>고장 플래그 경로</td><td>버스 → U6F → ISO4 → U5C → U5D → R187 510 Ω → 포트, 3.3 V측 R191 5.1 kΩ 풀업 + C171. 논리 극성: 고장 = 로우 (직렬저항 누락 H4 제외)</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>플라이백 변압기 극성</td><td>T2/T4/T6/T8 1차 도트 핀 3(드레인측), 2차 도트 핀 1 → D3 애노드 → PHV. CST T1/T3/T5/T7 1차 도트 8(PV+측), 2차 도트 1 → D1 애노드. 플라이백·CT 방향 모두 정상</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>게이트 구동 소자값</td><td>2EDN7524R VDD ← BLM18KG601 ← VCC_10V0, 1 nF + 1 µF + 100 nF. OUT → 6.65 Ω ∥ 6.65 Ω → 게이트(FET당 개별), 1 Ω ∥ 1 Ω + PMEG3020ER 턴오프, 10 kΩ G-S. Q1‖Q2 드레인 R10 0 Ω 결합, C5/C6 4.7 nF 스너버(원본 C111과 동일)</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>INA240 방향</td><td>IN+ = 션트 GND측, IN− = PV_A-측, REF1/REF2 = GND → 단방향 양(+) 출력. VCC ← R166 10 Ω ← VDDA_3V3, 100 nF + 1 µF</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>AMC3301 / AMC3302</td><td>INP/INN·HGND·DCDC_HGND가 각각 V_GRID_N / I_GRID_N(핫사이드 기준)에, 저압측 VDD ← 10 Ω ← VDDA_3V3, OUTP/OUTN → 1 kΩ + 4.7 nF. 계통 전압 분압 3×680 kΩ / 1 kΩ, 전류 션트 10 mΩ + 10 Ω/1 nF. 전회 계산(152 mV pk, 32 mV pk)대로</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>릴레이 접점·코일</td><td>LS1 3–4 = N선, 5–6 = L선 (2극 직렬), 코일 8 = VCC_12V0, 1 → Q9 드레인, D28 BAS100AS 프리휠. 구동 R91 510 Ω·R93 100 kΩ·C59 1 nF (도메인 문제 C4 별도)</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>EMI·서지</td><td>L7·L8 1 mH CM 초크 2단, X-캡 330 nF ×2 / 4.7 nF·3.3 µF·150 nF, Y-캡 2.2 nF/760 VAC, MOV 5개, RV1 + TH1 P2600SDLRP 직렬(SIDACtor + MOV 조합, 정상), SL1411A600 가스관, 퓨즈 F1 L선</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>MCU 주변</td><td>VDD 8핀 전부 VDD_3V3, VSS 8핀 GND, 100 nF ×14 + 1 µF + 2.2 µF, VDDA 100 nF + 4.7 µF, BOOT0 10 kΩ 풀다운, NRST 10 kΩ 풀업, HSE 24 MHz 8 pF ×2, SWD 6핀 헤더</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>CAN</td><td>FDCAN1 PD0/PD1, 1 kΩ 직렬, NEN 10 kΩ 풀다운(정상 모드), 60.4 Ω ×2 + 1 nF 분할 종단, ACT45B CMC, PESD2IVN24, 100 pF</td><td><span class="badge b-ok">확인</span></td></tr>
+      <tr><td>ESP32-S3 · TPM</td><td>EN ← 10 kΩ 풀업 + TSW1, IO0 부트 회로(Q11·R139·R140), USB D± 22 Ω, UART0 47 kΩ 풀업, TPM SLB9670 SPI(CS/MISO/MOSI/SCLK 33 Ω)·RST·PIRQ는 ESP32 IO10~IO14/IO21에 연결</td><td><span class="badge b-ok">확인</span></td></tr>
+    </tbody></table></div></div></div>
+</section>
+
+<!-- ================= PART 5 ================= -->
+<section class="part">
+  <div class="part-head"><span class="part-no">PART 5</span><h2>수정 순서</h2><span class="sub">앞 단계가 뒤 단계의 전제</span></div>
+  <div class="steps">
+    <div class="step"><span class="n">1</span><div><b>전원 라벨·포트명 전수 정리</b><span>N1 PV_A+ → PV_B+, C2 OFFPAGELEFT-L/R → GATE_UNF_N/L·FAULT_HW, H5 I_GIRD_Lk 오타, N4 R101 제거, N10 UART0 방향 이름. 끝나면 DRC 1613 목록이 곧 MCU 미결선 목록이 됩니다.</span></div></div>
+    <div class="step"><span class="n">2</span><div><b>절연 경계 재확인</b><span>C4 릴레이 코일(VCC_12V0/PGND ↔ Q9 GND), C3 09 시트 삭제(20 mΩ·비절연 op-amp), N5 USB VBUS 분리. PGND–GND 사이 부품이 옵토·AMC·변압기·Y-캡뿐인지 넷리스트로 검색.</span></div></div>
+    <div class="step"><span class="n">3</span><div><b>MCU 결선 — 1부 핀맵</b><span>38핀 결선, VREF+ ← REF3030A(VCC_5V0 급전), QET6 → VET7. CubeMX에서 HRTIM A/B/E/F + FLT1, ADC1~4 + COMP1~4 충돌 검사.</span></div></div>
+    <div class="step"><span class="n">4</span><div><b>보조전원 값</b><span>N3 FB 23.2 k/10 k(또는 LDO), C7 CS 40~50 mΩ·클램프 다이오드 ≥ 150 V, N7 Q10 150 V·D31, N9 SS·PGOOD, C8 VCC_3V3 LDO.</span></div></div>
+    <div class="step"><span class="n">5</span><div><b>전력단 소자값</b><span>N2 CST 필터 100 pF(부담 10 Ω 검토), H1 150 V FET·200 V 스너버 캡, N6 클램프 비드 30 Ω/3 A, C6 D40 상단 → PHV, H4 FOD817 3.3 kΩ, H3 VIO 3.3 V, H8 MOC3053, N8 CM 초크 권선 대응.</span></div></div>
+    <div class="step"><span class="n">6</span><div><b>정리</b><span>H7 2EDN 풋프린트·ENA/ENB, M3 NTC 3.9~4.7 kΩ, M4 ESP32 22 µF, N11 타이틀·NC 속성, H2 OPA2387 블록 삭제, M6·M9.</span></div></div>
+  </div>
+</section>
+
+<!-- ================= PART 6 ================= -->
+<section class="part">
+  <div class="part-head"><span class="part-no">PART 6</span><h2>검토 방법과 한계</h2></div>
+  <div class="card"><div class="card-body"><div class="table-wrap"><table>
+    <thead><tr><th>항목</th><th>상태</th></tr></thead>
+    <tbody>
+      <tr><td>V2000 넷리스트</td><td><span class="badge b-ok">복원</span> PDF Type3 글리프(gNN = Mac 표준 글리프 순서 → ASCII)를 해독해 부품 주석·값·핀 번호·핀 이름·넷 라벨을 좌표로 추출. 파란 선 = 배선, 빨간 점 = 접속점, 갈색 = 핀, 검정 = 전원·포트 기호. 배선은 끝점 일치와 접속점으로만 연결(교차 = 비접속). 10 시트 563 부품, 명명 넷 95개</td></tr>
+      <tr><td>확대 확인</td><td><span class="badge b-ok">확인</span> AC_N_IN/AC_L_IN 접속점, easyDSP 포트, PV_A- 션트·포트, CST/T2 극성, Q1/Q2 접지, FB 분압, FOD817 직결, D40 상단, VREF+ 미결선, PV_B 2상 라벨, 보조전원 입력 OR-ing을 300 dpi 확대로 재확인</td></tr>
+      <tr><td>원본 대조</td><td><span class="badge b-ok">확인</span> S2G1812 04.PVA GDRV 시트(CT 회로·클램프·게이트 저항), 00.AC INPUT(전회 벡터 넷리스트)</td></tr>
+      <tr><td>핀 기능</td><td><span class="badge b-ok">확인</span> ST CubeMX 핀 데이터 XML(QB-C-ETx, VB-C-ETx)</td></tr>
+      <tr><td>REF3030A</td><td><span class="badge b-ok">확인</span> 업로드 데이터시트 SBVS032K: 3.0 V ±0.2 %, 75 ppm/℃, 25 mA, VIN ≥ VOUT + 0.2 V</td></tr>
+      <tr><td>자동 추출 한계</td><td><span class="badge b-ref">참고</span> 2핀 수동소자의 핀 귀속은 인접 부품과 섞일 수 있어 IC·포트·전원 넷 중심으로 판독했고, 지적 항목은 전부 확대 이미지로 재확인했습니다. 변압기 핀 번호는 시각 판독입니다</td></tr>
+      <tr><td>미확보</td><td><span class="badge b-gap">미확보</span> LM5156 FB 기준·CS 문턱, AMC3301/3302 출력 스윙, LF19S 권선 핀, SCS205KNHR, IAUCN10S7L040 Qg, PA1005 V·s 정격, MOC3063 점호 창</td></tr>
+    </tbody></table></div>
+    <p class="src" style="margin-top:14px"><b>참고 문서</b> — V2000 회로도 검토 Rev 1 · V2000 MCU 이식 검토 · docs/V2000-MCU-pinmap.md · 언폴더 구동·보호 회로 · NCP1031 대체 보조전원.</p>
+  </div></div>
+</section>
+
+</div>
+</body>
+</html>
