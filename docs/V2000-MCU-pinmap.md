@@ -87,3 +87,53 @@ COMP1~4의 반전 입력은 내부 DAC(DAC1_OUT1/2, DAC3)로 잡아 4상 각각�
 | OFFPAGELEFT-L (U5B 입력) | GATE_UNF_L | 〃 |
 | OFFPAGELEFT-R (U5D 출력) | FAULT_HW | 〃 |
 | I_GIRD_Lk (03 시트) | I_GRID_Lk | 오타로 08 시트와 단절 |
+
+## 부록 A. STM32G474 LQFP-128 ADC 핀 전수표 (ST CubeMX 핀 데이터 STM32G474QB-C-ETx.xml)
+
+42핀 · 채널 매핑 74개 (ADC1 14 · ADC2 16 · ADC3 15 · ADC4 16 · ADC5 13). 괄호는 LQFP-100 핀 번호.
+차동 입력은 같은 ADC의 INx(+)와 INx+1(−) 조합만 가능하다.
+
+| 핀 | 포트 | ADC 채널 | COMP | DAC | HRTIM | V2000 배정 |
+|---|---|---|---|---|---|---|
+| 19 (12) | PF0 | ADC1_IN10 |  |  |  | OSC_IN |
+| 20 (13) | PF1 | ADC2_IN10 | COMP3_INM |  |  | OSC_OUT |
+| 22 (15) | PC0 | ADC1_IN6, ADC2_IN6 | COMP3_INM |  |  |  |
+| 23 (16) | PC1 | ADC1_IN7, ADC2_IN7 | COMP3_INP |  |  | ADC_I_PB1 |
+| 24 (17) | PC2 | ADC1_IN8, ADC2_IN8 |  |  |  | ADC_I_PV_A |
+| 25 (18) | PC3 | ADC1_IN9, ADC2_IN9 |  |  |  | ADC_I_PV_B |
+| 27 (20) | PA0 | ADC1_IN1, ADC2_IN1 | COMP1_INM, COMP3_INP |  |  | ADC_V_PA |
+| 28 (21) | PA1 | ADC1_IN2, ADC2_IN2 | COMP1_INP |  |  | ADC_I_PA1 |
+| 29 (22) | PA2 | ADC1_IN3 | COMP2_INM |  |  | ADC_V_PB |
+| 32 (25) | PA3 | ADC1_IN4 | COMP2_INP |  |  |  |
+| 33 (26) | PA4 | ADC2_IN17 | COMP1_INM | DAC1_OUT1 |  |  |
+| 34 (27) | PA5 | ADC2_IN13 | COMP2_INM | DAC1_OUT2 |  |  |
+| 35 (28) | PA6 | ADC2_IN3 |  | DAC2_OUT1 |  |  |
+| 36 (29) | PA7 | ADC2_IN4 | COMP2_INP |  |  | ADC_I_PA2 |
+| 37 (30) | PC4 | ADC2_IN5 |  |  |  | AIN1 |
+| 38 (31) | PC5 | ADC2_IN11 |  |  |  | AIN2 |
+| 39 (32) | PB0 | ADC1_IN15, ADC3_IN12 | COMP4_INP |  | HRTIM1_FLT5 | AIN3 |
+| 40 (33) | PB1 | ADC1_IN12, ADC3_IN1 | COMP1_INP |  |  | AIN4 |
+| 41 (34) | PB2 | ADC2_IN12 | COMP4_INM |  |  |  |
+| 53 (38) | PE7 | ADC3_IN4 | COMP4_INP |  |  | ADC_I_PB2 |
+| 54 (39) | PE8 | ADC3_IN6, ADC4_IN6, ADC5_IN6 | COMP4_INM |  |  |  |
+| 55 (40) | PE9 | ADC3_IN2 |  |  |  |  |
+| 56 (41) | PE10 | ADC3_IN14, ADC4_IN14, ADC5_IN14 |  |  |  |  |
+| 57 (42) | PE11 | ADC3_IN15, ADC4_IN15, ADC5_IN15 |  |  |  |  |
+| 58 (43) | PE12 | ADC3_IN16, ADC4_IN16, ADC5_IN16 |  |  |  |  |
+| 59 (44) | PE13 | ADC3_IN3 |  |  |  | (예비) ADC_V_10V0 |
+| 60 (45) | PE14 | ADC4_IN1 |  |  |  | ADC_I_GRID_P |
+| 61 (46) | PE15 | ADC4_IN2 |  |  |  | ADC_I_GRID_N |
+| 65 (50) | PB11 | ADC1_IN14, ADC2_IN14 | COMP6_INP |  | HRTIM1_FLT4 |  |
+| 66 (51) | PB12 | ADC1_IN11, ADC4_IN3 | COMP7_INM |  | HRTIM1_CHC1 |  |
+| 67 (52) | PB13 | ADC3_IN5 | COMP5_INP |  | HRTIM1_CHC2 |  |
+| 68 (53) | PB14 | ADC1_IN5, ADC4_IN4 | COMP7_INP |  | HRTIM1_CHD1 | ADC_V_GRID_P |
+| 69 (54) | PB15 | ADC2_IN15, ADC4_IN5 | COMP6_INM |  | HRTIM1_CHD2 | ADC_V_GRID_N |
+| 70 (55) | PD8 | ADC4_IN12, ADC5_IN12 |  |  |  |  |
+| 71 (56) | PD9 | ADC4_IN13, ADC5_IN13 |  |  |  |  |
+| 72 (57) | PD10 | ADC3_IN7, ADC4_IN7, ADC5_IN7 | COMP6_INM |  |  |  |
+| 73 (58) | PD11 | ADC3_IN8, ADC4_IN8, ADC5_IN8 | COMP6_INP |  |  |  |
+| 74 (59) | PD12 | ADC3_IN9, ADC4_IN9, ADC5_IN9 | COMP5_INP |  |  | ADC_I_GRID_Lk |
+| 75 (60) | PD13 | ADC3_IN10, ADC4_IN10, ADC5_IN10 | COMP5_INM |  |  |  |
+| 76 (61) | PD14 | ADC3_IN11, ADC4_IN11, ADC5_IN11 | COMP7_INP |  |  |  |
+| 89 (69) | PA8 | ADC5_IN1 |  |  | HRTIM1_CHA1 | PWM_A1 |
+| 90 (70) | PA9 | ADC5_IN2 |  |  | HRTIM1_CHA2 | PWM_A2 |
