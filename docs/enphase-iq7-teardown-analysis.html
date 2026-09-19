@@ -1,0 +1,438 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>IQ7+ 해부</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#FCFCFD; --sheet:#FFFFFF; --ink:#0F1729; --muted:#5A6473; --faint:#8A93A3;
+    --rule:#DCE2EB; --rule-strong:#B9C2D0;
+    --sym:#1B3A8F; --wire:#C81E1E; --sig:#0E7490; --node:#B026C9;
+    --ok-bg:#ECFDF5; --ok-line:#34A47C; --ok-ink:#0B5B44;
+    --gap-bg:#F4F1FB; --gap-line:#8B6FC4; --gap-ink:#4A3282;
+    --ref-bg:#FFF7E6; --ref-line:#D9A441; --ref-ink:#7A5200;
+    --bad-bg:#FEF2F2; --bad-line:#DC6A6A; --bad-ink:#8C2020;
+    --shadow:0 1px 2px rgba(15,23,41,.05), 0 8px 24px rgba(15,23,41,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0B0F16; --sheet:#121824; --ink:#E7ECF4; --muted:#9AA5B6; --faint:#7A8496;
+      --rule:#243044; --rule-strong:#35435C;
+      --sym:#7FA6F5; --wire:#FF7A7A; --sig:#38D6E8; --node:#E27BF5;
+      --ok-bg:#0A2219; --ok-line:#2E7D5F; --ok-ink:#7EE0B8;
+      --gap-bg:#1C1630; --gap-line:#6B54A0; --gap-ink:#C4AEF0;
+      --ref-bg:#2A2110; --ref-line:#9C7A2E; --ref-ink:#F0CC7A;
+      --bad-bg:#2A1113; --bad-line:#9C4444; --bad-ink:#F2A5A5;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0B0F16; --sheet:#121824; --ink:#E7ECF4; --muted:#9AA5B6; --faint:#7A8496;
+    --rule:#243044; --rule-strong:#35435C;
+    --sym:#7FA6F5; --wire:#FF7A7A; --sig:#38D6E8; --node:#E27BF5;
+    --ok-bg:#0A2219; --ok-line:#2E7D5F; --ok-ink:#7EE0B8;
+    --gap-bg:#1C1630; --gap-line:#6B54A0; --gap-ink:#C4AEF0;
+    --ref-bg:#2A2110; --ref-line:#9C7A2E; --ref-ink:#F0CC7A;
+    --bad-bg:#2A1113; --bad-line:#9C4444; --bad-ink:#F2A5A5;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Noto Sans KR","IBM Plex Sans Condensed",system-ui,sans-serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;word-break:keep-all}
+  .wrap{max-width:1240px;margin:0 auto;padding-block:28px 64px;padding-left:16px;padding-right:16px}
+  .masthead{border:1.5px solid var(--rule-strong);background:var(--sheet);box-shadow:var(--shadow)}
+  .masthead-body{padding:26px 24px 20px}
+  .eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--sig);font-weight:600;margin:0 0 10px}
+  h1{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:clamp(27px,5vw,42px);line-height:1.12;letter-spacing:-.015em;font-weight:700;margin:0 0 12px;text-wrap:balance}
+  .standfirst{margin:0;max-width:70ch;color:var(--muted);font-size:16px}
+  .titleblock{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1.5px solid var(--rule-strong);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px}
+  .titleblock div{padding:9px 14px;border-right:1px solid var(--rule)}
+  .titleblock div:last-child{border-right:none}
+  .titleblock span{display:block;color:var(--faint);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+  .titleblock b{font-weight:500;color:var(--ink)}
+  .part{margin-top:36px}
+  .part-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+  .part-no{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--sheet);background:var(--sym);padding:3px 9px;border-radius:3px;white-space:nowrap}
+  .part-head h2{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:23px;font-weight:700;margin:0;letter-spacing:-.015em}
+  .part-head .sub{color:var(--muted);font-size:13.5px}
+  .card{border:1.5px solid var(--rule-strong);background:var(--sheet);box-shadow:var(--shadow);margin-bottom:18px}
+  .card-head{padding:13px 20px;border-bottom:1.5px solid var(--rule-strong);font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-weight:700;font-size:16px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .card-head .pn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:500;color:var(--muted)}
+  .card-body{padding:18px 20px}
+  .card-body > :first-child{margin-top:0}
+  .card-body > :last-child{margin-bottom:0}
+  .card-body h3{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:15px;margin:22px 0 10px;font-weight:700}
+  .canvas{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  .canvas svg{display:block;min-width:760px;width:100%;height:auto}
+  figure{margin:0}
+  figcaption{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);color:var(--muted);font-size:13.5px;max-width:84ch}
+  figcaption b{color:var(--ink);font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  th,td{padding:9px 12px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+  thead th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);font-weight:600;white-space:nowrap;border-bottom:1.5px solid var(--rule-strong)}
+  tbody tr:last-child td{border-bottom:none}
+  td.mono,th.mono,.mono{font-family:"IBM Plex Mono",monospace;font-size:13px;font-variant-numeric:tabular-nums}
+  tr.pick td{background:var(--ok-bg);font-weight:700}
+  tr.pick td:first-child{box-shadow:inset 3px 0 0 var(--ok-line)}
+  .badge{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 6px;border-radius:3px;border:1px solid currentColor;white-space:nowrap;font-weight:500}
+  .b-ok{color:var(--ok-ink);background:var(--ok-bg)}
+  .b-gap{color:var(--gap-ink);background:var(--gap-bg)}
+  .b-ref{color:var(--ref-ink);background:var(--ref-bg)}
+  .eqbox{font-family:"IBM Plex Mono",monospace;font-size:13px;background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--sig);padding:14px 16px;margin:16px 0;overflow-x:auto;line-height:1.8;white-space:pre-wrap;tab-size:2}
+  .eqbox b{color:var(--sig)}
+  .gapcard{border:1.5px solid var(--gap-line);background:var(--gap-bg);color:var(--gap-ink);padding:18px 20px;margin-bottom:18px}
+  .gapcard h3,.refcard h3{font-family:"IBM Plex Sans Condensed","Noto Sans KR",sans-serif;font-size:16px;margin:0 0 8px;font-weight:700}
+  .gapcard p,.refcard p{margin:0 0 10px;font-size:14px;max-width:80ch}
+  .gapcard p:last-child,.refcard p:last-child{margin-bottom:0}
+  .refcard{border:1.5px solid var(--ref-line);background:var(--ref-bg);color:var(--ref-ink);padding:18px 20px;margin-bottom:18px}
+  p.lead{font-size:14.5px;color:var(--muted);max-width:82ch}
+  ul,ol{max-width:82ch}
+  li{margin-bottom:6px}
+  .src{font-size:13px;color:var(--muted)}
+  .src a{word-break:break-all;color:var(--sig)}
+  @media (max-width:620px){.titleblock{grid-template-columns:repeat(2,minmax(0,1fr))}.titleblock div{border-bottom:1px solid var(--rule)}.card-body{padding:14px}.masthead-body{padding:20px 16px 16px}}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="masthead-body">
+      <p class="eyebrow">Enphase IQ7 / IQ7+ · Teardown Analysis · ChargerLAB 기반</p>
+      <h1>IQ7+ 해부</h1>
+      <p class="standfirst">ChargerLAB 분해기와 Enphase 공식 사양, 부품사 자료를 교차해 IQ7+의 <b>토폴로지 · 부품 선정 · 설계 수치</b>를 복원하고, 같은 언폴딩 구조인 S2G1812/V2000과 비교했습니다. 부품사·유통사·기사 원문 도메인은 이 세션에서 차단되어 있어 모든 수치는 <b>검색 스니펫에서 확보한 것만</b> 썼고, 확보하지 못한 항목은 따로 표시했습니다.</p>
+    </div>
+    <div class="titleblock">
+      <div><span>대상</span><b>IQ7+ (IQ7PLUS-72-2-US)</b></div>
+      <div><span>정격</span><b>295 VA · 240 V</b></div>
+      <div><span>구조</span><b>1차 H-브리지 + 언폴더</b></div>
+      <div><span>Rev</span><b>0.1</b></div>
+    </div>
+  </header>
+
+  <!-- ===== PART 1 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 1</span><h2>공식 사양</h2><span class="sub">Enphase 데이터시트 · 검색 스니펫으로 확인</span></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>항목</th><th class="mono">IQ7</th><th class="mono">IQ7+</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr class="pick"><td>피크 출력</td><td class="mono">250 VA</td><td class="mono">295 VA</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>MPPT 전압 범위</td><td class="mono">27 ~ 37 V</td><td class="mono">27 ~ 45 V</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>동작 전압 범위</td><td class="mono">16 ~ 48 V</td><td class="mono">16 ~ 60 V</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>기동 전압 (min / max)</td><td class="mono">22 / 48 V</td><td class="mono">22 / 60 V</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>최대 입력 DC 전압</td><td class="mono">48 V</td><td class="mono">60 V</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>최대 모듈 Isc</td><td class="mono">15 A</td><td class="mono">15 A</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>DC 포트 과전압 등급</td><td class="mono">II</td><td class="mono">II</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr class="pick"><td>최대 연속 출력 전류</td><td class="mono">1.0 A (240 V) · 1.15 A (208 V)</td><td class="mono">1.21 A (240 V) · 1.39 A (208 V)</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>20 A 분기당 최대 대수</td><td class="mono">16 (240 V) · 13 (208 V)</td><td class="mono">13 (240 V) · 11 (208 V)</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>역률 설정</td><td class="mono">1.0</td><td class="mono">1.0</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr class="pick"><td>피크 효율</td><td class="mono">97.0 %</td><td class="mono">97.6 %</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>CEC 가중 효율</td><td class="mono" colspan="2">—</td><td><span class="badge b-gap">미확보</span></td></tr>
+              <tr><td>최대 입력 전류</td><td class="mono" colspan="2">—</td><td><span class="badge b-gap">미확보</span></td></tr>
+              <tr><td>주위 온도</td><td class="mono" colspan="2">−40 ~ +65 ℃</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>치수 / 무게</td><td class="mono" colspan="2">212 × 175 × 30.2 mm · 1.08 kg (브래킷 포함)</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>냉각 / 외함 등급</td><td class="mono" colspan="2">자연대류(참고) · IP/NEMA 등급 미확보</td><td><span class="badge b-gap">미확보</span></td></tr>
+              <tr><td>인증</td><td class="mono" colspan="2">UL 1741-SA (CA Rule 21), UL 6210, PV 급속차단 장비 등재</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>보증</td><td class="mono" colspan="2">최대 25년</td><td><span class="badge b-ok">확인</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lead" style="margin-top:14px"><b>교차 검증 한 가지</b> — 295 VA ÷ 240 V = 1.23 A. 데이터시트의 1.21 A와 1.6 % 안에서 맞아떨어집니다. 피크 출력과 출력 전류가 서로 독립적으로 확보된 값이므로, 두 값이 일치한다는 건 스니펫이 정확히 옮겨졌다는 뜻입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 2 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 2</span><h2>복원한 전력 구조</h2><span class="sub">분해기에서 식별된 부품을 자리에 놓으면 이렇게 됩니다</span></div>
+    <div class="card">
+      <div class="card-head"><span>IQ7+ 블록 다이어그램</span><span class="pn">실선 = 식별된 부품 · 점선 = 추정</span></div>
+      <div class="card-body">
+        <figure>
+        <div class="canvas">
+          <svg viewBox="0 0 1180 470" role="img" aria-label="IQ7+ 전력 구조. PV 입력이 3밀리옴 션트와 3300마이크로패럿 전해 커패시터 4개를 거쳐, NTMFS5C628NL 네 개로 된 1차 H-브리지에 들어가고, EPCOS 변압기로 절연된 뒤 2차 정류를 거쳐 IPT60R102G7 네 개로 된 언폴더 브리지에서 교류가 되어 퓨즈와 바리스터를 지나 계통으로 나간다. ASIC 480-00031-01이 1차측에서 전체를 제어하고, 언폴더 게이트는 2EDS7165H 절연 드라이버로 넘어간다.">
+            <defs>
+              <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--wire)"/></marker>
+            </defs>
+            <!-- isolation barrier -->
+            <line x1="612" y1="30" x2="612" y2="440" stroke="var(--faint)" stroke-width="1.6" stroke-dasharray="7 5"/>
+            <text x="604" y="46" text-anchor="end" font-family="Noto Sans KR, sans-serif" font-size="12" fill="var(--faint)">PV 측 (비절연)</text>
+            <text x="620" y="46" font-family="Noto Sans KR, sans-serif" font-size="12" fill="var(--faint)">계통 측</text>
+
+            <!-- power path blocks -->
+            <g font-family="IBM Plex Sans Condensed, Noto Sans KR, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">
+              <rect x="20" y="150" width="112" height="86" rx="4" fill="var(--sheet)" stroke="var(--sym)" stroke-width="2"/>
+              <text x="76" y="180" text-anchor="middle">PV 입력</text>
+              <text x="76" y="200" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">27~45 V MPPT</text>
+              <text x="76" y="216" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">≤15 A Isc</text>
+
+              <rect x="164" y="150" width="130" height="86" rx="4" fill="var(--sheet)" stroke="var(--sym)" stroke-width="2"/>
+              <text x="229" y="176" text-anchor="middle">입력 디커플링</text>
+              <text x="229" y="196" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">4 × 3300 µF / 63 V</text>
+              <text x="229" y="212" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">Chemi-Con = 13.2 mF</text>
+              <text x="229" y="228" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">+ 3 mΩ 션트</text>
+
+              <rect x="326" y="150" width="140" height="86" rx="4" fill="var(--sheet)" stroke="var(--sym)" stroke-width="2"/>
+              <text x="396" y="176" text-anchor="middle">1차 H-브리지</text>
+              <text x="396" y="196" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">4 × NTMFS5C628NL</text>
+              <text x="396" y="212" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">60 V · 2.4 mΩ · DFN5</text>
+              <text x="396" y="228" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">드라이버 MP1921A</text>
+
+              <rect x="498" y="150" width="96" height="86" rx="4" fill="var(--sheet)" stroke="var(--sym)" stroke-width="2"/>
+              <text x="546" y="180" text-anchor="middle">변압기</text>
+              <text x="546" y="200" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">EPCOS</text>
+              <text x="546" y="216" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">절연</text>
+
+              <rect x="632" y="150" width="104" height="86" rx="4" fill="var(--sheet)" stroke="var(--faint)" stroke-width="2" stroke-dasharray="6 4"/>
+              <text x="684" y="180" text-anchor="middle" fill="var(--muted)">2차 정류</text>
+              <text x="684" y="200" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--faint)">부품 미식별</text>
+              <text x="684" y="216" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--faint)">정류 정현파 버스</text>
+
+              <rect x="768" y="150" width="150" height="86" rx="4" fill="var(--sheet)" stroke="var(--sym)" stroke-width="2"/>
+              <text x="843" y="176" text-anchor="middle">언폴더 브리지</text>
+              <text x="843" y="196" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">4 × IPT60R102G7</text>
+              <text x="843" y="212" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">600 V · 102 mΩ · TOLL</text>
+              <text x="843" y="228" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">60 Hz 전환</text>
+
+              <rect x="944" y="150" width="134" height="86" rx="4" fill="var(--sheet)" stroke="var(--sym)" stroke-width="2"/>
+              <text x="1011" y="176" text-anchor="middle">AC 보호 · 출력</text>
+              <text x="1011" y="196" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">퓨즈 3.15 A / 300 V</text>
+              <text x="1011" y="212" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">MOV P175P10C</text>
+              <text x="1011" y="228" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">240 V · 1.21 A</text>
+            </g>
+            <!-- power arrows -->
+            <g stroke="var(--wire)" stroke-width="2.4" fill="none" marker-end="url(#ah)">
+              <line x1="132" y1="193" x2="162" y2="193"/>
+              <line x1="294" y1="193" x2="324" y2="193"/>
+              <line x1="466" y1="193" x2="496" y2="193"/>
+              <line x1="594" y1="193" x2="630" y2="193"/>
+              <line x1="736" y1="193" x2="766" y2="193"/>
+              <line x1="918" y1="193" x2="942" y2="193"/>
+              <line x1="1078" y1="193" x2="1126" y2="193"/>
+            </g>
+            <text x="1130" y="198" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="var(--wire)">계통</text>
+
+            <!-- control -->
+            <rect x="282" y="300" width="256" height="92" rx="4" fill="var(--sheet)" stroke="var(--sig)" stroke-width="2"/>
+            <g font-family="IBM Plex Sans Condensed, Noto Sans KR, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">
+              <text x="410" y="326" text-anchor="middle">Enphase ASIC</text>
+              <text x="410" y="346" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">480-00031-01 (별도 보고 480-00035-01)</text>
+              <text x="410" y="362" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">외부 메모리 GigaDevice</text>
+              <text x="410" y="378" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">전원 TI 벅 ×2</text>
+            </g>
+            <g stroke="var(--sig)" stroke-width="1.8" fill="none" marker-end="url(#ah)">
+              <path d="M410,300 V262 H396 V238"/>
+              <path d="M282,346 H229 V238"/>
+            </g>
+            <text x="274" y="338" text-anchor="end" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--sig)">션트 전류 · 전압 감지</text>
+            <text x="440" y="270" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--sig)">1차 PWM</text>
+
+            <!-- isolated driver -->
+            <rect x="700" y="300" width="200" height="72" rx="4" fill="var(--sheet)" stroke="var(--sig)" stroke-width="2"/>
+            <g font-family="IBM Plex Sans Condensed, Noto Sans KR, sans-serif" font-size="13" font-weight="700" fill="var(--ink)">
+              <text x="800" y="326" text-anchor="middle">절연 게이트 드라이버</text>
+              <text x="800" y="346" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">2 × 2EDS7165H (강화절연)</text>
+              <text x="800" y="362" text-anchor="middle" font-size="11" font-weight="500" font-family="IBM Plex Mono, monospace" fill="var(--muted)">4 A / 8 A · 37 ns · 150 V/ns</text>
+            </g>
+            <g stroke="var(--sig)" stroke-width="1.8" fill="none" marker-end="url(#ah)">
+              <path d="M538,336 H698"/>
+              <path d="M800,300 V262 H843 V238"/>
+            </g>
+            <text x="618" y="330" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-size="11" fill="var(--sig)">언폴더 지령 (장벽 통과)</text>
+
+            <!-- notes -->
+            <text x="20" y="430" font-family="Noto Sans KR, sans-serif" font-size="12" fill="var(--muted)">추정 표시: ASIC 위치(PV 측), 2차 정류 형식, MP1921A 수량(2), PLC 통신 회로 위치 — 분해기 스니펫에 직접 언급 없음</text>
+          </svg>
+        </div>
+        <figcaption><b>이 구조가 IQ7의 정체성입니다.</b> 1차측이 단일 스위치 플라이백이 아니라 <b>60 V MOSFET 네 개의 H-브리지</b>이고, 계통측 언폴더는 SCR이 아니라 <b>600 V MOSFET 네 개</b>를 강화절연 드라이버로 직접 구동합니다. 제어 ASIC은 3 mΩ 션트를 직접 읽고 MP1921A를 바로 구동하므로 PV 측에 있다고 보는 것이 자연스럽고, 유일하게 장벽을 넘는 신호가 2EDS7165H를 통한 언폴더 게이트 지령입니다.</figcaption>
+        </figure>
+
+        <h3>왜 1차측이 H-브리지인가 — Enphase 특허 US 8,456,865</h3>
+        <p class="lead">Enphase의 특허 "Single stage micro-inverter with H-bridge topology combining flyback and forward operating modes"는 정확히 이 구조를 설명합니다. 입력 커패시터 · <b>1차 H-브리지</b> · 인덕터 · 변압기로 이루어진 단일단 절연 컨버터에서, <b>저전류 구간은 플라이백 모드, 고전류 구간은 포워드 모드</b>로 운전합니다. 정현파 한 주기 안에서 전류 진폭이 0에서 피크까지 오가므로 두 모드가 한 주기 안에서 교대됩니다.</p>
+        <ul>
+          <li><b>플라이백 모드</b> — 영교차 부근의 작은 전류. 코어에 에너지를 저장했다 넘기는 방식이 소전류에서 효율적.</li>
+          <li><b>포워드 모드</b> — 피크 부근의 큰 전류. 에너지를 저장하지 않고 직접 전달하므로 코어 손실과 피크 전류가 줄어듦.</li>
+        </ul>
+        <p class="lead">그래서 스위치가 네 개입니다. 단일 스위치 플라이백(S2G1812 방식)은 한 모드밖에 못 하지만, H-브리지는 스위칭 패턴만 바꿔 두 모드를 오갈 수 있습니다. 2.4 mΩ짜리 60 V FET 네 개는 그 대가로는 저렴합니다.</p>
+        <div class="gapcard" style="margin-top:14px;margin-bottom:0">
+          <h3>특허 원문은 열지 못했습니다</h3>
+          <p>patents.google.com과 USPTO 도메인이 차단되어 요약(abstract)과 제목만 스니펫으로 확인했습니다. <b>모드 전환 문턱값, 인덕터 위치, 2차 정류 구조</b>는 원문을 대조해야 합니다. 위 설명은 확인된 요약과 부품 구성으로부터의 추론입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 3 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 3</span><h2>부품 목록과 선정 이유</h2><span class="sub">식별된 품번 · 부품사 사양은 스니펫 확인분만</span></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>역할</th><th>품번</th><th>확인된 사양</th><th>왜 이 부품인가</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr class="pick"><td>제어 ASIC</td><td class="mono">Enphase 480-00031-01<br>(별도 보고: 480-00035-01)</td><td>자체 설계. 1차 PWM과 출력 변조를 모두 생성</td><td>범용 DSP 대신 전용 실리콘. 두 보고의 품번이 달라 <b>IQ7 vs IQ7+ 리비전 차이</b>이거나 <b>보드에 칩이 둘</b>일 가능성 — 원문 사진 없이는 판단 불가</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>외부 메모리</td><td class="mono">GigaDevice (품번 미확보)</td><td>—</td><td>ASIC의 펌웨어·로그 저장</td><td><span class="badge b-ref">참고</span></td></tr>
+              <tr><td>제어 전원</td><td class="mono">TI 벅 ×2 (품번 미확보)</td><td>—</td><td>PV 전압(16~60 V)에서 ASIC 전원 생성</td><td><span class="badge b-ref">참고</span></td></tr>
+              <tr class="pick"><td>1차 H-브리지 MOSFET</td><td class="mono">onsemi NTMFS5C628NL ×4</td><td>60 V · 2.4 mΩ(max) · 150 A · DFN5 5×6 mm · Ciss 3.6 nF</td><td>최대 입력 60 V에 정격 60 V — <b>마진 0</b>. 대신 2.4 mΩ로 도통 손실 최소화. 마진은 입력 TVS/클램프가 맡는다는 뜻(부품 미확인)</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>1차 드라이버</td><td class="mono">MPS MP1921A (×2 추정)</td><td>100 V 하프브리지 · 2.5 A · 부트스트랩 내장 · 16 ns 지연 · VDD 9~18 V</td><td>H-브리지 한 레그당 하나. 100 V 정격이 60 V 버스에 여유</td><td><span class="badge b-ok">확인</span> 수량 추정</td></tr>
+              <tr><td>변압기</td><td class="mono">EPCOS (품번 미확보)</td><td>—</td><td>보드 하단 배치. 권선비·코어 미확보</td><td><span class="badge b-ref">참고</span></td></tr>
+              <tr class="pick"><td>언폴더 MOSFET</td><td class="mono">Infineon IPT60R102G7 ×4</td><td>600 V · 102 mΩ · 23 A · Qg 34 nC · TOLL · Kelvin 소스 · Ptot 141 W</td><td>1.21 A에 23 A 정격 = <b>19배</b>. 도통 손실 목적이 아니라 <b>서지·낙뢰 내량과 낮은 Qg</b>를 산 것. TOLL은 바닥면 방열</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr class="pick"><td>언폴더 절연 드라이버</td><td class="mono">Infineon 2EDS7165H ×2<br>(마킹 2S7165B)</td><td>2채널 강화절연 · 4 A/8 A · 37 ns · CMTI 150 V/ns · VISO 5700 Vrms · DSO-16 300 mil</td><td>언폴더 4개 = 2채널 × 2개. <b>계통측에 별도 플로팅 전원과 로직을 두지 않고</b> 장벽 너머에서 직접 게이트를 침</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>입력 디커플링</td><td class="mono">Chemi-Con 3300 µF / 63 V ×4</td><td>합계 13.2 mF. 시리즈·리플 정격 미확보</td><td>PV 측 저전압 대용량. 63 V는 최대 입력 60 V에 마진 5 %</td><td><span class="badge b-ok">확인</span> 시리즈 미확보</td></tr>
+              <tr><td>DC 전류 감지</td><td class="mono">3 mΩ 션트</td><td>—</td><td>MPPT용 입력 전류. 10.9 A에서 33 mV, 0.36 W</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>AC 서지 보호</td><td class="mono">Littelfuse P175P10C</td><td>175 Vrms급 MOV (P175 계열). 세부 미확보</td><td>퓨즈와 한 쌍으로 <b>크로바</b> 동작 — 서지 시 MOV 도통 → 퓨즈 용단</td><td><span class="badge b-ref">참고</span></td></tr>
+              <tr><td>AC 퓨즈</td><td class="mono">Littelfuse 3.15 A / 300 V</td><td>—</td><td>연속 1.21 A 대비 2.6배. 수리기 사례에서 낙뢰 후 이 퓨즈만 용단</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>PLC 통신</td><td class="mono">미식별</td><td>—</td><td>Envoy와 전력선 통신. ASIC 내장인지 별도 칩인지 스니펫에 없음</td><td><span class="badge b-gap">미확보</span></td></tr>
+              <tr><td>방열</td><td class="mono">알루미늄 히트싱크 (후면)</td><td>부스트 MOSFET·출력 MOSFET용, 청색 열전도 실리콘</td><td>TOLL·DFN 바닥면 → 보드 → 실리콘 → 알루미늄 → 외기</td><td><span class="badge b-ok">확인</span></td></tr>
+              <tr><td>봉지</td><td class="mono">실리콘 다량 도포</td><td>"massive silicone adhesives"</td><td>옥외 25년 보증의 실체. 수리기에서는 퓨즈 접근을 위해 <b>하우징을 드릴로 뚫어야</b> 했음</td><td><span class="badge b-ok">확인</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 4 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 4</span><h2>설계 수치 해부</h2><span class="sub">확인된 사양과 부품 값에서 계산</span></div>
+    <div class="card">
+      <div class="card-head"><span>입력 디커플링 — 13.2 mF가 하는 일</span><span class="pn">P/ω · ΔV = P/(ωCV)</span></div>
+      <div class="card-body">
+        <div class="eqbox">필요 에너지 저장   ΔE = P / ω = 295 / 377 = <b>0.78 J</b>
+저장된 에너지       ½CV² @ 36 V = ½ × 13.2 mF × 36² = <b>8.55 J</b>   (필요량의 11배)
+
+120 Hz 리플 전압    ΔV_pp = P / (ω·C·V)
+	V = 27 V:  2.20 V  (8.1 %)      ← MPPT 하한, 최악
+	V = 36 V:  1.65 V  (4.6 %)
+	V = 45 V:  1.32 V  (2.9 %)
+
+커패시터 리플 전류  I_c(120 Hz) = P / (√2·V)
+	V = 27 V:  7.7 A rms → 4개 분담 <b>1.9 A / 개</b>
+	V = 36 V:  5.8 A rms → 1.45 A / 개
+
+C/P 비율            13.2 mF / 295 W = <b>44.7 µF/W</b>
+	S2G1812 (8 × 2700 µF)            = 21.6 mF
+	V2000 §17.4 수동 디커플링 추정   = 16.6 µF/W</div>
+        <p class="lead"><b>IQ7+는 우리 V2000 추정치의 2.7배를 넣었습니다.</b> 이유는 리플 전압이 아니라 <b>리플 전류와 수명</b>입니다. 120 Hz 리플 전류 1.9 A/개가 25년 동안 흐릅니다. 전해 커패시터의 수명은 리플 전류 발열에 지수적으로 반응하므로, 커패시턴스를 늘려 개당 전류를 낮추는 것이 곧 수명을 사는 방법입니다. 시리즈를 확보하지 못해 정격 리플 전류 대비 여유는 계산할 수 없습니다.</p>
+
+        <h3>1차측 전류 — 왜 2.4 mΩ인가</h3>
+        <div class="eqbox">입력 평균 전류 @ 27 V   I_avg = 295 / 27 = <b>10.9 A</b>
+순시 피크 (정현파 전력 포락선 2배)   I_pk = 2 × 10.9 = <b>21.9 A</b>
+1차 rms (정류 정현파 포락선 1.225배)   I_rms ≈ 13.4 A
+H-브리지 도통 손실 (직렬 2석)   2 × 2.4 mΩ × 13.4² = <b>0.86 W</b>   ← 총 손실 7.1 W의 12 %</div>
+        <p class="lead">피크 효율 97.6 %면 295 W에서 손실 7.1 W입니다. 1차 도통 손실을 1 W 아래로 눌렀다는 건 나머지 6 W가 <b>변압기 · 2차 정류 · 스위칭</b>에 있다는 뜻이고, 그 6 W가 자연대류로 빠져나가는 외함이 212 × 175 × 30 mm입니다. 무팬 옥외 설계의 열 예산이 이 정도입니다.</p>
+
+        <h3>언폴더 — 정격의 19배를 쓴 이유</h3>
+        <div class="eqbox">언폴더 도통 손실   2 × 102 mΩ × 1.21² = <b>0.30 W</b>   (무시 가능)
+정격 대비           23 A / 1.21 A = 19배
+600 V 정격 vs 240 V 계통 피크 340 V   → 마진 1.76배 + MOV 클램프</div>
+        <p class="lead">102 mΩ TOLL을 1.2 A에 쓴 건 저항 때문이 아닙니다. <b>Qg 34 nC</b>의 낮은 게이트 전하, <b>Kelvin 소스</b>, <b>TOLL 바닥면 방열</b>, 그리고 <b>66 A 펄스 내량</b>이 낙뢰 서지에서 살아남기 위한 사양입니다. S2G1812가 같은 자리에 SCR을 쓴 것과 대조됩니다 — SCR은 자연 소호가 장점이지만 끌 수 없고, MOSFET은 끌 수 있는 대신 <b>영교차 타이밍이 전적으로 제어기 책임</b>이 됩니다. 2EDS7165H의 37 ns 전파지연은 그 책임을 감당할 수 있는 수치입니다.</p>
+
+        <h3>보호 — 퓨즈 + MOV 크로바</h3>
+        <p class="lead">수리기 사례가 결정적입니다. 낙뢰성 과전압이 오면 MOV가 도통해 계통을 단락시키고 <b>3.15 A 퓨즈가 끊어져 장치를 계통에서 영구 분리</b>합니다. 이건 반도체를 살리기 위한 <b>희생 설계</b>입니다 — 퓨즈 하나를 버리고 600 V FET와 ASIC을 지킵니다. 대가는 <b>현장 수리 불가</b>: 실리콘 봉지 안의 퓨즈에 닿으려면 하우징을 뚫어야 하고, Enphase는 이를 보증 대상으로 인정하지 않습니다. 25년 보증과 밀봉 구조가 이 지점에서 맞물립니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 5 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 5</span><h2>S2G1812 / V2000과 비교</h2><span class="sub">같은 언폴딩 구조, 다른 선택</span></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>항목</th><th>Enphase IQ7+</th><th>S2G1812 (리버스 분석)</th><th>V2000에 주는 시사점</th></tr></thead>
+            <tbody>
+              <tr><td>정격</td><td class="mono">295 VA · 1채널</td><td class="mono">2채널 (PVA/PVB) · 4상</td><td>모듈 1장당 1채널이 Enphase 방식. 채널당 300 W급</td></tr>
+              <tr class="pick"><td>1차 토폴로지</td><td><b>H-브리지</b> 단일단, 플라이백+포워드 혼합 (특허)</td><td>인터리브 플라이백, 상당 단일 스위치 2병렬</td><td>H-브리지는 스위치 4개로 피크 전류·코어 손실을 낮춤. 단, 특허 영역</td></tr>
+              <tr><td>1차 MOSFET</td><td class="mono">NTMFS5C628NL 60 V 2.4 mΩ ×4</td><td class="mono">BSC190N15NS3 150 V 19 mΩ ×2/상</td><td>포워드 모드는 반사 전압이 작아 60 V로 충분. 플라이백은 150 V 필요</td></tr>
+              <tr class="pick"><td>언폴더</td><td><b>MOSFET ×4</b> (IPT60R102G7) + 강화절연 드라이버</td><td><b>SCR ×2 + MOSFET ×2</b> + 포토트라이악 + 40106B 로직</td><td>IQ7 방식이 부품 수 적고 제어 자유도 높음. 타이밍 책임은 제어기로</td></tr>
+              <tr><td>계통측 제어</td><td>없음 — 절연 드라이버로 게이트만 넘김</td><td>FT-H12V 플로팅 전원 + HEF40106B + 하드웨어 고장 버스</td><td>S2G1812의 하드웨어 보호 루프는 IQ7에 대응물이 보이지 않음 — ASIC 내부일 가능성</td></tr>
+              <tr><td>제어기</td><td class="mono">자체 ASIC</td><td class="mono">TMS320F28034 DSP</td><td>V2000은 STM32G474 — 범용 MCU 경로. ASIC의 타이밍 확정성은 HRTIM으로 대체</td></tr>
+              <tr class="pick"><td>입력 디커플링</td><td class="mono">13.2 mF (44.7 µF/W)</td><td class="mono">21.6 mF (전체)</td><td><b>V2000 추정 16.6 µF/W는 낮다.</b> 25년 목표라면 리플 전류 기준으로 다시 잡을 것</td></tr>
+              <tr><td>서지 보호</td><td>MOV + 퓨즈 크로바 (희생)</td><td>MOV ×2 + 가스관 GT1 + 퓨즈 T10A</td><td>S2G1812가 더 두터움. IQ7은 크기·원가를 택함</td></tr>
+              <tr><td>봉지·외함</td><td>실리콘 봉지, 후면 알루미늄, 수리 불가</td><td>미확인</td><td>V2000 OI-08 열 이슈: IQ7은 7 W를 30 mm 두께로 처리 — 참고 기준</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="refcard" style="margin-top:18px;margin-bottom:0">
+          <h3>가져올 것과 가져오면 안 되는 것</h3>
+          <p><b>가져올 것</b> — 언폴더를 600 V MOSFET + 강화절연 드라이버로 단순화하는 구조, 리플 전류 기준의 디커플링 산정, TOLL/DFN 바닥면 방열 경로, MOV+퓨즈 희생 보호의 명확한 의도.</p>
+          <p><b>주의할 것</b> — 1차 H-브리지의 플라이백/포워드 혼합 운전은 Enphase 특허(US 8,456,865)입니다. 구조를 그대로 채택하기 전에 청구항 범위를 확인해야 합니다. 상용 제품에 쓰려면 특허 검토가 설계 검토보다 먼저입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 6 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 6</span><h2>IQ8 세대에서 바뀐 것</h2><span class="sub">ChargerLAB IQ8X · IQ8P 분해기 스니펫</span></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>항목</th><th class="mono">IQ7+</th><th class="mono">IQ8X</th><th class="mono">IQ8P (480 W)</th></tr></thead>
+            <tbody>
+              <tr><td>1차 H-브리지</td><td class="mono">NTMFS5C628NL 60 V 2.4 mΩ ×4</td><td class="mono">AOS AON6276 <b>80 V</b> 2.2 mΩ ×4</td><td class="mono">미확보</td></tr>
+              <tr><td>1차 드라이버</td><td class="mono">MP1921A</td><td class="mono">MP1921A (동일)</td><td class="mono">미확보</td></tr>
+              <tr><td>언폴더 MOSFET</td><td class="mono">IPT60R102G7</td><td class="mono">IPT60R102G7 (동일)</td><td class="mono">미확보</td></tr>
+              <tr><td>절연 드라이버</td><td class="mono">Infineon 2EDS7165H</td><td class="mono">TI UCC21520A</td><td class="mono">미확보</td></tr>
+              <tr><td>입력 디커플링</td><td class="mono">Chemi-Con 3300 µF/63 V ×4</td><td class="mono">Rubycon (값 미확보)</td><td class="mono">NCC 3300 µF/65 V <b>×5</b></td></tr>
+              <tr><td>ASIC</td><td class="mono">480-00031-01</td><td class="mono">Enphase (품번 미확보)</td><td class="mono">480-00048-01</td></tr>
+              <tr><td>전류 센싱</td><td class="mono">3 mΩ 션트</td><td class="mono">변압기에 출력 CT 통합</td><td class="mono">미확보</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lead" style="margin-top:14px">전력단 골격은 그대로이고, <b>1차 FET 정격을 60 → 80 V로 올려 입력 마진을 확보</b>했고, 절연 드라이버를 2차 소싱(Infineon → TI)했으며, 480 W급에서는 <b>커패시터를 5개로 늘려</b> 리플 전류를 분산했습니다. 변압기에 CT를 통합한 것은 부품 수와 절연 거리를 동시에 줄이는 수법입니다. IQ7의 60 V 마진 0은 IQ8에서 고쳐졌다고 읽는 것이 자연스럽습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PART 7 ===== -->
+  <section class="part">
+    <div class="part-head"><span class="part-no">PART 7</span><h2>검증 상태와 다음 단계</h2></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>항목</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr><td>정격 사양 — 출력, MPPT, 전압 범위, 전류, 효율, 온도, 치수, 인증</td><td><span class="badge b-ok">확인</span> Enphase 데이터시트 스니펫, 출력 전류로 교차검증</td></tr>
+              <tr><td>부품 식별 — ASIC, 1차 FET ×4, MP1921A, 2EDS7165H ×2, IPT60R102G7, EPCOS, Chemi-Con ×4, MOV, 퓨즈, 3 mΩ 션트</td><td><span class="badge b-ok">확인</span> ChargerLAB 스니펫</td></tr>
+              <tr><td>부품 사양 — NTMFS5C628NL, IPT60R102G7, MP1921A, 2EDS7165H</td><td><span class="badge b-ok">확인</span> 부품사 스니펫</td></tr>
+              <tr><td>특허 US 8,456,865 — 1차 H-브리지 플라이백/포워드 혼합</td><td><span class="badge b-ok">확인</span> 제목·요약만. 청구항 미확보</td></tr>
+              <tr><td>고장 모드 — MOV+퓨즈 크로바, 낙뢰, 하우징 천공 수리</td><td><span class="badge b-ok">확인</span> 수리기 스니펫</td></tr>
+              <tr><td>CEC 가중 효율, 최대 입력 전류, 외함 등급, 커넥터</td><td><span class="badge b-gap">미확보</span></td></tr>
+              <tr><td>2차 정류 형식, 변압기 권선비, 스위칭 주파수, PLC 회로, MP1921A 수량</td><td><span class="badge b-gap">미확보</span> 원문 사진 필요</td></tr>
+              <tr><td>ASIC 품번 불일치 (480-00031-01 vs 480-00035-01)</td><td><span class="badge b-gap">미해결</span> 두 소스가 다름</td></tr>
+              <tr><td>Chemi-Con 시리즈·리플 정격, P175P10C 세부, 입력 TVS 유무</td><td><span class="badge b-gap">미확보</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="gapcard" style="margin-top:18px">
+          <h3>다음에 할 수 있는 것</h3>
+          <p>기사 원문의 <b>보드 사진 두 장(앞·뒤)</b>을 올려 주시면 2차 정류 구조, MP1921A 수량, PLC 회로, 입력 클램프를 직접 판독해 이 문서를 갱신하겠습니다. S2G1812 때처럼 부품 배치와 배선을 따라가면 위의 미확보 항목 대부분이 채워집니다.</p>
+        </div>
+        <p class="src"><b>출처</b> —
+          <a href="https://www.chargerlab.com/teardown-of-enphase-iq7-microinverter">ChargerLAB IQ7+ 분해기</a> ·
+          <a href="https://www.chargerlab.com/teardown-of-enphase-iq8x-microinverter/">IQ8X</a> ·
+          <a href="https://www.chargerlab.com/teardown-of-enphase-iq8p-480w-microinverter-iq8p-72-2-int/">IQ8P</a> ·
+          <a href="https://enphase.com/download/iq7-and-iq7plus-microinverters-data-sheet">Enphase IQ7/IQ7+ 데이터시트</a> ·
+          <a href="https://patents.google.com/patent/US8456865B1/en">US 8,456,865 B1</a> ·
+          <a href="https://elmoret.substack.com/p/repairing-a-failed-enphase-iq7-microinverter">IQ7 수리기</a> ·
+          <a href="https://www.onsemi.com/pdf/datasheet/ntmfs5c628nl-d.pdf">NTMFS5C628NL</a> ·
+          <a href="https://www.infineon.com/part/IPT60R102G7">IPT60R102G7</a> ·
+          <a href="https://www.monolithicpower.com/en/mp1921a.html">MP1921A</a> ·
+          <a href="https://www.infineon.com/cms/en/product/power/gate-driver-ics/2eds7165h/">2EDS7165H</a>.
+          모든 페이지는 원문 접근이 차단되어 검색 스니펫으로만 확인했습니다.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+</body></html>
