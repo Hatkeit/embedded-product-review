@@ -197,3 +197,64 @@ GPIO41~44는 뒤의 언폴더 구동 분석(docs/ac-unfolder-drive-protection.ht
 - 원본 라벨 46개 중 동일 기능 매핑 20개, 절연 센싱으로 대체 6개, 내부 주변장치로 흡수 3개(TZ2, ECAP1, COMP3B 기준), 삭제 8개(RF 모듈·ADCINA5·TRST), 선택/예비 8개.
 - 원본에 있으나 V2000에 없는 감시 3개(PVA+/PVB+ 직접 전압, 보조 10 V)는 추가를 권장하며 핀을 미리 잡아 두었다: PC0, PA3, PE13.
 - 위 핀 전부 LQFP-128·LQFP-100 양쪽에 존재하며 기존 핀맵(§1~§3)과 충돌이 없다.
+
+## 부록 C. 실제 넷리스트 대조 — 확정 핀맵 (pstxnet.dat, PSTWRITER 17.4, 2026-09-20 00:46)
+
+OrCAD 패키저 출력(pstxnet/pstxprt/pstchip)을 파싱해 U16 128핀 전부와 명명 넷 99개를 대조했다.
+PDF 복원 넷리스트가 아니라 **실제 넷리스트**이므로 이 부록이 §1~§3·부록 B보다 우선한다.
+
+### C-1. U16에 실제 결선된 신호 — 핀맵과 일치 (그대로 확정)
+
+| 신호 (넷 이름) | U16 핀 | 기능 | 판정 |
+|---|---|---|---|
+| PWM_A1 / PWM_A2 / PWM_B1 / PWM_B2 | PA8 / PA9 / PA10 / PA11 | HRTIM1 CHA1·CHA2·CHB1·CHB2 | ✔ |
+| GATE_AC_N / GATE_AC_L | PC6 / PC7 | HRTIM1 CHF1 / CHF2 | ✔ |
+| ADC_V_PA1 / ADC_V_PA2 (CST T1/T3 피크 전류) | PA1 / PA7 | ADC1_IN2+COMP1_INP / ADC2_IN4+COMP2_INP | ✔ (이름은 전류이므로 ADC_I_PA1/PA2 권장) |
+| ADC_V_PB1 / ADC_V_PB2 (CST T5/T7) | PC1 / PE7 | ADC1_IN7+COMP3_INP / ADC3_IN4+COMP4_INP | ✔ (동일) |
+| ADC_V_PA / ADC_V_PB (클램프 노드 전압) | PA0 / PA2 | ADC1_IN1 / ADC1_IN3 | ✔ |
+| ADC_V_GRID_L (AMC3301 OUTN 측) | PB14 | ADC4_IN4 (+) | ✔ |
+| ADC_I_GRID_P (AMC3302 OUTP) | PE14 | ADC4_IN1 (+) | ✔ |
+| ADC_I_GRID_N (AMC3302 OUTN) | PE15 | ADC4_IN2 (−) | ✔ |
+| ADC_I_GRID_LK | PD12 | ADC3_IN9 | ✔ |
+| AIN1~AIN4 | PC4 / PC5 / PB0 / PB1 | ADC2_IN5 / ADC2_IN11 / ADC1_IN15 / ADC1_IN12 | ✔ |
+| RELAY_GRID | PB10 | GPIO | ✔ |
+| UART0_TXD / UART0_RXD ↔ ESP32 IO18 / IO17 | PD5 / PD6 | USART2 | ✔ |
+| UART2_TXD_C / UART2_RXD_C ↔ J20 | PC10 / PC11 | USART3 | ✔ |
+| CAN_TX / CAN_RX / CAN_NEN | PD1 / PD0 / PD2 | FDCAN1 | ✔ |
+| SWDIO_C / SWCLK_C / SWO_C | PA13 / PA14 / PB3 | SWD | ✔ |
+| /BOOT_C (R112 풀다운) / /RESET_C (R118 풀업) | PB8 / NRST | | ✔ |
+| OSC_IN / OSC_OUT | PF0 / PF1 | HSE | ✔ |
+| VDD_3V0 (U27 REF3030A OUT, C200 100 nF + C201 4.7 µF) | VREF+A(43) · VREF+B(44) | 기준전압 | ✔ 핀 1 IN·2 OUT·3 GND 데이터시트와 일치 |
+
+### C-2. 겹치는 신호 · 미결선 — 수정 후 확정
+
+| # | 넷리스트 상태 | 문제 | 확정 조치 |
+|---|---|---|---|
+| X1 | **ADC_I_GRID_N이 PE15와 PB15 두 핀**에 붙어 있고, ADC_V_GRID_N은 C156·R175에만 있어 MCU 미결선 | 같은 넷이 두 ADC 핀에 병렬, 계통 전압 (−) 미결선 | PB15를 ADC_I_GRID_N에서 떼어 **ADC_V_GRID_N → PB15 (ADC4_IN5)** |
+| X2 | **ADC_I_PA** 넷 = R157(U2A OPA2387 출력) + R166(U21 INA240 출력) + C127 + C135, MCU 미결선. ADC_I_PB 동일(R156 + R171) | op-amp 출력 두 개가 한 넷에 묶임 | U2 OPA2387 블록 삭제(R152~R160, C123·C125·C126·C127·C128). INA240 출력만 남겨 **ADC_I_PA → PC2 (ADC1_IN8), ADC_I_PB → PC3 (ADC1_IN9)** |
+| X3 | **ADC1** 넷 = R187 + C167 = 고장 플래그(U5D 출력) | 이름이 ADC 계열과 겹치고 MCU 미결선 | **FAULT_HW로 개명 → PA12 (HRTIM1_FLT1)** |
+| X4 | **IO1** = R194(U5A 입력), **IO2** = R208(U5B 입력), MCU 미결선 | 언폴더 MOSFET 지령 두 레그. 이전 판의 OFFPAGELEFT-L 공유는 해소됨 | **IO1 → GATE_UNF_N → PC8 (CHE1), IO2 → GATE_UNF_L → PC9 (CHE2)** |
+| X5 | **ADC2·ADC3·ADC4·ADC5·IO3** = 09 시트 U10/U11/U12(20 mΩ·비절연 op-amp 블록) 출력, MCU 미결선 | 전회 C3. AMC3301과 기능 중복 | 블록 삭제. 유지가 강행되면 PD13 / PD14 / PD10 / PD11 (ADC3/4/5) · IO3 → PB6 (TIM4_CH1) |
+| X6 | ADC_V_PA1/PA2/PB1/PB2 는 CST **전류** 신호, ADC_V_PA/PB 는 **전압** 신호 | 접두어 V/I 혼동 | CST 신호를 ADC_I_PA1/PA2/PB1/PB2 로 개명 (핀은 그대로) |
+| X7 | U27 REF3030A IN = VDD_3V3 | 데이터시트 VIN 하한 = VOUT + 0.2 V = 3.2 V, 3.3 V 레일 여유 0.1 V | IN을 VCC_5V0 + 10 Ω/1 µF 로 |
+
+### C-3. 핀맵보다 먼저 고쳐야 할 넷리스트 오류 (치명)
+
+| # | 넷리스트 근거 | 문제 |
+|---|---|---|
+| G1 | **GND 넷에 01·02 시트 부품이 하나도 없다.** Q1~Q8 소스, U13/U14 GND, EC2~EC6·EC8~EC12 (−), C10~C20 등 30핀이 **I_PV_A+ / I_PV_B+** 넷에만 있고, 그 넷의 시트 밖 연결은 U21/U22 IN+ 한 핀뿐 | DC-DC 전력단 귀환이 시스템 GND에서 떠 있다. PV 전류의 귀환 경로도, 보조전원(04 시트, GND 기준)의 귀환 경로도 없다. R6/R43 션트의 GND 측(I_PV_A+ / I_PV_B+)을 GND에 한 점으로 연결해야 한다 |
+| G2 | **PV_A-** 넷 = C68·C70·R101(04 시트) + R159(07 시트)뿐, **PV_B-** 넷 = R158 한 핀. PV 단자 J3/J4/J8/J9 는 I_PV_A- / I_PV_B- 넷 | 04·07 시트의 PV_A-/PV_B- 전원 심볼이 PV 단자와 다른 넷. R101 2 mΩ은 어디에도 이어지지 않은 GND 션트가 됐고, U2A/U2B 입력도 떠 있다 | 
+| G3 | **PV_A+** 넷에 02 시트 C35·C36·T7 핀 4·5·6·8 포함 (PV_B+ 넷은 T5만) | 전회 N1 그대로. PV_B 2상 1차가 PV_A+ |
+| G4 | U21/U22 INA240 심볼 핀 번호: 2=IN+, 3=IN−, 8=OUT, 5=VCC, 6=REF2, 7=REF1 | INA240 TSSOP-8 실물은 2=IN−, 3=IN+, 7=OUT, 8=VS 로 알려져 있다. 심볼이 맞으면 PCB에서 입력 극성 반전·출력이 REF1(GND)에 단락된다. **데이터시트로 심볼 핀 번호 확인 필수** |
+| G5 | 'NC' 넷 131핀 (U16 미사용 핀, U17 IO, U19 NC 핀, T1.2 등) | OrCAD 무접속 의사 넷으로 보이나(경로 없는 C_SIGNAL='NC'), Allegro에서 NC 넷 래츠가 생기지 않는지 확인 |
+| G6 | 그 밖에 전회 지적이 그대로임: VCC_3V3 소스 없음(C8), Q9 소스 GND ↔ LS1 코일 VCC_12V0(C4), USB VBUS = VCC_5V0(N5), TLE9251 VIO = 5 V(H3) | |
+
+### C-4. 확정 핀맵 집계
+
+| 구분 | 핀 |
+|---|---|
+| 이미 결선·확정 (C-1) | 38핀 (VREF+ 2핀 포함) |
+| 추가 결선 (C-2) | PB15 ADC_V_GRID_N · PC2 ADC_I_PA · PC3 ADC_I_PB · PA12 FAULT_HW · PC8 GATE_UNF_N · PC9 GATE_UNF_L |
+| 예비 (미결선 유지) | PC0/PA3 PV 직접 전압, PE13 10 V 감시, PD3/PD4 LED, PA15/PB7 I2C |
+
+수정 순서: G1·G2·G3 (접지·전원 넷) → X1~X5 (핀 결선·삭제) → X6·X7 → G4 심볼 확인.
