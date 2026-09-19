@@ -77,6 +77,11 @@ fp_rows = [
      "벤더 스텐실 1.1 오프셋", "있음",
      "규칙2로 토 0.15 연장(벤더 1.1→1.25). 이탈 없음. 마스크는 규칙6에 따라 데이터시트값(NSMD, 동판+0.07/변) 우선 → 웹 0.21",
      None, "미검증", "buildsot95p280.il", "TI SLVSE13J p.3 Pin Functions / p.59 Package Outline / p.60 Board Layout / p.61 Stencil"],
+    ["SOT95P237X112-3M", "SMD", "DBZ0003A (SOT-23-3)", 3, 0.95,
+     "1.42 x 0.60", None, "1.4 x 3.04 x 1.12max", "x ±1.92 / y ±1.67",
+     "벤더 스텐실 1.3 오프셋", "있음",
+     "규칙2로 토 0.12 연장(벤더 1.3→1.42). 이탈 없음. 마스크는 규칙6에 따라 데이터시트값(NSMD, 동판+0.07/변) 우선 → 웹 1.16",
+     None, "미검증", "buildsot95p237.il", "TI SBVS032K p.3 Pin Config / p.34 Package Outline / p.35 Board Layout / p.36 Stencil"],
 ]
 for r, row in enumerate(fp_rows, start=2):
     for c, v in enumerate(row, start=1):
@@ -92,18 +97,19 @@ fp["G6"] = "—"; fp["G6"].font = IN_FONT
 fp["G7"] = "—"; fp["G7"].font = IN_FONT
 fp["G8"] = "—"; fp["G8"].font = IN_FONT
 fp["G9"] = "—"; fp["G9"].font = IN_FONT
+fp["G10"] = "—"; fp["G10"].font = IN_FONT
 fp["E8"] = "—"; fp["E8"].font = IN_FONT
 fp["E4"] = "—"; fp["E4"].font = IN_FONT
-for rr in (2,3,4,5,6,7,8,9):
+for rr in (2,3,4,5,6,7,8,9,10):
     fp.cell(row=rr, column=13, value="미실행").font = IN_FONT
-for rr in (2,3,4,5,6,7,8,9):
+for rr in (2,3,4,5,6,7,8,9,10):
     fp.cell(row=rr, column=13).fill = WARN
     fp.cell(row=rr, column=14).fill = WARN
 
-fp["A11"] = "※ DRC / 검증상태는 axlDRCUpdate(t) 와 extracta 대조를 실제로 돌린 뒤에만 갱신할 것."
-fp["A11"].font = Font(name=F, size=9, italic=True, color="C00000")
-fp["A12"] = "※ 여덟 풋프린트 모두 이 세션에서는 빌드하지 못했습니다 (Allegro/extracta 부재). 스크립트만 작성된 상태입니다."
+fp["A12"] = "※ DRC / 검증상태는 axlDRCUpdate(t) 와 extracta 대조를 실제로 돌린 뒤에만 갱신할 것."
 fp["A12"].font = Font(name=F, size=9, italic=True, color="C00000")
+fp["A13"] = "※ 아홉 풋프린트 모두 이 세션에서는 빌드하지 못했습니다 (Allegro/extracta 부재). 스크립트만 작성된 상태입니다."
+fp["A13"].font = Font(name=F, size=9, italic=True, color="C00000")
 fp.freeze_panes = "A2"
 
 fp["L2"].comment = Comment(
@@ -187,6 +193,11 @@ v_rows = [
      "SOT-23-5 (DBV0005A)", "SOT95P280X145-5M", None, "있음",
      "TI SLVSE13J (2024-11 rev)", "buildsot95p280.il", "미검증",
      "1 OUT/2 V-/3 IN+/4 IN-/5 V+ (표준 'North West' 핀아웃). 같은 SOT-23-5 에 7041S·7041L 핀아웃 변형이 있으나 랜드는 동일 — 풋프린트는 1개, 구분은 심볼에서"],
+    ["REF3030AIDBZR", "Texas Instruments", "전압 레퍼런스 (직렬)",
+     "Vout 3.0V / 초기정확도 ±0.2% / 드리프트 75ppm/°C / Iq 42µA typ / Iout 25mA / -40~+125°C / 마킹 R30F",
+     "SOT-23-3 (DBZ0003A)", "SOT95P237X112-3M", None, "있음",
+     "TI SBVS032K (2025-12 rev)", "buildsot95p237.il", "미검증",
+     "1 IN / 2 OUT / 3 GND. 같은 DBZ 패키지의 REF30E 계열(REF3030EAIDBZR 등)도 랜드 동일 — 풋프린트 1개 공용"],
 ]
 for r, row in enumerate(v_rows, start=HR+1):
     v.cell(row=r, column=1, value=f"=ROW()-{HR}").font = FX_FONT

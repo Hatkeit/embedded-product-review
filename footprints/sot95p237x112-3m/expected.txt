@@ -1,0 +1,19 @@
+SOT95P237X112-3M  expected values  (mm, TOP view per datasheet p.3, origin = package centre)
+  vendor land   : 1.3 x 0.6  row centre-to-centre 2.1 -> inner 0.40  outer 1.70
+  applied land  : 1.42 x 0.6  centre +/-1.11  inner 0.40  outer 1.82
+  mask (NSMD)   : 1.56 x 0.74   (datasheet: copper + 0.07/side min)
+  paste         : 1.3 x 0.6  offset +0.06  lands at +/-1.05  (= p.36 stencil)
+  lead tip (max): 1.32  toe exposed = 0.50  (rule >=0.50 OK)
+  copper gap    : 1.30 between pin1/pin2  (rule >=0.20 OK)
+  mask web      : 1.16  (>=0.20 OK)
+  body          : E1 1.4 (x) x D 3.04 (y) max, height 1.12 max
+  silk          : y=+/-1.52 lines, x -0.7..0.7; clearance to pad 0.22
+  pin-1 dot     : (0, 1.15) r0.12; clearance to pad 0.23  (free band is |x|<0.40)
+  assembly      : closed rect 1.4 x 3.04 with 0.40 chamfer at the pin-1 corner
+  place bound   : x +/-1.92  y +/-1.67  filled
+  refdes        : (-1.52, 1.60)
+
+pin  name        x        y  rot   pasteX
+  1    IN    -1.11     0.95    0    -1.05
+  2   OUT    -1.11    -0.95    0    -1.05
+  3   GND     1.11     0.00  180     1.05
