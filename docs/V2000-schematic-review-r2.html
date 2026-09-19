@@ -110,7 +110,7 @@
   <div class="titleblock">
     <div><span>MCU 신호</span><b>38 핀 · HRTIM 8 · ADC 17</b></div>
     <div><span>전회 지적</span><b>25건 중 3건 해결</b></div>
-    <div><span>신규 지적</span><b>치명 1 · 높음 4 · 중 6</b></div>
+    <div><span>신규 지적</span><b>치명 1 · 높음 5 · 중 6</b></div>
     <div><span>Rev</span><b>2.0 · 2026-09-19</b></div>
   </div>
 </header>
@@ -310,6 +310,13 @@ AMC3301/3302 출력 스윙은 데이터시트 미확보 — 3.0 V 이내로 알�
     <dt>수정</dt><dd>SS 47~220 nF, PGOOD는 MCU 감시 입력 또는 NC.</dd>
   </dl></div></div>
 
+  <div class="card high"><div class="card-head">N12 · LM5156 스위칭 주파수 2 MHz <span class="pn">04 시트 · R110 RT 10 kΩ · 데이터시트 식 f = 2.21×10¹⁰ / (R_RT + 955)</span></div>
+  <div class="card-body"><dl class="find">
+    <dt>확인</dt><dd>R110 10 kΩ이 RT–AGND에 있습니다. 데이터시트 표: RT 9.09 kΩ → 2.2 MHz, 220 kΩ → 100 kHz. 10 kΩ이면 <b>약 2.0 MHz</b>입니다.</dd>
+    <dt>영향</dt><dd>6권선 커스텀 플라이백 T9, 100 V FET Q10, PMEG 클램프, 1 mΩ CS 필터 조합에서 2 MHz는 스위칭 손실·누설 스파이크·최소 온타임(50 ns) 모두 무리입니다. 원본 NCP1031은 고정 100 kHz급이었습니다.</dd>
+    <dt>수정</dt><dd>R110 → 220 kΩ (100 kHz) 또는 110 kΩ (200 kHz). 주파수 확정 후 슬로프 보상 R_SL·CS 필터·T9 권선 설계를 같이 재계산.</dd>
+  </dl></div></div>
+
   <div class="card mid"><div class="card-head">N10 · UART0 넷 이름 방향 <span class="pn">06 시트 · UART0_TXD = PD5(MCU TX) ↔ ESP32 IO18 · UART0_RXD = PD6 ↔ IO17</span></div>
   <div class="card-body"><dl class="find">
     <dt>확인</dt><dd>같은 이름의 넷이 양단에 붙어 있어 어느 쪽 TX인지 도면만으로는 모호합니다. 넷리스트상 MCU USART2_TX(PD5)가 ESP32 IO18에, USART2_RX(PD6)가 IO17에 갑니다.</dd>
@@ -350,7 +357,7 @@ AMC3301/3302 출력 스윙은 데이터시트 미확보 — 3.0 V 이내로 알�
     <div class="step"><span class="n">1</span><div><b>전원 라벨·포트명 전수 정리</b><span>N1 PV_A+ → PV_B+, C2 OFFPAGELEFT-L/R → GATE_UNF_N/L·FAULT_HW, H5 I_GIRD_Lk 오타, N4 R101 제거, N10 UART0 방향 이름. 끝나면 DRC 1613 목록이 곧 MCU 미결선 목록이 됩니다.</span></div></div>
     <div class="step"><span class="n">2</span><div><b>절연 경계 재확인</b><span>C4 릴레이 코일(VCC_12V0/PGND ↔ Q9 GND), C3 09 시트 삭제(20 mΩ·비절연 op-amp), N5 USB VBUS 분리. PGND–GND 사이 부품이 옵토·AMC·변압기·Y-캡뿐인지 넷리스트로 검색.</span></div></div>
     <div class="step"><span class="n">3</span><div><b>MCU 결선 — 1부 핀맵</b><span>38핀 결선, VREF+ ← REF3030A(VCC_5V0 급전), QET6 → VET7. CubeMX에서 HRTIM A/B/E/F + FLT1, ADC1~4 + COMP1~4 충돌 검사.</span></div></div>
-    <div class="step"><span class="n">4</span><div><b>보조전원 값</b><span>N3 FB 23.2 k/10 k(또는 LDO), C7 CS 40~50 mΩ·클램프 다이오드 ≥ 150 V, N7 Q10 150 V·D31, N9 SS·PGOOD, C8 VCC_3V3 LDO.</span></div></div>
+    <div class="step"><span class="n">4</span><div><b>보조전원 값</b><span>N3 FB 23.2 k/10 k(또는 LDO), C7 CS 47 mΩ·클램프 다이오드 ≥ 150 V, N7 Q10 150 V·D31, N9 SS 100 nF·PGOOD, N12 RT 220 kΩ(100 kHz), C8 VCC_3V3 LDO.</span></div></div>
     <div class="step"><span class="n">5</span><div><b>전력단 소자값</b><span>N2 CST 필터 100 pF(부담 10 Ω 검토), H1 150 V FET·200 V 스너버 캡, N6 클램프 비드 30 Ω/3 A, C6 D40 상단 → PHV, H4 FOD817 3.3 kΩ, H3 VIO 3.3 V, H8 MOC3053, N8 CM 초크 권선 대응.</span></div></div>
     <div class="step"><span class="n">6</span><div><b>정리</b><span>H7 2EDN 풋프린트·ENA/ENB, M3 NTC 3.9~4.7 kΩ, M4 ESP32 22 µF, N11 타이틀·NC 속성, H2 OPA2387 블록 삭제, M6·M9.</span></div></div>
   </div>
@@ -369,7 +376,8 @@ AMC3301/3302 출력 스윙은 데이터시트 미확보 — 3.0 V 이내로 알�
       <tr><td>REF3030A</td><td><span class="badge b-ok">확인</span> 업로드 데이터시트 SBVS032K: 3.0 V ±0.2 %, 75 ppm/℃, 25 mA, VIN ≥ VOUT + 0.2 V</td></tr>
       <tr><td>자동 추출 한계</td><td><span class="badge b-ref">참고</span> 2핀 수동소자의 핀 귀속은 인접 부품과 섞일 수 있어 IC·포트·전원 넷 중심으로 판독했고, 지적 항목은 전부 확대 이미지로 재확인했습니다. 변압기 핀 번호는 시각 판독입니다</td></tr>
       <tr><td>데이터시트 확인 (9/20 추가)</td><td><span class="badge b-ok">확인</span> INA240 PW 핀 배열·출력 스윙, AMC3301/3302 핀 배열·CM 1.44 V·클리핑 ±2.49 V, SCS205KNHR 1200 V/5 A, MOC3063 I_FT 5 mA·V_INH 5~20 V, REF3030A 핀 배열. 상세는 docs/V2000-MCU-pinmap.md 부록 D</td></tr>
-      <tr><td>미확보</td><td><span class="badge b-gap">미확보</span> LM5156 FB 기준·CS 문턱, LF19S 권선 핀, IAUCN10S7L040 Qg, PA1005 V·s 정격</td></tr>
+      <tr><td>데이터시트 확인 (9/20 2차)</td><td><span class="badge b-ok">확인</span> LM5156H V_REF 1.0 V·V_CLTH 100 mV·UVLO 1.5 V·I_SS 10 µA·f_RT 식, PA1005 1:100 20 A·B_pk 식, IAUCN10S7L040 100 V·Q_g 50.6 nC. N3(1.21 V)·C7(100 A)·N9(1 s) 수치 확정, 신규 N12 RT 10 kΩ → 2.0 MHz</td></tr>
+      <tr><td>미확보</td><td><span class="badge b-gap">미확보</span> LF19S-102-8A 권선 핀 대응</td></tr>
     </tbody></table></div>
     <p class="src" style="margin-top:14px"><b>참고 문서</b> — V2000 회로도 검토 Rev 1 · V2000 MCU 이식 검토 · docs/V2000-MCU-pinmap.md · 언폴더 구동·보호 회로 · NCP1031 대체 보조전원.</p>
   </div></div>
