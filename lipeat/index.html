@@ -2,9 +2,16 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="영상과 자막으로 문장 단위 쉐도잉을 반복하는 개인용 외국어 학습기" />
   <meta name="theme-color" content="#1d4ed8" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Lipeat" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <title>Lipeat 개인 학습기</title>
   <style>
     :root{
@@ -53,7 +60,7 @@
     .field textarea{min-height:140px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.45}
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .file-drop{border:2px dashed var(--line);border-radius:14px;padding:18px;text-align:center;color:var(--muted);cursor:pointer}
+    .file-drop{display:block;border:2px dashed var(--line);border-radius:14px;padding:18px;text-align:center;color:var(--muted);cursor:pointer}
     .file-drop.over{border-color:var(--blue);background:var(--blue-50)}
     .file-drop strong{color:var(--text)}
     input[type=file]{display:none}
@@ -114,12 +121,19 @@
     .help{font-size:13px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
     .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:calc(100vw - 32px)}
     .toast.show{opacity:1}
+    .install{display:none;gap:10px;align-items:center;justify-content:space-between;background:var(--blue-50);border:1px solid var(--blue-100);border-radius:14px;padding:10px 14px;margin-bottom:12px;font-size:13px;word-break:keep-all}
+    .install.show{display:flex}
     .hidden{display:none!important}
     @media (max-width:900px){
       .study{grid-template-columns:1fr}
       .list-card{position:static;max-height:60vh}
       .two{grid-template-columns:1fr}
       .sentence .text{font-size:20px}
+    }
+    @supports (padding: env(safe-area-inset-top)){
+      header.top{padding-top:calc(12px + env(safe-area-inset-top));padding-left:calc(16px + env(safe-area-inset-left));padding-right:calc(16px + env(safe-area-inset-right))}
+      .container{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+      .toast{bottom:calc(24px + env(safe-area-inset-bottom))}
     }
     @media (max-width:600px){
       .brand small{display:none}
@@ -137,6 +151,10 @@
   </header>
 
   <main class="container">
+    <div class="install" id="installHint">
+      <span id="installText">홈 화면에 추가하면 앱처럼 전체 화면으로 실행됩니다.</span>
+      <span class="row" style="flex-wrap:nowrap"><button class="btn btn-primary btn-sm" id="btnInstall">설치</button><button class="btn btn-ghost btn-sm" id="btnInstallDismiss">닫기</button></span>
+    </div>
     <!-- ===== 설정 화면 ===== -->
     <section id="view-setup">
       <div class="card" id="pendingNotice" style="display:none">
@@ -911,6 +929,27 @@
       }
     });
     window.addEventListener('beforeunload', () => { if (state.session) persistSession(true); });
+
+    // ---------- 앱 설치(PWA) ----------
+    if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+      navigator.serviceWorker.register('sw.js').catch(() => { /* 오프라인 캐시 없이도 동작 */ });
+    }
+    (function installHint() {
+      const box = $('#installHint'), btn = $('#btnInstall');
+      const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+      if (standalone || loadJSON('lipeat.installHint', false)) return;
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      let deferred = null;
+      if (isIOS) {
+        $('#installText').textContent = 'iPhone: Safari 아래 공유 버튼(⬆) → 「홈 화면에 추가」를 누르면 앱처럼 설치됩니다.';
+        btn.classList.add('hidden');
+        box.classList.add('show');
+      }
+      window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferred = e; btn.classList.remove('hidden'); box.classList.add('show'); });
+      btn.addEventListener('click', async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; box.classList.remove('show'); });
+      $('#btnInstallDismiss').addEventListener('click', () => { box.classList.remove('show'); saveJSON('lipeat.installHint', true); });
+      window.addEventListener('appinstalled', () => box.classList.remove('show'));
+    })();
 
     // ---------- 초기화 ----------
     applySettingsUI();

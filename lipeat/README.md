@@ -13,6 +13,19 @@ python3 -m http.server 8000
 
 `index.html`을 더블클릭해서 열어도 로컬 파일 학습은 되지만, 녹음(마이크)과 YouTube 재생은 `http://localhost` 로 여는 편이 안정적입니다.
 
+## iPhone·Android에서 앱처럼 쓰기 (PWA)
+
+이 앱은 홈 화면에 설치할 수 있는 웹 앱(PWA)입니다. 한 번 설치하면 전체 화면으로 열리고, 앱 화면 자체는 오프라인에서도 뜹니다.
+
+1. 인터넷에서 열리는 주소가 필요합니다. 가장 쉬운 방법은 GitHub Pages입니다.
+   - 리포지토리 **Settings → Pages → Source: Deploy from a branch**, 브랜치와 루트(`/`)를 고르고 저장합니다.
+   - 몇 분 뒤 `https://<계정>.github.io/<리포지토리>/lipeat/` 로 접속됩니다. (비공개 리포지토리는 GitHub Pro 이상에서만 Pages가 됩니다.)
+   - 같은 Wi-Fi 안에서만 쓰려면 PC에서 `python3 -m http.server 8000` 을 띄우고 휴대폰에서 `http://<PC IP>:8000/lipeat/` 로 열어도 됩니다. 단 이 경우 마이크 녹음은 HTTPS가 아니라 막힙니다.
+2. **iPhone**: Safari로 주소를 연 뒤 아래 공유 버튼(⬆) → **홈 화면에 추가**. 앱 안에 안내 배너도 표시됩니다.
+3. **Android**: Chrome에서 열면 「설치」 배너가 뜨거나, 메뉴(⋮) → **앱 설치**를 누릅니다.
+
+iPhone에서는 「로컬 파일」 탭에서 파일 앱·사진 앱의 영상을 고를 수 있고, 녹음은 iOS 14.5 이상 Safari에서 동작합니다. 저장된 학습 데이터는 설치한 앱 안에 유지되며, 기기 간 이동은 백업 내보내기/가져오기를 사용합니다.
+
 ## 사용 순서
 
 1. **영상 선택** – 내 PC의 mp4/webm/mp3 파일을 고르거나, YouTube 주소를 붙여넣습니다.
