@@ -1,0 +1,13 @@
+{
+  "appId": "com.hatkeit.lipeat",
+  "appName": "Lipeat",
+  "webDir": "../lipeat",
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#f1f5f9",
+    "allowsLinkPreview": false
+  },
+  "server": {
+    "allowNavigation": ["www.youtube.com", "youtube.com", "*.youtube.com"]
+  }
+}

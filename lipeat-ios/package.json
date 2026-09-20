@@ -1,0 +1,17 @@
+{
+  "name": "lipeat-ios",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lipeat 개인 학습기 iOS 앱 (Capacitor로 ../lipeat 웹 앱을 감쌉니다)",
+  "scripts": {
+    "sync": "cap sync ios",
+    "open": "cap open ios"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0"
+  }
+}
