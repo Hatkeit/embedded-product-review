@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="영상과 자막으로 문장 단위 쉐도잉을 반복하는 개인용 외국어 학습기" />
+  <meta name="theme-color" content="#1d4ed8" />
+  <title>Lipeat 개인 학습기</title>
+  <style>
+    :root{
+      --bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;
+      --blue:#1d4ed8;--blue-50:#eff6ff;--blue-100:#dbeafe;--accent:#0891b2;
+      --green:#16a34a;--green-50:#f0fdf4;--red:#dc2626;--amber:#d97706;
+      --shadow:0 10px 25px rgba(15,23,42,.06)
+    }
+    @media (prefers-color-scheme:dark){
+      :root:not([data-theme="light"]){
+        --bg:#0b1220;--card:#111a2e;--text:#e2e8f0;--muted:#94a3b8;--line:#243047;
+        --blue:#60a5fa;--blue-50:#172554;--blue-100:#1e3a8a;--green-50:#052e16;--shadow:none
+      }
+    }
+    :root[data-theme="dark"]{
+      --bg:#0b1220;--card:#111a2e;--text:#e2e8f0;--muted:#94a3b8;--line:#243047;
+      --blue:#60a5fa;--blue-50:#172554;--blue-100:#1e3a8a;--green-50:#052e16;--shadow:none
+    }
+    *{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{margin:0;font-family:Inter,Arial,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+    button,input,select,textarea{font:inherit;color:inherit}
+    .container{max-width:1200px;margin:0 auto;padding:16px}
+    header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+    .brand{font-weight:900;letter-spacing:-.02em;font-size:18px}
+    .brand small{font-weight:500;color:var(--muted);margin-left:8px;font-size:12px}
+    .top nav{display:flex;gap:8px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+    .card h2{margin:0 0 6px;font-size:18px}
+    .card h2 .step{display:inline-block;background:var(--blue);color:#fff;border-radius:999px;width:24px;height:24px;line-height:24px;text-align:center;font-size:13px;margin-right:8px}
+    .hint{color:var(--muted);font-size:13px;margin:0 0 12px;word-break:keep-all}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer;background:var(--blue-50);color:var(--blue);text-decoration:none;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+    .btn:hover{filter:brightness(.97)}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .btn-primary{background:var(--blue);color:#fff}
+    .btn-ghost{background:transparent;border-color:var(--line);color:var(--text)}
+    .btn-danger{background:transparent;border-color:var(--line);color:var(--red)}
+    .btn-lg{padding:14px 24px;font-size:16px;border-radius:14px}
+    .btn-sm{padding:6px 10px;font-size:13px;border-radius:10px}
+    .tabs{display:flex;gap:6px;margin-bottom:12px}
+    .tab{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;cursor:pointer;font-weight:600}
+    .tab[aria-selected="true"]{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+    .field label{font-size:13px;font-weight:700;color:var(--muted)}
+    .field input[type=text],.field input[type=url],.field textarea,.field select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+    .field textarea{min-height:140px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.45}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .file-drop{border:2px dashed var(--line);border-radius:14px;padding:18px;text-align:center;color:var(--muted);cursor:pointer}
+    .file-drop.over{border-color:var(--blue);background:var(--blue-50)}
+    .file-drop strong{color:var(--text)}
+    input[type=file]{display:none}
+    .check{display:inline-flex;align-items:center;gap:6px;font-size:14px;cursor:pointer}
+    /* study layout */
+    .study{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:16px;align-items:start}
+    .stage{position:relative;background:#000;border-radius:16px;overflow:hidden;aspect-ratio:16/9}
+    .stage video,.stage .yt-wrap,.stage .yt-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .stage.audio-only{aspect-ratio:auto;height:64px;background:linear-gradient(90deg,#1e293b,#0f172a);display:flex;align-items:center;justify-content:center;color:#cbd5e1;font-size:13px}
+    .stage.audio-only video{position:static;height:48px;width:100%}
+    .sentence{margin-top:16px;padding:18px;border-radius:16px;background:var(--blue-50);border:1px solid var(--blue-100)}
+    .sentence .meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:8px;gap:8px;flex-wrap:wrap}
+    .sentence .text{font-size:24px;font-weight:800;line-height:1.35;letter-spacing:-.01em;word-break:keep-all;white-space:pre-wrap;min-height:1.35em}
+    .sentence .tr{margin-top:8px;color:var(--muted);font-size:16px;white-space:pre-wrap;min-height:1em}
+    .blind .text,.blind .cue .txt{filter:blur(8px);transition:filter .2s}
+    .blind .text:hover,.blind .cue .txt:hover,.blind .sentence.peek .text{filter:none}
+    .hide-tr .tr,.hide-tr .cue .trs{display:none}
+    .status{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:14px;color:var(--muted);min-height:22px}
+    .status .dot{width:10px;height:10px;border-radius:50%;background:var(--line)}
+    .status.playing .dot{background:var(--blue)}
+    .status.speak .dot{background:var(--green)}
+    .status.rec .dot{background:var(--red);animation:blink 1s infinite}
+    @keyframes blink{50%{opacity:.3}}
+    .gap{height:6px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:8px}
+    .gap i{display:block;height:100%;width:0;background:var(--green);transition:width linear}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
+    .controls .spacer{flex:1}
+    .settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}
+    .settings label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}
+    .settings select,.settings input[type=number]{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);width:100%}
+    .settings .check{flex-direction:row;align-items:center;margin-top:auto;font-weight:600;color:var(--text)}
+    .rec-box{margin-top:12px;padding:12px;border-radius:12px;border:1px solid var(--line);display:none;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
+    .rec-box.show{display:flex}
+    /* list */
+    .list-card{position:sticky;top:72px;max-height:calc(100vh - 88px);display:flex;flex-direction:column;padding:0}
+    .list-head{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .list-head .prog{font-size:13px;color:var(--muted)}
+    .progress{height:6px;background:var(--line)}
+    .progress i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+    ol.cues{list-style:none;margin:0;padding:8px;overflow:auto;flex:1}
+    .cue{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;width:100%;text-align:left;padding:10px 10px;border-radius:12px;border:1px solid transparent;background:transparent;cursor:pointer;align-items:start}
+    .cue:hover{background:var(--bg)}
+    .cue.active{background:var(--blue-50);border-color:var(--blue-100)}
+    .cue .n{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:3px;min-width:34px}
+    .cue .txt{font-size:14px;font-weight:600;white-space:pre-wrap;word-break:break-word}
+    .cue .trs{grid-column:2;font-size:12px;color:var(--muted);white-space:pre-wrap}
+    .cue .chk{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);font-size:12px;display:flex;align-items:center;justify-content:center;color:transparent}
+    .cue.learned .chk{background:var(--green);border-color:var(--green);color:#fff}
+    .cue.has-rec .n::after{content:"●";color:var(--red);font-size:8px;margin-left:3px;vertical-align:middle}
+    /* library */
+    .lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+    .lib .item{border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px;background:var(--card)}
+    .lib .item h3{margin:0;font-size:15px;word-break:break-word}
+    .lib .item .sub{font-size:12px;color:var(--muted)}
+    .lib .item .actions{display:flex;gap:6px;margin-top:auto}
+    .empty{color:var(--muted);text-align:center;padding:40px 16px}
+    .kbd{display:inline-block;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:0 6px;font-size:12px;font-family:ui-monospace,monospace;background:var(--bg)}
+    .help{font-size:13px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+    .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:calc(100vw - 32px)}
+    .toast.show{opacity:1}
+    .hidden{display:none!important}
+    @media (max-width:900px){
+      .study{grid-template-columns:1fr}
+      .list-card{position:static;max-height:60vh}
+      .two{grid-template-columns:1fr}
+      .sentence .text{font-size:20px}
+    }
+    @media (max-width:600px){
+      .brand small{display:none}
+      .controls .btn{padding:10px 12px}
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="brand">Lipeat 개인 학습기<small>영상 쉐도잉 · 개인 소장용</small></div>
+    <nav>
+      <button class="btn btn-ghost btn-sm" id="btnLibrary">라이브러리</button>
+      <button class="btn btn-primary btn-sm" id="btnNew">새 학습</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- ===== 설정 화면 ===== -->
+    <section id="view-setup">
+      <div class="card" id="pendingNotice" style="display:none">
+        <strong>라이브러리 세션 이어하기:</strong> <span id="pendingTitle"></span><br />
+        <span class="hint">브라우저는 로컬 영상 파일을 기억할 수 없어서, 같은 영상 파일을 다시 선택하면 저장된 자막·진도로 이어서 학습합니다.</span>
+      </div>
+
+      <div class="card">
+        <h2><span class="step">1</span>영상 선택</h2>
+        <p class="hint">내 컴퓨터의 영상·음성 파일(mp4, webm, mp3 등)이나 YouTube 링크를 사용합니다.</p>
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" data-src="file" aria-selected="true">로컬 파일</button>
+          <button class="tab" role="tab" data-src="youtube" aria-selected="false">YouTube</button>
+        </div>
+        <div id="srcFile">
+          <label class="file-drop" id="drop">
+            <input type="file" id="fileInput" accept="video/*,audio/*,.mkv" />
+            <span id="fileLabel">클릭하거나 파일을 끌어다 놓으세요 <br /><strong>영상 또는 음성 파일</strong></span>
+          </label>
+        </div>
+        <div id="srcYoutube" class="hidden">
+          <div class="field">
+            <label for="ytUrl">YouTube 주소 또는 영상 ID</label>
+            <input type="url" id="ytUrl" placeholder="https://www.youtube.com/watch?v=..." />
+          </div>
+          <p class="hint">임베드가 허용된 영상만 재생됩니다. 재생 속도·구간 반복은 YouTube 플레이어 API로 제어합니다.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="step">2</span>자막</h2>
+        <p class="hint">SRT 또는 VTT 자막을 붙여넣거나 파일로 불러옵니다. 문장 단위로 잘려서 반복 학습 목록이 됩니다.</p>
+        <div class="two">
+          <div class="field">
+            <label for="subText">학습 언어 자막 (필수)</label>
+            <div class="row" style="margin-bottom:6px">
+              <label class="btn btn-ghost btn-sm">자막 파일 열기<input type="file" id="subFile" accept=".srt,.vtt,.txt" /></label>
+              <button class="btn btn-ghost btn-sm" id="btnSample">예제 자막 넣기</button>
+            </div>
+            <textarea id="subText" placeholder="1&#10;00:00:01,000 --> 00:00:03,500&#10;Hello, how are you doing today?&#10;&#10;2&#10;..."></textarea>
+          </div>
+          <div class="field">
+            <label for="trText">번역 자막 (선택)</label>
+            <div class="row" style="margin-bottom:6px">
+              <label class="btn btn-ghost btn-sm">번역 자막 파일 열기<input type="file" id="trFile" accept=".srt,.vtt,.txt" /></label>
+            </div>
+            <textarea id="trText" placeholder="같은 타임코드의 한국어 자막을 넣으면 문장 아래에 번역이 표시됩니다."></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <label class="check"><input type="checkbox" id="optClean" checked /> 자동 생성 자막 정리(중복·빈 줄 제거)</label>
+          <label class="check"><input type="checkbox" id="optMerge" /> 짧은 자막을 앞 문장과 합치기</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="step">3</span>시작</h2>
+        <div class="field">
+          <label for="title">세션 이름 (비우면 파일명/영상 ID 사용)</label>
+          <input type="text" id="title" placeholder="예: Friends S01E01" />
+        </div>
+        <button class="btn btn-primary btn-lg" id="btnStart">학습 시작</button>
+      </div>
+    </section>
+
+    <!-- ===== 학습 화면 ===== -->
+    <section id="view-study" class="hidden">
+      <div class="study">
+        <div>
+          <div class="card" style="padding:12px">
+            <div class="stage" id="stage">
+              <video id="video" controls playsinline preload="metadata"></video>
+              <div class="yt-wrap hidden" id="ytWrap"></div>
+            </div>
+
+            <div class="sentence" id="sentence">
+              <div class="meta">
+                <span><span id="curIdx">0</span> / <span id="curTotal">0</span> · <span id="curTime">00:00</span></span>
+                <span class="row">
+                  <button class="btn btn-ghost btn-sm" id="btnPeek" title="가린 문장 잠깐 보기">문장 보기</button>
+                  <button class="btn btn-ghost btn-sm" id="btnEdit" title="문장 수정">✎ 수정</button>
+                </span>
+              </div>
+              <div class="text" id="curText">문장을 선택하세요</div>
+              <div class="tr" id="curTr"></div>
+              <div class="status" id="status"><span class="dot"></span><span id="statusText">정지</span></div>
+              <div class="gap"><i id="gapFill"></i></div>
+            </div>
+
+            <div class="controls">
+              <button class="btn btn-ghost" id="btnPrev" title="이전 문장 (←)">◀ 이전</button>
+              <button class="btn btn-primary btn-lg" id="btnPlay" title="연습 시작/정지 (Space)">▶ 연습</button>
+              <button class="btn btn-ghost" id="btnNext" title="다음 문장 (→)">다음 ▶</button>
+              <button class="btn btn-ghost" id="btnOnce" title="한 번만 듣기 (R)">↻ 한 번 듣기</button>
+              <span class="spacer"></span>
+              <button class="btn btn-ghost" id="btnContinuous" title="자막 따라가며 연속 재생 (C)">연속 재생</button>
+              <button class="btn" id="btnLearned" title="학습 완료 표시 (M)">✓ 완료</button>
+            </div>
+
+            <div class="settings">
+              <label>모드
+                <select id="setMode">
+                  <option value="listen">듣기만 (반복 재생)</option>
+                  <option value="repeat">듣고 따라 말하기</option>
+                  <option value="record">따라 말하며 녹음</option>
+                </select>
+              </label>
+              <label>반복 횟수
+                <select id="setRepeat">
+                  <option>1</option><option>2</option><option selected>3</option><option>5</option><option>10</option>
+                </select>
+              </label>
+              <label>재생 속도
+                <select id="setRate">
+                  <option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option>
+                </select>
+              </label>
+              <label>말하기 시간 (문장 길이 ×)
+                <select id="setGap">
+                  <option value="1">1.0</option><option value="1.2" selected>1.2</option><option value="1.5">1.5</option><option value="2">2.0</option>
+                </select>
+              </label>
+              <label class="check"><input type="checkbox" id="setAuto" /> 다음 문장 자동 진행</label>
+              <label class="check"><input type="checkbox" id="setBlind" /> 문장 가리기 (블라인드) <span class="kbd">H</span></label>
+              <label class="check"><input type="checkbox" id="setHideTr" /> 번역 숨기기</label>
+            </div>
+
+            <div class="rec-box" id="recBox">
+              <span>내 녹음:</span>
+              <button class="btn btn-ghost btn-sm" id="btnPlayRec">▶ 내 목소리</button>
+              <button class="btn btn-ghost btn-sm" id="btnPlayOrig">▶ 원음</button>
+              <button class="btn btn-ghost btn-sm" id="btnCompare">번갈아 듣기</button>
+              <a class="btn btn-ghost btn-sm" id="btnDownloadRec" download>저장</a>
+              <span id="recInfo" class="hint" style="margin:0"></span>
+            </div>
+
+            <div class="help">
+              <span><span class="kbd">Space</span> 연습 시작/정지</span>
+              <span><span class="kbd">←</span><span class="kbd">→</span> 문장 이동</span>
+              <span><span class="kbd">R</span> 한 번 듣기</span>
+              <span><span class="kbd">M</span> 완료 표시</span>
+              <span><span class="kbd">H</span> 문장 가리기</span>
+              <span><span class="kbd">C</span> 연속 재생</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card list-card">
+          <div class="list-head">
+            <strong id="sessionTitle" style="word-break:break-word">세션</strong>
+            <span class="prog"><span id="learnedCount">0</span>/<span id="cueCount">0</span> 완료</span>
+          </div>
+          <div class="progress"><i id="progressFill"></i></div>
+          <ol class="cues" id="cues"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 라이브러리 ===== -->
+    <section id="view-library" class="hidden">
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <h2 style="margin:0">내 학습 세션</h2>
+          <span class="row">
+            <button class="btn btn-ghost btn-sm" id="btnExport">백업 내보내기</button>
+            <label class="btn btn-ghost btn-sm">백업 가져오기<input type="file" id="importFile" accept=".json" /></label>
+          </span>
+        </div>
+        <p class="hint">자막·진도·설정은 이 브라우저의 localStorage에만 저장됩니다. 다른 기기로 옮기려면 백업 파일을 사용하세요.</p>
+        <div class="lib" id="lib"></div>
+        <div class="empty hidden" id="libEmpty">저장된 세션이 없습니다. 「새 학습」으로 시작하세요.</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  (() => {
+    'use strict';
+    const $ = (s) => document.querySelector(s);
+    const STORE_KEY = 'lipeat.sessions.v1';
+    const SETTINGS_KEY = 'lipeat.settings.v1';
+
+    // ---------- 상태 ----------
+    const state = {
+      session: null,        // {id,title,type,videoId,fileName,cues:[{start,end,text,tr}],progress:{learned:{},lastIndex},createdAt,updatedAt}
+      index: 0,
+      running: false,
+      continuous: false,
+      pendingSession: null, // 라이브러리에서 파일 세션을 다시 열 때
+      srcType: 'file',
+      file: null,
+    };
+    const settings = Object.assign(
+      { mode: 'repeat', repeat: 3, rate: 1, gap: 1.2, autoAdvance: false, blind: false, hideTr: false },
+      loadJSON(SETTINGS_KEY, {})
+    );
+    let player = null;
+    let runToken = 0;
+    let mediaStream = null;
+    const recordings = new Map(); // cue index -> {url, blob}
+    let saveTimer = null;
+
+    // ---------- 유틸 ----------
+    function loadJSON(key, fallback) {
+      try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+    }
+    function saveJSON(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+      catch (e) { toast('저장 실패: ' + e.message); return false; }
+    }
+    function toast(msg, ms = 2600) {
+      const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+      clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), ms);
+    }
+    function fmt(sec) {
+      sec = Math.max(0, Math.floor(sec));
+      const m = Math.floor(sec / 60), s = sec % 60;
+      return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+    const wait = (ms, token) => new Promise((res) => {
+      const start = Date.now();
+      const tick = () => { if (token !== runToken || Date.now() - start >= ms) return res(); setTimeout(tick, 40); };
+      tick();
+    });
+    function uid() { return (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2)); }
+    function readFileText(file) {
+      return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsText(file); });
+    }
+
+    // ---------- 자막 파싱 ----------
+    function parseTime(s) {
+      const m = s.match(/(?:(\d+):)?(\d{1,2}):(\d{1,2})[.,](\d{1,3})/);
+      if (!m) return NaN;
+      return (+(m[1] || 0)) * 3600 + (+m[2]) * 60 + (+m[3]) + (+m[4].padEnd(3, '0')) / 1000;
+    }
+    function cleanText(t) {
+      return t.replace(/<[^>]+>/g, '').replace(/\{\\[^}]*\}/g, '')
+        .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"')
+        .split('\n').map((l) => l.trim()).filter(Boolean).join('\n').trim();
+    }
+    function parseSubtitles(text) {
+      const blocks = text.replace(/\r/g, '').replace(/﻿/g, '').split(/\n[ \t]*\n+/);
+      const cues = [];
+      for (const b of blocks) {
+        const lines = b.split('\n');
+        const ti = lines.findIndex((l) => l.includes('-->'));
+        if (ti < 0) continue;
+        const [a, z] = lines[ti].split('-->');
+        const start = parseTime(a.trim()), end = parseTime(z.trim().split(/\s+/)[0]);
+        if (!isFinite(start) || !isFinite(end) || end <= start) continue;
+        const txt = cleanText(lines.slice(ti + 1).join('\n'));
+        cues.push({ start, end, text: txt });
+      }
+      cues.sort((x, y) => x.start - y.start);
+      return cues;
+    }
+    function cleanCues(cues) {
+      const out = [];
+      for (let i = 0; i < cues.length; i++) {
+        const c = cues[i], next = cues[i + 1], prev = out[out.length - 1];
+        if (!c.text) continue;
+        if (prev && prev.text === c.text && c.start - prev.end < 1) { prev.end = Math.max(prev.end, c.end); continue; }
+        if (next && next.text.startsWith(c.text) && next.text !== c.text && next.start - c.end < 1) continue; // 롤링 자막의 앞부분
+        out.push({ ...c });
+      }
+      return out;
+    }
+    function mergeShort(cues, minSec = 1.2) {
+      const out = [];
+      for (const c of cues) {
+        const prev = out[out.length - 1];
+        if (prev && (c.end - c.start) < minSec && c.start - prev.end < 0.6 && !/[.!?。]$/.test(prev.text)) {
+          prev.end = c.end; prev.text = (prev.text + ' ' + c.text).trim();
+        } else out.push({ ...c });
+      }
+      return out;
+    }
+    function attachTranslation(cues, trCues) {
+      if (!trCues.length) return cues;
+      let j = 0;
+      for (const c of cues) {
+        let best = null, bestD = 1.5;
+        for (let k = Math.max(0, j - 3); k < trCues.length; k++) {
+          const d = Math.abs(trCues[k].start - c.start);
+          if (d < bestD) { best = trCues[k]; bestD = d; j = k; }
+          if (trCues[k].start > c.start + 3) break;
+        }
+        if (best) c.tr = best.text;
+      }
+      return cues;
+    }
+    function parseYoutubeId(input) {
+      const s = input.trim();
+      if (/^[\w-]{11}$/.test(s)) return s;
+      try {
+        const u = new URL(s);
+        if (u.hostname.includes('youtu.be')) return u.pathname.slice(1).split('/')[0];
+        if (u.searchParams.get('v')) return u.searchParams.get('v');
+        const m = u.pathname.match(/\/(embed|shorts|live|v)\/([\w-]{11})/);
+        if (m) return m[2];
+      } catch { /* not a url */ }
+      return null;
+    }
+
+    // ---------- 플레이어 ----------
+    class FilePlayer {
+      constructor(video) { this.v = video; this.url = null; }
+      load(file) {
+        if (this.url) URL.revokeObjectURL(this.url);
+        this.url = URL.createObjectURL(file);
+        this.v.src = this.url;
+        return new Promise((res, rej) => {
+          this.v.onloadedmetadata = () => res();
+          this.v.onerror = () => rej(new Error('이 브라우저에서 재생할 수 없는 파일 형식입니다.'));
+        });
+      }
+      get time() { return this.v.currentTime; }
+      get paused() { return this.v.paused; }
+      seek(t) { this.v.currentTime = t; }
+      play() { return this.v.play().catch((e) => toast('재생 실패: ' + e.message)); }
+      pause() { this.v.pause(); }
+      setRate(r) { this.v.playbackRate = r; }
+      destroy() { this.v.pause(); this.v.removeAttribute('src'); this.v.load(); if (this.url) URL.revokeObjectURL(this.url); this.url = null; }
+    }
+
+    let ytApiPromise = null;
+    function ensureYtApi() {
+      if (window.YT && window.YT.Player) return Promise.resolve();
+      if (ytApiPromise) return ytApiPromise;
+      ytApiPromise = new Promise((res, rej) => {
+        window.onYouTubeIframeAPIReady = () => res();
+        const s = document.createElement('script');
+        s.src = 'https://www.youtube.com/iframe_api';
+        s.onerror = () => rej(new Error('YouTube API를 불러올 수 없습니다. 네트워크를 확인하세요.'));
+        document.head.appendChild(s);
+        setTimeout(() => rej(new Error('YouTube API 로딩 시간 초과')), 15000);
+      });
+      return ytApiPromise;
+    }
+    class YtPlayer {
+      constructor(wrap) { this.wrap = wrap; this.p = null; this.ready = false; }
+      async load(videoId) {
+        await ensureYtApi();
+        this.destroy();
+        const host = document.createElement('div');
+        this.wrap.appendChild(host);
+        return new Promise((res, rej) => {
+          this.p = new YT.Player(host, {
+            videoId,
+            playerVars: { controls: 1, rel: 0, playsinline: 1, modestbranding: 1, origin: location.origin.startsWith('http') ? location.origin : undefined },
+            events: {
+              onReady: () => { this.ready = true; res(); },
+              onError: (e) => {
+                const map = { 2: '잘못된 영상 ID', 5: 'HTML5 플레이어 오류', 100: '영상을 찾을 수 없음', 101: '임베드가 허용되지 않은 영상', 150: '임베드가 허용되지 않은 영상' };
+                const msg = map[e.data] || ('YouTube 오류 ' + e.data);
+                if (!this.ready) rej(new Error(msg)); else toast(msg);
+              },
+            },
+          });
+        });
+      }
+      get time() { return this.ready && this.p.getCurrentTime ? this.p.getCurrentTime() : 0; }
+      get paused() { return !this.ready || this.p.getPlayerState() !== YT.PlayerState.PLAYING; }
+      seek(t) { if (this.ready) this.p.seekTo(t, true); }
+      play() { if (this.ready) this.p.playVideo(); }
+      pause() { if (this.ready) this.p.pauseVideo(); }
+      setRate(r) { if (this.ready) this.p.setPlaybackRate(r); }
+      destroy() { if (this.p) { try { this.p.destroy(); } catch { /* ignore */ } } this.p = null; this.ready = false; this.wrap.innerHTML = ''; }
+    }
+
+    async function setupPlayer(session, file) {
+      if (player) { player.destroy(); player = null; }
+      const video = $('#video'), wrap = $('#ytWrap'), stage = $('#stage');
+      stage.classList.remove('audio-only');
+      if (session.type === 'youtube') {
+        video.classList.add('hidden'); wrap.classList.remove('hidden');
+        player = new YtPlayer(wrap);
+        await player.load(session.videoId);
+      } else {
+        wrap.classList.add('hidden'); video.classList.remove('hidden');
+        player = new FilePlayer(video);
+        await player.load(file);
+        if (file.type.startsWith('audio/') || video.videoHeight === 0) stage.classList.add('audio-only');
+      }
+      player.setRate(settings.rate);
+    }
+
+    // ---------- 세션 저장 ----------
+    function persistSession(now = false) {
+      if (!state.session) return;
+      clearTimeout(saveTimer);
+      const doSave = () => {
+        const list = loadJSON(STORE_KEY, []);
+        state.session.updatedAt = Date.now();
+        const i = list.findIndex((s) => s.id === state.session.id);
+        if (i >= 0) list[i] = state.session; else list.unshift(state.session);
+        saveJSON(STORE_KEY, list);
+      };
+      if (now) doSave(); else saveTimer = setTimeout(doSave, 400);
+    }
+    function saveSettings() { saveJSON(SETTINGS_KEY, settings); }
+
+    // ---------- 화면 전환 ----------
+    function showView(name) {
+      for (const v of ['setup', 'study', 'library']) $('#view-' + v).classList.toggle('hidden', v !== name);
+      if (name !== 'study') stopPractice();
+    }
+
+    // ---------- 학습 화면 ----------
+    function cues() { return state.session ? state.session.cues : []; }
+
+    function renderList() {
+      const ol = $('#cues'); ol.innerHTML = '';
+      const learned = state.session.progress.learned;
+      cues().forEach((c, i) => {
+        const li = document.createElement('li');
+        const b = document.createElement('button');
+        b.className = 'cue' + (learned[i] ? ' learned' : '') + (recordings.has(i) ? ' has-rec' : '');
+        b.dataset.i = i;
+        b.innerHTML = `<span class="n">${fmt(c.start)}</span><span class="txt"></span><span class="chk">✓</span>${c.tr ? '<span class="trs"></span>' : ''}`;
+        b.querySelector('.txt').textContent = c.text;
+        if (c.tr) b.querySelector('.trs').textContent = c.tr;
+        b.addEventListener('click', () => { select(i); startPractice(); });
+        li.appendChild(b); ol.appendChild(li);
+      });
+      $('#cueCount').textContent = cues().length;
+      $('#curTotal').textContent = cues().length;
+      updateProgress();
+    }
+    function updateProgress() {
+      const n = Object.keys(state.session.progress.learned).filter((k) => state.session.progress.learned[k]).length;
+      $('#learnedCount').textContent = n;
+      $('#progressFill').style.width = (cues().length ? (n / cues().length * 100) : 0) + '%';
+    }
+    function select(i, { scroll = true } = {}) {
+      if (!cues().length) return;
+      i = Math.max(0, Math.min(cues().length - 1, i));
+      state.index = i;
+      const c = cues()[i];
+      $('#curIdx').textContent = i + 1;
+      $('#curTime').textContent = fmt(c.start) + ' – ' + fmt(c.end);
+      $('#curText').textContent = c.text;
+      $('#curTr').textContent = c.tr || '';
+      document.querySelectorAll('.cue.active').forEach((el) => el.classList.remove('active'));
+      const el = document.querySelector(`.cue[data-i="${i}"]`);
+      if (el) { el.classList.add('active'); if (scroll) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+      $('#btnLearned').classList.toggle('btn-primary', !!state.session.progress.learned[i]);
+      state.session.progress.lastIndex = i;
+      persistSession();
+      updateRecUI();
+    }
+    function setStatus(kind, text) {
+      const s = $('#status'); s.className = 'status ' + kind; $('#statusText').textContent = text;
+    }
+    function runGapBar(ms) {
+      const f = $('#gapFill');
+      f.style.transition = 'none'; f.style.width = '0%';
+      void f.offsetWidth; // reflow
+      f.style.transition = `width ${ms}ms linear`; f.style.width = '100%';
+    }
+    function resetGapBar() { const f = $('#gapFill'); f.style.transition = 'none'; f.style.width = '0%'; }
+
+    function playSegment(cue, token) {
+      return new Promise((resolve) => {
+        player.seek(cue.start);
+        player.play();
+        const t0 = Date.now(); let started = false;
+        const tick = () => {
+          if (token !== runToken) return resolve(false);
+          const t = player.time;
+          if (!started) { if (Math.abs(t - cue.start) < 1.0 || Date.now() - t0 > 1500) started = true; else return setTimeout(tick, 40); }
+          if (t >= cue.end - 0.03) { player.pause(); return resolve(true); }
+          if (Date.now() - t0 > ((cue.end - cue.start) / settings.rate + 8) * 1000) { player.pause(); return resolve(true); } // 안전장치
+          setTimeout(tick, 40);
+        };
+        tick();
+      });
+    }
+    async function ensureMic() {
+      if (mediaStream) return true;
+      if (!navigator.mediaDevices || !window.MediaRecorder) { toast('이 브라우저는 녹음을 지원하지 않습니다.'); return false; }
+      try { mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true }); return true; }
+      catch (e) { toast('마이크를 사용할 수 없습니다: ' + e.message); return false; }
+    }
+    async function recordFor(ms, token, idx) {
+      const rec = new MediaRecorder(mediaStream);
+      const chunks = [];
+      rec.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
+      const stopped = new Promise((res) => { rec.onstop = res; });
+      rec.start();
+      await wait(ms, token);
+      if (rec.state !== 'inactive') rec.stop();
+      await stopped;
+      if (!chunks.length) return;
+      const blob = new Blob(chunks, { type: rec.mimeType || 'audio/webm' });
+      const old = recordings.get(idx); if (old) URL.revokeObjectURL(old.url);
+      recordings.set(idx, { url: URL.createObjectURL(blob), blob, mime: blob.type });
+      const el = document.querySelector(`.cue[data-i="${idx}"]`); if (el) el.classList.add('has-rec');
+      updateRecUI();
+    }
+
+    async function startPractice() {
+      if (!player || !cues().length) return;
+      stopPractice();
+      const token = ++runToken;
+      state.running = true; state.continuous = false; $('#btnContinuous').classList.remove('btn-primary');
+      $('#btnPlay').textContent = '■ 정지';
+      const i = state.index, cue = cues()[i];
+      const mode = settings.mode;
+      let canRecord = mode === 'record' ? await ensureMic() : false;
+      if (token !== runToken) return;
+      const reps = settings.repeat;
+      for (let r = 0; r < reps; r++) {
+        setStatus('playing', `듣기 ${r + 1}/${reps}`);
+        resetGapBar();
+        const ok = await playSegment(cue, token);
+        if (!ok || token !== runToken) return;
+        if (mode === 'listen') { if (r < reps - 1) await wait(500, token); continue; }
+        const gapMs = Math.max(1500, ((cue.end - cue.start) / settings.rate) * settings.gap * 1000 + 400);
+        runGapBar(gapMs);
+        if (mode === 'record' && canRecord) { setStatus('rec', `녹음 중 · 따라 말하세요 (${r + 1}/${reps})`); await recordFor(gapMs, token, i); }
+        else { setStatus('speak', `따라 말하세요 (${r + 1}/${reps})`); await wait(gapMs, token); }
+        if (token !== runToken) return;
+      }
+      resetGapBar();
+      if (settings.autoAdvance && i < cues().length - 1) { select(i + 1); return startPractice(); }
+      finishPractice('완료 · 다시 하려면 Space');
+    }
+    function finishPractice(text) {
+      state.running = false; $('#btnPlay').textContent = '▶ 연습'; setStatus('', text || '정지'); resetGapBar();
+    }
+    function stopPractice() {
+      runToken++;
+      if (player && state.running) player.pause();
+      if (state.running) finishPractice('정지');
+    }
+    async function playOnce() {
+      if (!player || !cues().length) return;
+      stopPractice();
+      const token = ++runToken; state.running = true; $('#btnPlay').textContent = '■ 정지';
+      setStatus('playing', '한 번 듣기');
+      await playSegment(cues()[state.index], token);
+      if (token === runToken) finishPractice('정지');
+    }
+    function toggleContinuous() {
+      if (!player) return;
+      if (state.continuous) { state.continuous = false; player.pause(); $('#btnContinuous').classList.remove('btn-primary'); setStatus('', '정지'); return; }
+      stopPractice();
+      state.continuous = true; $('#btnContinuous').classList.add('btn-primary'); setStatus('playing', '연속 재생 · 자막 따라가기');
+      const c = cues()[state.index]; if (c) player.seek(c.start);
+      player.play();
+    }
+    // 연속 재생 중 자막 동기화
+    setInterval(() => {
+      if (!state.continuous || !player || player.paused) return;
+      const t = player.time, list = cues();
+      let i = list.findIndex((c) => t >= c.start && t < c.end);
+      if (i < 0) { i = list.findIndex((c) => c.start > t) - 1; }
+      if (i >= 0 && i !== state.index) select(i);
+    }, 200);
+
+    function toggleLearned() {
+      if (!state.session) return;
+      const p = state.session.progress.learned;
+      p[state.index] = !p[state.index];
+      const el = document.querySelector(`.cue[data-i="${state.index}"]`); if (el) el.classList.toggle('learned', !!p[state.index]);
+      $('#btnLearned').classList.toggle('btn-primary', !!p[state.index]);
+      updateProgress(); persistSession();
+    }
+    function editCurrent() {
+      const c = cues()[state.index]; if (!c) return;
+      const text = prompt('문장 수정', c.text); if (text === null) return;
+      const tr = prompt('번역 (비우면 없음)', c.tr || ''); if (tr === null) return;
+      c.text = text.trim(); c.tr = tr.trim() || undefined;
+      renderList(); select(state.index); persistSession(true);
+    }
+
+    // 녹음 UI
+    let compareTimer = null;
+    function updateRecUI() {
+      const r = recordings.get(state.index);
+      const box = $('#recBox');
+      box.classList.toggle('show', !!r);
+      if (r) {
+        const a = $('#btnDownloadRec');
+        a.href = r.url;
+        const ext = r.mime.includes('ogg') ? 'ogg' : r.mime.includes('mp4') ? 'm4a' : 'webm';
+        a.download = `lipeat-${state.session.title}-${String(state.index + 1).padStart(3, '0')}.${ext}`.replace(/[\\/:*?"<>|]/g, '_');
+        $('#recInfo').textContent = '녹음은 브라우저를 닫으면 사라집니다. 필요하면 저장하세요.';
+      }
+    }
+    function playRecording() {
+      const r = recordings.get(state.index); if (!r) return Promise.resolve();
+      stopPractice();
+      return new Promise((res) => { const a = new Audio(r.url); a.onended = res; a.onerror = res; a.play().catch(res); });
+    }
+    async function compare() {
+      clearTimeout(compareTimer);
+      await playOnce();
+      await wait(300, runToken);
+      await playRecording();
+    }
+
+    // ---------- 세션 시작 ----------
+    async function startSession() {
+      const btn = $('#btnStart'); btn.disabled = true; btn.textContent = '불러오는 중…';
+      try {
+        const pending = state.pendingSession;
+        let session, file = null;
+        if (pending) {
+          if (pending.type === 'file' && !state.file) throw new Error('영상 파일을 다시 선택하세요.');
+          session = pending; file = state.file;
+        } else {
+          let main = parseSubtitles($('#subText').value);
+          if (!main.length) throw new Error('자막을 인식하지 못했습니다. SRT/VTT 형식인지 확인하세요.');
+          if ($('#optClean').checked) main = cleanCues(main);
+          if ($('#optMerge').checked) main = mergeShort(main);
+          const tr = $('#trText').value.trim() ? parseSubtitles($('#trText').value) : [];
+          main = attachTranslation(main, tr);
+          if (state.srcType === 'youtube') {
+            const id = parseYoutubeId($('#ytUrl').value);
+            if (!id) throw new Error('YouTube 주소나 영상 ID를 확인하세요.');
+            session = { id: uid(), type: 'youtube', videoId: id, title: $('#title').value.trim() || ('YouTube ' + id) };
+          } else {
+            if (!state.file) throw new Error('영상 또는 음성 파일을 선택하세요.');
+            file = state.file;
+            session = { id: uid(), type: 'file', fileName: file.name, title: $('#title').value.trim() || file.name.replace(/\.[^.]+$/, '') };
+          }
+          session.cues = main; session.progress = { learned: {}, lastIndex: 0 }; session.createdAt = Date.now();
+        }
+        await setupPlayer(session, file);
+        state.session = session; state.pendingSession = null;
+        recordings.forEach((r) => URL.revokeObjectURL(r.url)); recordings.clear();
+        $('#sessionTitle').textContent = session.title;
+        renderList();
+        select(session.progress.lastIndex || 0);
+        applySettingsUI();
+        persistSession(true);
+        showView('study');
+        finishPractice('문장을 고르고 Space 또는 ▶ 연습을 누르세요');
+        toast(`${session.cues.length}개 문장 · 준비 완료`);
+      } catch (e) {
+        toast(e.message || String(e), 4000);
+      } finally { btn.disabled = false; btn.textContent = '학습 시작'; }
+    }
+
+    // ---------- 라이브러리 ----------
+    function renderLibrary() {
+      const list = loadJSON(STORE_KEY, []).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      const box = $('#lib'); box.innerHTML = '';
+      $('#libEmpty').classList.toggle('hidden', list.length > 0);
+      for (const s of list) {
+        const n = Object.values(s.progress?.learned || {}).filter(Boolean).length;
+        const d = document.createElement('div'); d.className = 'item';
+        d.innerHTML = `<h3></h3><div class="sub"></div><div class="progress" style="border-radius:999px;overflow:hidden"><i style="width:${s.cues.length ? n / s.cues.length * 100 : 0}%"></i></div>
+          <div class="actions"><button class="btn btn-primary btn-sm act-open">이어하기</button><button class="btn btn-ghost btn-sm act-reset">진도 초기화</button><button class="btn btn-danger btn-sm act-del">삭제</button></div>`;
+        d.querySelector('h3').textContent = s.title;
+        d.querySelector('.sub').textContent = `${s.type === 'youtube' ? 'YouTube · ' + s.videoId : '파일 · ' + s.fileName} · ${s.cues.length}문장 · ${n}완료 · ${new Date(s.updatedAt || s.createdAt).toLocaleDateString('ko-KR')}`;
+        d.querySelector('.act-open').addEventListener('click', () => openSession(s));
+        d.querySelector('.act-reset').addEventListener('click', () => { if (confirm('진도를 초기화할까요?')) { s.progress = { learned: {}, lastIndex: 0 }; const all = loadJSON(STORE_KEY, []); const i = all.findIndex((x) => x.id === s.id); if (i >= 0) { all[i] = s; saveJSON(STORE_KEY, all); } renderLibrary(); } });
+        d.querySelector('.act-del').addEventListener('click', () => { if (confirm(`'${s.title}' 세션을 삭제할까요?`)) { saveJSON(STORE_KEY, loadJSON(STORE_KEY, []).filter((x) => x.id !== s.id)); if (state.session && state.session.id === s.id) state.session = null; renderLibrary(); } });
+        box.appendChild(d);
+      }
+    }
+    function openSession(s) {
+      state.pendingSession = s;
+      if (s.type === 'youtube') { showView('setup'); startSession(); return; }
+      state.file = null; $('#fileLabel').innerHTML = '클릭하거나 파일을 끌어다 놓으세요 <br /><strong>영상 또는 음성 파일</strong>';
+      setSrcType('file');
+      $('#pendingNotice').style.display = ''; $('#pendingTitle').textContent = `${s.title} (${s.fileName})`;
+      showView('setup');
+      toast('영상 파일을 다시 선택한 뒤 「학습 시작」을 누르세요', 4000);
+    }
+    function exportBackup() {
+      const data = { app: 'lipeat-personal', version: 1, exportedAt: new Date().toISOString(), sessions: loadJSON(STORE_KEY, []), settings };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `lipeat-backup-${new Date().toISOString().slice(0, 10)}.json`; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    }
+    async function importBackup(file) {
+      try {
+        const data = JSON.parse(await readFileText(file));
+        const incoming = Array.isArray(data) ? data : data.sessions;
+        if (!Array.isArray(incoming)) throw new Error('형식이 올바르지 않습니다.');
+        const cur = loadJSON(STORE_KEY, []);
+        let added = 0;
+        for (const s of incoming) {
+          if (!s || !Array.isArray(s.cues)) continue;
+          const i = cur.findIndex((x) => x.id === s.id);
+          if (i >= 0) cur[i] = s; else { cur.push(s); added++; }
+        }
+        saveJSON(STORE_KEY, cur); renderLibrary();
+        toast(`가져오기 완료: ${incoming.length}개 (신규 ${added}개)`);
+      } catch (e) { toast('가져오기 실패: ' + e.message, 4000); }
+    }
+
+    // ---------- 설정 UI ----------
+    function applySettingsUI() {
+      $('#setMode').value = settings.mode; $('#setRepeat').value = String(settings.repeat); $('#setRate').value = String(settings.rate);
+      $('#setGap').value = String(settings.gap); $('#setAuto').checked = settings.autoAdvance; $('#setBlind').checked = settings.blind; $('#setHideTr').checked = settings.hideTr;
+      document.body.classList.toggle('blind', settings.blind); document.body.classList.toggle('hide-tr', settings.hideTr);
+      if (player) player.setRate(settings.rate);
+    }
+    function setSrcType(t) {
+      state.srcType = t;
+      document.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.src === t)));
+      $('#srcFile').classList.toggle('hidden', t !== 'file'); $('#srcYoutube').classList.toggle('hidden', t !== 'youtube');
+    }
+
+    // ---------- 이벤트 ----------
+    $('#btnLibrary').addEventListener('click', () => { renderLibrary(); showView('library'); });
+    $('#btnNew').addEventListener('click', () => { state.pendingSession = null; $('#pendingNotice').style.display = 'none'; showView('setup'); });
+    document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => setSrcType(b.dataset.src)));
+    const drop = $('#drop');
+    function pickFile(f) {
+      if (!f) return;
+      state.file = f;
+      $('#fileLabel').innerHTML = `<strong></strong><br /><span>${(f.size / 1048576).toFixed(1)} MB · 다른 파일을 고르려면 다시 클릭</span>`;
+      $('#fileLabel strong').textContent = f.name;
+      if (!$('#title').value) $('#title').value = f.name.replace(/\.[^.]+$/, '');
+    }
+    $('#fileInput').addEventListener('change', (e) => pickFile(e.target.files[0]));
+    drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('over'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+    drop.addEventListener('drop', (e) => { e.preventDefault(); drop.classList.remove('over'); pickFile(e.dataTransfer.files[0]); });
+    $('#subFile').addEventListener('change', async (e) => { const f = e.target.files[0]; if (f) $('#subText').value = await readFileText(f); e.target.value = ''; });
+    $('#trFile').addEventListener('change', async (e) => { const f = e.target.files[0]; if (f) $('#trText').value = await readFileText(f); e.target.value = ''; });
+    $('#btnSample').addEventListener('click', () => {
+      $('#subText').value = `1\n00:00:00,500 --> 00:00:02,800\nHi there. How's it going?\n\n2\n00:00:03,000 --> 00:00:05,900\nNot bad. I just got back from the gym.\n\n3\n00:00:06,200 --> 00:00:09,400\nReally? I've been meaning to sign up for months.\n\n4\n00:00:09,600 --> 00:00:12,500\nYou should come with me sometime. It's more fun together.\n`;
+      $('#trText').value = `1\n00:00:00,500 --> 00:00:02,800\n안녕. 잘 지내?\n\n2\n00:00:03,000 --> 00:00:05,900\n나쁘지 않아. 방금 헬스장에서 돌아왔어.\n\n3\n00:00:06,200 --> 00:00:09,400\n정말? 나도 몇 달째 등록하려고 마음만 먹고 있어.\n\n4\n00:00:09,600 --> 00:00:12,500\n언제 나랑 같이 가자. 같이 하면 더 재밌어.\n`;
+    });
+    $('#btnStart').addEventListener('click', startSession);
+
+    $('#btnPlay').addEventListener('click', () => state.running ? stopPractice() : startPractice());
+    $('#btnPrev').addEventListener('click', () => { stopPractice(); select(state.index - 1); });
+    $('#btnNext').addEventListener('click', () => { stopPractice(); select(state.index + 1); });
+    $('#btnOnce').addEventListener('click', playOnce);
+    $('#btnContinuous').addEventListener('click', toggleContinuous);
+    $('#btnLearned').addEventListener('click', toggleLearned);
+    $('#btnEdit').addEventListener('click', editCurrent);
+    $('#btnPeek').addEventListener('click', () => { const s = $('#sentence'); s.classList.add('peek'); setTimeout(() => s.classList.remove('peek'), 2500); });
+    $('#btnPlayRec').addEventListener('click', playRecording);
+    $('#btnPlayOrig').addEventListener('click', playOnce);
+    $('#btnCompare').addEventListener('click', compare);
+
+    $('#setMode').addEventListener('change', (e) => { settings.mode = e.target.value; saveSettings(); });
+    $('#setRepeat').addEventListener('change', (e) => { settings.repeat = +e.target.value; saveSettings(); });
+    $('#setRate').addEventListener('change', (e) => { settings.rate = +e.target.value; if (player) player.setRate(settings.rate); saveSettings(); });
+    $('#setGap').addEventListener('change', (e) => { settings.gap = +e.target.value; saveSettings(); });
+    $('#setAuto').addEventListener('change', (e) => { settings.autoAdvance = e.target.checked; saveSettings(); });
+    $('#setBlind').addEventListener('change', (e) => { settings.blind = e.target.checked; document.body.classList.toggle('blind', settings.blind); saveSettings(); });
+    $('#setHideTr').addEventListener('change', (e) => { settings.hideTr = e.target.checked; document.body.classList.toggle('hide-tr', settings.hideTr); saveSettings(); });
+
+    $('#btnExport').addEventListener('click', exportBackup);
+    $('#importFile').addEventListener('change', (e) => { if (e.target.files[0]) importBackup(e.target.files[0]); e.target.value = ''; });
+
+    document.addEventListener('keydown', (e) => {
+      if ($('#view-study').classList.contains('hidden')) return;
+      const tag = (e.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.metaKey || e.ctrlKey || e.altKey) return;
+      switch (e.code) {
+        case 'Space': e.preventDefault(); state.running ? stopPractice() : startPractice(); break;
+        case 'ArrowLeft': e.preventDefault(); stopPractice(); select(state.index - 1); break;
+        case 'ArrowRight': e.preventDefault(); stopPractice(); select(state.index + 1); break;
+        case 'KeyR': playOnce(); break;
+        case 'KeyM': toggleLearned(); break;
+        case 'KeyC': toggleContinuous(); break;
+        case 'KeyH': settings.blind = !settings.blind; $('#setBlind').checked = settings.blind; document.body.classList.toggle('blind', settings.blind); saveSettings(); break;
+        default: return;
+      }
+    });
+    window.addEventListener('beforeunload', () => { if (state.session) persistSession(true); });
+
+    // ---------- 초기화 ----------
+    applySettingsUI();
+    setSrcType('file');
+    if (loadJSON(STORE_KEY, []).length) { renderLibrary(); showView('library'); } else showView('setup');
+  })();
+  </script>
+</body>
+</html>
