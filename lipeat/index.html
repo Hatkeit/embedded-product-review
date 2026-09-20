@@ -121,6 +121,13 @@
     .help{font-size:13px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
     .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:calc(100vw - 32px)}
     .toast.show{opacity:1}
+    .asr{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;background:var(--bg)}
+    .asr h3{margin:0 0 4px;font-size:15px}
+    .asr .row select{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+    .asr .bar{height:8px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:10px;display:none}
+    .asr .bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .2s}
+    .asr .bar.show{display:block}
+    .asr .live{font-size:13px;color:var(--muted);margin-top:8px;max-height:72px;overflow:auto;white-space:pre-wrap;word-break:break-word}
     .install{display:none;gap:10px;align-items:center;justify-content:space-between;background:var(--blue-50);border:1px solid var(--blue-100);border-radius:14px;padding:10px 14px;margin-bottom:12px;font-size:13px;word-break:keep-all}
     .install.show{display:flex}
     .hidden{display:none!important}
@@ -186,7 +193,37 @@
 
       <div class="card">
         <h2><span class="step">2</span>자막</h2>
-        <p class="hint">SRT 또는 VTT 자막을 붙여넣거나 파일로 불러옵니다. 문장 단위로 잘려서 반복 학습 목록이 됩니다.</p>
+        <p class="hint">자막 파일이 있으면 붙여넣고, 없으면 영상에서 자동으로 만듭니다. 문장 단위로 잘려서 반복 학습 목록이 됩니다.</p>
+        <div class="asr" id="asrBox">
+          <h3>영상에서 자막 자동 생성 (AI 음성 인식)</h3>
+          <p class="hint" id="asrHint">로컬 파일을 선택하면 브라우저 안에서 Whisper 모델이 음성을 인식해 타임코드가 맞는 자막을 만듭니다. 서버로 전송되지 않으며, 모델은 처음 한 번만 내려받습니다.</p>
+          <div class="row">
+            <select id="asrLang" title="영상 언어">
+              <option value="auto">언어 자동 감지</option>
+              <option value="en" selected>영어</option>
+              <option value="ja">일본어</option>
+              <option value="zh">중국어</option>
+              <option value="ko">한국어</option>
+              <option value="es">스페인어</option>
+              <option value="fr">프랑스어</option>
+              <option value="de">독일어</option>
+              <option value="vi">베트남어</option>
+              <option value="th">태국어</option>
+              <option value="ru">러시아어</option>
+              <option value="pt">포르투갈어</option>
+              <option value="it">이탈리아어</option>
+            </select>
+            <select id="asrModel" title="모델 크기">
+              <option value="onnx-community/whisper-tiny">빠름 · tiny (약 40MB)</option>
+              <option value="onnx-community/whisper-base" selected>보통 · base (약 80MB)</option>
+              <option value="onnx-community/whisper-small">정확 · small (약 250MB, PC 권장)</option>
+            </select>
+            <button class="btn btn-primary" id="btnAsr">자막 만들기</button>
+            <button class="btn btn-ghost hidden" id="btnAsrCancel">취소</button>
+          </div>
+          <div class="bar" id="asrBar"><i></i></div>
+          <div class="live" id="asrLive"></div>
+        </div>
         <div class="two">
           <div class="field">
             <label for="subText">학습 언어 자막 (필수)</label>
@@ -276,6 +313,13 @@
                 <select id="setGap">
                   <option value="1">1.0</option><option value="1.2" selected>1.2</option><option value="1.5">1.5</option><option value="2">2.0</option>
                 </select>
+              </label>
+              <label>자막 싱크 (초)
+                <span class="row" style="flex-wrap:nowrap;gap:4px">
+                  <button class="btn btn-ghost btn-sm" id="btnSyncMinus" title="자막이 영상보다 늦으면">−0.2</button>
+                  <input type="number" id="setSync" step="0.1" value="0" style="width:70px;text-align:center" />
+                  <button class="btn btn-ghost btn-sm" id="btnSyncPlus" title="자막이 영상보다 빠르면">+0.2</button>
+                </span>
               </label>
               <label class="check"><input type="checkbox" id="setAuto" /> 다음 문장 자동 진행</label>
               <label class="check"><input type="checkbox" id="setBlind" /> 문장 가리기 (블라인드) <span class="kbd">H</span></label>
@@ -461,6 +505,122 @@
       return null;
     }
 
+    function toSrt(list) {
+      const ts = (t) => {
+        const total = Math.max(0, Math.round(t * 1000));
+        const h = Math.floor(total / 3600000), m = Math.floor((total % 3600000) / 60000), sec = Math.floor((total % 60000) / 1000), ms = total % 1000;
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')},${String(ms).padStart(3, '0')}`;
+      };
+      return list.map((c, i) => `${i + 1}\n${ts(c.start)} --> ${ts(c.end)}\n${c.text}\n`).join('\n');
+    }
+
+    // ---------- 자동 자막 생성 (브라우저 내 Whisper) ----------
+    const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0';
+    let asr = { pipeline: null, key: '', token: 0, lib: null };
+
+    async function loadTransformers() {
+      if (asr.lib) return asr.lib;
+      if (window.__lipeatTransformers) { asr.lib = window.__lipeatTransformers; return asr.lib; } // 테스트용 주입
+      asr.lib = await import(TRANSFORMERS_URL);
+      asr.lib.env.allowLocalModels = false;
+      return asr.lib;
+    }
+    async function decodeAudioTo16k(file) {
+      const buf = await file.arrayBuffer();
+      const AC = window.AudioContext || window.webkitAudioContext;
+      let ctx;
+      try { ctx = new AC({ sampleRate: 16000 }); } catch { ctx = new AC(); }
+      let audio;
+      try { audio = await ctx.decodeAudioData(buf); } finally { ctx.close && ctx.close(); }
+      let data;
+      if (audio.numberOfChannels === 1) data = audio.getChannelData(0);
+      else {
+        data = new Float32Array(audio.length);
+        for (let ch = 0; ch < audio.numberOfChannels; ch++) { const d = audio.getChannelData(ch); for (let i = 0; i < d.length; i++) data[i] += d[i] / audio.numberOfChannels; }
+      }
+      if (audio.sampleRate !== 16000) { // 브라우저가 리샘플링을 안 해 준 경우
+        const len = Math.ceil(audio.duration * 16000);
+        const off = new OfflineAudioContext(1, len, 16000);
+        const b = off.createBuffer(1, data.length, audio.sampleRate); b.copyToChannel(data, 0);
+        const src = off.createBufferSource(); src.buffer = b; src.connect(off.destination); src.start();
+        data = (await off.startRendering()).getChannelData(0);
+      }
+      return { data, duration: audio.duration };
+    }
+    function asrUI(status, pct, live) {
+      if (status !== undefined) $('#asrHint').textContent = status;
+      const bar = $('#asrBar');
+      if (pct === null) bar.classList.remove('show'); else { bar.classList.add('show'); bar.firstElementChild.style.width = Math.max(0, Math.min(100, pct)) + '%'; }
+      if (live !== undefined) $('#asrLive').textContent = live;
+    }
+    async function generateSubtitles() {
+      if (state.srcType !== 'file' || !state.file) { toast('먼저 「로컬 파일」 탭에서 영상 또는 음성 파일을 선택하세요. YouTube는 브라우저에서 음성을 읽을 수 없어 yt-dlp로 자막을 받아 넣어야 합니다.', 5000); return; }
+      const btn = $('#btnAsr'), cancel = $('#btnAsrCancel');
+      const token = ++asr.token;
+      const model = $('#asrModel').value, lang = $('#asrLang').value;
+      btn.disabled = true; cancel.classList.remove('hidden');
+      const cancelled = () => token !== asr.token;
+      try {
+        asrUI('음성 인식 라이브러리 불러오는 중…', 0, '');
+        const tf = await loadTransformers();
+        if (cancelled()) return;
+        const device = navigator.gpu ? 'webgpu' : 'wasm';
+        const key = model + '|' + device;
+        if (!asr.pipeline || asr.key !== key) {
+          asr.pipeline = null;
+          const progress_callback = (p) => {
+            if (cancelled()) return;
+            if (p.status === 'progress') asrUI(`모델 내려받는 중 (처음 한 번만): ${p.file}`, p.progress);
+            else if (p.status === 'ready') asrUI('모델 준비 완료', 100);
+          };
+          const opts = device === 'webgpu' ? { device, dtype: { encoder_model: 'fp32', decoder_model_merged: 'q4' }, progress_callback } : { device, dtype: 'q8', progress_callback };
+          try { asr.pipeline = await tf.pipeline('automatic-speech-recognition', model, opts); }
+          catch (e) {
+            if (device !== 'webgpu') throw e;
+            asrUI('WebGPU를 쓸 수 없어 CPU(WASM)로 전환합니다…', 0);
+            asr.pipeline = await tf.pipeline('automatic-speech-recognition', model, { device: 'wasm', dtype: 'q8', progress_callback });
+          }
+          asr.key = key;
+        }
+        if (cancelled()) return;
+        asrUI('영상에서 음성 추출 중…', 0);
+        const { data, duration } = await decodeAudioTo16k(state.file);
+        if (cancelled()) return;
+        asrUI(`음성 인식 중… (${fmt(duration)} 분량${device === 'webgpu' ? ', GPU' : ', CPU'})`, 0, '');
+        let live = '';
+        const streamer = tf.WhisperTextStreamer && asr.pipeline.tokenizer ? new tf.WhisperTextStreamer(asr.pipeline.tokenizer, {
+          skip_prompt: true, skip_special_tokens: true,
+          on_chunk_start: (t) => { if (!cancelled()) asrUI(undefined, Math.min(99, t / duration * 100)); },
+          callback_function: (text) => { if (cancelled()) return; live = (live + text).slice(-400); asrUI(undefined, undefined, live); },
+        }) : undefined;
+        const out = await asr.pipeline(data, {
+          language: lang === 'auto' ? undefined : lang, task: 'transcribe',
+          chunk_length_s: 30, stride_length_s: 5, return_timestamps: true, streamer,
+        });
+        if (cancelled()) return;
+        const raw = (out.chunks || []).map((c) => ({
+          start: c.timestamp[0] ?? 0,
+          end: c.timestamp[1] ?? Math.min(duration, (c.timestamp[0] ?? 0) + 6),
+          text: (c.text || '').trim(),
+        })).filter((c) => c.text && c.end > c.start);
+        if (!raw.length && out.text && out.text.trim()) raw.push({ start: 0, end: duration, text: out.text.trim() });
+        if (!raw.length) throw new Error('음성을 인식하지 못했습니다. 언어 설정이나 파일의 오디오를 확인하세요.');
+        const list = cleanCues(raw);
+        $('#subText').value = toSrt(list);
+        asrUI(`자막 ${list.length}문장 생성 완료. 아래 칸에서 확인·수정한 뒤 「학습 시작」을 누르세요.`, 100, '');
+        toast(`자막 ${list.length}문장이 만들어졌습니다`);
+      } catch (e) {
+        if (!cancelled()) { asrUI('자막 생성 실패: ' + (e.message || e), null, ''); toast('자막 생성 실패: ' + (e.message || e), 5000); }
+      } finally {
+        if (!cancelled()) { btn.disabled = false; cancel.classList.add('hidden'); }
+      }
+    }
+    function cancelAsr() {
+      asr.token++;
+      asrUI('취소했습니다. 진행 중이던 인식은 백그라운드에서 마무리된 뒤 버려집니다.', null, '');
+      $('#btnAsr').disabled = false; $('#btnAsrCancel').classList.add('hidden');
+    }
+
     // ---------- 플레이어 ----------
     class FilePlayer {
       constructor(video) { this.v = video; this.url = null; }
@@ -567,6 +727,15 @@
 
     // ---------- 학습 화면 ----------
     function cues() { return state.session ? state.session.cues : []; }
+    // 자막 싱크 오프셋(초). 양수면 자막을 늦춘다(영상 기준 시간 = 자막 시간 + offset).
+    function offset() { return state.session && isFinite(state.session.offset) ? state.session.offset : 0; }
+    function timed(cue) { const o = offset(); return { start: Math.max(0, cue.start + o), end: Math.max(0.05, cue.end + o) }; }
+    function setOffset(v) {
+      if (!state.session) return;
+      state.session.offset = Math.round(Math.max(-30, Math.min(30, v)) * 10) / 10;
+      $('#setSync').value = state.session.offset;
+      persistSession();
+    }
 
     function renderList() {
       const ol = $('#cues'); ol.innerHTML = '';
@@ -619,7 +788,8 @@
     }
     function resetGapBar() { const f = $('#gapFill'); f.style.transition = 'none'; f.style.width = '0%'; }
 
-    function playSegment(cue, token) {
+    function playSegment(c, token) {
+      const cue = timed(c);
       return new Promise((resolve) => {
         player.seek(cue.start);
         player.play();
@@ -706,13 +876,13 @@
       if (state.continuous) { state.continuous = false; player.pause(); $('#btnContinuous').classList.remove('btn-primary'); setStatus('', '정지'); return; }
       stopPractice();
       state.continuous = true; $('#btnContinuous').classList.add('btn-primary'); setStatus('playing', '연속 재생 · 자막 따라가기');
-      const c = cues()[state.index]; if (c) player.seek(c.start);
+      const c = cues()[state.index]; if (c) player.seek(timed(c).start);
       player.play();
     }
     // 연속 재생 중 자막 동기화
     setInterval(() => {
       if (!state.continuous || !player || player.paused) return;
-      const t = player.time, list = cues();
+      const t = player.time - offset(), list = cues();
       let i = list.findIndex((c) => t >= c.start && t < c.end);
       if (i < 0) { i = list.findIndex((c) => c.start > t) - 1; }
       if (i >= 0 && i !== state.index) select(i);
@@ -791,6 +961,7 @@
         state.session = session; state.pendingSession = null;
         recordings.forEach((r) => URL.revokeObjectURL(r.url)); recordings.clear();
         $('#sessionTitle').textContent = session.title;
+        $('#setSync').value = session.offset || 0;
         renderList();
         select(session.progress.lastIndex || 0);
         applySettingsUI();
@@ -864,6 +1035,9 @@
       state.srcType = t;
       document.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.src === t)));
       $('#srcFile').classList.toggle('hidden', t !== 'file'); $('#srcYoutube').classList.toggle('hidden', t !== 'youtube');
+      $('#btnAsr').disabled = t !== 'file';
+      if (t === 'youtube') asrUI('YouTube 영상은 브라우저가 음성을 읽을 수 없어 자동 생성이 안 됩니다. 로컬 파일로 받아서 올리거나 yt-dlp로 자막을 내려받아 붙여넣으세요.', null, '');
+      else asrUI('로컬 파일을 선택하면 브라우저 안에서 Whisper 모델이 음성을 인식해 타임코드가 맞는 자막을 만듭니다. 서버로 전송되지 않으며, 모델은 처음 한 번만 내려받습니다.', null, '');
     }
 
     // ---------- 이벤트 ----------
@@ -877,6 +1051,7 @@
       $('#fileLabel').innerHTML = `<strong></strong><br /><span>${(f.size / 1048576).toFixed(1)} MB · 다른 파일을 고르려면 다시 클릭</span>`;
       $('#fileLabel strong').textContent = f.name;
       if (!$('#title').value) $('#title').value = f.name.replace(/\.[^.]+$/, '');
+      if (!$('#subText').value.trim()) asrUI('파일이 준비되었습니다. 자막이 없으면 「자막 만들기」를 누르세요.', null, '');
     }
     $('#fileInput').addEventListener('change', (e) => pickFile(e.target.files[0]));
     drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('over'); });
@@ -889,6 +1064,8 @@
       $('#trText').value = `1\n00:00:00,500 --> 00:00:02,800\n안녕. 잘 지내?\n\n2\n00:00:03,000 --> 00:00:05,900\n나쁘지 않아. 방금 헬스장에서 돌아왔어.\n\n3\n00:00:06,200 --> 00:00:09,400\n정말? 나도 몇 달째 등록하려고 마음만 먹고 있어.\n\n4\n00:00:09,600 --> 00:00:12,500\n언제 나랑 같이 가자. 같이 하면 더 재밌어.\n`;
     });
     $('#btnStart').addEventListener('click', startSession);
+    $('#btnAsr').addEventListener('click', generateSubtitles);
+    $('#btnAsrCancel').addEventListener('click', cancelAsr);
 
     $('#btnPlay').addEventListener('click', () => state.running ? stopPractice() : startPractice());
     $('#btnPrev').addEventListener('click', () => { stopPractice(); select(state.index - 1); });
@@ -907,6 +1084,9 @@
     $('#setRate').addEventListener('change', (e) => { settings.rate = +e.target.value; if (player) player.setRate(settings.rate); saveSettings(); });
     $('#setGap').addEventListener('change', (e) => { settings.gap = +e.target.value; saveSettings(); });
     $('#setAuto').addEventListener('change', (e) => { settings.autoAdvance = e.target.checked; saveSettings(); });
+    $('#setSync').addEventListener('change', (e) => setOffset(parseFloat(e.target.value) || 0));
+    $('#btnSyncMinus').addEventListener('click', () => { setOffset(offset() - 0.2); playOnce(); });
+    $('#btnSyncPlus').addEventListener('click', () => { setOffset(offset() + 0.2); playOnce(); });
     $('#setBlind').addEventListener('change', (e) => { settings.blind = e.target.checked; document.body.classList.toggle('blind', settings.blind); saveSettings(); });
     $('#setHideTr').addEventListener('change', (e) => { settings.hideTr = e.target.checked; document.body.classList.toggle('hide-tr', settings.hideTr); saveSettings(); });
 
