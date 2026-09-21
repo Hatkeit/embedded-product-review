@@ -79,7 +79,7 @@ put('D2', 72, 78); put('C69', 72, 84); put('C70', 72, 92)
 put('T1', 114, 82); put('T3', 114, 114)
 put('Q1', 100, 78, 0, 'BOTTOM'); put('Q2', 100, 90, 0, 'BOTTOM'); put('Q3', 100, 108, 0, 'BOTTOM'); put('Q4', 100, 120, 0, 'BOTTOM')
 put('U13', 100, 99, 0, 'BOTTOM')
-put('T2', 134, 86, 0, 'BOTTOM', 26, 22); put('T4', 134, 120, 0, 'BOTTOM', 26, 22)
+put('T2', 134, 86, 0, 'TOP', 26, 22); put('T4', 134, 120, 0, 'TOP', 26, 22)
 put('D3', 160, 86, 0, 'BOTTOM'); put('D8', 160, 120, 0, 'BOTTOM')
 put('D4', 114, 92, 0, 'BOTTOM'); put('D9', 114, 106, 0, 'BOTTOM')
 # --- aux band (primary side) ---
@@ -93,7 +93,7 @@ put('D13', 72, 168)
 put('T5', 114, 172); put('T7', 114, 204)
 put('Q5', 100, 168, 0, 'BOTTOM'); put('Q6', 100, 180, 0, 'BOTTOM'); put('Q7', 100, 198, 0, 'BOTTOM'); put('Q8', 100, 210, 0, 'BOTTOM')
 put('U14', 100, 189, 0, 'BOTTOM')
-put('T6', 134, 176, 0, 'BOTTOM', 26, 22); put('T8', 134, 210, 0, 'BOTTOM', 26, 22)
+put('T6', 134, 176, 0, 'TOP', 26, 22); put('T8', 134, 210, 0, 'TOP', 26, 22)
 put('D14', 160, 176, 0, 'BOTTOM'); put('D19', 160, 210, 0, 'BOTTOM')
 put('D15', 114, 182, 0, 'BOTTOM'); put('D20', 114, 196, 0, 'BOTTOM')
 put('C162', 60, 238); put('C164', 82, 238)
@@ -108,7 +108,7 @@ put('Q13', 194, 112, 0, 'BOTTOM'); put('Q14', 194, 140, 0, 'BOTTOM')
 put('R200', 206, 108, 0, 'BOTTOM'); put('R201', 206, 114, 0, 'BOTTOM'); put('R211', 206, 138, 0, 'BOTTOM'); put('R212', 206, 144, 0, 'BOTTOM')
 put('U1', 176, 126)  # top, gate logic for Q13/Q14
 put('R79', 160, 110); put('R81', 160, 116); put('R188', 160, 122); put('R82', 160, 130); put('R83', 160, 136)
-put('D25', 152, 150); put('D26', 158, 150); put('D27', 190, 150); put('D28', 176, 150); put('Q9', 182, 150)
+put('D25', 152, 150); put('D26', 158, 150); put('D27', 216, 150); put('D28', 176, 150); put('Q9', 182, 150)
 # --- AC filter / output (top, mostly THT) ---
 put('TH1', 188, 98); put('RV1', 200, 98); put('C46', 188, 88); put('C47', 204, 88)
 put('C50', 196, 72); put('C51', 196, 80); put('L7', 196, 60); put('LS1', 226, 60)
@@ -138,8 +138,8 @@ CLUSTERS = [
 ]
 # ---- thermal-pad contact zones on the BOTTOM (top-view coords): (x1,y1,x2,y2,label,height) ----
 ZONES = [
- (92, 72, 108, 128, 'A-FET  Q1~Q4 + U13', '1.0 (PQFN)'), (120, 74, 148, 132, 'A-XFMR T2/T4', '≤ 8 (평면형)'), (153, 76, 167, 130, 'A-SiC D3/D8', '4.5 (D2PAK)'),
- (92, 162, 108, 218, 'B-FET  Q5~Q8 + U14', '1.0 (PQFN)'), (120, 164, 148, 222, 'B-XFMR T6/T8', '≤ 8 (평면형)'), (153, 166, 167, 220, 'B-SiC D14/D19', '4.5 (D2PAK)'),
+ (92, 72, 108, 128, 'A-FET  Q1~Q4 + U13', '1.0 (PQFN)'), (153, 76, 167, 130, 'A-SiC D3/D8', '4.5 (D2PAK)'),
+ (92, 162, 108, 218, 'B-FET  Q5~Q8 + U14', '1.0 (PQFN)'), (153, 166, 167, 220, 'B-SiC D14/D19', '4.5 (D2PAK)'),
  (170, 104, 212, 150, 'C-UNFOLD', 'DPAK 2.4 / D2PAK 4.6'),
 ]
 BARRIER_X = 140.0
@@ -149,9 +149,10 @@ ANT_KEEPOUT = (20, 0, 50, 10)
 HIGH = {'Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q12','Q13','Q14','D3','D8','D14','D19','D23','D24','T2','T4','T6','T8'}
 MED = {'Q10','T9','U13','U14','U15','L12','D4','D9','D15','D20','D2','D13','R6','R43','R79','R81','R188','R82','R83','R90','R96','R106',
        'R200','R201','R211','R212','R219','R228','L7','L8','LS1','D25','D26','TH1','RV1','RV2','RV3','RV4','RV5','T1','T3','T5','T7'} | {f'EC{i}' for i in range(1, 13)}
+THT_REFS = {'T2', 'T4', 'T6', 'T8', 'T9'}  # DIP 타입 트랜스포머 (사용자 확인)
 def mount(ref):
     psm = parts[ref]['psm']
-    if psm in THT_PSM: return 'THT'
+    if psm in THT_PSM or ref in THT_REFS: return 'THT'
     if psm == 'USB-C_16PIN': return 'SMT(+THT 고정핀)'
     return 'SMT'
 def heat(ref):
@@ -225,6 +226,14 @@ def draw_part(ref, mirror, ghost=False, tht_mark=False):
         out.append(rect_px(X(x - 2.0), Y(y - 2.6), 4.0 * SC, 4.2 * SC, fill='#e6b0aa', stroke=stroke, stroke_width=0.8))
     if not ghost and not tht_mark and psm == '250T-1':
         out.append(rect_px(X(x - (w / 2 + 2.5) if not mirror else x + w / 2 - 0.5), Y(y - 1.2), 3.0 * SC, 2.4 * SC, fill='#aab7b8', stroke='#566573', stroke_width=0.8))
+    if not ghost and not tht_mark and ref in THT_REFS:
+        n = parts[ref]['npins']; per_side = max(2, n // 2)
+        for i in range(per_side):
+            py = y - (per_side - 1) * 2.5 / 2 + i * 2.5
+            for px in (x - w / 2 + 2.0, x + w / 2 - 2.0):
+                out.append(circ_px(X(px), Y(py), 0.9 * SC, fill='#fff', stroke=stroke, stroke_width=1))
+        out.append(text(X(x - w / 2 + 2.0), Y(y - h / 2) - 3, '1차', size=6, fill='#7d6608'))
+        out.append(text(X(x + w / 2 - 2.0), Y(y - h / 2) - 3, '2차', size=6, fill='#7d6608'))
     if not ghost and not tht_mark and psm == 'ESP32-S3':
         out.append(rect_px(X(x - w / 2), Y(y - h / 2), w * SC, 6.0 * SC, fill='#f9e79f', stroke=stroke, stroke_width=0.8))
         out.append(text(X(x), Y(y - h / 2 + 4), '안테나', size=7, fill='#7d6608'))
@@ -342,7 +351,7 @@ def top_view():
         parts_svg.append(text(X(0) - 28, Y((y1 + y2) / 2), lab, size=8, anchor='middle', fill='#1a5276', weight='bold', rot=-90))
     for (x, y, lab) in [(150, 30, '2차측 게이트 로직 (p8)'), (150, 75.5, 'PHV 정류 (하면 D3/D8, D14/D19)'), (204, 38, 'AC 필터·릴레이·보호 (THT, 상면)'), (150, 220, '그리드 센싱 (AMC3301/3302, 절연 경계)')]:
         parts_svg.append(text(X(x), Y(y), lab, size=7.5, anchor='start', fill='#1a5276', weight='bold'))
-    leg = legend([('#f5b7b1', '#922b21', 'none', '발열 高 → 하면 실장, 서멀패드 접촉 (상면도에서는 점선 고스트)'),
+    leg = legend([('#f5b7b1', '#922b21', 'none', '발열 高 SMT → 하면, 서멀패드 접촉 (상면도에서는 점선 고스트) / 트랜스는 DIP 상면'),
                   ('#fad7a0', '#9c640c', 'none', '발열 中 → 상면, 동박·비아로 방열'),
                   ('#d6eaf8', '#1b4f72', 'none', 'SMT 일반 (상면)'),
                   ('#d5f5e3', '#196f3d', '6 3', 'THT(DIP) 부품 — 점선 외곽, 리드가 하면으로 돌출'),
@@ -352,7 +361,8 @@ def top_view():
         '보드 250 × 250 mm, 4 코너 M3 (J5/J10/J17/J18 = FGND 프레임 접지 패드 겸용).  좌측 에지 PV_A/PV_B Faston 탭, 우측 에지 AC L/N/PE 탭.',
         '전력 흐름 좌→우: PV 탭 → 입력 전해캡(THT, 18×40) → 플라이백(하면 FET·트랜스·SiC) → PHV → 언폴더(하면) → CM 초크·X/Y캡·릴레이·퓨즈(THT) → AC 탭.',
         '절연 경계 x=140: T2/T4/T6/T8/T9, ISO1~4, U23/U24 만 경계에 걸침. ESP32 안테나는 보드 에지 밖으로 향하게, 금속 케이스면 외부 안테나 검토.',
-        'CUSTOM 트랜스(T2/T4/T6/T8) 26×22 · T9 16×14 는 자리표시(placeholder). 실제 치수·높이 확정 후 존 크기 조정 (높이 > 8 mm 이면 상면 이동 또는 히트싱크 포켓).',
+        '트랜스 T2/T4/T6/T8(26×22) · T9(16×14) 는 DIP 타입으로 상면 실장 (자리표시 크기, 실제 풋프린트로 교체). 1차 핀은 하면 FET 쪽(좌), 2차 핀은 SiC 쪽(우)으로 향하게.',
+        '트랜스 코어 방열: 상면이므로 서멀패드가 아니라 상부 커버 갭필러/포팅으로 처리. 리드가 하면으로 돌출하므로 하면 히트싱크는 트랜스 영역을 피함.',
     ]
     parts_svg.append(leg)
     parts_svg.append(notes_box('배치 원칙 (상면)', notes, 470, Y(250) + 30, 880))
@@ -376,17 +386,18 @@ def bottom_view():
                   ('url(#lead)', '#c0392b', '3 2', 'THT 리드 돌출 영역 — 히트싱크 접촉 불가 (릴리프 포켓 또는 회피)'),
                   ('url(#dots)', '#5d6d7e', '2 2', '하면 소형 SMD 군집 (게이트 저항·스너버·PHV 캡) — 존 밖에 배치')], 24, Y(250) + 30)
     notes = [
-        '존 A/B: FET(Q1~4, Q5~8) h=1.0 → 트랜스 h≤8 → SiC D2PAK h=4.5 로 높이가 다르므로 존별로 히트싱크 페데스탈 높이를 달리하거나 갭필러 두께로 흡수 (1.0~2.0 mm 권장).',
+        '존 A/B: FET(Q1~4, Q5~8) h=1.0 과 SiC D2PAK h=4.5 로 높이가 다르므로 존별로 히트싱크 페데스탈 높이를 달리하거나 갭필러 두께로 흡수 (1.0~2.0 mm 권장).',
+        '트랜스 T2/T4/T6/T8/T9 는 DIP 로 상면 실장 → 하면에는 리드만 돌출(빗금). FET 존과 SiC 존 사이의 이 영역은 히트싱크 릴리프 포켓 처리.',
         '존 C 언폴더: D23/D24/Q12 DPAK(2.4)와 Q13/Q14 D2PAK(4.6) 혼재 → 두 단 페데스탈. 소스 션트 R200/201, R211/212 는 Q13/Q14 바로 옆(존 안, h 0.6).',
-        'THT 부품(전해캡 12개, 초크 2, 릴레이, 필름캡, MOV, 탭, 헤더) 리드는 하면으로 1~2 mm 돌출 → 빗금 영역은 히트싱크와 접촉 불가. 존과 겹치지 않도록 배치함.',
+        'THT 부품(전해캡 12개, 트랜스 5개, 초크 2, 릴레이, 필름캡, MOV, 탭, 헤더) 리드는 하면으로 1~2 mm 돌출 → 빗금 영역은 히트싱크와 접촉 불가. 존과 겹치지 않도록 배치함.',
         'PQFN(IAUCN10S7L040)·D2PAK·DPAK 는 노출 패드가 하면 동박에 납땜되므로 그 동박을 절연 서멀패드(예: 2~3 W/mK, 내전압 ≥ 4 kV) 로 히트싱크에 접촉. PHV/드레인 전위 → 절연 필수.',
-        'FET 4개 병렬(채널당 2 트랜스 × 2 FET)은 트랜스와 같은 존, 게이트 드라이버 U13/U14 는 FET 중앙(하면). 드라이버↔게이트 ≤ 15 mm.',
+        'FET 4개(채널당 2 트랜스 × 2 FET)는 트랜스 1차 핀 바로 아래쪽 하면, 게이트 드라이버 U13/U14 는 FET 중앙(하면). 드라이버↔게이트 ≤ 15 mm, FET↔트랜스 1차 핀 ≤ 20 mm.',
     ]
     parts_svg.append(leg)
     parts_svg.append(notes_box('하면 서멀패드 실장 원칙', notes, 470, Y(250) + 30, 880))
     return wrap('\n'.join(parts_svg), 1380, Y(250) + 30 + 30 + 15.5 * len(notes) + 40,
                 'MICROINV V2000 — 250×250 배치 계획도 (BOTTOM, 서멀패드면, 좌우 반전)',
-                '발열 高 부품만 하면 SMT 실장. 빨간 존 = 히트싱크 접촉면, 빗금 = THT 리드 돌출로 접촉 불가 영역.')
+                '발열 高 SMT 부품만 하면 실장 (트랜스는 DIP 로 상면). 빨간 존 = 히트싱크 접촉면, 빗금 = THT 리드 돌출로 접촉 불가 영역.')
 
 open('out/floorplan_top.svg', 'w', encoding='utf-8').write(top_view())
 open('out/floorplan_bottom.svg', 'w', encoding='utf-8').write(bottom_view())
