@@ -1,0 +1,387 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1380" height="1517.5" viewBox="0 0 1380 1517.5" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">
+<rect width="100%" height="100%" fill="#fff"/><defs>
+<pattern id="dots" patternUnits="userSpaceOnUse" width="6" height="6"><circle cx="3" cy="3" r="1" fill="#5d6d7e" fill-opacity="0.6"/></pattern>
+<pattern id="lead" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#c0392b" stroke-width="1.5" stroke-opacity="0.8"/></pattern>
+<pattern id="keep" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#7d6608" stroke-width="1.2" stroke-opacity="0.7"/></pattern>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#17a589"/></marker>
+</defs>
+<text x="24.0" y="34.0" font-size="18" text-anchor="start" font-weight="bold" fill="#111" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">MICROINV V2000 — 250×250 배치 계획도 (BOTTOM, 서멀패드면, 좌우 반전)</text>
+<text x="24.0" y="56.0" font-size="10.5" text-anchor="start" font-weight="normal" fill="#7b241c" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">발열 高 부품만 하면 SMT 실장. 빨간 존 = 히트싱크 접촉면, 빗금 = THT 리드 돌출로 접촉 불가 영역.</text>
+<line x1="60.0" y1="90.0" x2="60.0" y2="1340.0" stroke="#d5d8dc" stroke-width="1"/>
+<line x1="60.0" y1="90.0" x2="1310.0" y2="90.0" stroke="#d5d8dc" stroke-width="1"/>
+<text x="60.0" y="84.0" font-size="9" text-anchor="middle" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">0</text>
+<text x="52.0" y="93.0" font-size="9" text-anchor="end" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">0</text>
+<line x1="110.0" y1="90.0" x2="110.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="140.0" x2="1310.0" y2="140.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="160.0" y1="90.0" x2="160.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="190.0" x2="1310.0" y2="190.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="210.0" y1="90.0" x2="210.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="240.0" x2="1310.0" y2="240.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="260.0" y1="90.0" x2="260.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="290.0" x2="1310.0" y2="290.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="310.0" y1="90.0" x2="310.0" y2="1340.0" stroke="#d5d8dc" stroke-width="1"/>
+<line x1="60.0" y1="340.0" x2="1310.0" y2="340.0" stroke="#d5d8dc" stroke-width="1"/>
+<text x="310.0" y="84.0" font-size="9" text-anchor="middle" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">50</text>
+<text x="52.0" y="343.0" font-size="9" text-anchor="end" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">50</text>
+<line x1="360.0" y1="90.0" x2="360.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="390.0" x2="1310.0" y2="390.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="410.0" y1="90.0" x2="410.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="440.0" x2="1310.0" y2="440.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="460.0" y1="90.0" x2="460.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="490.0" x2="1310.0" y2="490.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="510.0" y1="90.0" x2="510.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="540.0" x2="1310.0" y2="540.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="560.0" y1="90.0" x2="560.0" y2="1340.0" stroke="#d5d8dc" stroke-width="1"/>
+<line x1="60.0" y1="590.0" x2="1310.0" y2="590.0" stroke="#d5d8dc" stroke-width="1"/>
+<text x="560.0" y="84.0" font-size="9" text-anchor="middle" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">100</text>
+<text x="52.0" y="593.0" font-size="9" text-anchor="end" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">100</text>
+<line x1="610.0" y1="90.0" x2="610.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="640.0" x2="1310.0" y2="640.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="660.0" y1="90.0" x2="660.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="690.0" x2="1310.0" y2="690.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="710.0" y1="90.0" x2="710.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="740.0" x2="1310.0" y2="740.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="760.0" y1="90.0" x2="760.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="790.0" x2="1310.0" y2="790.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="810.0" y1="90.0" x2="810.0" y2="1340.0" stroke="#d5d8dc" stroke-width="1"/>
+<line x1="60.0" y1="840.0" x2="1310.0" y2="840.0" stroke="#d5d8dc" stroke-width="1"/>
+<text x="810.0" y="84.0" font-size="9" text-anchor="middle" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">150</text>
+<text x="52.0" y="843.0" font-size="9" text-anchor="end" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">150</text>
+<line x1="860.0" y1="90.0" x2="860.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="890.0" x2="1310.0" y2="890.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="910.0" y1="90.0" x2="910.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="940.0" x2="1310.0" y2="940.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="960.0" y1="90.0" x2="960.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="990.0" x2="1310.0" y2="990.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="1010.0" y1="90.0" x2="1010.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="1040.0" x2="1310.0" y2="1040.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="1060.0" y1="90.0" x2="1060.0" y2="1340.0" stroke="#d5d8dc" stroke-width="1"/>
+<line x1="60.0" y1="1090.0" x2="1310.0" y2="1090.0" stroke="#d5d8dc" stroke-width="1"/>
+<text x="1060.0" y="84.0" font-size="9" text-anchor="middle" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">200</text>
+<text x="52.0" y="1093.0" font-size="9" text-anchor="end" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">200</text>
+<line x1="1110.0" y1="90.0" x2="1110.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="1140.0" x2="1310.0" y2="1140.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="1160.0" y1="90.0" x2="1160.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="1190.0" x2="1310.0" y2="1190.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="1210.0" y1="90.0" x2="1210.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="1240.0" x2="1310.0" y2="1240.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="1260.0" y1="90.0" x2="1260.0" y2="1340.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="60.0" y1="1290.0" x2="1310.0" y2="1290.0" stroke="#eef0f2" stroke-width="0.6"/>
+<line x1="1310.0" y1="90.0" x2="1310.0" y2="1340.0" stroke="#d5d8dc" stroke-width="1"/>
+<line x1="60.0" y1="1340.0" x2="1310.0" y2="1340.0" stroke="#d5d8dc" stroke-width="1"/>
+<text x="1310.0" y="84.0" font-size="9" text-anchor="middle" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">250</text>
+<text x="52.0" y="1343.0" font-size="9" text-anchor="end" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">250</text>
+<rect x="60.0" y="90.0" width="1250.0" height="1250.0" fill="none" stroke="#b7950b" stroke-width="3"/>
+<rect x="590.0" y="90.0" width="40.0" height="1250.0" fill="#f4d03f" fill-opacity="0.18" stroke="none"/>
+<line x1="610.0" y1="90.0" x2="610.0" y2="1340.0" stroke="#b7950b" stroke-width="2" stroke-dasharray="10 5"/>
+<text x="610.0" y="1356.0" font-size="9" text-anchor="middle" font-weight="bold" fill="#7d6608" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">절연 경계 (1차: PV·제어 GND | 2차: PHV·AC PGND) — 강화절연 ≥ 8 mm, 트랜스·옵토·AMC만 통과</text>
+<rect x="770.0" y="450.0" width="80.0" height="280.0" fill="#ec7063" fill-opacity="0.16" stroke="#c0392b" stroke-width="2"/>
+<text x="810.0" y="446.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#922b21" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">A-FET  Q1~Q4 + U13  h=1.0 (PQFN)</text>
+<rect x="570.0" y="460.0" width="140.0" height="290.0" fill="#ec7063" fill-opacity="0.16" stroke="#c0392b" stroke-width="2"/>
+<text x="640.0" y="456.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#922b21" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">A-XFMR T2/T4  h=≤ 8 (평면형)</text>
+<rect x="475.0" y="470.0" width="70.0" height="270.0" fill="#ec7063" fill-opacity="0.16" stroke="#c0392b" stroke-width="2"/>
+<text x="510.0" y="466.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#922b21" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">A-SiC D3/D8  h=4.5 (D2PAK)</text>
+<rect x="770.0" y="900.0" width="80.0" height="280.0" fill="#ec7063" fill-opacity="0.16" stroke="#c0392b" stroke-width="2"/>
+<text x="810.0" y="896.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#922b21" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">B-FET  Q5~Q8 + U14  h=1.0 (PQFN)</text>
+<rect x="570.0" y="910.0" width="140.0" height="290.0" fill="#ec7063" fill-opacity="0.16" stroke="#c0392b" stroke-width="2"/>
+<text x="640.0" y="906.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#922b21" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">B-XFMR T6/T8  h=≤ 8 (평면형)</text>
+<rect x="475.0" y="920.0" width="70.0" height="270.0" fill="#ec7063" fill-opacity="0.16" stroke="#c0392b" stroke-width="2"/>
+<text x="510.0" y="916.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#922b21" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">B-SiC D14/D19  h=4.5 (D2PAK)</text>
+<rect x="250.0" y="610.0" width="210.0" height="230.0" fill="#ec7063" fill-opacity="0.16" stroke="#c0392b" stroke-width="2"/>
+<text x="355.0" y="606.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#922b21" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C-UNFOLD  h=DPAK 2.4 / D2PAK 4.6</text>
+<circle cx="1270.0" cy="130.0" r="20.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1270.0" cy="130.0" r="8.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1270.0" cy="1300.0" r="20.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1270.0" cy="1300.0" r="8.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="100.0" cy="130.0" r="20.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="100.0" cy="130.0" r="8.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="100.0" cy="1300.0" r="20.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="100.0" cy="1300.0" r="8.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<rect x="960.8" y="208.5" width="38.5" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="980.0" y="218.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J22</text>
+<rect x="879.5" y="103.5" width="51.0" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="905.0" y="113.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J21</text>
+<rect x="774.2" y="103.5" width="76.5" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="812.5" y="113.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J19</text>
+<rect x="695.0" y="102.5" width="65.0" height="30.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="727.5" y="120.5" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J20</text>
+<rect x="642.2" y="103.5" width="25.5" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="655.0" y="113.0" font-size="7" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J23</text>
+<rect x="1235.0" y="195.0" width="40.0" height="90.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="1255.0" y="243.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C4</text>
+<rect x="1155.0" y="1240.0" width="90.0" height="40.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="1200.0" y="1263.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C24</text>
+<rect x="1270.0" y="477.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="1290.0" y="493.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J1</text>
+<rect x="1270.0" y="537.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="1290.0" y="553.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J2</text>
+<rect x="1270.0" y="657.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="1290.0" y="673.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J3</text>
+<rect x="1270.0" y="717.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="1290.0" y="733.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J4</text>
+<circle cx="1140.0" cy="510.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1140.0" cy="491.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1140.0" cy="528.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1140.0" y="513.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC1</text>
+<circle cx="1040.0" cy="510.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1040.0" cy="491.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1040.0" cy="528.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1040.0" y="513.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC2</text>
+<circle cx="1140.0" cy="610.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1140.0" cy="591.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1140.0" cy="628.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1140.0" y="613.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC3</text>
+<circle cx="1040.0" cy="610.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1040.0" cy="591.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1040.0" cy="628.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1040.0" y="613.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC4</text>
+<circle cx="1140.0" cy="710.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1140.0" cy="691.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1140.0" cy="728.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1140.0" y="713.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC5</text>
+<circle cx="1040.0" cy="710.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1040.0" cy="691.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1040.0" cy="728.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1040.0" y="713.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC6</text>
+<rect x="917.5" y="497.5" width="65.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="950.0" y="513.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C69</text>
+<rect x="917.5" y="537.5" width="65.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="950.0" y="553.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C70</text>
+<rect x="1270.0" y="927.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="1290.0" y="943.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J6</text>
+<rect x="1270.0" y="987.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="1290.0" y="1003.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J7</text>
+<rect x="1270.0" y="1107.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="1290.0" y="1123.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J8</text>
+<rect x="1270.0" y="1167.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="1290.0" y="1183.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J9</text>
+<circle cx="1140.0" cy="960.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1140.0" cy="941.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1140.0" cy="978.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1140.0" y="963.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC7</text>
+<circle cx="1040.0" cy="960.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1040.0" cy="941.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1040.0" cy="978.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1040.0" y="963.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC8</text>
+<circle cx="1140.0" cy="1060.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1140.0" cy="1041.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1140.0" cy="1078.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1140.0" y="1063.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC9</text>
+<circle cx="1040.0" cy="1060.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1040.0" cy="1041.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1040.0" cy="1078.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1040.0" y="1063.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC10</text>
+<circle cx="1140.0" cy="1160.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1140.0" cy="1141.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1140.0" cy="1178.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1140.0" y="1163.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC11</text>
+<circle cx="1040.0" cy="1160.0" r="46.2" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2"/>
+<circle cx="1040.0" cy="1141.2" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<circle cx="1040.0" cy="1178.8" r="4.0" fill="#fff" stroke="#c0392b" stroke-width="1"/>
+<text x="1040.0" y="1163.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">EC12</text>
+<rect x="965.0" y="1255.0" width="90.0" height="50.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="1010.0" y="1283.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C162</text>
+<rect x="855.0" y="1255.0" width="90.0" height="50.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="900.0" y="1283.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C164</text>
+<rect x="500.0" y="1195.0" width="60.0" height="30.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="530.0" y="1213.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C48</text>
+<rect x="340.0" y="825.0" width="40.0" height="30.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="360.0" y="843.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">D27</text>
+<rect x="270.0" y="566.2" width="80.0" height="27.5" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="310.0" y="583.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">RV1</text>
+<rect x="340.0" y="515.0" width="60.0" height="30.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="370.0" y="533.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C46</text>
+<rect x="260.0" y="515.0" width="60.0" height="30.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="290.0" y="533.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C47</text>
+<rect x="300.0" y="435.0" width="60.0" height="30.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="330.0" y="453.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C50</text>
+<rect x="300.0" y="475.0" width="60.0" height="30.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="330.0" y="493.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C51</text>
+<rect x="270.0" y="357.5" width="120.0" height="65.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="330.0" y="393.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">L7</text>
+<rect x="107.5" y="356.2" width="145.0" height="67.5" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="393.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">LS1</text>
+<rect x="113.8" y="513.8" width="132.5" height="52.5" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="543.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C56</text>
+<rect x="120.0" y="597.5" width="120.0" height="65.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="633.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">L8</text>
+<rect x="135.0" y="680.0" width="90.0" height="40.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="703.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C53</text>
+<rect x="150.0" y="727.5" width="60.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="743.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C54</text>
+<rect x="135.0" y="760.0" width="90.0" height="40.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="783.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C58</text>
+<rect x="135.0" y="800.0" width="90.0" height="40.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="823.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C63</text>
+<rect x="147.5" y="847.5" width="65.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="863.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C49</text>
+<rect x="147.5" y="877.5" width="65.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="893.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C57</text>
+<rect x="140.0" y="916.2" width="80.0" height="27.5" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="933.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">RV3</text>
+<rect x="140.0" y="951.2" width="80.0" height="27.5" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="968.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">RV4</text>
+<rect x="140.0" y="986.2" width="80.0" height="27.5" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="1003.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">RV5</text>
+<rect x="140.0" y="1021.2" width="80.0" height="27.5" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="180.0" y="1038.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">RV2</text>
+<rect x="60.0" y="557.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="80.0" y="573.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J11</text>
+<rect x="60.0" y="617.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="80.0" y="633.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J12</text>
+<rect x="60.0" y="717.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="80.0" y="733.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J15</text>
+<rect x="60.0" y="777.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="80.0" y="793.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J16</text>
+<rect x="60.0" y="877.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="80.0" y="893.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J13</text>
+<rect x="60.0" y="937.5" width="40.0" height="25.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="80.0" y="953.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J14</text>
+<rect x="215.0" y="1071.2" width="90.0" height="37.5" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" fill-opacity="0.9" stroke-opacity="0.9" stroke-dasharray="3 2" rx="1"/>
+<text x="260.0" y="1093.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C52</text>
+<rect x="855.0" y="470.0" width="75.0" height="95.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="892.5" y="520.5" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#34495e" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">p1 게이트·스너버 (하면)</text>
+<rect x="855.0" y="605.0" width="75.0" height="95.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="892.5" y="655.5" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#34495e" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">p1 게이트·스너버 (하면)</text>
+<rect x="400.0" y="470.0" width="60.0" height="120.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="430.0" y="533.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#34495e" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">p1 PHV 캐패시터 (하면)</text>
+<rect x="855.0" y="920.0" width="75.0" height="95.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="892.5" y="970.5" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#34495e" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">p2 게이트·스너버 (하면)</text>
+<rect x="855.0" y="1055.0" width="75.0" height="95.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="892.5" y="1105.5" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#34495e" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">p2 게이트·스너버 (하면)</text>
+<rect x="400.0" y="860.0" width="60.0" height="330.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="430.0" y="1028.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#34495e" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">p2 PHV 캐패시터 (하면)</text>
+<rect x="400.0" y="590.0" width="60.0" height="20.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="430.0" y="603.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#34495e" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">p3 C42/C43 (하면)</text>
+<rect x="793.5" y="463.5" width="33.0" height="33.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="800.0" y="467.0" width="20.0" height="21.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="810.0" y="483.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q1</text>
+<rect x="793.5" y="523.5" width="33.0" height="33.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="800.0" y="527.0" width="20.0" height="21.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="810.0" y="543.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q2</text>
+<rect x="793.5" y="613.5" width="33.0" height="33.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="800.0" y="617.0" width="20.0" height="21.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="810.0" y="633.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q3</text>
+<rect x="793.5" y="673.5" width="33.0" height="33.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="800.0" y="677.0" width="20.0" height="21.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="810.0" y="693.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q4</text>
+<rect x="795.0" y="576.0" width="30.0" height="18.0" fill="#fad7a0" stroke="#9c640c" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="810.0" y="588.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">U13</text>
+<rect x="575.0" y="465.0" width="130.0" height="110.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="640.0" y="523.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">T2</text>
+<text x="640.0" y="532.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#566573" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">CUSTOM</text>
+<rect x="575.0" y="635.0" width="130.0" height="110.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="640.0" y="693.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">T4</text>
+<text x="640.0" y="702.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#566573" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">CUSTOM</text>
+<rect x="483.2" y="481.0" width="53.5" height="78.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="486.2" y="484.0" width="47.5" height="35.1" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="493.6" y="548.0" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="520.4" y="548.0" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="510.0" y="523.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">D3</text>
+<text x="510.0" y="532.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#566573" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">SCS205KNHR</text>
+<rect x="483.2" y="651.0" width="53.5" height="78.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="486.2" y="654.0" width="47.5" height="35.1" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="493.6" y="718.0" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="520.4" y="718.0" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="510.0" y="693.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">D8</text>
+<text x="510.0" y="702.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#566573" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">SCS205KNHR</text>
+<rect x="726.0" y="540.2" width="28.0" height="19.5" fill="#fad7a0" stroke="#9c640c" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="740.0" y="553.0" font-size="7" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">D4</text>
+<rect x="726.0" y="610.2" width="28.0" height="19.5" fill="#fad7a0" stroke="#9c640c" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="740.0" y="623.0" font-size="7" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">D9</text>
+<rect x="793.5" y="913.5" width="33.0" height="33.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="800.0" y="917.0" width="20.0" height="21.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="810.0" y="933.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q5</text>
+<rect x="793.5" y="973.5" width="33.0" height="33.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="800.0" y="977.0" width="20.0" height="21.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="810.0" y="993.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q6</text>
+<rect x="793.5" y="1063.5" width="33.0" height="33.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="800.0" y="1067.0" width="20.0" height="21.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="810.0" y="1083.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q7</text>
+<rect x="793.5" y="1123.5" width="33.0" height="33.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="800.0" y="1127.0" width="20.0" height="21.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="810.0" y="1143.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q8</text>
+<rect x="795.0" y="1026.0" width="30.0" height="18.0" fill="#fad7a0" stroke="#9c640c" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="810.0" y="1038.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">U14</text>
+<rect x="575.0" y="915.0" width="130.0" height="110.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="640.0" y="973.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">T6</text>
+<text x="640.0" y="982.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#566573" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">CUSTOM</text>
+<rect x="575.0" y="1085.0" width="130.0" height="110.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="640.0" y="1143.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">T8</text>
+<text x="640.0" y="1152.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#566573" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">CUSTOM</text>
+<rect x="483.2" y="931.0" width="53.5" height="78.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="486.2" y="934.0" width="47.5" height="35.1" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="493.6" y="998.0" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="520.4" y="998.0" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="510.0" y="973.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">D14</text>
+<text x="510.0" y="982.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#566573" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">SCS205KNHR</text>
+<rect x="483.2" y="1101.0" width="53.5" height="78.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="486.2" y="1104.0" width="47.5" height="35.1" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="493.6" y="1168.0" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="520.4" y="1168.0" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="510.0" y="1143.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">D19</text>
+<text x="510.0" y="1152.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#566573" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">SCS205KNHR</text>
+<rect x="726.0" y="990.2" width="28.0" height="19.5" fill="#fad7a0" stroke="#9c640c" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="740.0" y="1003.0" font-size="7" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">D15</text>
+<rect x="726.0" y="1060.2" width="28.0" height="19.5" fill="#fad7a0" stroke="#9c640c" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="740.0" y="1073.0" font-size="7" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">D20</text>
+<rect x="412.5" y="624.5" width="35.0" height="51.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="415.5" y="627.5" width="29.0" height="22.9" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="418.2" y="664.5" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="435.8" y="664.5" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="430.0" y="653.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">D23</text>
+<rect x="412.5" y="764.5" width="35.0" height="51.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="415.5" y="767.5" width="29.0" height="22.9" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="418.2" y="804.5" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="435.8" y="804.5" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="430.0" y="793.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">D24</text>
+<rect x="412.5" y="694.5" width="35.0" height="51.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="415.5" y="697.5" width="29.0" height="22.9" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="418.2" y="734.5" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="435.8" y="734.5" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="430.0" y="723.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q12</text>
+<rect x="313.2" y="610.5" width="53.5" height="79.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="316.2" y="613.5" width="47.5" height="35.6" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="323.6" y="678.5" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="350.4" y="678.5" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="340.0" y="653.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q13</text>
+<text x="340.0" y="662.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#566573" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">IPB80R290C3A</text>
+<rect x="313.2" y="750.5" width="53.5" height="79.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<rect x="316.2" y="753.5" width="47.5" height="35.6" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="323.6" y="818.5" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<rect x="350.4" y="818.5" width="6.0" height="9.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
+<text x="340.0" y="793.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q14</text>
+<text x="340.0" y="802.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#566573" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">IPB80R290C3A</text>
+<rect x="260.0" y="619.0" width="40.0" height="22.0" fill="#fad7a0" stroke="#9c640c" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="280.0" y="633.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">R200</text>
+<rect x="260.0" y="649.0" width="40.0" height="22.0" fill="#fad7a0" stroke="#9c640c" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="280.0" y="663.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">R201</text>
+<rect x="260.0" y="769.0" width="40.0" height="22.0" fill="#fad7a0" stroke="#9c640c" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="280.0" y="783.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">R211</text>
+<rect x="260.0" y="799.0" width="40.0" height="22.0" fill="#fad7a0" stroke="#9c640c" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="280.0" y="813.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">R212</text>
+<rect x="720.0" y="574.0" width="40.0" height="22.0" fill="#d6eaf8" stroke="#1b4f72" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="740.0" y="588.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">R10</text>
+<rect x="720.0" y="709.0" width="40.0" height="22.0" fill="#d6eaf8" stroke="#1b4f72" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="740.0" y="723.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">R30</text>
+<rect x="720.0" y="1024.0" width="40.0" height="22.0" fill="#d6eaf8" stroke="#1b4f72" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="740.0" y="1038.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">R47</text>
+<rect x="720.0" y="1159.0" width="40.0" height="22.0" fill="#d6eaf8" stroke="#1b4f72" stroke-width="1.4" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
+<text x="740.0" y="1173.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">R67</text>
+<text x="685.0" y="68.0" font-size="10" text-anchor="middle" font-weight="bold" fill="#7b241c" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">※ 하면에서 본 그림 (좌우 반전). Allegro 하면 뷰(Mirror)와 동일 방향.</text>
+<rect x="24.0" y="1370.0" width="420.0" height="88.0" fill="#fff" stroke="#bdc3c7" rx="6"/>
+<rect x="34.0" y="1378.0" width="26.0" height="12.0" fill="#f5b7b1" stroke="#922b21" stroke-width="1.4" stroke-dasharray="none"/>
+<text x="68.0" y="1388.0" font-size="9" text-anchor="start" font-weight="normal" fill="#111" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">발열 高 SMT — 하면, 서멀패드/히트싱크 직접 접촉</text>
+<rect x="34.0" y="1395.0" width="26.0" height="12.0" fill="#ec7063" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="none"/>
+<text x="68.0" y="1405.0" font-size="9" text-anchor="start" font-weight="normal" fill="#111" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">서멀패드 접촉 존 (존별 부품 높이 통일 → 히트싱크 페데스탈 높이)</text>
+<rect x="34.0" y="1412.0" width="26.0" height="12.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="3 2"/>
+<text x="68.0" y="1422.0" font-size="9" text-anchor="start" font-weight="normal" fill="#111" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">THT 리드 돌출 영역 — 히트싱크 접촉 불가 (릴리프 포켓 또는 회피)</text>
+<rect x="34.0" y="1429.0" width="26.0" height="12.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1.4" stroke-dasharray="2 2"/>
+<text x="68.0" y="1439.0" font-size="9" text-anchor="start" font-weight="normal" fill="#111" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">하면 소형 SMD 군집 (게이트 저항·스너버·PHV 캡) — 존 밖에 배치</text>
+<rect x="470.0" y="1370.0" width="880.0" height="107.5" fill="#fbfcfc" stroke="#bdc3c7" rx="6"/>
+<text x="482.0" y="1388.0" font-size="11" text-anchor="start" font-weight="bold" fill="#111" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">하면 서멀패드 실장 원칙</text>
+<text x="482.0" y="1407.0" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">존 A/B: FET(Q1~4, Q5~8) h=1.0 → 트랜스 h≤8 → SiC D2PAK h=4.5 로 높이가 다르므로 존별로 히트싱크 페데스탈 높이를 달리하거나 갭필러 두께로 흡수 (1.0~2.0 mm 권장).</text>
+<text x="482.0" y="1422.5" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">존 C 언폴더: D23/D24/Q12 DPAK(2.4)와 Q13/Q14 D2PAK(4.6) 혼재 → 두 단 페데스탈. 소스 션트 R200/201, R211/212 는 Q13/Q14 바로 옆(존 안, h 0.6).</text>
+<text x="482.0" y="1438.0" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">THT 부품(전해캡 12개, 초크 2, 릴레이, 필름캡, MOV, 탭, 헤더) 리드는 하면으로 1~2 mm 돌출 → 빗금 영역은 히트싱크와 접촉 불가. 존과 겹치지 않도록 배치함.</text>
+<text x="482.0" y="1453.5" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">PQFN(IAUCN10S7L040)·D2PAK·DPAK 는 노출 패드가 하면 동박에 납땜되므로 그 동박을 절연 서멀패드(예: 2~3 W/mK, 내전압 ≥ 4 kV) 로 히트싱크에 접촉. PHV/드레인 전위 → 절연 필수.</text>
+<text x="482.0" y="1469.0" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">FET 4개 병렬(채널당 2 트랜스 × 2 FET)은 트랜스와 같은 존, 게이트 드라이버 U13/U14 는 FET 중앙(하면). 드라이버↔게이트 ≤ 15 mm.</text></svg>
