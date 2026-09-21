@@ -319,3 +319,106 @@ B열(핀 7~12) : 9·10 = 2차 B(PGND, 강화절연).  7·8·11·12는 제거
 | **PGOOD (R107)** | 0 Ω로 GND 단락 | 오픈드레인 출력을 접지에 직결 — 기능 상실 | 미사용이면 개방, 쓰려면 풀업 후 MCU로 |
 
 **3.3 V·5 V 탭 직접 인출의 한계**: 위 권선수(4 T / 6 T)는 정수로 잘 맞지만, 탭 방식은 부하 변동에 따른 교차조정 오차가 ±10 % 수준이다. VDD_3V3은 STM32G474·ESP32-S3에 **직접** 들어가므로(중간에 LDO 없음) ±5 % 안에 들어야 한다. 실측 후 여의치 않으면 **VDD_3V3을 FB 기준으로 두고(위 R108 수정), VCC_5V0은 10 V에서 LDO로 후단 조정**하는 구성을 권한다. 그러면 2차 A의 탭이 2개로 줄어 보빈 여유가 더 생긴다.
+
+---
+
+# 부록 C. 보빈 데이터시트 출처 및 실제 카탈로그값 반영 〔2026-09-21〕
+
+**주의**: 이 세션은 프록시 정책상 tdk-electronics.tdk.com · product.tdk.com · ferroxcube.com · mouser · digikey · datasheetarchive 등 **모든 부품사·유통사 도메인의 직접 다운로드가 차단**되어 PDF 원문을 열지 못했다. 아래 수치는 **검색 결과 스니펫**에서 얻은 것이므로 **PDF 원문으로 재확인해야 한다.** 링크는 존재를 확인한 실제 URL이다.
+
+## C-1. 데이터시트 링크
+
+### PQ35/35
+
+| 문서 | URL |
+|---|---|
+| TDK/EPCOS 코어 + 코일포머 (B65881A 코어 / B65882 보빈, 4핀·12핀) | `https://www.tdk-electronics.tdk.com/inf/80/ds/b65881a.pdf` |
+| TDK PQ 35/35 코어 단품 | `https://www.tdk-electronics.tdk.com/inf/80/db/fer/pq_35_35.pdf` |
+| TDK PQ 35/35 DG (보빈 조합) | `https://www.tdk-electronics.tdk.com/inf/80/db/fer/pq_35_35_dg.pdf` |
+| TDK 12핀 코일포머 B65882B0012T001 규격서 (Mouser 미러) | `https://www.mouser.com/catalog/specsheets/TDK_PQ35-35_coil%20former_B65882B0012T001_iss03.pdf` |
+| Ferroxcube PQ35/35 (코어 + 보빈 전체) | `https://www.ferroxcube.com/upload/media/product/file/Pr_ds/PQ35_35.pdf` |
+| TDK PQ 시리즈 카탈로그 (Mn-Zn) | `https://product.tdk.com/info/en/catalog/datasheets/ferrite_mz_sw_pq_en.pdf` |
+
+### EFD25/13/9  〔"ETD23/13/9"는 표준 시리즈에 없다 — /13/9 치수는 **EFD25/13/9**를 가리킨다〕
+
+| 문서 | URL |
+|---|---|
+| TDK/EPCOS EFD 25/13/9 코어 + 코일포머 | `https://www.tdk-electronics.tdk.com/inf/80/db/fer/efd_25_13_9.pdf` |
+| Ferroxcube EFD25/13/9 (DigiKey HTML 미러) | `https://www.digikey.com/en/htmldatasheets/production/2109353/0/0/1/efd25-13-9-spec` |
+| EPCOS 코일포머 B66422W1010D001 (RS 상품페이지) | `https://americas.rsdelivers.com/product/epcos/b66422w1010d001/...` |
+
+### 확대 후보 (T9용, C-3 참조)
+
+| 문서 | URL |
+|---|---|
+| Ferroxcube ETD29/16/10 (코어 + CPH-ETD29-1S-13P 보빈) | `https://www.farnell.com/datasheets/1469874.pdf` |
+| CPH-ETD29-1S-13P 보빈 단품 | `https://datasheet.octopart.com/CPH-ETD29-1S-13P-Ferroxcube-datasheet-522017.pdf` |
+| TDK ETD 29/16/10 | `https://www.tdk-electronics.tdk.com/inf/80/db/fer/etd_29_16_10.pdf` |
+| Ferroxcube EFD30/15/9 | `https://www.ferroxcube.com/upload/media/product/file/Pr_ds/EFD30_15_9.pdf` |
+
+## C-2. 확인된 카탈로그값 (검색 스니펫 — PDF 재확인 필요)
+
+| 부품 | 항목 | 값 |
+|---|---|---|
+| **PQ35/35 코어 (Ferroxcube)** | A_e / l_e / V_e | **190 mm² / 86.1 mm / 16 300 mm³** |
+| **PQ35/35DG 코어 (TDK B65881A…R087, N87)** | A_e / l_e | **171 mm² / 79.7 mm** ← Ferroxcube와 다르다 |
+| **CPV-PQ35/35-1S-12P-Z** (Ferroxcube 12핀) | 최소 권선면적 / 권선폭 / 평균 1턴 길이 | **152 mm² / 20.8 mm / 75 mm** |
+| 〃 | 재질 / 핀 / 내열 | PET 유리강화 난연 / 동도금강선 주석도금 / **180 ℃** |
+| **B65882B0012T001** (TDK 12핀, PQ35/35DG) | 권선 단면적 A_N / 평균 1턴 길이 l_N | **158 mm² / 76 mm** |
+| **EFD25/13/9 코어** | A_e / V_e / A×B×C | **58 mm² / 3 300 mm³ / 25 × 12.5 × 9.1 mm** |
+| **CSHS-EFD25-1S-12P(-C)** (Ferroxcube 12핀) | 최소 권선면적 / 평균 1턴 길이 | **39.0 mm² / 46.4 mm** |
+| **ETD29/16/10 코어** | A_e / l_e / A_e·A_w | **76 mm² / 72 mm / 7 220 mm⁴** |
+| **CPH-ETD29-1S-13P** (13핀, PBT 유리강화) | 최소 권선면적 / 최소 권선폭 / 평균 1턴 길이 | **95 mm² / 19.4 mm / 53 mm** |
+| CSH-EFD30-1S-12P-IZ (Ferroxcube 12핀 수직 THT) | 존재 확인 | 권선면적 **미확보** |
+
+**E25/13/7(EF25)** 은 스니펫 수치가 서로 모순되어(평균 1턴 길이 15.45 mm / 권선폭 63.3 mm — 뒤바뀐 값) 채택하지 않았다.
+
+## C-3. 부록 B 수정 사항
+
+### ① PQ35/35 — 권선창은 152~158 mm² (부록 B의 가정 190 mm²는 과대)
+
+권선폭 20.8 mm, A_N 152 mm² → **반경 방향 가용 높이 7.3 mm**. 권선 배치를 반경으로 다시 쌓으면:
+
+| 층 | 구성 | 반경 |
+|---|---|---|
+| 1차 하단 | 동박 0.15 × 18 mm, 4턴, 층간 0.05 mm | 0.80 mm |
+| 절연 | 테이프 2층 | 0.10 mm |
+| 2차 | **TIW 0.5 mm 도체, 외경 0.70 mm 가정** → 28턴/층 × 3층 | 2.16 mm |
+| 절연 | 테이프 2층 | 0.10 mm |
+| 1차 상단 | 동박 4턴 | 0.80 mm |
+| 외피 | 테이프 2층 | 0.10 mm |
+| **합계** | | **4.06 mm / 7.3 mm = 점유율 0.56** ✔ |
+
+**관건은 TIW 외경이다.** 외경이 0.86 mm면 2차가 4층이 되어 합계 5.34 mm(0.73)로 빡빡해진다. 외경 **≤ 0.75 mm**인 TIW(도체 0.5 mm급)를 확보해야 3층으로 끝난다. → 와이어 데이터시트 **미확보**, 확인 필요.
+
+### ② DCR 사양이 실제로 성립함을 확인 (l_N = 76 mm 적용)
+
+| 권선 | 길이 | 단면적 | R_DC (20 ℃) | 사양 | 판정 |
+|---|---|---|---|---|---|
+| 1차 | 8 T × 76 mm = 0.608 m | 동박 0.15 × 18 = 2.70 mm² | **3.9 mΩ** | ≤ 5 mΩ | ✔ |
+| 2차 | 80 T × 76 mm = 6.08 m | TIW 0.5 mm = 0.196 mm² | **0.53 Ω** | ≤ 1.0 Ω | ✔ |
+
+동손(DC) = 10.7² × 3.9 mΩ + 0.72² × 0.53 Ω = 0.45 + 0.27 = **0.72 W**. §4의 1.0 W 추정과 정합(차이는 AC 저항분).
+
+### ③ 코어 제조사에 따라 1차 턴수가 달라진다
+
+| 코어 | A_e | N_p = 8일 때 B_pk @15.4 A | 조치 |
+|---|---|---|---|
+| Ferroxcube PQ35/35 | 190 mm² | **0.243 T** | N_p 8, A_L **375 nH/T²** (부록 B 그대로) |
+| TDK PQ35/35DG | **171 mm²** | **0.270 T** | 높다 → **N_p 9**, A_L = 24 µH/81 = **296 nH/T²** |
+
+발주 시 어느 제조사 코어인지 먼저 확정하고 A_L을 지정할 것.
+
+### ④ T9 — EFD25/13/9 12핀은 **권선창이 부족하다** 〔부록 B-2 수정〕
+
+CSHS-EFD25-1S-12P의 최소 권선면적은 **39.0 mm²**다. 부록 B-2에서 계산한 T9 권선 소요는 **약 33 mm²** → 점유율 **0.85**로 **성립하지 않는다**(테이프·공차 여유 없음). 부록 B-2에서 EFD25의 권선창을 약 90 mm²로 가정한 것이 틀렸다.
+
+필요 A_N ≥ 33 / 0.45 ≈ **73 mm²**.
+
+| 대안 | 보빈 | A_N | 점유율 | 판정 |
+|---|---|---|---|---|
+| **ETD29/16/10** | CPH-ETD29-1S-13P (13핀, PBT) | **95 mm²** | **0.35** | **권장.** 단 13핀 번호 배열이 «1~6 한 열 / 9·10 반대 열» 요구와 맞는지 도면 확인 필요 |
+| EFD30/15/9 | CSH-EFD30-1S-12P-IZ (12핀 수직 THT) | **미확보** | — | 12핀 배열은 이상적. 권선면적 확인 후 판정 |
+| EFD25/13/9 유지 | CSHS-EFD25-1S-12P | 39 mm² | 0.85 | **불가.** 쓰려면 3.3 V·5 V 탭을 없애고(10 V에서 벅/LDO 후단 조정) 권선을 1차 + 10 V + 절연 12 V **3개·6리드**로 줄여야 한다 |
+
+ETD29 채택 시 A_e = 76 mm², N_p 32 T에서 B_pk = 0.034 T로 매우 낮다. 코어 손실은 무시할 수준이지만 A_L 32 nH/T²를 만들려면 공극이 커지므로 **분할 공극 또는 공극부 권선 회피**로 프린징 손실을 관리해야 한다. 코어를 줄이는 대신 권선수를 낮추려면 위 «탭 제거» 안이 더 낫다.
