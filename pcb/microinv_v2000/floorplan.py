@@ -28,7 +28,7 @@ BLOCK = {1: 'PV_A DC-DC (플라이백 A)', 2: 'PV_B DC-DC (플라이백 B)', 3: 
 SIZE = {
  'SON127P515X548X100-8N': (6.6, 6.6), 'SOT254P1510X450-3N': (10.7, 15.6), 'SOT254P1524X457-3N': (10.7, 15.8),
  'SOT228P998X235-3N': (7.0, 10.2), 'SOT228P991X233-3M': (7.0, 10.2), 'XFMR185P838X721X550-8': (8.4, 7.2),
- 'CAPPRD750W80D1800H4000': ('circle', 18.5), 'INDRR1850X900W80L2400T1300H2300': (24.0, 13.0),
+ 'CAPPRD750W80D1800H4000': (44.0, 18.5), 'INDRR1850X900W80L2400T1300H2300': (24.0, 13.0),
  'RLYRR2500X750L2900T1350H2650': (29.0, 13.5), 'MPX154K31D2KN15800': (18.0, 8.0), 'MPX332K31C2KN15600': (26.5, 10.5),
  'MP2334K27D6X8LC': (12.0, 6.0), 'B32021A3472K000': (13.0, 5.0), 'B32922C3334K289': (18.0, 7.5), 'JW102M400VACP10': (12.0, 5.0),
  'CAPRR1500W80L1800T1000H1580': (18.0, 10.0), 'CAPRR1000W60L1300T500H1100': (13.0, 5.0),
@@ -62,20 +62,20 @@ def put(ref, x, y, rot=0, side='TOP', w=None, h=None): P[ref] = dict(x=x, y=y, r
 # corners: frame-ground / mounting
 put('J5', 8, 8); put('J10', 8, 242); put('J17', 242, 8); put('J18', 242, 242)
 # --- control band (primary side) ---
-put('U17', 35, 18.5); put('U18', 56, 6); put('TSW1', 66, 16); put('J22', 66, 25); put('U19', 52, 24)
-put('J21', 81, 4); put('J19', 99.5, 4); put('J20', 116.5, 5.5); put('J23', 131, 4)
-put('U20', 120, 14); put('L11', 128, 10); put('D39', 120, 21)
-put('U16', 96, 26); put('Y1', 84, 35); put('U27', 110, 35)
-put('C4', 11, 30, 90); put('C24', 22, 234)
+put('U17', 79, 18.5); put('U18', 100, 6); put('TSW1', 94, 16); put('J22', 94, 24); put('U19', 94, 32)
+put('J21', 112, 4); put('J19', 127, 4); put('J20', 127, 14); put('J23', 133, 9)
+put('U20', 112, 12); put('L11', 104, 13); put('D39', 104, 19)
+put('U16', 112, 30); put('Y1', 99, 40); put('U27', 125, 26)
+put('C4', 60, 22, 90); put('C24', 68, 239)
 # --- analog band ---
-put('U2', 30, 58); put('U3', 44, 58); put('U10', 58, 58); put('U11', 72, 58); put('U12', 84, 58)
-put('D42', 92, 58); put('D43', 98, 58); put('D44', 104, 58)
+put('U2', 66, 60); put('U3', 78, 60); put('U10', 90, 60); put('U11', 102, 60); put('U12', 112, 60)
+put('D42', 118, 60); put('D43', 124, 60); put('D44', 130, 60)
 put('ISO1', 140, 48); put('ISO4', 140, 58)
 # --- PV_A stage ---
-for i, (ref, y) in enumerate([('J1', 80), ('J2', 92), ('J3', 116), ('J4', 128)]): put(ref, 4, y)
-put('R6', 16, 122, 90); put('U21', 17, 108)
-for ref, (x, y) in zip(['EC1', 'EC2', 'EC3', 'EC4', 'EC5', 'EC6'], [(34, 84), (54, 84), (34, 104), (54, 104), (34, 124), (54, 124)]): put(ref, x, y)
-put('D2', 72, 78); put('C69', 72, 84); put('C70', 72, 92)
+for ref, y in [('J1', 40), ('J2', 60), ('J3', 90), ('J4', 110)]: put(ref, 4, y)
+put('R6', 60, 76, 90); put('U21', 66, 76)
+for i, ref in enumerate(['EC1', 'EC2', 'EC3', 'EC4', 'EC5', 'EC6']): put(ref, 35, 18 + 20 * i)
+put('D2', 76, 80); put('C69', 70, 90); put('C70', 70, 97)
 put('T1', 114, 82); put('T3', 114, 114)
 put('Q1', 100, 78, 0, 'BOTTOM'); put('Q2', 100, 90, 0, 'BOTTOM'); put('Q3', 100, 108, 0, 'BOTTOM'); put('Q4', 100, 120, 0, 'BOTTOM')
 put('U13', 100, 99, 0, 'BOTTOM')
@@ -83,20 +83,20 @@ put('T2', 134, 86, 0, 'TOP', 26, 22); put('T4', 134, 120, 0, 'TOP', 26, 22)
 put('D3', 160, 86, 0, 'BOTTOM'); put('D8', 160, 120, 0, 'BOTTOM')
 put('D4', 114, 92, 0, 'BOTTOM'); put('D9', 114, 106, 0, 'BOTTOM')
 # --- aux band (primary side) ---
-put('L12', 80, 149); put('U15', 94, 149); put('Q10', 108, 149); put('D29', 66, 142); put('D30', 66, 150)
+put('L12', 80, 149); put('U15', 94, 149); put('Q10', 108, 149); put('D29', 64, 142); put('D30', 64, 150)
 put('T9', 140, 149, 0, 'TOP', 16, 14); put('ISO2', 140, 137); put('ISO3', 140, 161)
 # --- PV_B stage ---
-for ref, y in [('J6', 170), ('J7', 182), ('J8', 206), ('J9', 218)]: put(ref, 4, y)
-put('R43', 16, 212, 90); put('U22', 17, 198)
-for ref, (x, y) in zip(['EC7', 'EC8', 'EC9', 'EC10', 'EC11', 'EC12'], [(34, 174), (54, 174), (34, 194), (54, 194), (34, 214), (54, 214)]): put(ref, x, y)
-put('D13', 72, 168)
+for ref, y in [('J6', 150), ('J7', 170), ('J8', 200), ('J9', 220)]: put(ref, 4, y)
+put('R43', 60, 176, 90); put('U22', 66, 176)
+for i, ref in enumerate(['EC7', 'EC8', 'EC9', 'EC10', 'EC11', 'EC12']): put(ref, 35, 138 + 20 * i)
+put('D13', 76, 170)
 put('T5', 114, 172); put('T7', 114, 204)
 put('Q5', 100, 168, 0, 'BOTTOM'); put('Q6', 100, 180, 0, 'BOTTOM'); put('Q7', 100, 198, 0, 'BOTTOM'); put('Q8', 100, 210, 0, 'BOTTOM')
 put('U14', 100, 189, 0, 'BOTTOM')
 put('T6', 134, 176, 0, 'TOP', 26, 22); put('T8', 134, 210, 0, 'TOP', 26, 22)
 put('D14', 160, 176, 0, 'BOTTOM'); put('D19', 160, 210, 0, 'BOTTOM')
 put('D15', 114, 182, 0, 'BOTTOM'); put('D20', 114, 196, 0, 'BOTTOM')
-put('C162', 60, 238); put('C164', 82, 238)
+put('C162', 90, 239); put('C164', 112, 239)
 # --- barrier crossers at the bottom ---
 put('U23', 140, 229); put('U24', 140, 241); put('C48', 156, 224)
 # --- secondary logic (page 8) top side ---
@@ -108,7 +108,7 @@ put('Q13', 194, 112, 0, 'BOTTOM'); put('Q14', 194, 140, 0, 'BOTTOM')
 put('R200', 206, 108, 0, 'BOTTOM'); put('R201', 206, 114, 0, 'BOTTOM'); put('R211', 206, 138, 0, 'BOTTOM'); put('R212', 206, 144, 0, 'BOTTOM')
 put('U1', 176, 126)  # top, gate logic for Q13/Q14
 put('R79', 160, 110); put('R81', 160, 116); put('R188', 160, 122); put('R82', 160, 130); put('R83', 160, 136)
-put('D25', 152, 150); put('D26', 158, 150); put('D27', 216, 150); put('D28', 176, 150); put('Q9', 182, 150)
+put('D25', 152, 150); put('D26', 158, 150); put('D27', 214, 200); put('D28', 176, 150); put('Q9', 182, 150)
 # --- AC filter / output (top, mostly THT) ---
 put('TH1', 188, 98); put('RV1', 200, 98); put('C46', 188, 88); put('C47', 204, 88)
 put('C50', 196, 72); put('C51', 196, 80); put('L7', 196, 60); put('LS1', 226, 60)
@@ -116,17 +116,17 @@ put('F1', 226, 74); put('R90', 226, 80); put('C56', 226, 90); put('L8', 226, 108
 put('C53', 226, 122); put('C54', 226, 130); put('C58', 226, 138); put('C63', 226, 146); put('C49', 226, 154); put('C57', 226, 160)
 put('RV3', 226, 168); put('RV4', 226, 175); put('RV5', 226, 182); put('RV2', 226, 189)
 put('J11', 246, 96); put('J12', 246, 108); put('J15', 246, 128); put('J16', 246, 140); put('J13', 246, 160); put('J14', 246, 172)
-put('R219', 226, 200); put('R228', 226, 206); put('F2', 236, 222); put('C52', 210, 200)
-put('R96', 118, 142); put('R99', 118, 148); put('R100', 118, 154); put('R101', 30, 150); put('R106', 118, 160)
+put('R219', 232, 200); put('R228', 232, 206); put('F2', 236, 222); put('C52', 210, 210)
+put('R96', 118, 142); put('R99', 118, 148); put('R100', 118, 154); put('R101', 60, 86, 90); put('R106', 118, 160)
 put('R10', 114, 99, 0, 'BOTTOM'); put('R30', 114, 126, 0, 'BOTTOM'); put('R47', 114, 189, 0, 'BOTTOM'); put('R67', 114, 216, 0, 'BOTTOM')
 
 # ---- small-passive clusters: (page, side, x1, y1, x2, y2, label) ----
 CLUSTERS = [
- (5, 'TOP', 74, 37, 124, 44.5, 'p5 MCU 주변 소형 SMD'),
- (6, 'TOP', 44, 30, 70, 42, 'p6 ESP32/TPM/CAN 소형 SMD'),
- (10, 'TOP', 124, 14, 136, 34, 'p10 ADC 보호 (ZD1-4 포함)'),
- (7, 'TOP', 26, 63, 110, 70, 'p7 센싱 소형 SMD'),
- (9, 'TOP', 112, 48, 136, 60, 'p9 아날로그 소형 SMD'),
+ (5, 'TOP', 62, 44.5, 136, 50.5, 'p5 MCU 주변 소형 SMD'),
+ (6, 'TOP', 62, 33, 90, 44, 'p6 ESP32/TPM/CAN 소형 SMD'),
+ (10, 'TOP', 122, 28, 136, 44, 'p10 ADC 보호 (ZD1-4 포함)'),
+ (7, 'TOP', 62, 64, 136, 71.5, 'p7 센싱 소형 SMD'),
+ (9, 'TOP', 62, 52, 136, 56.5, 'p9 아날로그 소형 SMD'),
  (1, 'BOTTOM', 76, 76, 91, 95, 'p1 게이트·스너버 (하면)'), (1, 'BOTTOM', 76, 103, 91, 122, 'p1 게이트·스너버 (하면)'),
  (1, 'BOTTOM', 170, 76, 182, 100, 'p1 PHV 캐패시터 (하면)'),
  (2, 'BOTTOM', 76, 166, 91, 185, 'p2 게이트·스너버 (하면)'), (2, 'BOTTOM', 76, 193, 91, 212, 'p2 게이트·스너버 (하면)'),
@@ -143,7 +143,7 @@ ZONES = [
  (170, 104, 212, 150, 'C-UNFOLD', 'DPAK 2.4 / D2PAK 4.6'),
 ]
 BARRIER_X = 140.0
-ANT_KEEPOUT = (20, 0, 50, 10)
+ANT_KEEPOUT = (64, 0, 94, 10)
 
 # ---- classification ----
 HIGH = {'Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q12','Q13','Q14','D3','D8','D14','D19','D23','D24','T2','T4','T6','T8'}
@@ -202,6 +202,23 @@ def draw_part(ref, mirror, ghost=False, tht_mark=False):
         elif heat(ref) == 'M': fill, stroke = '#fad7a0', '#9c640c'
         else: fill, stroke = '#d6eaf8' if not is_tht else '#d5f5e3', '#1b4f72' if not is_tht else '#196f3d'
         op, dash = 1.0, ('6 3' if is_tht else 'none')
+    if psm == 'CAPPRD750W80D1800H4000':
+        # lying radial capacitor: body 40 long (x-22 .. x+18), leads bent down at x+20
+        bx1, bx2 = (x - 22, x + 18) if not mirror else (x - 18, x + 22)
+        lx = x + 20 if not mirror else x - 20
+        if tht_mark:
+            out.append(rect_px(X(min(bx1, bx2)), Y(y - 9.25), 40 * SC, 18.5 * SC, fill='none', stroke='#c0392b', stroke_width=0.8, stroke_dasharray='2 3', rx=6))
+            out.append(rect_px(X(lx - 2.5), Y(y - 6), 5 * SC, 12 * SC, fill='url(#lead)', stroke='#c0392b', stroke_width=1, stroke_dasharray='3 2'))
+            out.append(text(X(x), Y(y) + 3, ref, size=7, fill='#c0392b'))
+            return '\n'.join(out)
+        out.append(rect_px(X(min(bx1, bx2)), Y(y - 9.25), 40 * SC, 18.5 * SC, fill=fill, stroke=stroke, stroke_width=1.4, stroke_dasharray=dash, rx=8))
+        out.append(line_px(X(min(bx1, bx2) + 4), Y(y - 9.25), X(min(bx1, bx2) + 4), Y(y + 9.25), stroke=stroke, stroke_width=1))  # sleeve mark (- side)
+        for dy in (-3.75, 3.75):
+            out.append(line_px(X(max(bx1, bx2)), Y(y + dy), X(lx), Y(y + dy), stroke=stroke, stroke_width=2))
+            out.append(circ_px(X(lx), Y(y + dy), 0.8 * SC, fill='#fff', stroke=stroke, stroke_width=1))
+        out.append(text(X(x - 2), Y(y) + 3, ref, size=8, weight='bold', fill='#1b2631'))
+        out.append(text(X(x - 2), Y(y) + 12, '2700µF/63V 눕힘', size=6.5, fill='#566573'))
+        return '\n'.join(out)
     if s[0] == 'circle':
         r = s[1] / 2
         out.append(circ_px(X(x), Y(y), r * SC, fill=fill, stroke=stroke, stroke_width=1.4, fill_opacity=op, stroke_opacity=op, stroke_dasharray=dash))
@@ -314,11 +331,11 @@ def flow_svg(mirror):
     out = []
     def arrow(x1, y1, x2, y2):
         return line_px(X(mx(x1, mirror)), Y(y1), X(mx(x2, mirror)), Y(y2), stroke='#17a589', stroke_width=2.5, marker_end='url(#arrow)', stroke_opacity=0.85)
-    out += [arrow(14, 104, 26, 104), arrow(64, 104, 90, 104), arrow(110, 104, 118, 104), arrow(150, 104, 168, 104),
-            arrow(14, 194, 26, 194), arrow(64, 194, 90, 194), arrow(110, 194, 118, 194), arrow(150, 194, 168, 194),
+    out += [arrow(59, 104, 90, 104), arrow(110, 104, 118, 104), arrow(150, 104, 168, 104),
+            arrow(59, 194, 90, 194), arrow(110, 194, 118, 194), arrow(150, 194, 168, 194),
             line_px(X(mx(168, mirror)), Y(86), X(mx(168, mirror)), Y(210), stroke='#17a589', stroke_width=2.5, stroke_opacity=0.85),
             arrow(168, 126, 172, 126)]
-    labs = [(20, 100, 'PV_A'), (20, 190, 'PV_B'), (78, 100, '입력 캐패시터'), (128, 104, '플라이백'), (160, 104, 'PHV'), (160, 194, 'PHV')]
+    labs = [(80, 108.5, '캡 리드→FET'), (128, 104, '플라이백'), (160, 104, 'PHV'), (80, 198.5, '캡 리드→FET'), (160, 194, 'PHV')]
     for (x, y, lab) in labs:
         out.append(text(X(mx(x, mirror)), Y(y) - 5, lab, size=7.5, fill='#0e6655', weight='bold'))
     return '\n'.join(out)
@@ -345,8 +362,9 @@ def top_view():
         if P[ref]['side'] == 'TOP': parts_svg.append(draw_part(ref, False))
     parts_svg.append(flow_svg(False))
     # band labels
-    for (y1, y2, lab) in [(4, 44, '제어: STM32·ESP32·TPM·USB·CAN·헤더'), (46, 70, '아날로그'), (72, 136, 'PV_A 입력 · 플라이백 A'),
-                     (138, 160, 'AUX 전원'), (162, 226, 'PV_B 입력 · 플라이백 B'), (228, 248, 'Y-캡 · 센싱')]:
+    parts_svg.append(text(X(35), Y(0) - 20, 'PV 입력 전해캡 12개 눕힘 실장 (Ø18×40 → 높이 ≈ 19 mm), 리드는 FET 쪽 ↓', size=8, fill='#9c640c', weight='bold'))
+    for (y1, y2, lab) in [(4, 44, '제어: STM32·ESP32·TPM·USB·CAN·헤더'), (52, 72, '아날로그'), (72, 136, 'PV_A 플라이백 A'),
+                     (138, 160, 'AUX 전원'), (162, 226, 'PV_B 플라이백 B'), (228, 248, 'Y-캡 · 센싱')]:
         parts_svg.append(line_px(X(0) - 22, Y(y1), X(0) - 22, Y(y2), stroke='#1a5276', stroke_width=3, stroke_opacity=0.5))
         parts_svg.append(text(X(0) - 28, Y((y1 + y2) / 2), lab, size=8, anchor='middle', fill='#1a5276', weight='bold', rot=-90))
     for (x, y, lab) in [(150, 30, '2차측 게이트 로직 (p8)'), (150, 75.5, 'PHV 정류 (하면 D3/D8, D14/D19)'), (204, 38, 'AC 필터·릴레이·보호 (THT, 상면)'), (150, 220, '그리드 센싱 (AMC3301/3302, 절연 경계)')]:
@@ -359,7 +377,8 @@ def top_view():
                   ('url(#dots)', '#5d6d7e', '2 2', '소형 SMD(0603/0805/1206) 군집 — 면적 환산')], 24, Y(250) + 30)
     notes = [
         '보드 250 × 250 mm, 4 코너 M3 (J5/J10/J17/J18 = FGND 프레임 접지 패드 겸용).  좌측 에지 PV_A/PV_B Faston 탭, 우측 에지 AC L/N/PE 탭.',
-        '전력 흐름 좌→우: PV 탭 → 입력 전해캡(THT, 18×40) → 플라이백(하면 FET·트랜스·SiC) → PHV → 언폴더(하면) → CM 초크·X/Y캡·릴레이·퓨즈(THT) → AC 탭.',
+        '전해캡 EC1~12 는 IQ 시리즈처럼 눕힘 실장: x 13~57 세로 컬럼, 리드 끝(x≈55)이 FET 쪽. 몸체는 접착/홀더로 고정, 탭→캡 DC 경로는 캡 몸체 아래 넓은 동박(하면·내층)으로.',
+        '전력 흐름 좌→우: PV 탭 → 입력 전해캡(눕힘) → 플라이백(하면 FET → 상면 DIP 트랜스 → 하면 SiC) → PHV → 언폴더(하면) → CM 초크·X/Y캡·릴레이·퓨즈(THT) → AC 탭.',
         '절연 경계 x=140: T2/T4/T6/T8/T9, ISO1~4, U23/U24 만 경계에 걸침. ESP32 안테나는 보드 에지 밖으로 향하게, 금속 케이스면 외부 안테나 검토.',
         '트랜스 T2/T4/T6/T8(26×22) · T9(16×14) 는 DIP 타입으로 상면 실장 (자리표시 크기, 실제 풋프린트로 교체). 1차 핀은 하면 FET 쪽(좌), 2차 핀은 SiC 쪽(우)으로 향하게.',
         '트랜스 코어 방열: 상면이므로 서멀패드가 아니라 상부 커버 갭필러/포팅으로 처리. 리드가 하면으로 돌출하므로 하면 히트싱크는 트랜스 영역을 피함.',
@@ -389,7 +408,7 @@ def bottom_view():
         '존 A/B: FET(Q1~4, Q5~8) h=1.0 과 SiC D2PAK h=4.5 로 높이가 다르므로 존별로 히트싱크 페데스탈 높이를 달리하거나 갭필러 두께로 흡수 (1.0~2.0 mm 권장).',
         '트랜스 T2/T4/T6/T8/T9 는 DIP 로 상면 실장 → 하면에는 리드만 돌출(빗금). FET 존과 SiC 존 사이의 이 영역은 히트싱크 릴리프 포켓 처리.',
         '존 C 언폴더: D23/D24/Q12 DPAK(2.4)와 Q13/Q14 D2PAK(4.6) 혼재 → 두 단 페데스탈. 소스 션트 R200/201, R211/212 는 Q13/Q14 바로 옆(존 안, h 0.6).',
-        'THT 부품(전해캡 12개, 트랜스 5개, 초크 2, 릴레이, 필름캡, MOV, 탭, 헤더) 리드는 하면으로 1~2 mm 돌출 → 빗금 영역은 히트싱크와 접촉 불가. 존과 겹치지 않도록 배치함.',
+        'THT 부품(트랜스 5개, 초크 2, 릴레이, 필름캡, MOV, 탭, 헤더) 리드는 하면으로 1~2 mm 돌출 → 빗금 영역은 히트싱크와 접촉 불가. 눕힌 전해캡은 리드 끝(x≈55) 만 돌출, 몸체 아래 하면은 자유.',
         'PQFN(IAUCN10S7L040)·D2PAK·DPAK 는 노출 패드가 하면 동박에 납땜되므로 그 동박을 절연 서멀패드(예: 2~3 W/mK, 내전압 ≥ 4 kV) 로 히트싱크에 접촉. PHV/드레인 전위 → 절연 필수.',
         'FET 4개(채널당 2 트랜스 × 2 FET)는 트랜스 1차 핀 바로 아래쪽 하면, 게이트 드라이버 U13/U14 는 FET 중앙(하면). 드라이버↔게이트 ≤ 15 mm, FET↔트랜스 1차 핀 ≤ 20 mm.',
     ]
