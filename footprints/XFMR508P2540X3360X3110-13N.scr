@@ -1,0 +1,22 @@
+# XFMR508P2540X3360X3110-13N — ETD29/16/10 13핀 보빈 (T9)
+# Ferroxcube CPH-ETD29-1S-13P
+# V2000 보빈 풋프린트 — 치수는 데이터시트 도면이 아니라 검색으로 얻은 치수표에서 왔다. 제작 전 원본 PDF 도면과 대조할 것.
+# Allegro PCB Editor: File > Script > Play. 먼저 패드스택을 만들고 이름을 PADSTACK 에 넣을 것.
+# 권장 패드스택: 드릴 1.30 mm 도금, 패드 ⌀2.60 mm, 안티패드 ⌀3.40 mm
+setwindow pcb
+units mm
+
+define PADSTACK BOBBIN_D130_P260
+
+add pin $PADSTACK 1 -15.2400 -12.7000 0
+add pin $PADSTACK 2 -10.1600 -12.7000 0
+add pin $PADSTACK 3 -5.0800 -12.7000 0
+add pin $PADSTACK 4 0.0000 -12.7000 0
+add pin $PADSTACK 5 5.0800 -12.7000 0
+add pin $PADSTACK 6 10.1600 -12.7000 0
+add pin $PADSTACK 9 7.6200 12.7000 0
+add pin $PADSTACK 10 2.5400 12.7000 0
+
+# 조립 외곽 (Package Geometry/Assembly_Top)
+# rectangle -16.80 -15.55 16.80 15.55
+save
