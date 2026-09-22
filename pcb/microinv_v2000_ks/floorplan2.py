@@ -56,16 +56,16 @@ for i, r in enumerate(['EC7','EC9','EC11']): put(r, 30, 172 + 21*i)
 for i, r in enumerate(['EC8','EC10','EC12']): put(r, 74, 172 + 21*i)
 
 # ── 1차: 제어·통신 (좌측 에지 커넥터) ──
-put('U18', 7, 148); put('J19', 11, 92); put('J20', 11, 102); put('J21', 9, 112)
-put('J22', 8, 120); put('J23', 7, 128)
-put('U17', 34, 108); put('U19', 34, 128); put('U20', 34, 138); put('L11', 34, 145)
-put('D39', 34, 151); put('TSW1', 46, 150)
-put('U16', 62, 104); put('Y1', 62, 118); put('U27', 62, 126)
+put('U17', 17.75, 120, 90)                      # ESP32: 좌측 에지, 안테나가 보드 밖을 향함
+put('U18', 8, 155); put('J19', 40, 148); put('J20', 40, 157)
+put('J21', 62, 148); put('J22', 62, 154); put('J23', 62, 159)
+put('U19', 36, 90); put('U20', 50, 90); put('L11', 60, 90); put('D39', 68, 90); put('TSW1', 80, 90)
+put('U16', 60, 106); put('Y1', 44, 100); put('U27', 44, 108)
 # ── 1차: 아날로그 ──
-for i, r in enumerate(['U2','U3','U10','U11']): put(r, 88 + 0*i, 92 + 8*i)
-put('U12', 88, 124); put('D42', 96, 92); put('D43', 96, 98); put('D44', 96, 104)
+for i, r in enumerate(['U2','U3','U10','U11']): put(r, 88, 100 + 8*i)
+put('U12', 88, 132); put('D42', 98, 100); put('D43', 98, 106); put('D44', 98, 112)
 put('R6', 100, 8, 90); put('U21', 104, 8, 90); put('R43', 100, 244, 90); put('U22', 104, 244, 90)
-put('R101', 96, 136, 90)
+put('R101', 98, 140, 90)
 # ── 1차: FET (하면) + 드라이버 ──
 for i, (r, y) in enumerate([('Q1',18),('Q2',32),('Q3',72),('Q4',86)]): put(r, 108, y, 0, 'BOTTOM')
 put('U13', 108, 52, 0, 'BOTTOM')
@@ -74,11 +74,11 @@ put('U14', 108, 178, 0, 'BOTTOM')
 put('R10', 118, 20, 90, 'BOTTOM'); put('R30', 118, 84, 90, 'BOTTOM')
 put('R47', 118, 152, 90, 'BOTTOM'); put('R67', 118, 208, 90, 'BOTTOM')
 put('D2', 102, 18); put('D13', 102, 236)
-put('C69', 100, 96); put('C70', 100, 106)
+put('C69', 100, 150); put('C70', 100, 158)
 # ── 1차: AUX 전원 (T9 1차측 = 보드 우하단) ──
 put('L12', 144, 240); put('U15', 158, 240); put('Q10', 168, 240, 0, 'BOTTOM')
 put('D29', 190, 232); put('D30', 190, 240)
-put('C162', 208, 238); put('C164', 232, 238)
+put('C162', 202, 238); put('C164', 224, 238)
 
 # ── 2차: PHV 정류 (하면 SiC) ──
 put('D3', 152, 28, 0, 'BOTTOM'); put('D8', 152, 82, 0, 'BOTTOM')
@@ -87,7 +87,7 @@ put('D4', 156, 52); put('D9', 156, 106); put('D15', 156, 152); put('D20', 156, 1
 # ── 2차: 게이트 로직 (상면) ──
 put('U6', 170, 12); put('U7', 180, 10); put('U8', 186, 10); put('U9', 192, 10)
 put('U25', 180, 17); put('U26', 187, 17); put('D40', 200, 10); put('D41', 200, 17)
-put('U1', 168, 62); put('U5', 96, 116)     # U5 는 1차(VDD_U5/GND)
+put('U1', 168, 62); put('U5', 44, 116)     # U5 는 1차(VDD_U5/GND)
 # ── 2차: 언폴더 (하면) ──
 put('D23', 172, 62, 0, 'BOTTOM'); put('Q12', 172, 82, 0, 'BOTTOM'); put('D24', 172, 102, 0, 'BOTTOM')
 put('Q13', 192, 62, 0, 'BOTTOM'); put('Q14', 192, 102, 0, 'BOTTOM')
@@ -112,16 +112,16 @@ put('J13', 241, 10); put('J14', 241, 22); put('J17', 241, 206); put('J18', 241, 
 
 # ─────────────────── 3. 소형 SMD 군집 ───────────────────
 CLUSTERS = [
- (5,'TOP', 52, 86, 78, 100, 'p5 MCU 주변'), (5,'TOP', 52, 132, 78, 146, 'p5 MCU 주변'),
- (6,'TOP', 22, 96, 46, 104, 'p6 ESP32/TPM/CAN'), (6,'TOP', 22, 154, 60, 162, 'p6'),
- (10,'TOP', 84, 132, 100, 146, 'p10 ADC 보호 (ZD1~4)'),
- (7,'TOP', 84, 152, 122, 168, 'p7 센싱'), (7,'TOP', 196, 226, 232, 248, 'p7 AMC 출력 (1차측)'),
- (9,'TOP', 84, 108, 100, 120, 'p9 아날로그'),
+ (5,'TOP', 52, 118, 76, 130, 'p5 MCU 주변'), (5,'TOP', 52, 132, 76, 144, 'p5 MCU 주변'),
+ (6,'TOP', 30, 78, 90, 86, 'p6 ESP32/TPM/CAN'), (6,'TOP', 84, 78, 96, 94, 'p6'),
+ (10,'TOP', 78, 148, 96, 160, 'p10 ADC 보호 (ZD1~4)'),
+ (7,'TOP', 14, 146, 28, 161, 'p7 센싱'), (7,'TOP', 196, 224, 250, 232, 'p7 AMC 출력 (1차측)'),
+ (9,'TOP', 76, 96, 84, 144, 'p9 아날로그'),
  (1,'BOTTOM', 96, 40, 104, 66, 'p1 게이트·스너버'), (1,'BOTTOM', 158, 14, 172, 52, 'p1 PHV 캡'),
  (2,'BOTTOM', 96, 172, 104, 194, 'p2 게이트·스너버'), (2,'BOTTOM', 158, 160, 172, 200, 'p2 PHV 캡'),
- (4,'TOP', 136, 228, 182, 234, 'p4 AUX'), (4,'BOTTOM', 150, 232, 182, 248, 'p4 AUX'),
- (8,'TOP', 164, 20, 204, 26, 'p8 로직'), (8,'TOP', 156, 74, 200, 82, 'p8 로직'),
- (3,'TOP', 186, 30, 206, 60, 'p3 GRID'), (3,'TOP', 160, 168, 208, 186, 'p3 GRID'),
+ (4,'TOP', 118, 236, 140, 248, 'p4 AUX'), (4,'BOTTOM', 186, 232, 214, 248, 'p4 AUX'),
+ (8,'TOP', 164, 20, 200, 26, 'p8 로직'), (8,'TOP', 156, 74, 200, 82, 'p8 로직'),
+ (3,'TOP', 186, 30, 200, 60, 'p3 GRID'), (3,'TOP', 160, 168, 208, 186, 'p3 GRID'),
 ]
 # ─────────────────── 4. 하면 서멀 존 ───────────────────
 ZONES = [
@@ -137,7 +137,12 @@ THERMAL_DIMS = [
  ('h', 100, 145, 158, 'EC 뱅크 ↔ SiC 존  45'),
  ('v', 92, 76, 100, 'PV 탭 ↔ 발열부'),
 ]
-ANT_KEEPOUT = (25, 96, 43, 120)      # ESP32 안테나
+# ── RF 구역 (Espressif ESP32-S3-WROOM-1 요구: 전방향 15 mm 키프아웃, 전층 동박 없음) ──
+RF_MOD    = (5.0, 111.0, 30.5, 129.0)    # U17 모듈 외형 (90° 회전, 안테나가 -x 방향)
+RF_ANT    = (5.0, 111.0, 13.0, 129.0)    # 안테나 영역 (모듈 선단 8 mm)
+RF_KEEP   = (0.0, 96.0, 28.0, 144.0)     # 15 mm 키프아웃 — 전층 동박·GND shape·부품·히트싱크 금지
+RF_NOTCH  = (0.0, 104.0, 10.0, 136.0)    # 보드 노치 (안테나 하부 FR-4 제거)
+ANT_KEEPOUT = RF_KEEP
 TEST_ZONES = [                        # 8.3.1 / 8.3.2 시험 시 탈착 (바리스터·Y캡·서지)
  (231, 74, 250, 128, '탈착: RV1~RV5 (바리스터)'),
  (231, 122, 250, 156, '탈착: C49/C57/C63 (Y캡)'),
@@ -203,6 +208,32 @@ DEFS = '''<defs>
 </defs>'''
 COL = {'PRI': '#eaf2fb', 'SEC': '#fdeeec', 'PE': '#fcf3cf'}
 PE_ISLANDS = [(2,2,20,20),(2,230,20,248),(232,2,250,32),(230,196,250,216),(232,230,250,248)]
+
+
+def rf_zone(mir):
+    """RF 키프아웃 · 보드 노치 · 15 mm 치수 (상·하면 공통 — 전층 동박 금지)"""
+    o = []
+    kx1, ky1, kx2, ky2 = RF_KEEP
+    ax1, ay1, ax2, ay2 = RF_ANT
+    nx1, ny1, nx2, ny2 = RF_NOTCH
+    a, b = mx(kx1, mir), mx(kx2, mir)
+    o.append(rmm(min(a,b), ky1, max(a,b), ky2, fill='#f4ecf7', stroke='#8e44ad', stroke_width=2.2, stroke_dasharray='8 4'))
+    a, b = mx(nx1, mir), mx(nx2, mir)
+    o.append(rmm(min(a,b), ny1, max(a,b), ny2, fill='#ffffff', stroke='#b7950b', stroke_width=2.4))
+    o.append(text(X((min(a,b)+max(a,b))/2), Y((ny1+ny2)/2), '노치', size=7, fill='#7d6608', weight='bold', rot=-90))
+    a, b = mx(ax1, mir), mx(ax2, mir)
+    o.append(rmm(min(a,b), ay1, max(a,b), ay2, fill='#e8daef', stroke='#6c3483', stroke_width=1.6))
+    o.append(text(X((min(a,b)+max(a,b))/2), Y((ay1+ay2)/2), '안테나', size=7, fill='#4a235a', weight='bold', rot=-90))
+    o.append(text(X(mx((kx1+kx2)/2, mir)), Y(ky1)-4, 'RF 키프아웃 (전층 동박·GND shape·부품·히트싱크 금지)', size=7.5, fill='#6c3483', weight='bold'))
+    o.append(text(X(mx((kx1+kx2)/2, mir)), Y(ky2)+10, '외함은 이 구역에 플라스틱 윈도우 필요', size=7.5, fill='#6c3483', weight='bold'))
+    for (yy, lab) in [(ay1, '15'), (ay2, '15')]:
+        pass
+    o.append(hdim(mx(ax2, mir) if not mir else mx(kx2, mir), mx(kx2, mir) if not mir else mx(ax2, mir), ky1+3, '15', c='#6c3483'))
+    o.append(lmm(mx(ax1,mir), ay1, mx(ax1,mir), ky1, stroke='#6c3483', stroke_width=1, stroke_dasharray='3 2'))
+    o.append(text(X(mx(ax1,mir)), Y((ay1+ky1)/2), '15', size=8, fill='#6c3483', weight='bold', anchor='middle'))
+    o.append(lmm(mx(ax1,mir), ay2, mx(ax1,mir), ky2, stroke='#6c3483', stroke_width=1, stroke_dasharray='3 2'))
+    o.append(text(X(mx(ax1,mir)), Y((ay2+ky2)/2), '15', size=8, fill='#6c3483', weight='bold', anchor='middle'))
+    return '\n'.join(o)
 
 def grid():
     o = []
@@ -310,8 +341,12 @@ def fp(ref, mir, ghost=False, lead=False):
     if not ghost and not lead and psm == 'SON127P515X548X100-8N':
         o.append(rmm(x-2.0, y-2.2, x+2.0, y+2.2, fill='#e6b0aa', stroke=st, stroke_width=0.8))
     if not ghost and not lead and psm == 'ESP32-S3':
-        o.append(rmm(x-w/2, y-h/2, x+w/2, y-h/2+6, fill='#f9e79f', stroke=st, stroke_width=0.8))
-        o.append(text(X(x), Y(y-h/2+4.2), '안테나', size=6.5, fill='#7d6608'))
+        if p['rot'] in (90, 270):
+            o.append(rmm(x-w/2, y-h/2, x-w/2+8, y+h/2, fill='#f9e79f', stroke=st, stroke_width=0.8))
+            o.append(text(X(x-w/2+4), Y(y), '안테나', size=6.5, fill='#7d6608', rot=-90))
+        else:
+            o.append(rmm(x-w/2, y-h/2, x+w/2, y-h/2+6, fill='#f9e79f', stroke=st, stroke_width=0.8))
+            o.append(text(X(x), Y(y-h/2+4.2), '안테나', size=6.5, fill='#7d6608'))
     size = 8 if w*SC >= 34 else (7 if w*SC >= 18 else 6)
     col = '#7f8c8d' if ghost else ('#7b241c' if ref in GALVANIC_BUG else '#1b2631')
     if w*SC < 15 and h*SC >= 15: o.append(text(X(x), Y(y), ref, size=size, weight='bold', fill=col, rot=-90))
@@ -374,8 +409,7 @@ def wrap(body, w, h, t, sub):
 
 def top_view():
     o = [domains(False), grid()]
-    kx, ky, kx2, ky2 = ANT_KEEPOUT
-    o.append(rmm(kx, ky, kx2, ky2, fill='none', stroke='#7d6608', stroke_width=1, stroke_dasharray='3 2'))
+    o.append(rf_zone(False))
     for r in P:
         if P[r]['side'] == 'BOTTOM': o.append(fp(r, False, ghost=True))
     o.append(clusters(False, 'TOP'))
@@ -394,6 +428,7 @@ def top_view():
     o.append(callout(BAR_VX-4, 112, 112, 112, '공간 5.5 / 연면 8.0', anchor='end'))
     o.append(callout(232, 190, 214, 196, 'AC↔PE 공간 3.0 / 연면 4.0', anchor='end'))
     o.append(callout(20, 9, 30, 20, 'PV↔PE 1.8 / 1.3', anchor='start'))
+
     o.append(callout(131, 55, 146, 66, 'ISO1 ELD207 리드스팬 4.6 < 8.0 — 교체 필요', c='#b9770e', anchor='start'))
     o.append(callout(167, 134, 158, 106, 'Q9: 1차 GND ↔ 2차 PGND 단락', c='#c0392b', anchor='end'))
     # 열 이격
@@ -404,7 +439,9 @@ def top_view():
                   ('#fad7a0','#9c640c','none','발열 中 (전해캡·트랜스·션트·초크·MOV)'),
                   ('#d6eaf8','#1b4f72','none','SMT 일반'), ('#d5f5e3','#196f3d','6 3','THT(DIP) — 리드 하면 돌출'),
                   ('none','#8e44ad','6 3','8.3.1/8.3.2 시험 시 탈착 구역 (바리스터·Y캡·서지)'),
-                  ('#e74c3c','#7b241c','none','회로 결함 (Q9)'), ('url(#dots)','#5d6d7e','2 2','소형 SMD 군집')], 24, Y(250)+30)
+                  ('#e74c3c','#7b241c','none','회로 결함 (Q9)'),
+                  ('#f4ecf7','#8e44ad','8 4','RF 키프아웃 — 전층 동박·GND shape 금지'),
+                  ('url(#dots)','#5d6d7e','2 2','소형 SMD 군집')], 24, Y(250)+30)
     nl = [
         'KS C 8560:2020 적용범위 = Pac ≤ 1 kW, Vdc ≤ 150 V, Vac ≤ 380 V. 본 설계(PV 60 V / AC 220 V)는 범위 내.',
         '절연 경계 = ㄴ자 8.0 mm 통로. 세로 x=128 (T2/T4/T6/T8 + ISO1/ISO4), 가로 y=216 (T9 + ISO2/ISO3 + U23/U24). 통로를 가로지르는 배선·비아·동박 금지.',
@@ -416,6 +453,11 @@ def top_view():
         '보라색 구역 = 8.3.1 절연저항 / 8.3.2 내전압 시험 시 제거 대상(바리스터 RV1~RV5, Y캡 C4·C24·C49·C57·C63·C162·C164, GDT D27). 상면·에지·단독 배치로 탈착 용이.',
         '★ Q9(BSS316NH6327)가 릴레이 코일(VCC_12V0=PGND 기준)의 저측을 1차 GND 로 당겨 절연 경계를 단락함. 이 상태로는 8.3.1/8.3.2 시험 불가 — 회로 수정 선행 필요.',
         '★ ISO1(ELD207) 리드스팬 4.6 mm < 보강 연면 8.0 mm. 8 mm 급 절연 광커플러로 교체 필요. ISO2/ISO3(MOC3063S)·ISO4(FOD817D3SD)는 10.16 mm 로 충족.',
+        '',
+        '[RF] ESP32-S3-WROOM-1(U17) 을 좌측 에지로 이동. 안테나 선단이 에지에서 5 mm, 사방 15 mm 키프아웃(x 0~28, y 96~144) — 전층 동박·GND shape·부품·히트싱크 전부 금지.',
+        '  안테나 하부 FR-4 도 제거(노치 10 × 32 mm). 가장 가까운 금속: USB-C 셸 22 mm, 헤더 26 mm, 전해캡 34 mm, 히트싱크 88 mm → 15 mm 요구 충족.',
+        '  외함: 이 구역은 반드시 플라스틱 윈도우. 금속 외벽이 안테나 전방 15 mm 안에 있으면 통신거리가 수십 m → 수 m 로 떨어짐.',
+        '  ★ 권장안은 ESP32-S3-WROOM-1U(외부 안테나 단자) + U.FL 케이블 + 외함 외부 안테나. 옥외 금속 외함 + 하면 히트싱크 구조에서 PCB 안테나는 여유가 없다.',
     ]
     o.append(leg); o.append(notes('KS C 8560:2020 기반 배치 원칙 (상면)', nl, 490, Y(250)+30, 900))
     return wrap('\n'.join(o), 1420, Y(250)+30+30+15.5*len(nl)+40,
@@ -423,7 +465,7 @@ def top_view():
                 'KS C 8560:2020 8.3.4 절연거리 · 8.5.4 온도 상승(표 13) · 8.3.1/8.3.2 시험 편의를 반영한 재배치안. 좌표는 초안이며 Allegro 에서 조정 전제.')
 
 def bottom_view():
-    o = [domains(True), grid(), zones(True)]
+    o = [domains(True), grid(), rf_zone(True), zones(True)]
     for r in P:
         if mount(r) == 'THT': o.append(fp(r, True, lead=True))
     o.append(clusters(True, 'BOTTOM'))
@@ -446,6 +488,7 @@ def bottom_view():
         'THT 리드 돌출(빗금): 전해캡 12개는 눕힘이라 리드 끝단만 돌출, 트랜스 5개·초크 2·릴레이·필름캡·MOV·탭·헤더는 몸체 전체 폭으로 돌출 → 존과 겹치지 않게 배치함.',
         '하면 경계 통로(ㄴ자 8.0 mm)에도 동박·비아 금지. 히트싱크 절개선(슬롯)을 경계와 일치시켜 금속 경로를 끊을 것.',
         'PCB 자체 온도 한계 105 ℃(표 13). 존 바로 아래 내층 동박은 열확산용으로 쓰되, 경계 통로는 관통 금지.',
+        '★ RF 키프아웃(좌측, 보라 점선)은 하면·내층에서도 동일하게 동박·GND shape 금지. 히트싱크 플레이트도 이 구역까지 연장하지 말 것.',
     ]
     o.append(leg); o.append(notes('하면 방열·절연 원칙', nl, 490, Y(250)+30, 900))
     return wrap('\n'.join(o), 1420, Y(250)+30+30+15.5*len(nl)+40,

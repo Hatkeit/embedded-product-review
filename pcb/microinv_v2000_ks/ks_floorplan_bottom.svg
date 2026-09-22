@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1420" height="1554.5" viewBox="0 0 1420 1554.5" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1420" height="1570.0" viewBox="0 0 1420 1570.0" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">
 <rect width="100%" height="100%" fill="#fff"/><defs>
 <pattern id="dots" patternUnits="userSpaceOnUse" width="6" height="6"><circle cx="3" cy="3" r="1" fill="#5d6d7e" fill-opacity="0.55"/></pattern>
 <pattern id="bar" patternUnits="userSpaceOnUse" width="9" height="9" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#b7950b" stroke-width="2.4" stroke-opacity="0.55"/></pattern>
@@ -94,6 +94,21 @@
 <text x="1322.0" y="89.0" font-size="9" text-anchor="middle" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">250</text>
 <text x="63.0" y="1349.0" font-size="9" text-anchor="end" font-weight="normal" fill="#7f8c8d" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">250</text>
 <rect x="72.0" y="96.0" width="1250.0" height="1250.0" fill="none" stroke="#b7950b" stroke-width="3"/>
+<rect x="1182.0" y="576.0" width="140.0" height="240.0" fill="#f4ecf7" stroke="#8e44ad" stroke-width="2.2" stroke-dasharray="8 4"/>
+<rect x="1272.0" y="616.0" width="50.0" height="160.0" fill="#ffffff" stroke="#b7950b" stroke-width="2.4"/>
+<text x="1297.0" y="696.0" font-size="7" text-anchor="middle" font-weight="bold" fill="#7d6608" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif" transform="rotate(-90 1297.0 696.0)">노치</text>
+<rect x="1257.0" y="651.0" width="40.0" height="90.0" fill="#e8daef" stroke="#6c3483" stroke-width="1.6"/>
+<text x="1277.0" y="696.0" font-size="7" text-anchor="middle" font-weight="bold" fill="#4a235a" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif" transform="rotate(-90 1277.0 696.0)">안테나</text>
+<text x="1252.0" y="572.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#6c3483" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">RF 키프아웃 (전층 동박·GND shape·부품·히트싱크 금지)</text>
+<text x="1252.0" y="826.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#6c3483" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">외함은 이 구역에 플라스틱 윈도우 필요</text>
+<line x1="1182.0" y1="591.0" x2="1257.0" y2="591.0" stroke="#6c3483" stroke-width="1"/>
+<line x1="1182.0" y1="585.0" x2="1182.0" y2="597.0" stroke="#6c3483" stroke-width="1"/>
+<line x1="1257.0" y1="585.0" x2="1257.0" y2="597.0" stroke="#6c3483" stroke-width="1"/>
+<text x="1219.5" y="587.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#6c3483" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">15</text>
+<line x1="1297.0" y1="651.0" x2="1297.0" y2="576.0" stroke="#6c3483" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="1297.0" y="613.5" font-size="8" text-anchor="middle" font-weight="bold" fill="#6c3483" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">15</text>
+<line x1="1297.0" y1="741.0" x2="1297.0" y2="816.0" stroke="#6c3483" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="1297.0" y="778.5" font-size="8" text-anchor="middle" font-weight="bold" fill="#6c3483" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">15</text>
 <rect x="742.0" y="146.0" width="80.0" height="420.0" fill="#ec7063" fill-opacity="0.16" stroke="#c0392b" stroke-width="2"/>
 <text x="782.0" y="142.0" font-size="7" text-anchor="middle" font-weight="bold" fill="#922b21" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">A-FET Q1~Q4 + U13  h=PQFN 1.0</text>
 <rect x="742.0" y="806.0" width="80.0" height="380.0" fill="#ec7063" fill-opacity="0.16" stroke="#c0392b" stroke-width="2"/>
@@ -174,20 +189,20 @@
 <rect x="839.5" y="1031.0" width="25.0" height="60.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1"/>
 <rect x="862.0" y="1119.8" width="200.0" height="92.5" fill="none" stroke="#c0392b" stroke-width="0.8" stroke-dasharray="2 3" rx="6"/>
 <rect x="839.5" y="1136.0" width="25.0" height="60.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1"/>
-<rect x="1228.8" y="549.5" width="76.5" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
-<text x="1267.0" y="559.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J19</text>
-<rect x="1234.5" y="591.0" width="65.0" height="30.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
-<text x="1267.0" y="609.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J20</text>
-<rect x="1251.5" y="649.5" width="51.0" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
-<text x="1277.0" y="659.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J21</text>
-<rect x="1262.8" y="689.5" width="38.5" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
-<text x="1282.0" y="699.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J22</text>
-<rect x="1274.2" y="729.5" width="25.5" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
-<text x="1287.0" y="739.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J23</text>
-<rect x="237.0" y="1261.0" width="90.0" height="50.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
-<text x="282.0" y="1289.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C162</text>
-<rect x="117.0" y="1261.0" width="90.0" height="50.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
-<text x="162.0" y="1289.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C164</text>
+<rect x="1083.8" y="829.5" width="76.5" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="1122.0" y="839.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J19</text>
+<rect x="1089.5" y="866.0" width="65.0" height="30.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="1122.0" y="884.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J20</text>
+<rect x="986.5" y="829.5" width="51.0" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="1012.0" y="839.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J21</text>
+<rect x="992.8" y="859.5" width="38.5" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="1012.0" y="869.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J22</text>
+<rect x="999.2" y="884.5" width="25.5" height="13.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="1012.0" y="894.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">J23</text>
+<rect x="267.0" y="1261.0" width="90.0" height="50.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="312.0" y="1289.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C162</text>
+<rect x="157.0" y="1261.0" width="90.0" height="50.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="202.0" y="1289.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">C164</text>
 <rect x="187.0" y="223.5" width="120.0" height="65.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
 <text x="247.0" y="259.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#c0392b" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">L7</text>
 <rect x="187.0" y="313.5" width="120.0" height="65.0" fill="url(#lead)" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
@@ -256,8 +271,8 @@
 <text x="822.0" y="1014.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#34495e" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">p2 게이트·스너버</text>
 <rect x="462.0" y="896.0" width="70.0" height="200.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1" stroke-dasharray="2 2"/>
 <text x="497.0" y="999.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#34495e" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">p2 PHV 캡</text>
-<rect x="412.0" y="1256.0" width="160.0" height="80.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1" stroke-dasharray="2 2"/>
-<text x="492.0" y="1299.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#34495e" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">p4 AUX</text>
+<rect x="252.0" y="1256.0" width="140.0" height="80.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="322.0" y="1299.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#34495e" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">p4 AUX</text>
 <rect x="769.0" y="172.2" width="26.0" height="27.5" fill="#f5b7b1" stroke="#922b21" stroke-width="1.5" fill-opacity="1.0" stroke-opacity="1.0" stroke-dasharray="none" rx="1"/>
 <rect x="772.0" y="175.0" width="20.0" height="22.0" fill="#e6b0aa" stroke="#922b21" stroke-width="0.8"/>
 <text x="782.0" y="189.0" font-size="7" text-anchor="middle" font-weight="bold" fill="#1b2631" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">Q1</text>
@@ -352,7 +367,7 @@
 <text x="68.0" y="1428.0" font-size="9" text-anchor="start" font-weight="normal" fill="#111" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">THT 리드 돌출 — 히트싱크 접촉 불가 (릴리프 포켓)</text>
 <rect x="34.0" y="1435.0" width="26.0" height="12.0" fill="url(#dots)" stroke="#5d6d7e" stroke-width="1.4" stroke-dasharray="2 2"/>
 <text x="68.0" y="1445.0" font-size="9" text-anchor="start" font-weight="normal" fill="#111" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">하면 소형 SMD 군집 (게이트·스너버·PHV 캡)</text>
-<rect x="490.0" y="1376.0" width="900.0" height="138.5" fill="#fbfcfc" stroke="#bdc3c7" rx="6"/>
+<rect x="490.0" y="1376.0" width="900.0" height="154.0" fill="#fbfcfc" stroke="#bdc3c7" rx="6"/>
 <text x="502.0" y="1394.0" font-size="11" text-anchor="start" font-weight="bold" fill="#111" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">하면 방열·절연 원칙</text>
 <text x="502.0" y="1413.0" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">히트싱크를 1차용(A)·2차용(B) 2개로 분리. 하나의 금속 히트싱크가 절연 경계를 가로지르면 1차·2차가 서멀패드 2장을 통해 결합되어 보강절연이 성립하지 않음.</text>
 <text x="502.0" y="1428.5" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">분리가 불가능하면 단일 히트싱크를 PE(GND_EARTH)에 본딩하고, 1차↔히트싱크·2차↔히트싱크 각각을 기본절연(내전압 1 260 / 1 420 Vrms 1분)으로 설계.</text>
@@ -360,4 +375,5 @@
 <text x="502.0" y="1459.5" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">존별 부품 높이: FET PQFN 1.0 / SiC D2PAK 4.5 / 언폴더 DPAK 2.4 · D2PAK 4.6 → 페데스탈 단차 또는 1~2 mm 갭필러로 흡수.</text>
 <text x="502.0" y="1475.0" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">THT 리드 돌출(빗금): 전해캡 12개는 눕힘이라 리드 끝단만 돌출, 트랜스 5개·초크 2·릴레이·필름캡·MOV·탭·헤더는 몸체 전체 폭으로 돌출 → 존과 겹치지 않게 배치함.</text>
 <text x="502.0" y="1490.5" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">하면 경계 통로(ㄴ자 8.0 mm)에도 동박·비아 금지. 히트싱크 절개선(슬롯)을 경계와 일치시켜 금속 경로를 끊을 것.</text>
-<text x="502.0" y="1506.0" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">PCB 자체 온도 한계 105 ℃(표 13). 존 바로 아래 내층 동박은 열확산용으로 쓰되, 경계 통로는 관통 금지.</text></svg>
+<text x="502.0" y="1506.0" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">PCB 자체 온도 한계 105 ℃(표 13). 존 바로 아래 내층 동박은 열확산용으로 쓰되, 경계 통로는 관통 금지.</text>
+<text x="502.0" y="1521.5" font-size="9" text-anchor="start" font-weight="normal" fill="#2c3e50" font-family="Noto Sans KR, Apple SD Gothic Neo, Arial, sans-serif">★ RF 키프아웃(좌측, 보라 점선)은 하면·내층에서도 동일하게 동박·GND shape 금지. 히트싱크 플레이트도 이 구역까지 연장하지 말 것.</text></svg>
