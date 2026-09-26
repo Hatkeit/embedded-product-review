@@ -1,0 +1,895 @@
+{
+ "kicad_version": "10.0.6",
+ "counts": [
+  {
+   "type": "clearance",
+   "severity": "error",
+   "n": 499
+  },
+  {
+   "type": "hole_clearance",
+   "severity": "error",
+   "n": 199
+  },
+  {
+   "type": "starved_thermal",
+   "severity": "error",
+   "n": 199
+  },
+  {
+   "type": "text_height",
+   "severity": "warning",
+   "n": 199
+  },
+  {
+   "type": "silk_over_copper",
+   "severity": "warning",
+   "n": 199
+  },
+  {
+   "type": "silk_overlap",
+   "severity": "warning",
+   "n": 128
+  },
+  {
+   "type": "solder_mask_bridge",
+   "severity": "error",
+   "n": 115
+  },
+  {
+   "type": "track_width",
+   "severity": "error",
+   "n": 56
+  },
+  {
+   "type": "via_dangling",
+   "severity": "warning",
+   "n": 30
+  },
+  {
+   "type": "items_not_allowed",
+   "severity": "error",
+   "n": 12
+  },
+  {
+   "type": "zones_intersect",
+   "severity": "error",
+   "n": 8
+  },
+  {
+   "type": "invalid_outline",
+   "severity": "error",
+   "n": 7
+  },
+  {
+   "type": "shorting_items",
+   "severity": "error",
+   "n": 6
+  },
+  {
+   "type": "silk_edge_clearance",
+   "severity": "warning",
+   "n": 6
+  },
+  {
+   "type": "text_thickness",
+   "severity": "warning",
+   "n": 5
+  },
+  {
+   "type": "holes_co_located",
+   "severity": "warning",
+   "n": 3
+  },
+  {
+   "type": "track_dangling",
+   "severity": "warning",
+   "n": 1
+  }
+ ],
+ "unconnected": [
+  {
+   "description": "Missing connection between items",
+   "items": [
+    {
+     "description": "Track [GND_EARTH] on BOTTOM, length 23.0000 mm",
+     "pos": {
+      "x": 35.0,
+      "y": -209.0
+     },
+     "uuid": "590dfe24-7d96-40bb-aa43-2bed40fcea88"
+    },
+    {
+     "description": "Track [GND_EARTH] on BOTTOM, length 9.5459 mm",
+     "pos": {
+      "x": 16.75,
+      "y": -3.25
+     },
+     "uuid": "5ab5bffb-c50e-4291-95b1-6778ee2310c0"
+    }
+   ],
+   "severity": "error",
+   "type": "unconnected_items"
+  },
+  {
+   "description": "Missing connection between items",
+   "items": [
+    {
+     "description": "PTH pad 2 [GND_EARTH] of C63",
+     "pos": {
+      "x": 172.5,
+      "y": -5.0
+     },
+     "uuid": "f19bc0bb-7dbd-4259-bbd0-61039da19fa7"
+    },
+    {
+     "description": "Pad 1 [GND_EARTH] of R42 on BOTTOM",
+     "pos": {
+      "x": 72.25,
+      "y": -5.25
+     },
+     "uuid": "c2e4aec2-163c-40d8-a5dc-01097a1720dc"
+    }
+   ],
+   "severity": "error",
+   "type": "unconnected_items"
+  },
+  {
+   "description": "Missing connection between items",
+   "items": [
+    {
+     "description": "Zone [GND_EARTH] on TOP, BOTTOM and L3, priority 0",
+     "pos": {
+      "x": 228.75,
+      "y": -6.4
+     },
+     "uuid": "d7e0b16e-7c48-41c9-8f21-c477aeb7daeb"
+    },
+    {
+     "description": "PTH pad 2 [GND_EARTH] of C63",
+     "pos": {
+      "x": 172.5,
+      "y": -5.0
+     },
+     "uuid": "f19bc0bb-7dbd-4259-bbd0-61039da19fa7"
+    }
+   ],
+   "severity": "error",
+   "type": "unconnected_items"
+  }
+ ],
+ "items_not_allowed": [
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [VDD_3V3] on BOTTOM, length 0.0141 mm",
+     "pos": {
+      "x": 107.54,
+      "y": -242.73
+     },
+     "uuid": "41affb7e-5916-4fff-8f78-74bcb809103c"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [VDD_3V3] on BOTTOM, length 2.7700 mm",
+     "pos": {
+      "x": 107.55,
+      "y": -242.72
+     },
+     "uuid": "cbdf7987-85b9-4958-b3b5-873faac89be2"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [GND] on BOTTOM, length 1.5700 mm",
+     "pos": {
+      "x": 83.73,
+      "y": -247.0
+     },
+     "uuid": "eb0bde7b-9ba2-4315-b9f8-49511e50866f"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [UART1_RXD_C] on BOTTOM, length 0.9700 mm",
+     "pos": {
+      "x": 68.73,
+      "y": -247.0
+     },
+     "uuid": "65df225e-269a-4190-b7bd-d6bb6feb6cf1"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [SWCLK_C] on TOP, length 4.4000 mm",
+     "pos": {
+      "x": 87.0,
+      "y": -248.4
+     },
+     "uuid": "32be055d-e176-4edd-b19c-db34614c30e0"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [SWCLK_C] on TOP, length 1.9799 mm",
+     "pos": {
+      "x": 82.6,
+      "y": -248.4
+     },
+     "uuid": "450b0f3c-9251-4ad3-8aae-be8966232508"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [BOOT_SEL_C] on BOTTOM, length 4.9497 mm",
+     "pos": {
+      "x": 55.0,
+      "y": -226.75
+     },
+     "uuid": "4edb6338-f3f3-45ac-962d-6b665a8dbeb2"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [N16141563] on TOP, length 2.9900 mm",
+     "pos": {
+      "x": 55.5,
+      "y": -232.8
+     },
+     "uuid": "35898539-afd2-4a4f-a6aa-b2e80cf7555a"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [N16141563] on TOP, length 0.0141 mm",
+     "pos": {
+      "x": 58.49,
+      "y": -232.8
+     },
+     "uuid": "a3c49c9f-acc1-4866-ac06-8cf47d23276b"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [CAN_H_C] on TOP, length 2.4300 mm",
+     "pos": {
+      "x": 120.2,
+      "y": -243.75
+     },
+     "uuid": "99a34b27-0c17-4015-98b6-f6a8377de42c"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [CAN_H_C] on TOP, length 0.8061 mm",
+     "pos": {
+      "x": 120.2,
+      "y": -246.18
+     },
+     "uuid": "ed6b13eb-bdf8-4b33-ade7-c694d5b04d24"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items not allowed",
+   "items": [
+    {
+     "description": "Track [CAN_H_C] on TOP, length 2.8500 mm",
+     "pos": {
+      "x": 120.2,
+      "y": -243.75
+     },
+     "uuid": "f88d903f-6314-42f7-a02b-67fd96fe2e2b"
+    }
+   ],
+   "severity": "error",
+   "type": "items_not_allowed"
+  },
+  {
+   "description": "Items shorting two nets (nets  and GND_EARTH)",
+   "items": [
+    {
+     "description": "PTH pad [<no net>] of J5",
+     "pos": {
+      "x": 12.1213,
+      "y": -208.8787
+     },
+     "uuid": "01dd378e-05fd-4f09-9992-80c09316f0f1"
+    },
+    {
+     "description": "Track [GND_EARTH] on L3, length 2.8284 mm",
+     "pos": {
+      "x": 12.0,
+      "y": -209.0
+     },
+     "uuid": "d17e0f2d-f794-44d2-a4ce-dd22744d5aac"
+    }
+   ],
+   "severity": "error",
+   "type": "shorting_items"
+  },
+  {
+   "description": "Items shorting two nets (nets  and GND_EARTH)",
+   "items": [
+    {
+     "description": "PTH pad [<no net>] of J5",
+     "pos": {
+      "x": 12.1213,
+      "y": -208.8787
+     },
+     "uuid": "01dd378e-05fd-4f09-9992-80c09316f0f1"
+    },
+    {
+     "description": "Track [GND_EARTH] on L3, length 23.0000 mm",
+     "pos": {
+      "x": 35.0,
+      "y": -209.0
+     },
+     "uuid": "5d433daf-1a2b-406c-a018-701840537235"
+    }
+   ],
+   "severity": "error",
+   "type": "shorting_items"
+  },
+  {
+   "description": "Items shorting two nets (nets  and GND_EARTH)",
+   "items": [
+    {
+     "description": "PTH pad [<no net>] of J5",
+     "pos": {
+      "x": 12.1213,
+      "y": -208.8787
+     },
+     "uuid": "01dd378e-05fd-4f09-9992-80c09316f0f1"
+    },
+    {
+     "description": "Track [GND_EARTH] on BOTTOM, length 2.8284 mm",
+     "pos": {
+      "x": 12.0,
+      "y": -209.0
+     },
+     "uuid": "90fc28a8-8cd9-4577-a2bd-578e99a70f1d"
+    }
+   ],
+   "severity": "error",
+   "type": "shorting_items"
+  },
+  {
+   "description": "Items shorting two nets (nets GND_EARTH and )",
+   "items": [
+    {
+     "description": "Track [GND_EARTH] on BOTTOM, length 9.5459 mm",
+     "pos": {
+      "x": 16.75,
+      "y": -3.25
+     },
+     "uuid": "5ab5bffb-c50e-4291-95b1-6778ee2310c0"
+    },
+    {
+     "description": "PTH pad [<no net>] of J10",
+     "pos": {
+      "x": 12.1213,
+      "y": -7.8787
+     },
+     "uuid": "6cc2c657-3496-45a7-b1a7-98158160b5be"
+    }
+   ],
+   "severity": "error",
+   "type": "shorting_items"
+  },
+  {
+   "description": "Items shorting two nets (nets  and GND_EARTH)",
+   "items": [
+    {
+     "description": "PTH pad [<no net>] of J5",
+     "pos": {
+      "x": 12.1213,
+      "y": -208.8787
+     },
+     "uuid": "01dd378e-05fd-4f09-9992-80c09316f0f1"
+    },
+    {
+     "description": "Track [GND_EARTH] on BOTTOM, length 23.0000 mm",
+     "pos": {
+      "x": 35.0,
+      "y": -209.0
+     },
+     "uuid": "590dfe24-7d96-40bb-aa43-2bed40fcea88"
+    }
+   ],
+   "severity": "error",
+   "type": "shorting_items"
+  },
+  {
+   "description": "Items shorting two nets (nets I_GRID_LK and )",
+   "items": [
+    {
+     "description": "Track [I_GRID_LK] on L3, length 6.7175 mm",
+     "pos": {
+      "x": 242.0,
+      "y": -48.0
+     },
+     "uuid": "71f0adb9-f1ea-4aad-b00c-512d5e3a0f28"
+    },
+    {
+     "description": "PTH pad [<no net>] of J18",
+     "pos": {
+      "x": 239.8787,
+      "y": -45.8787
+     },
+     "uuid": "9f073046-7788-4f10-bb69-d16def5302e2"
+    }
+   ],
+   "severity": "error",
+   "type": "shorting_items"
+  },
+  {
+   "description": "Copper zones intersect (intersecting zones must have distinct priorities)",
+   "items": [
+    {
+     "description": "Zone [I_PV_A-] on TOP, BOTTOM and 2 more, priority 0",
+     "pos": {
+      "x": 21.65,
+      "y": -190.9
+     },
+     "uuid": "5c2e7a99-4d20-451d-a324-b9cef4cbfcfd"
+    },
+    {
+     "description": "Zone [I_PV_A-] on TOP and L2, priority 0",
+     "pos": {
+      "x": 8.95,
+      "y": -182.55
+     },
+     "uuid": "79837be6-34f3-4ea0-837b-6e204735e83c"
+    }
+   ],
+   "severity": "error",
+   "type": "zones_intersect"
+  },
+  {
+   "description": "Copper zones intersect (intersecting zones must have distinct priorities)",
+   "items": [
+    {
+     "description": "Zone [I_PV_B-] on TOP, BOTTOM and 2 more, priority 0",
+     "pos": {
+      "x": 22.15,
+      "y": -90.9
+     },
+     "uuid": "6b9d9d82-42e0-439f-b644-1d0e75bd186e"
+    },
+    {
+     "description": "Zone [I_PV_B-] on TOP and L2, priority 0",
+     "pos": {
+      "x": 8.95,
+      "y": -82.55
+     },
+     "uuid": "28abbade-c16f-4313-a312-9236eb602039"
+    }
+   ],
+   "severity": "error",
+   "type": "zones_intersect"
+  },
+  {
+   "description": "Copper zones intersect (intersecting zones must have distinct priorities)",
+   "items": [
+    {
+     "description": "Zone [I_PV_A-] on TOP, BOTTOM and 2 more, priority 0",
+     "pos": {
+      "x": 21.65,
+      "y": -190.9
+     },
+     "uuid": "5c2e7a99-4d20-451d-a324-b9cef4cbfcfd"
+    },
+    {
+     "description": "Zone [I_PV_A-] on TOP and L2, priority 0",
+     "pos": {
+      "x": 8.95,
+      "y": -182.55
+     },
+     "uuid": "79837be6-34f3-4ea0-837b-6e204735e83c"
+    }
+   ],
+   "severity": "error",
+   "type": "zones_intersect"
+  },
+  {
+   "description": "Copper zones intersect (intersecting zones must have distinct priorities)",
+   "items": [
+    {
+     "description": "Zone [I_PV_B-] on TOP, BOTTOM and 2 more, priority 0",
+     "pos": {
+      "x": 22.15,
+      "y": -90.9
+     },
+     "uuid": "6b9d9d82-42e0-439f-b644-1d0e75bd186e"
+    },
+    {
+     "description": "Zone [I_PV_B-] on TOP and L2, priority 0",
+     "pos": {
+      "x": 8.95,
+      "y": -82.55
+     },
+     "uuid": "28abbade-c16f-4313-a312-9236eb602039"
+    }
+   ],
+   "severity": "error",
+   "type": "zones_intersect"
+  },
+  {
+   "description": "Copper zones intersect (intersecting zones must have distinct priorities)",
+   "items": [
+    {
+     "description": "Zone [PV_B+] on BOTTOM and L3, priority 0",
+     "pos": {
+      "x": 8.95,
+      "y": -60.05
+     },
+     "uuid": "97f29c5e-84fc-4f13-8fca-b7ae1eaaabca"
+    },
+    {
+     "description": "Zone [PV_B+] on BOTTOM and L3, priority 0",
+     "pos": {
+      "x": 46.75,
+      "y": -82.75
+     },
+     "uuid": "bfc52758-4c15-4c97-ae2d-6ed48d9b6742"
+    }
+   ],
+   "severity": "error",
+   "type": "zones_intersect"
+  },
+  {
+   "description": "Copper zones intersect (intersecting zones must have distinct priorities)",
+   "items": [
+    {
+     "description": "Zone [PV_A+] on BOTTOM and L3, priority 0",
+     "pos": {
+      "x": 8.95,
+      "y": -160.05
+     },
+     "uuid": "28dffeab-fc45-4209-bacc-1e6fef0ea020"
+    },
+    {
+     "description": "Zone [PV_A+] on L3, priority 0",
+     "pos": {
+      "x": 47.05,
+      "y": -181.5
+     },
+     "uuid": "c1952cdf-52ef-49fe-8e60-3f7c1f247dee"
+    }
+   ],
+   "severity": "error",
+   "type": "zones_intersect"
+  },
+  {
+   "description": "Copper zones intersect (intersecting zones must have distinct priorities)",
+   "items": [
+    {
+     "description": "Zone [N17838099] on TOP and BOTTOM, priority 0",
+     "pos": {
+      "x": 229.2,
+      "y": -35.1
+     },
+     "uuid": "f99c624c-af4d-47b2-9051-cfda159dc5b6"
+    },
+    {
+     "description": "Zone [N17838099] on BOTTOM, priority 0",
+     "pos": {
+      "x": 227.8,
+      "y": -42.05
+     },
+     "uuid": "528f0a7d-3c5d-4cd7-82c3-4f6289f82901"
+    }
+   ],
+   "severity": "error",
+   "type": "zones_intersect"
+  },
+  {
+   "description": "Copper zones intersect (intersecting zones must have distinct priorities)",
+   "items": [
+    {
+     "description": "Zone [PV_B+] on BOTTOM and L3, priority 0",
+     "pos": {
+      "x": 8.95,
+      "y": -60.05
+     },
+     "uuid": "97f29c5e-84fc-4f13-8fca-b7ae1eaaabca"
+    },
+    {
+     "description": "Zone [PV_B+] on BOTTOM and L3, priority 0",
+     "pos": {
+      "x": 46.75,
+      "y": -82.75
+     },
+     "uuid": "bfc52758-4c15-4c97-ae2d-6ed48d9b6742"
+    }
+   ],
+   "severity": "error",
+   "type": "zones_intersect"
+  },
+  {
+   "description": "Board has malformed outline (not a closed shape)",
+   "items": [
+    {
+     "description": "Segment of U18 on Board Geometry/Outline",
+     "pos": {
+      "x": 50.68,
+      "y": -250.0
+     },
+     "uuid": "c68b2595-7a5e-4be7-9c1f-53f09a094cfb"
+    },
+    {
+     "description": "Segment of U18 on Board Geometry/Outline",
+     "pos": {
+      "x": 50.68,
+      "y": -250.0
+     },
+     "uuid": "c68b2595-7a5e-4be7-9c1f-53f09a094cfb"
+    }
+   ],
+   "severity": "error",
+   "type": "invalid_outline"
+  },
+  {
+   "description": "Board has malformed outline (self-intersecting)",
+   "items": [
+    {
+     "description": "Rectangle on Board Geometry/Outline",
+     "pos": {
+      "x": 0.0,
+      "y": -250.0
+     },
+     "uuid": "5d7103ff-b8b8-41a3-bf58-e187e915b491"
+    },
+    {
+     "description": "Segment on Board Geometry/Outline",
+     "pos": {
+      "x": 0.0,
+      "y": -250.0
+     },
+     "uuid": "b9a5d7f7-6fa1-4dc6-87aa-40c37d5721b9"
+    }
+   ],
+   "severity": "error",
+   "type": "invalid_outline"
+  },
+  {
+   "description": "Board has malformed outline (not a closed shape)",
+   "items": [
+    {
+     "description": "Segment on Board Geometry/Outline",
+     "pos": {
+      "x": 0.0,
+      "y": -250.0
+     },
+     "uuid": "b9a5d7f7-6fa1-4dc6-87aa-40c37d5721b9"
+    },
+    {
+     "description": "Segment on Board Geometry/Outline",
+     "pos": {
+      "x": 0.0,
+      "y": -250.0
+     },
+     "uuid": "348651cf-237e-4d74-9f8a-ac4a16cda7b4"
+    }
+   ],
+   "severity": "error",
+   "type": "invalid_outline"
+  },
+  {
+   "description": "Board has malformed outline (not a closed shape)",
+   "items": [
+    {
+     "description": "Segment on Board Geometry/Outline",
+     "pos": {
+      "x": 0.0,
+      "y": -250.0
+     },
+     "uuid": "b9a5d7f7-6fa1-4dc6-87aa-40c37d5721b9"
+    },
+    {
+     "description": "Segment of U18 on Board Geometry/Outline",
+     "pos": {
+      "x": 50.68,
+      "y": -250.0
+     },
+     "uuid": "c68b2595-7a5e-4be7-9c1f-53f09a094cfb"
+    }
+   ],
+   "severity": "error",
+   "type": "invalid_outline"
+  },
+  {
+   "description": "Board has malformed outline (self-intersecting)",
+   "items": [
+    {
+     "description": "Segment on Board Geometry/Outline",
+     "pos": {
+      "x": 0.0,
+      "y": 0.0
+     },
+     "uuid": "246fc8c1-cca1-43bc-8aaa-143b62400860"
+    },
+    {
+     "description": "Segment on Board Geometry/Outline",
+     "pos": {
+      "x": 0.0,
+      "y": -250.0
+     },
+     "uuid": "b9a5d7f7-6fa1-4dc6-87aa-40c37d5721b9"
+    }
+   ],
+   "severity": "error",
+   "type": "invalid_outline"
+  },
+  {
+   "description": "Board has malformed outline (self-intersecting)",
+   "items": [
+    {
+     "description": "Segment on Board Geometry/Outline",
+     "pos": {
+      "x": 250.0,
+      "y": 0.0
+     },
+     "uuid": "324c0006-1877-45f3-ba6c-29148b084d90"
+    },
+    {
+     "description": "Rectangle on Board Geometry/Outline",
+     "pos": {
+      "x": 0.0,
+      "y": -250.0
+     },
+     "uuid": "5d7103ff-b8b8-41a3-bf58-e187e915b491"
+    }
+   ],
+   "severity": "error",
+   "type": "invalid_outline"
+  },
+  {
+   "description": "Board has malformed outline (not a closed shape)",
+   "items": [
+    {
+     "description": "Rectangle on Board Geometry/Outline",
+     "pos": {
+      "x": 0.0,
+      "y": -250.0
+     },
+     "uuid": "5d7103ff-b8b8-41a3-bf58-e187e915b491"
+    },
+    {
+     "description": "Segment on Board Geometry/Outline",
+     "pos": {
+      "x": 250.0,
+      "y": -250.0
+     },
+     "uuid": "4e6b5a73-155b-40cc-8574-e9af3e66900d"
+    }
+   ],
+   "severity": "error",
+   "type": "invalid_outline"
+  },
+  {
+   "description": "Drilled holes co-located",
+   "items": [
+    {
+     "description": "Via [GND] on TOP - BOTTOM",
+     "pos": {
+      "x": 52.5,
+      "y": -221.75
+     },
+     "uuid": "44f96df3-bd04-4644-9997-82448e7bbbc1"
+    },
+    {
+     "description": "Via [GND] on TOP - BOTTOM",
+     "pos": {
+      "x": 52.5,
+      "y": -221.75
+     },
+     "uuid": "7ed4911d-1407-4b56-b5a9-4801ded88259"
+    }
+   ],
+   "severity": "warning",
+   "type": "holes_co_located"
+  },
+  {
+   "description": "Drilled holes co-located",
+   "items": [
+    {
+     "description": "Via [GND] on TOP - BOTTOM",
+     "pos": {
+      "x": 52.5,
+      "y": -222.75
+     },
+     "uuid": "8a291e64-874b-4fd6-93bc-171801f73c68"
+    },
+    {
+     "description": "Via [GND] on TOP - BOTTOM",
+     "pos": {
+      "x": 52.5,
+      "y": -222.75
+     },
+     "uuid": "d828f82e-f8a5-4685-b274-b2b8873de843"
+    }
+   ],
+   "severity": "warning",
+   "type": "holes_co_located"
+  },
+  {
+   "description": "Drilled holes co-located",
+   "items": [
+    {
+     "description": "Via [GND] on TOP - BOTTOM",
+     "pos": {
+      "x": 52.5,
+      "y": -223.75
+     },
+     "uuid": "d53ba3c4-7cf7-4224-b4cc-c5be1cf00c01"
+    },
+    {
+     "description": "Via [GND] on TOP - BOTTOM",
+     "pos": {
+      "x": 52.5,
+      "y": -223.75
+     },
+     "uuid": "e73601a9-1faf-4235-8087-abcff31e7fd7"
+    }
+   ],
+   "severity": "warning",
+   "type": "holes_co_located"
+  }
+ ]
+}

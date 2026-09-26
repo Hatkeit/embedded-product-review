@@ -1,0 +1,3197 @@
+{
+"R82": {
+"device": "R_0_RESC6432_390F",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"R96": {
+"device": "R_0_RESC6432_4.99KF/2W",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"R172": {
+"device": "R_0_RESC1608_47KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R274": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R222": {
+"device": "R_0_RESC1608_10F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R43": {
+"device": "R_0_RESC6432_HOLR2512-3W-2MR-1%",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"J12": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"R85": {
+"device": "R_0_RESC3216_10F",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"R149": {
+"device": "RESISTOR_RESC2012_60.4F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C202": {
+"device": "CAP NP_0_CAPC1608_10UF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"D5": {
+"device": "DIODE_DIOM3517X100N_PMEG3020ER,",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"R214": {
+"device": "R_0_RESC1608_30KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"Q5": {
+"device": "IRF1010E/TO_13_SON127P508X590X1",
+"dev_sym": "SON127P508X590X120-8N",
+"placed_sym": null
+},
+"C8": {
+"device": "CAP NP_0_CAPC3216_10NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C48": {
+"device": "CAP NP_0_CAPRD1000W60D1200T500_",
+"dev_sym": "CAPRD1000W60D1200T500",
+"placed_sym": null
+},
+"R141": {
+"device": "R_0_RESC1608_22F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R13": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R101": {
+"device": "R_0_RESC6432_HOYLR2512-3W-3MR-1",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"C205": {
+"device": "CAP NP_0_CAPC1608_470PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R17": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"D37": {
+"device": "DIODE SCHOTTKY_30_DIOM3517X100N",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"R297": {
+"device": "R_0_RESC2012_NC",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R23": {
+"device": "R_0_RESC2012_2F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R114": {
+"device": "R_0_RESC1608_NC",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R247": {
+"device": "R_0_RESC2012_NC",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"D38": {
+"device": "DIODE_DIOM3517X100N_PMEG10010EL",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"D2": {
+"device": "DIODE SCHOTTKY_33_DIOM8171X262N",
+"dev_sym": "DIOM8171X262N",
+"placed_sym": null
+},
+"C105": {
+"device": "CAP NP_0_CAPC1608_NC",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"Q6": {
+"device": "IRF1010E/TO_13_SON127P508X590X1",
+"dev_sym": "SON127P508X590X120-8N",
+"placed_sym": null
+},
+"R195": {
+"device": "R_0_RESC1608_5.1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C70": {
+"device": "CAP NP_0_CAPRR1000W60L1300T50_1",
+"dev_sym": "CAPRR1000W60L1300T500H1100",
+"placed_sym": null
+},
+"D43": {
+"device": "DIODE_58_SOT95P240X100-3N_BAS40",
+"dev_sym": "SOT95P240X100-3N",
+"placed_sym": null
+},
+"R73": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R34": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R113": {
+"device": "R_0_RESC1608_NC",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C82": {
+"device": "CAP NP_0_CAPC3216_NC",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R266": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R135": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C180": {
+"device": "CAP NP_0_CAPC1608_10NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C114": {
+"device": "CAP NP_1_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"D17": {
+"device": "DIODE_DIOM3517X100N_PMEG3020ER,",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"C176": {
+"device": "CAP NP_0_CAPC1608_100PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C150": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R285": {
+"device": "R_0_RESC1608_NC",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"EC4": {
+"device": "CAP_CAPPRD750W80D1800H4000_HZ_6",
+"dev_sym": "CAPPRD750W80D1800H4000_HZ",
+"placed_sym": null
+},
+"R201": {
+"device": "R_0_RESC6432_80M",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"C28": {
+"device": "CAP NP_0_CAPC3216_10NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R48": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"TSW1": {
+"device": "SW DIP-2/SM_3_SMD-4P_6X6_TL3301",
+"dev_sym": "SMD-4P_6X6",
+"placed_sym": null
+},
+"D1": {
+"device": "DIODE SCHOTTKY_19_DIOM2512X090N",
+"dev_sym": "DIOM2512X090N",
+"placed_sym": null
+},
+"U18": {
+"device": "USB616FC-C2014216_5_USB-C_16PIN",
+"dev_sym": "USB-C_16PIN",
+"placed_sym": null
+},
+"R142": {
+"device": "R_0_RESC1608_22F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C66": {
+"device": "CAP NP_0_CAPC3216_1NF/100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R140": {
+"device": "R_0_RESC1608_100KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R248": {
+"device": "R_0_RESC1608_10F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R236": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C132": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"U9": {
+"device": "BC847_SOT65P210X110-6N_BC847BS",
+"dev_sym": "SOT65P210X110-6N",
+"placed_sym": null
+},
+"R102": {
+"device": "R_0_RESC3216_121KF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"C57": {
+"device": "CAP NP_0_CAPRR1000W60L1300T500H",
+"dev_sym": "CAPRR1000W60L1300T500H1100",
+"placed_sym": null
+},
+"L2": {
+"device": "INDUCTOR_BEADC1608X80N_MLZ1608N",
+"dev_sym": "BEADC1608X80N",
+"placed_sym": null
+},
+"C61": {
+"device": "CAP NP_0_CAPC2012_1NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"EC1": {
+"device": "CAP_CAPPRD750W80D1800H4000_HZ_6",
+"dev_sym": "CAPPRD750W80D1800H4000_HZ",
+"placed_sym": null
+},
+"R81": {
+"device": "R_0_RESC6432_200F",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"R185": {
+"device": "R_0_RESC2012_510F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C37": {
+"device": "CAP NP_0_CAPC3216_150PF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R292": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R41": {
+"device": "R_0_RESC2012_2F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R279": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C137": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R12": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R239": {
+"device": "R_0_RESC2012_NC",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"U20": {
+"device": "ZSR800/SOT_7_SOIC127P600X173-8N",
+"dev_sym": "SOIC127P600X173-8N",
+"placed_sym": null
+},
+"Q2": {
+"device": "IRF1010E/TO_13_SON127P508X590X1",
+"dev_sym": "SON127P508X590X120-8N",
+"placed_sym": null
+},
+"J1": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"C153": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"EC5": {
+"device": "CAP_CAPPRD750W80D1800H4000_HZ_6",
+"dev_sym": "CAPPRD750W80D1800H4000_HZ",
+"placed_sym": null
+},
+"C1": {
+"device": "CAP NP_0_CAPC2012_220PF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C75": {
+"device": "CAP NP_0_CAPC2012_100NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"U3": {
+"device": "TLV9062_SOIC127P600X173-8N_TLV9",
+"dev_sym": "SOIC127P600X173-8N",
+"placed_sym": null
+},
+"R38": {
+"device": "R_0_RESC2012_680F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"U25": {
+"device": "BAV70_SOT95P240X100-3N_BAV70",
+"dev_sym": "SOT95P240X100-3N",
+"placed_sym": null
+},
+"D28": {
+"device": "DIODE SCHOTTKY_13_DIOM3716X135N",
+"dev_sym": "DIOM3716X135N",
+"placed_sym": null
+},
+"C36": {
+"device": "CAP NP_0_CAPC3216_4.7NF/100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C96": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R112": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C4": {
+"device": "CAP NP_0_CAPRR1000W60L1300T500H",
+"dev_sym": "CAPRR1000W60L1300T500H1100",
+"placed_sym": null
+},
+"R178": {
+"device": "R_0_RESC1608_1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R22": {
+"device": "R_0_RESC2012_510F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C67": {
+"device": "CAP NP_0_CAPC3216_10UF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C139": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C74": {
+"device": "CAP NP_0_CAPC2012_10UF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C117": {
+"device": "CAP NP_1_CAPC4532_GR443DR73D472",
+"dev_sym": "CAPC4532",
+"placed_sym": null
+},
+"C77": {
+"device": "CAP NP_0_CAPC2012_47NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R217": {
+"device": "R_0_RESC1608_10F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R205": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"T6": {
+"device": "TRANSFORMER FLAT COMPACT_14_XFM",
+"dev_sym": "XFMR500P3500X3050-16",
+"placed_sym": null
+},
+"R228": {
+"device": "R_0_RESC6432_20MF",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"R210": {
+"device": "R_0_RESC1608_5.1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R36": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"J13": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"C23": {
+"device": "CAP NP_0_CAPC3216_100NF,100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R211": {
+"device": "R_0_RESC6432_80M",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"R71": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R209": {
+"device": "R_0_RESC1608_300F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C206": {
+"device": "CAP NP_0_CAPC1608_470PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R171": {
+"device": "R_0_RESC1608_1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R144": {
+"device": "R_0_RESC1608_5.1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C62": {
+"device": "CAP NP_0_CAPC2012_1NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C118": {
+"device": "CAP NP_1_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C106": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R78": {
+"device": "R_0_RESC2012_300F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C41": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C148": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C191": {
+"device": "CAP NP_0_CAPC2012_100NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"LS1": {
+"device": "RELAY DPDT_8_RLYRR2500X750L2900",
+"dev_sym": "RLYRR2500X750L2900T1350H2650",
+"placed_sym": null
+},
+"U19": {
+"device": "ZSR800/SOT_11_QFN50P500X500X85-",
+"dev_sym": "QFN50P500X500X85-33N",
+"placed_sym": null
+},
+"L8": {
+"device": "TRANSFORMER AIR CORE_7_INDRR1_1",
+"dev_sym": "INDRR1850X900W80L2400T1300H2300",
+"placed_sym": null
+},
+"D10": {
+"device": "DIODE_DIOM3517X100N_PMEG3020ER,",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"D21": {
+"device": "DIODE_DIOM3517X100N_PMEG3020ER,",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"D12": {
+"device": "DIODE SCHOTTKY_24_DIOM2512X090N",
+"dev_sym": "DIOM2512X090N",
+"placed_sym": null
+},
+"EC7": {
+"device": "CAP_CAPPRD750W80D1800H4000_HZ_6",
+"dev_sym": "CAPPRD750W80D1800H4000_HZ",
+"placed_sym": null
+},
+"U5": {
+"device": "SN74HC14_SOP65P640X120-14N_SN74",
+"dev_sym": "SOP65P640X120-14N",
+"placed_sym": null
+},
+"R296": {
+"device": "R_0_RESC2012_NC",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R94": {
+"device": "R_0_RESC2012_10F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R4": {
+"device": "R_0_RESC2012_2F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R9": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R86": {
+"device": "R_0_RESC3216_680KF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"C69": {
+"device": "CAP NP_0_CAPRR1000W60L1300T50_1",
+"dev_sym": "CAPRR1000W60L1300T500H1100",
+"placed_sym": null
+},
+"C38": {
+"device": "CAP NP_0_CAPC3216_10NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R174": {
+"device": "R_0_RESC1608_10F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R219": {
+"device": "R_0_RESC6432_20MF",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"C16": {
+"device": "CAP NP_0_CAPC3216_4.7NF/100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C168": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C111": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C97": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"D34": {
+"device": "DIODE_DIOM3517X100N_PMEG3020ER,",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"C44": {
+"device": "CAP NP_0_CAPC3216_47NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C198": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R91": {
+"device": "R_0_RESC1608_510F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C172": {
+"device": "CAP NP_0_CAPC1608_100PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R127": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"D13": {
+"device": "DIODE SCHOTTKY_31_DIOM8171X262N",
+"dev_sym": "DIOM8171X262N",
+"placed_sym": null
+},
+"R170": {
+"device": "R_0_RESC1608_510F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"U16": {
+"device": "STM32G474_QFP40P1600X1600X160-1",
+"dev_sym": "QFP40P1600X1600X160-128N",
+"placed_sym": null
+},
+"R30": {
+"device": "R_0_RESC6432_0F",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"R232": {
+"device": "R_0_RESC2012_10KB",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"ISO3": {
+"device": "PHOTODIODE_8_SOP254P1016X385-6N",
+"dev_sym": "SOP254P1016X385-6N",
+"placed_sym": null
+},
+"R182": {
+"device": "R_0_RESC3216_2M",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"R105": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R254": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"U14": {
+"device": "1ED3491MC12M_11_SOP65P490X104-9",
+"dev_sym": "SOP65P490X104-9N",
+"placed_sym": null
+},
+"C122": {
+"device": "CAP NP_1_CAPC2012_1NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C149": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R28": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R109": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R208": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C175": {
+"device": "CAP NP_0_CAPC1608_100PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R188": {
+"device": "R_0_RESC6432_1.5F",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"J22": {
+"device": "HEADER 2_2_HDRV3W64P254_1X3_2.5",
+"dev_sym": "HDRV3W64P254_1X3",
+"placed_sym": null
+},
+"C32": {
+"device": "CAP NP_0_CAPC2012_1UF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C25": {
+"device": "CAP NP_0_CAPC3216_4.7NF/100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R176": {
+"device": "R_0_RESC1608_10F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C146": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R45": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R268": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"Q1": {
+"device": "IRF1010E/TO_13_SON127P508X590X1",
+"dev_sym": "SON127P508X590X120-8N",
+"placed_sym": null
+},
+"T2": {
+"device": "TRANSFORMER FLAT COMPACT_10_XFM",
+"dev_sym": "XFMR500P3500X3050-16",
+"placed_sym": null
+},
+"Q13": {
+"device": "2N7000_4_SOT254P1524X457-3N_IPB",
+"dev_sym": "SOT254P1524X457-3N",
+"placed_sym": null
+},
+"U22": {
+"device": "INA240_SOP65P640X120-8N_INA240A",
+"dev_sym": "SOP65P640X120-8N",
+"placed_sym": null
+},
+"C185": {
+"device": "CAP NP_0_CAPC1608_100PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R98": {
+"device": "R_0_RESC3216_2M",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"C21": {
+"device": "CAP NP_0_CAPC2012_220PF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C14": {
+"device": "CAP NP_0_CAPC3216_100NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C107": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"D27": {
+"device": "DIODE_25_GDTAD800W100L1016_SL14",
+"dev_sym": "GDTAD800W100L1016",
+"placed_sym": null
+},
+"C120": {
+"device": "CAP NP_1_CAPC1608_100PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"J18": {
+"device": "JUMPER_8_FGND_FGND",
+"dev_sym": "FGND",
+"placed_sym": null
+},
+"C116": {
+"device": "CAP NP_1_CAPC2012_1UF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R277": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R108": {
+"device": "R_0_RESC2012_23KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C190": {
+"device": "CAP NP_0_CAPC2012_100NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C12": {
+"device": "CAP NP_0_CAPC2012_1UF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"D41": {
+"device": "DIODE_41_DIOM5639X245M_SMBJ5.0C",
+"dev_sym": "DIOM5639X245M",
+"placed_sym": null
+},
+"R29": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R196": {
+"device": "R_0_RESC1608_300F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"D33": {
+"device": "DIODE_DIOM3517X100N_PMEG10010EL",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"J14": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"R123": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"U17": {
+"device": "ESP32-S3-WROOM-1_8_ESP32-S3-WRO",
+"dev_sym": "ESP32-S3-WROOM-1",
+"placed_sym": null
+},
+"R212": {
+"device": "R_0_RESC6432_80M",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"R52": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C98": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C169": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R84": {
+"device": "R_0_RESC3216_680KF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"C164": {
+"device": "CAP NP_0_CAPRR1500W80L1800T1000",
+"dev_sym": "CAPRR1500W80L1800T1000H1580",
+"placed_sym": null
+},
+"R202": {
+"device": "R_0_RESC3216_10F",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"R60": {
+"device": "R_0_RESC2012_510F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C19": {
+"device": "CAP NP_0_CAPC3216_10NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R55": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R59": {
+"device": "R_0_RESC2012_22F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R6": {
+"device": "R_0_RESC6432_HOLR2512-3W-2MR-1%",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"C140": {
+"device": "CAP NP_0_CAPC1608_1UF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R76": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"D18": {
+"device": "DIODE SCHOTTKY_23_DIOM2512X090N",
+"dev_sym": "DIOM2512X090N",
+"placed_sym": null
+},
+"R146": {
+"device": "RESISTOR_RESC1608_1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C5": {
+"device": "CAP NP_0_CAPC3216_4.7NF/100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R145": {
+"device": "R_0_RESC1608_1M",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R262": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R207": {
+"device": "R_0_RESC1608_51F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C187": {
+"device": "CAP NP_0_CAPC1608_10NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C182": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R259": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R129": {
+"device": "R_0_RESC1608_100KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"J21": {
+"device": "HEADER 2_1_HDRV4W64P254_1X4_2.5",
+"dev_sym": "HDRV4W64P254_1X4",
+"placed_sym": null
+},
+"R93": {
+"device": "R_0_RESC1608_100KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"L4": {
+"device": "BEAD_1_BEADC1608X80N_BLM18KG601",
+"dev_sym": "BEADC1608X80N",
+"placed_sym": null
+},
+"R27": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C102": {
+"device": "CAP NP_0_CAPC1608_8PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R290": {
+"device": "R_0_RESC1608_4.7KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"U23": {
+"device": "AMC3301_SOIC127P1030X265-16N_AM",
+"dev_sym": "SOIC127P1030X265-16N",
+"placed_sym": null
+},
+"EC10": {
+"device": "CAP_CAPPRD750W80D1800H4000_HZ_6",
+"dev_sym": "CAPPRD750W80D1800H4000_HZ",
+"placed_sym": null
+},
+"R199": {
+"device": "R_0_RESC1608_1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"F2": {
+"device": "FUSE_1_FUSC9830X305N_0678L9100-",
+"dev_sym": "FUSC9830X305N",
+"placed_sym": null
+},
+"C26": {
+"device": "CAP NP_0_CAPC3216_4.7NF/100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"U11": {
+"device": "TLV9062_SOIC127P600X173-8N_TLV9",
+"dev_sym": "SOIC127P600X173-8N",
+"placed_sym": null
+},
+"C136": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"J10": {
+"device": "JUMPER_8_FGND_FGND",
+"dev_sym": "FGND",
+"placed_sym": null
+},
+"C103": {
+"device": "CAP NP_0_CAPC1608_8PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C79": {
+"device": "CAP NP_0_CAPC2012_100NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C152": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"Q11": {
+"device": "2N7002_SOT95P240X100-3N_2N7002L",
+"dev_sym": "SOT95P240X100-3N",
+"placed_sym": null
+},
+"R238": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R258": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C17": {
+"device": "CAP NP_0_CAPC3216_150PF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R267": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C43": {
+"device": "CAP NP_0_CAPC3216_1NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R216": {
+"device": "R_0_RESC1608_100KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R169": {
+"device": "R_0_RESC3216_1MF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"R90": {
+"device": "R_0_RESC6432_LR2512DS-3W-10MR-1",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"R46": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C47": {
+"device": "CAP NP_0_CAPRD1000W60D1200T500_",
+"dev_sym": "CAPRD1000W60D1200T500",
+"placed_sym": null
+},
+"R282": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C64": {
+"device": "CAP NP_0_CAPC3216_NC",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C112": {
+"device": "CAP NP_0_CAPC1608_1UF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C173": {
+"device": "CAP NP_0_CAPC1608_100PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"D24": {
+"device": "PHOTODIODE_1_SOT228P991X233-3M_",
+"dev_sym": "SOT228P991X233-3M",
+"placed_sym": null
+},
+"RV1": {
+"device": "VARISTOR_VARRD750W80L1650T750H2",
+"dev_sym": "VARRD750W80L1650T750H2000",
+"placed_sym": null
+},
+"EC2": {
+"device": "CAP_CAPPRD750W80D1800H4000_HZ_6",
+"dev_sym": "CAPPRD750W80D1800H4000_HZ",
+"placed_sym": null
+},
+"ZD2": {
+"device": "BAT54/SOT_3_DIOM3517X100N_PTVS3",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"U7": {
+"device": "BC847_SOT65P210X110-6N_BC847BS",
+"dev_sym": "SOT65P210X110-6N",
+"placed_sym": null
+},
+"R97": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R230": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"J5": {
+"device": "JUMPER_8_FGND_FGND",
+"dev_sym": "FGND",
+"placed_sym": null
+},
+"R72": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C51": {
+"device": "CAP NP_0_CAPRR1500W80L1800T10_1",
+"dev_sym": "CAPRR1500W80L1800T1000H1580",
+"placed_sym": null
+},
+"C80": {
+"device": "CAP NP_0_CAPC2012_NC",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R291": {
+"device": "R_0_RESC1608_510F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C3": {
+"device": "CAP NP_0_CAPC3216_100NF,100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R47": {
+"device": "R_0_RESC6432_0F",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"C72": {
+"device": "CAP NP_0_CAPC3216_10UF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R272": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R250": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"D44": {
+"device": "DIODE_59_SOT95P240X100-3N_BAS40",
+"dev_sym": "SOT95P240X100-3N",
+"placed_sym": null
+},
+"R189": {
+"device": "R_0_RESC1608_1.5KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R66": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R3": {
+"device": "R_0_RESC2012_510F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"T4": {
+"device": "TRANSFORMER FLAT COMPACT_10_XFM",
+"dev_sym": "XFMR500P3500X3050-16",
+"placed_sym": null
+},
+"R133": {
+"device": "R_0_RESC1608_33F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R115": {
+"device": "R_0_RESC1608_22F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"D20": {
+"device": "DIODE_DIOM5639X245M_ER2G-L",
+"dev_sym": "DIOM5639X245M",
+"placed_sym": null
+},
+"C160": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C86": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R269": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C13": {
+"device": "CAP NP_0_CAPC2012_220PF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C161": {
+"device": "CAP NP_0_CAPC1608_1UF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C58": {
+"device": "CAP NP_0_CAPRR1500W80L1800T600H",
+"dev_sym": "CAPRR1500W80L1800T600H1200",
+"placed_sym": null
+},
+"R190": {
+"device": "R_0_RESC1608_100KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R215": {
+"device": "R_0_RESC1608_100KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C27": {
+"device": "CAP NP_0_CAPC3216_150PF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C177": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R64": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R253": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"Q8": {
+"device": "IRF1010E/TO_13_SON127P508X590X1",
+"dev_sym": "SON127P508X590X120-8N",
+"placed_sym": null
+},
+"U4": {
+"device": "TLV9062_SOIC127P600X173-8N_TLV9",
+"dev_sym": "SOIC127P600X173-8N",
+"placed_sym": null
+},
+"C55": {
+"device": "CAP NP_0_CAPC3216_470PF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"J23": {
+"device": "HEADER 2_8_HDRV2W64P254_1X2_2.5",
+"dev_sym": "HDRV2W64P254_1X2",
+"placed_sym": null
+},
+"C156": {
+"device": "CAP NP_0_CAPC1608_4.7NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C179": {
+"device": "CAP NP_0_CAPC1608_100PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R206": {
+"device": "R_0_RESC1608_5.1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R264": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C94": {
+"device": "CAP NP_0_CAPC2012_1UF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R65": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"L12": {
+"device": "INDUCTOR_INDM7165X300N_SPM6530T",
+"dev_sym": "INDM7165X300N",
+"placed_sym": null
+},
+"RV3": {
+"device": "VARISTOR_VARRD750W80L1650T750_2",
+"dev_sym": "VARRD750W80L1650T750H2000",
+"placed_sym": null
+},
+"D32": {
+"device": "DIODE SCHOTTKY_39_DIOM3517X100N",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"RV2": {
+"device": "VARISTOR_VARRD750W80L1650T750_1",
+"dev_sym": "VARRD750W80L1650T750H2000",
+"placed_sym": null
+},
+"ZD1": {
+"device": "BAT54/SOT_3_DIOM3517X100N_PTVS3",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"R103": {
+"device": "R_0_RESC2012_10F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C15": {
+"device": "CAP NP_0_CAPC3216_4.7NF/100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C201": {
+"device": "CAP NP_0_CAPC1608_4.7UF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R177": {
+"device": "R_0_RESC1608_1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R243": {
+"device": "R_0_RESC2012_1KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R245": {
+"device": "R_0_RESC2012_NC",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R24": {
+"device": "R_0_RESC2012_22F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"D42": {
+"device": "DIODE_57_SOT95P240X100-3N_BAS40",
+"dev_sym": "SOT95P240X100-3N",
+"placed_sym": null
+},
+"R294": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C89": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R227": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R74": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C162": {
+"device": "CAP NP_0_CAPRR1500W80L1800T1000",
+"dev_sym": "CAPRR1500W80L1800T1000H1580",
+"placed_sym": null
+},
+"C196": {
+"device": "CAP NP_0_CAPC2012_100NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"U12": {
+"device": "TLV7041_SOT95P305X145-5N_TLV704",
+"dev_sym": "SOT95P305X145-5N",
+"placed_sym": null
+},
+"R57": {
+"device": "R_0_RESC2012_22F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C142": {
+"device": "CAP NP_0_CAPC1608_1UF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C2": {
+"device": "CAP NP_0_CAPC3216_100NF,100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"D11": {
+"device": "DIODE_DIOM3517X100N_PMEG3020ER,",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"D26": {
+"device": "DIODE_DIOM5329X245M_MURS1JAL",
+"dev_sym": "DIOM5329X245M",
+"placed_sym": null
+},
+"C81": {
+"device": "CAP NP_0_CAPC3216_NC",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R89": {
+"device": "R_0_RESC3216_10F",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"D25": {
+"device": "DIODE_DIOM5329X245M_MURS1JAL",
+"dev_sym": "DIOM5329X245M",
+"placed_sym": null
+},
+"R162": {
+"device": "R_0_RESC1608_10F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C35": {
+"device": "CAP NP_0_CAPC3216_4.7NF/100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C91": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R122": {
+"device": "R_0_RESC1608_47KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R186": {
+"device": "R_0_RESC3216_51KF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"C87": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C189": {
+"device": "CAP NP_0_CAPC1608_100PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R33": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R175": {
+"device": "R_0_RESC1608_1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R187": {
+"device": "R_0_RESC1608_510F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R218": {
+"device": "R_0_RESC1608_510F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R164": {
+"device": "R_0_RESC3216_1MF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"C108": {
+"device": "CAP NP_0_CAPC2012_4.7UF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C141": {
+"device": "CAP NP_0_CAPC1608_10NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C144": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R284": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C188": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R117": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"Q7": {
+"device": "IRF1010E/TO_13_SON127P508X590X1",
+"dev_sym": "SON127P508X590X120-8N",
+"placed_sym": null
+},
+"C46": {
+"device": "CAP NP_0_CAPRD1000W60D1200T500_",
+"dev_sym": "CAPRD1000W60D1200T500",
+"placed_sym": null
+},
+"C130": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R275": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"U8": {
+"device": "BC847_SOT65P210X110-6N_BC847BS",
+"dev_sym": "SOT65P210X110-6N",
+"placed_sym": null
+},
+"R278": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C199": {
+"device": "CAP NP_0_CAPC1608_1UF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R179": {
+"device": "R_0_RESC1608_1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C171": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C181": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R270": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R132": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"T7": {
+"device": "TRANSFORMER FLAT COMPACT_7_XFMR",
+"dev_sym": "XFMR185P838X721X550-8",
+"placed_sym": null
+},
+"R180": {
+"device": "R_0_RESC3216_2M",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"R280": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R139": {
+"device": "R_0_RESC1608_1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"D36": {
+"device": "DIODE SCHOTTKY_29_DIOM3517X100N",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"R120": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R143": {
+"device": "R_0_RESC1608_5.1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C30": {
+"device": "CAP NP_0_CAPC3216_100NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"EC9": {
+"device": "CAP_CAPPRD750W80D1800H4000_HZ_6",
+"dev_sym": "CAPPRD750W80D1800H4000_HZ",
+"placed_sym": null
+},
+"R119": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R198": {
+"device": "R_0_RESC3216_10F",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"R263": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"ZD3": {
+"device": "BAT54/SOT_3_DIOM3517X100N_PTVS3",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"R271": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R121": {
+"device": "R_0_RESC1608_47KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R224": {
+"device": "R_0_RESC1608_100KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C93": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R265": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R92": {
+"device": "R_0_RESC2012_10F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R100": {
+"device": "R_0_RESC6432_0F",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"C121": {
+"device": "CAP NP_1_CAPC1608_16PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R257": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R234": {
+"device": "R_0_RESC2012_1KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"T9": {
+"device": "TRANSFORMER FLAT COMPACT_11_XFM",
+"dev_sym": "XFMR500P2750X1850-12",
+"placed_sym": null
+},
+"R104": {
+"device": "R_0_RESC3216_11KF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"R184": {
+"device": "R_0_RESC3216_1MF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"R15": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R288": {
+"device": "R_0_RESC1608_100KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R10": {
+"device": "R_0_RESC6432_0F",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"D6": {
+"device": "DIODE_DIOM3517X100N_PMEG3020ER,",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"D30": {
+"device": "DIODE SCHOTTKY_26_DIOM3517X100N",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"R197": {
+"device": "R_0_RESC1608_5.1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"Q3": {
+"device": "IRF1010E/TO_13_SON127P508X590X1",
+"dev_sym": "SON127P508X590X120-8N",
+"placed_sym": null
+},
+"R165": {
+"device": "R_0_RESC1608_510F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R37": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R203": {
+"device": "R_0_RESC1608_51F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R95": {
+"device": "R_0_RESC3216_2M",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"R42": {
+"device": "R_0_RESC2012_2MF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R7": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R223": {
+"device": "R_0_RESC1608_5.1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R5": {
+"device": "R_0_RESC2012_2MF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R181": {
+"device": "R_0_RESC1608_10F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C129": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R242": {
+"device": "R_0_RESC2012_1KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"U13": {
+"device": "1ED3491MC12M_10_SOP65P490X104-9",
+"dev_sym": "SOP65P490X104-9N",
+"placed_sym": null
+},
+"C109": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C10": {
+"device": "CAP NP_0_CAPC3216_100NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R21": {
+"device": "R_0_RESC2012_680F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R68": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C95": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R229": {
+"device": "R_0_RESC1608_510F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C200": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"J20": {
+"device": "HEADER 2_9_HDRV10W64P254_2X5_70",
+"dev_sym": "HDRV10W64P254_2X5",
+"placed_sym": null
+},
+"RV5": {
+"device": "VARISTOR_VARRD750W80L1650T750_3",
+"dev_sym": "VARRD750W80L1650T750H2000",
+"placed_sym": null
+},
+"C138": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C115": {
+"device": "CAP NP_1_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R194": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R125": {
+"device": "R_0_RESC1608_47KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C193": {
+"device": "CAP NP_0_CAPC2012_100NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"D22": {
+"device": "DIODE_DIOM3517X100N_PMEG3020ER,",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"R51": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R193": {
+"device": "R_0_RESC1608_51F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"Q12": {
+"device": "2N7000_3_SOT228P991X233-3M_OSG6",
+"dev_sym": "SOT228P991X233-3M",
+"placed_sym": null
+},
+"R261": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C76": {
+"device": "CAP NP_0_CAPC2012_10UF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C29": {
+"device": "CAP NP_0_CAPC3216_10NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R225": {
+"device": "R_0_RESC1608_510F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C143": {
+"device": "CAP NP_0_CAPC1608_1UF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"RV4": {
+"device": "VARISTOR_VARRD750W80L1650T750_3",
+"dev_sym": "VARRD750W80L1650T750H2000",
+"placed_sym": null
+},
+"C100": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C73": {
+"device": "CAP NP_0_CAPC3216_10UF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R49": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"Q9": {
+"device": "2N7002_SOT95P240X100-3N_BSS316N",
+"dev_sym": "SOT95P240X100-3N",
+"placed_sym": null
+},
+"R99": {
+"device": "R_0_RESC6432_0F",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"EC11": {
+"device": "CAP_CAPPRD750W80D1800H4000_HZ_6",
+"dev_sym": "CAPPRD750W80D1800H4000_HZ",
+"placed_sym": null
+},
+"C147": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R168": {
+"device": "R_0_RESC3216_20KF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"TH1": {
+"device": "VARISTOR_0_DIOM5639X245M_P2600S",
+"dev_sym": "DIOM5639X245M",
+"placed_sym": null
+},
+"C165": {
+"device": "CAP NP_0_CAPC2012_2.2UF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C71": {
+"device": "CAP NP_0_CAPC3216_10UF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"U26": {
+"device": "BAV70_SOT95P240X100-3N_BAV70",
+"dev_sym": "SOT95P240X100-3N",
+"placed_sym": null
+},
+"J17": {
+"device": "JUMPER_8_FGND_FGND",
+"dev_sym": "FGND",
+"placed_sym": null
+},
+"L1": {
+"device": "BEAD_1_BEADC1608X80N_BLM18KG601",
+"dev_sym": "BEADC1608X80N",
+"placed_sym": null
+},
+"R256": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"Y1": {
+"device": "CRYSTAL_13_XTALCC5032X130N_NX50",
+"dev_sym": "XTALCC5032X130N",
+"placed_sym": null
+},
+"ISO2": {
+"device": "PHOTODIODE_8_SOP254P1016X385-6N",
+"dev_sym": "SOP254P1016X385-6N",
+"placed_sym": null
+},
+"D23": {
+"device": "PHOTODIODE_1_SOT228P991X233-3M_",
+"dev_sym": "SOT228P991X233-3M",
+"placed_sym": null
+},
+"C158": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R128": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R246": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C63": {
+"device": "CAP NP_0_CAPRR1000W60L1300T400H",
+"dev_sym": "CAPRR1000W60L1300T400H900",
+"placed_sym": null
+},
+"Q10": {
+"device": "IRF1010E/TO_13_SON127P508X590X1",
+"dev_sym": "SON127P508X590X120-8N",
+"placed_sym": null
+},
+"R231": {
+"device": "R_0_RESC1608_62KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"T3": {
+"device": "TRANSFORMER FLAT COMPACT_17_XFM",
+"dev_sym": "XFMR185P838X721X550-8",
+"placed_sym": null
+},
+"R11": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R276": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C134": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C195": {
+"device": "CAP NP_0_CAPC2012_100NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R220": {
+"device": "R_0_RESC1608_62KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"U21": {
+"device": "INA240_SOP65P640X120-8N_INA240A",
+"dev_sym": "SOP65P640X120-8N",
+"placed_sym": null
+},
+"D31": {
+"device": "DIODE SCHOTTKY_42_DIOM2512X090N",
+"dev_sym": "DIOM2512X090N",
+"placed_sym": null
+},
+"C90": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C170": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C59": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"U1": {
+"device": "SN74HC14_SOP65P640X120-14N_SN74",
+"dev_sym": "SOP65P640X120-14N",
+"placed_sym": null
+},
+"C204": {
+"device": "CAP NP_0_CAPC1608_470PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R281": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R35": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"J4": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"C183": {
+"device": "CAP NP_0_CAPC1608_10NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C56": {
+"device": "CAP NP_0_CAPRR2750W80L3150T1800",
+"dev_sym": "CAPRR2750W80L3150T1800H2750",
+"placed_sym": null
+},
+"D29": {
+"device": "DIODE SCHOTTKY_25_DIOM3517X100N",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"C104": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C65": {
+"device": "CAP NP_0_CAPC3216_100NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R80": {
+"device": "R_0_RESC2012_300F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"D7": {
+"device": "DIODE SCHOTTKY_20_DIOM2512X090N",
+"dev_sym": "DIOM2512X090N",
+"placed_sym": null
+},
+"R192": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R50": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"D19": {
+"device": "DIODE_36_SOT254P1510X450-3N_SCS",
+"dev_sym": "SOT254P1510X450-3N",
+"placed_sym": null
+},
+"R110": {
+"device": "R_0_RESC2012_54.9KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R87": {
+"device": "R_0_RESC3216_1K",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"C101": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R249": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R134": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R191": {
+"device": "R_0_RESC1608_5.1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R107": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R111": {
+"device": "R_0_RESC2012_1.3KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C167": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R31": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C39": {
+"device": "CAP NP_0_CAPC3216_10NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R252": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R26": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R106": {
+"device": "R_0_RESC6432_LR2512D-3W-30MR-1%",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"C131": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"D3": {
+"device": "DIODE_36_SOT254P1510X450-3N_SCS",
+"dev_sym": "SOT254P1510X450-3N",
+"placed_sym": null
+},
+"R124": {
+"device": "R_0_RESC1608_47KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R70": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C45": {
+"device": "CAP NP_0_CAPC3216_47NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R161": {
+"device": "R_0_RESC1608_10F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C11": {
+"device": "CAP NP_0_CAPC2012_1NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R235": {
+"device": "R_0_RESC2012_1KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R131": {
+"device": "R_0_RESC1608_33F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C22": {
+"device": "CAP NP_0_CAPC3216_100NF,100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R25": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R200": {
+"device": "R_0_RESC6432_80M",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"R2": {
+"device": "R_0_RESC2012_2MF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"T5": {
+"device": "TRANSFORMER FLAT COMPACT_13_XFM",
+"dev_sym": "XFMR185P838X721X550-8",
+"placed_sym": null
+},
+"R273": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C163": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R255": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"D4": {
+"device": "DIODE_DIOM5639X245M_ER2G-L",
+"dev_sym": "DIOM5639X245M",
+"placed_sym": null
+},
+"ISO4": {
+"device": "OPTO ISOLATOR-A_6_SOP254P1016X3",
+"dev_sym": "SOP254P1016X385-4N",
+"placed_sym": null
+},
+"R251": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R237": {
+"device": "R_0_RESC2012_NC",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C20": {
+"device": "CAP NP_0_CAPC3216_22NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R54": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C9": {
+"device": "CAP NP_0_CAPC3216_10NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R63": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R167": {
+"device": "R_0_RESC1608_10F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R221": {
+"device": "R_0_RESC1608_10F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C33": {
+"device": "CAP NP_0_CAPC2012_220PF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"C18": {
+"device": "CAP NP_0_CAPC3216_10NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C119": {
+"device": "CAP NP_1_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C6": {
+"device": "CAP NP_0_CAPC3216_4.7NF/100V",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R226": {
+"device": "R_0_RESC1608_130KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"D35": {
+"device": "DIODE SCHOTTKY_28_DIOM3517X100N",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"C42": {
+"device": "CAP NP_0_CAPC3216_1NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C49": {
+"device": "CAP NP_0_CAPRR1000W60L1300T500H",
+"dev_sym": "CAPRR1000W60L1300T500H1100",
+"placed_sym": null
+},
+"C83": {
+"device": "CAP NP_0_CAPC3216_10UF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R126": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R83": {
+"device": "R_0_RESC6432_390F",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"C133": {
+"device": "CAP NP_0_CAPC1608_1UF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C151": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"D8": {
+"device": "DIODE_36_SOT254P1510X450-3N_SCS",
+"dev_sym": "SOT254P1510X450-3N",
+"placed_sym": null
+},
+"R14": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C85": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"D39": {
+"device": "DIODE_0_SOT95P240X100-3N_PESD2I",
+"dev_sym": "SOT95P240X100-3N",
+"placed_sym": null
+},
+"L10": {
+"device": "INDUCTOR_BEADC1608X80N_LQM18PN4",
+"dev_sym": "BEADC1608X80N",
+"placed_sym": null
+},
+"R67": {
+"device": "R_0_RESC6432_0F",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"C159": {
+"device": "CAP NP_0_CAPC1608_1UF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C40": {
+"device": "CAP NP_0_CAPC3216_22NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"J6": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"U27": {
+"device": "REF3030A_SOT95P264X112-3N_REF30",
+"dev_sym": "SOT95P264X112-3N",
+"placed_sym": null
+},
+"D14": {
+"device": "DIODE_36_SOT254P1510X450-3N_SCS",
+"dev_sym": "SOT254P1510X450-3N",
+"placed_sym": null
+},
+"R241": {
+"device": "R_0_RESC2012_16.5KB",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C68": {
+"device": "CAP NP_0_CAPC3216_100NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"R136": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R293": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C24": {
+"device": "CAP NP_0_CAPRR1000W60L1300T500H",
+"dev_sym": "CAPRR1000W60L1300T500H1100",
+"placed_sym": null
+},
+"L5": {
+"device": "INDUCTOR_BEADC1608X80N_MLZ1608N",
+"dev_sym": "BEADC1608X80N",
+"placed_sym": null
+},
+"T8": {
+"device": "TRANSFORMER FLAT COMPACT_15_XFM",
+"dev_sym": "XFMR500P3500X3050-16",
+"placed_sym": null
+},
+"C203": {
+"device": "CAP NP_0_CAPC1608_470PF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C186": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R163": {
+"device": "R_0_RESC3216_20KF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"C7": {
+"device": "CAP NP_0_CAPC3216_150PF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"T1": {
+"device": "TRANSFORMER FLAT COMPACT_12_XFM",
+"dev_sym": "XFMR185P838X721X550-8",
+"placed_sym": null
+},
+"J11": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"C60": {
+"device": "CAP NP_0_CAPC2012_1NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"D40": {
+"device": "DIODE_41_DIOM5639X245M_SMBJ400C",
+"dev_sym": "DIOM5639X245M",
+"placed_sym": null
+},
+"R240": {
+"device": "R_0_RESC2012_16.5KB",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"ZD4": {
+"device": "BAT54/SOT_3_DIOM3517X100N_PTVS3",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"J8": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"U24": {
+"device": "AMC3301_SOIC127P1030X265-16N__1",
+"dev_sym": "SOIC127P1030X265-16N",
+"placed_sym": null
+},
+"R148": {
+"device": "RESISTOR_RESC2012_60.4F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"D16": {
+"device": "DIODE_DIOM3517X100N_PMEG3020ER,",
+"dev_sym": "DIOM3517X100N",
+"placed_sym": null
+},
+"R75": {
+"device": "R_0_RESC1608_10F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C34": {
+"device": "CAP NP_0_CAPC3216_100NF",
+"dev_sym": "CAPC3216",
+"placed_sym": null
+},
+"C166": {
+"device": "CAP NP_0_CAPC2012_10NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R39": {
+"device": "R_0_RESC2012_2MF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C174": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R62": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R58": {
+"device": "R_0_RESC2012_680F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"J7": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"C197": {
+"device": "CAP NP_0_CAPC2012_100NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R8": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R213": {
+"device": "R_0_RESC1608_51F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R173": {
+"device": "R_0_RESC1608_47KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"J9": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"R204": {
+"device": "R_0_RESC1608_30KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C154": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"ISO1": {
+"device": "ELD207_SOIC127P585X318-8N_ELD20",
+"dev_sym": "SOIC127P585X318-8N",
+"placed_sym": null
+},
+"Q14": {
+"device": "2N7000_5_SOT254P1524X457-3N_IPB",
+"dev_sym": "SOT254P1524X457-3N",
+"placed_sym": null
+},
+"R69": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"D9": {
+"device": "DIODE_DIOM5639X245M_ER2G-L",
+"dev_sym": "DIOM5639X245M",
+"placed_sym": null
+},
+"R233": {
+"device": "R_0_RESC2012_10KB",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C78": {
+"device": "CAP NP_0_CAPC2012_10UF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"J2": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"R79": {
+"device": "R_0_RESC6432_200F",
+"dev_sym": "RESC6432",
+"placed_sym": null
+},
+"C54": {
+"device": "CAP NP_0_CAPRD1000W55D650T450_1",
+"dev_sym": "CAPRD1000W55D650T450",
+"placed_sym": null
+},
+"C50": {
+"device": "CAP NP_0_CAPRR1500W80L1800T10_1",
+"dev_sym": "CAPRR1500W80L1800T1000H1580",
+"placed_sym": null
+},
+"R283": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R166": {
+"device": "R_0_RESC1608_1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"J3": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"R295": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R20": {
+"device": "R_0_RESC2012_22F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"EC3": {
+"device": "CAP_CAPPRD750W80D1800H4000_HZ_6",
+"dev_sym": "CAPPRD750W80D1800H4000_HZ",
+"placed_sym": null
+},
+"R244": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C145": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C110": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C99": {
+"device": "CAP NP_0_CAPC2012_2.2UF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R183": {
+"device": "R_0_RESC3216_1MF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"C208": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C178": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C194": {
+"device": "CAP NP_0_CAPC2012_100NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R1": {
+"device": "R_0_RESC2012_680F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"L6": {
+"device": "BEAD_1_BEADC1608X80N_BLM18KG601",
+"dev_sym": "BEADC1608X80N",
+"placed_sym": null
+},
+"C155": {
+"device": "CAP NP_0_CAPC1608_1NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R40": {
+"device": "R_0_RESC2012_510F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"J15": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"L3": {
+"device": "BEAD_1_BEADC1608X80N_BLM18KG601",
+"dev_sym": "BEADC1608X80N",
+"placed_sym": null
+},
+"D15": {
+"device": "DIODE_DIOM5639X245M_ER2G-L",
+"dev_sym": "DIOM5639X245M",
+"placed_sym": null
+},
+"R147": {
+"device": "RESISTOR_RESC1608_1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C53": {
+"device": "CAP NP_0_CAPRR1500W80L1800T600H",
+"dev_sym": "CAPRR1500W80L1800T600H1200",
+"placed_sym": null
+},
+"R260": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"R130": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"J16": {
+"device": "JUMPER_6_250T-1_250T-1",
+"dev_sym": "250T-1",
+"placed_sym": null
+},
+"ISO5": {
+"device": "OPTO ISOLATOR-A_6_SOP254P1016X3",
+"dev_sym": "SOP254P1016X385-4N",
+"placed_sym": null
+},
+"C192": {
+"device": "CAP NP_0_CAPC2012_100NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R77": {
+"device": "R_0_RESC2012_10KF",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R150": {
+"device": "RESISTOR_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"U6": {
+"device": "HEF40106B_SOIC127P600X175-14N_H",
+"dev_sym": "SOIC127P600X175-14N",
+"placed_sym": null
+},
+"R118": {
+"device": "R_0_RESC1608_10KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C184": {
+"device": "CAP NP_0_CAPC1608_10NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C84": {
+"device": "CAP NP_0_CAPC2012_NC",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"F1": {
+"device": "FUSE_1_FUSC9830X305N_0678L9100-",
+"dev_sym": "FUSC9830X305N",
+"placed_sym": null
+},
+"EC8": {
+"device": "CAP_CAPPRD750W80D1800H4000_HZ_6",
+"dev_sym": "CAPPRD750W80D1800H4000_HZ",
+"placed_sym": null
+},
+"Q4": {
+"device": "IRF1010E/TO_13_SON127P508X590X1",
+"dev_sym": "SON127P508X590X120-8N",
+"placed_sym": null
+},
+"R18": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R61": {
+"device": "R_0_RESC2012_2F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R88": {
+"device": "R_0_RESC3216_680KF",
+"dev_sym": "RESC3216",
+"placed_sym": null
+},
+"C88": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"R116": {
+"device": "R_0_RESC1608_0F",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"L11": {
+"device": "INDUCTOR_2_INDC4532X280N_ACT45B",
+"dev_sym": "INDC4532X280N",
+"placed_sym": null
+},
+"R138": {
+"device": "R_0_RESC1608_47KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C92": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C135": {
+"device": "CAP NP_0_CAPC1608_10NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"C52": {
+"device": "CAP NP_0_CAPRR1500W80L1800T800H",
+"dev_sym": "CAPRR1500W80L1800T800H1400",
+"placed_sym": null
+},
+"C157": {
+"device": "CAP NP_0_CAPC1608_4.7NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"J24": {
+"device": "JUMPER_8_FGND_FGND",
+"dev_sym": "FGND",
+"placed_sym": null
+},
+"U15": {
+"device": "LM5156H_SOP65P640X120-15N_LM515",
+"dev_sym": "SOP65P640X120-15N",
+"placed_sym": null
+},
+"U10": {
+"device": "TLV9062_SOIC127P600X173-8N_TLV9",
+"dev_sym": "SOIC127P600X173-8N",
+"placed_sym": null
+},
+"R44": {
+"device": "R_0_RESC2012_6.65F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"R289": {
+"device": "R_0_RESC1608_1KF",
+"dev_sym": "RESC1608",
+"placed_sym": null
+},
+"C31": {
+"device": "CAP NP_0_CAPC2012_1NF",
+"dev_sym": "CAPC2012",
+"placed_sym": null
+},
+"R32": {
+"device": "R_0_RESC2012_1F",
+"dev_sym": "RESC2012",
+"placed_sym": null
+},
+"C113": {
+"device": "CAP NP_0_CAPC1608_100NF",
+"dev_sym": "CAPC1608",
+"placed_sym": null
+},
+"L7": {
+"device": "TRANSFORMER AIR CORE_7_INDRR185",
+"dev_sym": "INDRR1850X900W80L2400T1300H2300",
+"placed_sym": null
+},
+"J19": {
+"device": "HEADER 2_4_HDRV6W64P254_1X6_2.5",
+"dev_sym": "HDRV6W64P254_1X6",
+"placed_sym": null
+}
+}

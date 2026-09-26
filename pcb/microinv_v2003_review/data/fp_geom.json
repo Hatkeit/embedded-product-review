@@ -1,0 +1,1370 @@
+[
+{
+"sym": "250T-1",
+"n": 14,
+"refs": [
+"J12",
+"J1",
+"J13",
+"J14",
+"J4",
+"J6"
+],
+"npads": 2,
+"span_x": 5.3,
+"span_y": 0.0,
+"pitch_min": 5.3,
+"tht": 2,
+"drills": [
+[
+1.7,
+1.2
+]
+],
+"ring_min": 0.0,
+"padsizes": [
+"2.4x1.7 d1.7"
+]
+},
+{
+"sym": "BEADC1608X80N",
+"n": 7,
+"refs": [
+"L2",
+"L4",
+"L1",
+"L10",
+"L5",
+"L6"
+],
+"npads": 2,
+"span_x": 1.35,
+"span_y": 0.0,
+"pitch_min": 1.35,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.65x0.7"
+]
+},
+{
+"sym": "CAPC1608",
+"n": 101,
+"refs": [
+"C202",
+"C205",
+"C105",
+"C180",
+"C114",
+"C176"
+],
+"npads": 2,
+"span_x": 1.6,
+"span_y": 0.0,
+"pitch_min": 1.6,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.9x1.0"
+]
+},
+{
+"sym": "CAPC2012",
+"n": 34,
+"refs": [
+"C61",
+"C1",
+"C75",
+"C74",
+"C77",
+"C62"
+],
+"npads": 2,
+"span_x": 2.0,
+"span_y": 0.0,
+"pitch_min": 2.0,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.95x1.45"
+]
+},
+{
+"sym": "CAPC3216",
+"n": 46,
+"refs": [
+"C8",
+"C82",
+"C28",
+"C66",
+"C37",
+"C36"
+],
+"npads": 2,
+"span_x": 3.1,
+"span_y": 0.0,
+"pitch_min": 3.1,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.4x1.8"
+]
+},
+{
+"sym": "CAPC4532",
+"n": 1,
+"refs": [
+"C117"
+],
+"npads": 2,
+"span_x": 4.0,
+"span_y": 0.0,
+"pitch_min": 4.0,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"2.2x3.4"
+]
+},
+{
+"sym": "CAPPRD750W80D1800H4000_HZ",
+"n": 10,
+"refs": [
+"EC4",
+"EC1",
+"EC5",
+"EC7",
+"EC10",
+"EC2"
+],
+"npads": 2,
+"span_x": 0.0,
+"span_y": 7.5,
+"pitch_min": 7.5,
+"tht": 2,
+"drills": [
+[
+1.1,
+1.1
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.6x1.6 d1.1"
+]
+},
+{
+"sym": "CAPRD1000W55D650T450",
+"n": 1,
+"refs": [
+"C54"
+],
+"npads": 2,
+"span_x": 10.0,
+"span_y": 0.0,
+"pitch_min": 10.0,
+"tht": 2,
+"drills": [
+[
+0.85,
+0.85
+]
+],
+"ring_min": 0.175,
+"padsizes": [
+"1.2x1.2 d0.85"
+]
+},
+{
+"sym": "CAPRD1000W60D1200T500",
+"n": 3,
+"refs": [
+"C48",
+"C47",
+"C46"
+],
+"npads": 2,
+"span_x": 10.0,
+"span_y": 0.0,
+"pitch_min": 10.0,
+"tht": 2,
+"drills": [
+[
+0.85,
+0.85
+]
+],
+"ring_min": 0.175,
+"padsizes": [
+"1.2x1.2 d0.85"
+]
+},
+{
+"sym": "CAPRR1000W60L1300T400H900",
+"n": 1,
+"refs": [
+"C63"
+],
+"npads": 2,
+"span_x": 10.0,
+"span_y": 0.0,
+"pitch_min": 10.0,
+"tht": 2,
+"drills": [
+[
+0.85,
+0.85
+]
+],
+"ring_min": 0.175,
+"padsizes": [
+"1.2x1.2 d0.85"
+]
+},
+{
+"sym": "CAPRR1000W60L1300T500H1100",
+"n": 6,
+"refs": [
+"C70",
+"C57",
+"C4",
+"C69",
+"C49",
+"C24"
+],
+"npads": 2,
+"span_x": 10.0,
+"span_y": 0.0,
+"pitch_min": 10.0,
+"tht": 2,
+"drills": [
+[
+0.85,
+0.85
+]
+],
+"ring_min": 0.175,
+"padsizes": [
+"1.2x1.2 d0.85"
+]
+},
+{
+"sym": "CAPRR1500W80L1800T1000H1580",
+"n": 4,
+"refs": [
+"C164",
+"C51",
+"C162",
+"C50"
+],
+"npads": 2,
+"span_x": 15.0,
+"span_y": 0.0,
+"pitch_min": 15.0,
+"tht": 2,
+"drills": [
+[
+1.1,
+1.1
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.6x1.6 d1.1"
+]
+},
+{
+"sym": "CAPRR1500W80L1800T600H1200",
+"n": 2,
+"refs": [
+"C58",
+"C53"
+],
+"npads": 2,
+"span_x": 15.0,
+"span_y": 0.0,
+"pitch_min": 15.0,
+"tht": 2,
+"drills": [
+[
+1.1,
+1.1
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.6x1.6 d1.1"
+]
+},
+{
+"sym": "CAPRR1500W80L1800T800H1400",
+"n": 1,
+"refs": [
+"C52"
+],
+"npads": 2,
+"span_x": 15.0,
+"span_y": 0.0,
+"pitch_min": 15.0,
+"tht": 2,
+"drills": [
+[
+1.1,
+1.1
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.6x1.6 d1.1"
+]
+},
+{
+"sym": "CAPRR2750W80L3150T1800H2750",
+"n": 1,
+"refs": [
+"C56"
+],
+"npads": 2,
+"span_x": 27.5,
+"span_y": 0.0,
+"pitch_min": 27.5,
+"tht": 2,
+"drills": [
+[
+1.1,
+1.1
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.6x1.6 d1.1"
+]
+},
+{
+"sym": "DIOM2512X090N",
+"n": 5,
+"refs": [
+"D1",
+"D12",
+"D18",
+"D31",
+"D7"
+],
+"npads": 2,
+"span_x": 2.5,
+"span_y": 0.0,
+"pitch_min": 2.5,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.8x0.6"
+]
+},
+{
+"sym": "DIOM3517X100N",
+"n": 21,
+"refs": [
+"D5",
+"D37",
+"D38",
+"D17",
+"D10",
+"D21"
+],
+"npads": 2,
+"span_x": 2.8,
+"span_y": 0.0,
+"pitch_min": 2.8,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.2x1.2"
+]
+},
+{
+"sym": "DIOM3716X135N",
+"n": 1,
+"refs": [
+"D28"
+],
+"npads": 2,
+"span_x": 3.28,
+"span_y": 0.0,
+"pitch_min": 3.28,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.97x1.22"
+]
+},
+{
+"sym": "DIOM5329X245M",
+"n": 2,
+"refs": [
+"D26",
+"D25"
+],
+"npads": 2,
+"span_x": 4.05,
+"span_y": 0.0,
+"pitch_min": 4.05,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.78x2.16"
+]
+},
+{
+"sym": "DIOM5639X245M",
+"n": 7,
+"refs": [
+"D41",
+"D20",
+"TH1",
+"D4",
+"D40",
+"D9"
+],
+"npads": 2,
+"span_x": 4.3,
+"span_y": 0.0,
+"pitch_min": 4.3,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"2.5x2.3"
+]
+},
+{
+"sym": "DIOM8171X262N",
+"n": 2,
+"refs": [
+"D2",
+"D13"
+],
+"npads": 2,
+"span_x": 6.6,
+"span_y": 0.0,
+"pitch_min": 6.6,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"2.4x3.3"
+]
+},
+{
+"sym": "ESP32-S3-WROOM-1",
+"n": 1,
+"refs": [
+"U17"
+],
+"npads": 49,
+"span_x": 17.5,
+"span_y": 17.76,
+"pitch_min": 1.27,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.9x1.5",
+"0.9x0.9"
+]
+},
+{
+"sym": "FGND",
+"n": 5,
+"refs": [
+"J18",
+"J10",
+"J5",
+"J17",
+"J24"
+],
+"npads": 9,
+"span_x": 6.0,
+"span_y": 6.0,
+"pitch_min": 2.296,
+"tht": 9,
+"drills": [
+[
+0.8,
+0.8
+],
+[
+4.0,
+4.0
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.3x1.3 d0.8",
+"8.0x8.0 d4.0"
+]
+},
+{
+"sym": "FUSC9830X305N",
+"n": 2,
+"refs": [
+"F2",
+"F1"
+],
+"npads": 2,
+"span_x": 9.41,
+"span_y": 0.0,
+"pitch_min": 9.41,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"3.81x4.06"
+]
+},
+{
+"sym": "GDTAD800W100L1016",
+"n": 1,
+"refs": [
+"D27"
+],
+"npads": 2,
+"span_x": 10.16,
+"span_y": 0.0,
+"pitch_min": 10.16,
+"tht": 2,
+"drills": [
+[
+1.3,
+1.3
+]
+],
+"ring_min": 0.35,
+"padsizes": [
+"2.0x2.0 d1.3"
+]
+},
+{
+"sym": "HDRV10W64P254_2X5",
+"n": 1,
+"refs": [
+"J20"
+],
+"npads": 10,
+"span_x": 10.16,
+"span_y": 2.54,
+"pitch_min": 2.54,
+"tht": 10,
+"drills": [
+[
+1.15,
+1.15
+]
+],
+"ring_min": 0.275,
+"padsizes": [
+"1.7x1.7 d1.15"
+]
+},
+{
+"sym": "HDRV2W64P254_1X2",
+"n": 1,
+"refs": [
+"J23"
+],
+"npads": 2,
+"span_x": 2.54,
+"span_y": 0.0,
+"pitch_min": 2.54,
+"tht": 2,
+"drills": [
+[
+1.0,
+1.0
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.5x1.5 d1.0"
+]
+},
+{
+"sym": "HDRV3W64P254_1X3",
+"n": 1,
+"refs": [
+"J22"
+],
+"npads": 3,
+"span_x": 5.08,
+"span_y": 0.0,
+"pitch_min": 2.54,
+"tht": 3,
+"drills": [
+[
+1.0,
+1.0
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.5x1.5 d1.0"
+]
+},
+{
+"sym": "HDRV4W64P254_1X4",
+"n": 1,
+"refs": [
+"J21"
+],
+"npads": 4,
+"span_x": 7.62,
+"span_y": 0.0,
+"pitch_min": 2.54,
+"tht": 4,
+"drills": [
+[
+1.0,
+1.0
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.5x1.5 d1.0"
+]
+},
+{
+"sym": "HDRV6W64P254_1X6",
+"n": 1,
+"refs": [
+"J19"
+],
+"npads": 6,
+"span_x": 12.7,
+"span_y": 0.0,
+"pitch_min": 2.54,
+"tht": 6,
+"drills": [
+[
+1.0,
+1.0
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.5x1.5 d1.0"
+]
+},
+{
+"sym": "INDC4532X280N",
+"n": 1,
+"refs": [
+"L11"
+],
+"npads": 4,
+"span_x": 4.55,
+"span_y": 2.5,
+"pitch_min": 2.5,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.35x0.9"
+]
+},
+{
+"sym": "INDM7165X300N",
+"n": 1,
+"refs": [
+"L12"
+],
+"npads": 2,
+"span_x": 5.55,
+"span_y": 0.0,
+"pitch_min": 5.55,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.85x3.4"
+]
+},
+{
+"sym": "INDRR1850X900W80L2400T1300H2300",
+"n": 2,
+"refs": [
+"L8",
+"L7"
+],
+"npads": 4,
+"span_x": 18.5,
+"span_y": 9.0,
+"pitch_min": 9.0,
+"tht": 4,
+"drills": [
+[
+1.1,
+1.1
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.6x1.6 d1.1"
+]
+},
+{
+"sym": "QFN50P500X500X85-33N",
+"n": 1,
+"refs": [
+"U19"
+],
+"npads": 33,
+"span_x": 4.8,
+"span_y": 4.8,
+"pitch_min": 0.5,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.7x0.25",
+"0.25x0.7",
+"3.6x3.6"
+]
+},
+{
+"sym": "QFP40P1600X1600X160-128N",
+"n": 1,
+"refs": [
+"U16"
+],
+"npads": 128,
+"span_x": 15.25,
+"span_y": 15.25,
+"pitch_min": 0.4,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.65x0.3",
+"0.3x1.65"
+]
+},
+{
+"sym": "RESC1608",
+"n": 140,
+"refs": [
+"R172",
+"R274",
+"R222",
+"R214",
+"R141",
+"R114"
+],
+"npads": 2,
+"span_x": 1.6,
+"span_y": 0.0,
+"pitch_min": 1.6,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.9x1.0"
+]
+},
+{
+"sym": "RESC2012",
+"n": 96,
+"refs": [
+"R149",
+"R13",
+"R17",
+"R297",
+"R23",
+"R247"
+],
+"npads": 2,
+"span_x": 2.0,
+"span_y": 0.0,
+"pitch_min": 2.0,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.95x1.45"
+]
+},
+{
+"sym": "RESC3216",
+"n": 21,
+"refs": [
+"R85",
+"R102",
+"R86",
+"R182",
+"R98",
+"R84"
+],
+"npads": 2,
+"span_x": 3.1,
+"span_y": 0.0,
+"pitch_min": 3.1,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.4x1.8"
+]
+},
+{
+"sym": "RESC6432",
+"n": 23,
+"refs": [
+"R82",
+"R96",
+"R43",
+"R101",
+"R201",
+"R81"
+],
+"npads": 2,
+"span_x": 6.2,
+"span_y": 0.0,
+"pitch_min": 6.2,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"2.1x4.0"
+]
+},
+{
+"sym": "RLYRR2500X750L2900T1350H2650",
+"n": 1,
+"refs": [
+"LS1"
+],
+"npads": 6,
+"span_x": 25.0,
+"span_y": 7.5,
+"pitch_min": 5.0,
+"tht": 6,
+"drills": [
+[
+1.3,
+1.3
+]
+],
+"ring_min": 0.35,
+"padsizes": [
+"2.0x2.0 d1.3"
+]
+},
+{
+"sym": "SMD-4P_6X6",
+"n": 1,
+"refs": [
+"TSW1"
+],
+"npads": 4,
+"span_x": 9.1,
+"span_y": 4.5,
+"pitch_min": 4.5,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"2.1x1.4"
+]
+},
+{
+"sym": "SOIC127P1030X265-16N",
+"n": 2,
+"refs": [
+"U23",
+"U24"
+],
+"npads": 16,
+"span_x": 9.75,
+"span_y": 8.89,
+"pitch_min": 1.27,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.65x0.6"
+]
+},
+{
+"sym": "SOIC127P585X318-8N",
+"n": 1,
+"refs": [
+"ISO1"
+],
+"npads": 8,
+"span_x": 5.47,
+"span_y": 3.81,
+"pitch_min": 1.27,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.52x0.63"
+]
+},
+{
+"sym": "SOIC127P600X173-8N",
+"n": 5,
+"refs": [
+"U20",
+"U3",
+"U11",
+"U4",
+"U10"
+],
+"npads": 8,
+"span_x": 5.4,
+"span_y": 3.81,
+"pitch_min": 1.27,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.55x0.6"
+]
+},
+{
+"sym": "SOIC127P600X175-14N",
+"n": 1,
+"refs": [
+"U6"
+],
+"npads": 14,
+"span_x": 5.4,
+"span_y": 7.62,
+"pitch_min": 1.27,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.55x0.6"
+]
+},
+{
+"sym": "SON127P508X590X120-8N",
+"n": 9,
+"refs": [
+"Q5",
+"Q6",
+"Q2",
+"Q1",
+"Q8",
+"Q7"
+],
+"npads": 8,
+"span_x": 3.81,
+"span_y": 3.725,
+"pitch_min": 1.1,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.65x1.0",
+"0.95x4.55"
+]
+},
+{
+"sym": "SOP254P1016X385-4N",
+"n": 2,
+"refs": [
+"ISO4",
+"ISO5"
+],
+"npads": 4,
+"span_x": 9.2,
+"span_y": 2.54,
+"pitch_min": 2.54,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.3x1.5"
+]
+},
+{
+"sym": "SOP254P1016X385-6N",
+"n": 2,
+"refs": [
+"ISO3",
+"ISO2"
+],
+"npads": 6,
+"span_x": 9.0,
+"span_y": 5.08,
+"pitch_min": 2.54,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.3x1.5"
+]
+},
+{
+"sym": "SOP65P490X104-9N",
+"n": 2,
+"refs": [
+"U14",
+"U13"
+],
+"npads": 9,
+"span_x": 4.4,
+"span_y": 1.95,
+"pitch_min": 0.65,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.3x0.4",
+"1.75x2.05"
+]
+},
+{
+"sym": "SOP65P640X120-14N",
+"n": 2,
+"refs": [
+"U5",
+"U1"
+],
+"npads": 14,
+"span_x": 5.8,
+"span_y": 3.9,
+"pitch_min": 0.65,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.5x0.45"
+]
+},
+{
+"sym": "SOP65P640X120-15N",
+"n": 1,
+"refs": [
+"U15"
+],
+"npads": 15,
+"span_x": 5.8,
+"span_y": 3.9,
+"pitch_min": 0.65,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.5x0.45",
+"3.4x5.0"
+]
+},
+{
+"sym": "SOP65P640X120-8N",
+"n": 2,
+"refs": [
+"U22",
+"U21"
+],
+"npads": 8,
+"span_x": 5.8,
+"span_y": 1.95,
+"pitch_min": 0.65,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.5x0.45"
+]
+},
+{
+"sym": "SOT228P991X233-3M",
+"n": 3,
+"refs": [
+"D24",
+"Q12",
+"D23"
+],
+"npads": 3,
+"span_x": 4.6,
+"span_y": 6.655,
+"pitch_min": 4.6,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.6x3.0",
+"6.71x6.71"
+]
+},
+{
+"sym": "SOT254P1510X450-3N",
+"n": 4,
+"refs": [
+"D19",
+"D3",
+"D8",
+"D14"
+],
+"npads": 3,
+"span_x": 5.08,
+"span_y": 10.0,
+"pitch_min": 5.08,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"2.5x3.4",
+"10.8x9.6"
+]
+},
+{
+"sym": "SOT254P1524X457-3N",
+"n": 2,
+"refs": [
+"Q13",
+"Q14"
+],
+"npads": 3,
+"span_x": 5.08,
+"span_y": 9.15,
+"pitch_min": 5.08,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"4.6x1.35",
+"10.9x9.5"
+]
+},
+{
+"sym": "SOT65P210X110-6N",
+"n": 3,
+"refs": [
+"U9",
+"U7",
+"U8"
+],
+"npads": 6,
+"span_x": 1.3,
+"span_y": 1.84,
+"pitch_min": 0.65,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.3x0.66"
+]
+},
+{
+"sym": "SOT95P240X100-3N",
+"n": 8,
+"refs": [
+"D43",
+"U25",
+"Q11",
+"D44",
+"D42",
+"Q9"
+],
+"npads": 3,
+"span_x": 1.9,
+"span_y": 2.0,
+"pitch_min": 1.9,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.8x0.9"
+]
+},
+{
+"sym": "SOT95P264X112-3N",
+"n": 1,
+"refs": [
+"U27"
+],
+"npads": 3,
+"span_x": 1.9,
+"span_y": 2.1,
+"pitch_min": 1.9,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.6x1.3"
+]
+},
+{
+"sym": "SOT95P305X145-5N",
+"n": 1,
+"refs": [
+"U12"
+],
+"npads": 5,
+"span_x": 1.9,
+"span_y": 2.6,
+"pitch_min": 0.95,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"0.6x1.1"
+]
+},
+{
+"sym": "USB-C_16PIN",
+"n": 1,
+"refs": [
+"U18"
+],
+"npads": 22,
+"span_x": 8.64,
+"span_y": 4.77,
+"pitch_min": 0.3,
+"tht": 6,
+"drills": [
+[
+0.6,
+1.4
+],
+[
+0.6,
+1.7
+],
+[
+0.65,
+0.65
+]
+],
+"ring_min": -0.35,
+"padsizes": [
+"0.3x1.1",
+"0.65x0.65 d0.65",
+"1.0x2.1 d0.6",
+"1.0x1.8 d0.6"
+]
+},
+{
+"sym": "VARRD750W80L1650T750H2000",
+"n": 5,
+"refs": [
+"RV1",
+"RV3",
+"RV2",
+"RV5",
+"RV4"
+],
+"npads": 2,
+"span_x": 7.5,
+"span_y": 0.0,
+"pitch_min": 7.5,
+"tht": 2,
+"drills": [
+[
+1.1,
+1.1
+]
+],
+"ring_min": 0.25,
+"padsizes": [
+"1.6x1.6 d1.1"
+]
+},
+{
+"sym": "XFMR185P838X721X550-8",
+"n": 4,
+"refs": [
+"T7",
+"T3",
+"T5",
+"T1"
+],
+"npads": 8,
+"span_x": 7.11,
+"span_y": 5.23,
+"pitch_min": 1.85,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"1.52x1.27",
+"3.05x2.54"
+]
+},
+{
+"sym": "XFMR500P2750X1850-12",
+"n": 1,
+"refs": [
+"T9"
+],
+"npads": 12,
+"span_x": 27.5,
+"span_y": 25.0,
+"pitch_min": 5.0,
+"tht": 12,
+"drills": [
+[
+1.6,
+1.6
+]
+],
+"ring_min": 0.5,
+"padsizes": [
+"2.6x2.6 d1.6"
+]
+},
+{
+"sym": "XFMR500P3500X3050-16",
+"n": 4,
+"refs": [
+"T6",
+"T2",
+"T4",
+"T8"
+],
+"npads": 16,
+"span_x": 35.0,
+"span_y": 35.0,
+"pitch_min": 5.0,
+"tht": 16,
+"drills": [
+[
+1.6,
+1.6
+]
+],
+"ring_min": 0.5,
+"padsizes": [
+"2.6x2.6 d1.6"
+]
+},
+{
+"sym": "XTALCC5032X130N",
+"n": 1,
+"refs": [
+"Y1"
+],
+"npads": 2,
+"span_x": 4.0,
+"span_y": 0.0,
+"pitch_min": 4.0,
+"tht": 0,
+"drills": [],
+"ring_min": null,
+"padsizes": [
+"2.0x2.4"
+]
+}
+]
