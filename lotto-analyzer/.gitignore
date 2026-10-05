@@ -1,0 +1,5 @@
+__pycache__/
+build/_test/
+build/_layout.xlsx
+*.tmp
+.~lock.*
