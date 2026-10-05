@@ -126,6 +126,11 @@ GUIDE = [
     ("  → 추천 조합끼리 공통번호가 [설정] C8 개수를 넘지 않도록 위에서부터 고릅니다.", None),
     ("  → [설정] C10 = Y 이면 이미 1등으로 나왔던 조합은 제외합니다.", None),
     ("가중치는 [설정] C13~C22에서 바꿀 수 있습니다. (0 = 해당 항목 미반영)", None),
+    ("", None),
+    ("■ 매크로(버튼)가 안 보일 때", BOLD),
+    ("1. Alt+F11 로 VBA 편집기 열기 → 파일 → 파일 가져오기 → LottoAnalyzer.bas 선택", None),
+    ("2. 왼쪽 목록의 ThisWorkbook 더블클릭 → ThisWorkbook_code.txt 내용 붙여넣기", None),
+    ("3. 다른 이름으로 저장 → 'Excel 매크로 사용 통합 문서 (*.xlsm)' 로 저장", None),
 ]
 
 WEIGHTS = [
