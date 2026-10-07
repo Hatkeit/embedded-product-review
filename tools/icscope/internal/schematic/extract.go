@@ -270,6 +270,8 @@ func pageTexts(pc *pdf.PageContent) []*text {
 }
 
 type pinRec struct {
+	ref   string
+	idx   int
 	s     seg
 	net   int // union-find id, -1 none
 	body  int
@@ -286,6 +288,7 @@ type extracted struct {
 	bodies []rect
 	items  [][]rect
 	texts  []*text
+	bsegs  []seg // orange body line segments (symbol drawing)
 }
 
 const tol = 1.2
@@ -294,6 +297,7 @@ func extractPage(pc *pdf.PageContent) *extracted {
 	var wires, pins, black []seg
 	var junc []pt
 	var bodyItems []rect
+	var bsegs []seg
 	for _, p := range pc.Paths {
 		var c, f *pdf.RGB
 		if p.Stroke {
@@ -316,6 +320,7 @@ func extractPage(pc *pdf.PageContent) *extracted {
 					pins = append(pins, s)
 				case is(c, cOrange) || is(f, cOrange):
 					bodyItems = append(bodyItems, s.rect())
+					bsegs = append(bsegs, s)
 				case is(c, cBlack) || is(f, cBlack):
 					if s.length() < 30 {
 						black = append(black, s)
@@ -440,6 +445,7 @@ func extractPage(pc *pdf.PageContent) *extracted {
 	}
 	// bodies: cluster orange items
 	e.bodies, e.items = cluster(bodyItems, 2.5)
+	e.bsegs = bsegs
 	e.texts = pageTexts(pc)
 	e.labels()
 	return e

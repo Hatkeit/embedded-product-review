@@ -55,6 +55,7 @@ func classify(s string) string {
 }
 
 type comp struct {
+	recs  []*pinRec
 	ref   string
 	lines []string
 	body  int
@@ -63,6 +64,7 @@ type comp struct {
 }
 
 type pageResult struct {
+	bodies   []rect
 	comps    map[string]*comp
 	netNames map[int][]string
 	pinNets  [][2]interface{}
@@ -332,7 +334,7 @@ func buildPage(pc *pdf.PageContent) *pageResult {
 			}
 		}
 	}
-	res := &pageResult{comps: comps, netNames: netNames, e: e}
+	res := &pageResult{comps: comps, netNames: netNames, e: e, bodies: bodies}
 	near := func(p pt, r rect) float64 { return rectDist(ptRect(p), r) }
 	for _, pr := range e.pins {
 		ep := pr.inner
@@ -401,7 +403,9 @@ func buildPage(pc *pdf.PageContent) *pageResult {
 			continue
 		}
 		res.pinNets = append(res.pinNets, [2]interface{}{ref, netID})
+		pr.ref = ref
 		comps[ref].pins = append(comps[ref].pins, netlist.Pin{Num: pr.num, Name: pr.name, Net: strconv.Itoa(netID)})
+		comps[ref].recs = append(comps[ref].recs, pr)
 	}
 	return res
 }
@@ -413,6 +417,60 @@ func contains(s []string, x string) bool {
 		}
 	}
 	return false
+}
+
+// Geometry of a schematic page for interactive display.
+type GPin struct {
+	Idx    int        `json:"i"` // index into the netlist part's Pins
+	Num    string     `json:"num"`
+	Name   string     `json:"name,omitempty"`
+	Net    string     `json:"net"`
+	X1, Y1 float64    `json:"-"`
+	X2, Y2 float64    `json:"-"`
+	IX, IY float64    `json:"-"`
+	Seg    [4]float64 `json:"seg"`
+	Inner  [2]float64 `json:"inner"`
+}
+
+type GPart struct {
+	Ref   string       `json:"ref"`
+	Base  string       `json:"base"`
+	Body  [4]float64   `json:"body"`
+	Text  [4]float64   `json:"text"`
+	Lines []string     `json:"lines,omitempty"`
+	Pins  []GPin       `json:"pins"`
+	Diag  [][4]float64 `json:"diag,omitempty"`
+}
+
+type GWire struct {
+	X1, Y1, X2, Y2 float64    `json:"-"`
+	Seg            [4]float64 `json:"seg"`
+	Net            string     `json:"net"`
+	Kind           string     `json:"k"`
+}
+
+type PageGeo struct {
+	Page  int     `json:"page"`
+	W, H  float64 `json:"-"`
+	Parts []GPart `json:"parts"`
+	Wires []GWire `json:"wires"`
+}
+
+func box(r rect) [4]float64 { return [4]float64{r.x0, r.y0, r.x1, r.y1} }
+
+// Finish fills the JSON coordinate fields.
+func (g *PageGeo) Finish() {
+	for i := range g.Wires {
+		w := &g.Wires[i]
+		w.Seg = [4]float64{w.X1, w.Y1, w.X2, w.Y2}
+	}
+	for i := range g.Parts {
+		for k := range g.Parts[i].Pins {
+			p := &g.Parts[i].Pins[k]
+			p.Seg = [4]float64{p.X1, p.Y1, p.X2, p.Y2}
+			p.Inner = [2]float64{p.IX, p.IY}
+		}
+	}
 }
 
 // Detect reports whether a page looks like an OrCAD Capture export.
@@ -438,6 +496,7 @@ var reSection = regexp.MustCompile(`^((?:U|IC|ISO)\d+)([A-H])$`)
 // across pages by name (power symbols, ports, off-page connectors).
 func FromPDF(d *Doc) (*netlist.Netlist, error) {
 	r := d.R
+	d.Geo = map[int]*PageGeo{}
 	nl := netlist.New(d.Name, "pdf")
 	var notes []string
 	type key struct{ page, id int }
@@ -473,6 +532,7 @@ func FromPDF(d *Doc) (*netlist.Netlist, error) {
 		}
 		pages++
 		res := buildPage(pc)
+		geo := &PageGeo{Page: i, W: pc.Width, H: pc.Height}
 		for id, ns := range res.netNames {
 			k := fmt.Sprintf("%d:%d", i, id)
 			for _, n := range ns {
@@ -499,16 +559,50 @@ func FromPDF(d *Doc) (*netlist.Netlist, error) {
 			if len(p.Lines) == 0 {
 				p.Lines = c.lines
 			}
-			for _, pin := range c.pins {
-				dupe := false
-				for _, q := range p.Pins {
-					if q.Num == pin.Num && pin.Num != "" && q.Name == pin.Name && q.Net == fmt.Sprintf("%d:%s", i, pin.Net) {
-						dupe = true
+			gp := GPart{Ref: ref, Base: base, Text: box(c.sbb), Lines: c.lines}
+			if c.body >= 0 && c.body < len(res.bodies) {
+				b := res.bodies[c.body]
+				gp.Body = box(b)
+				for _, sg := range res.e.bsegs {
+					if rectDist(sg.rect(), b) < 0.2 && !sg.axis() {
+						gp.Diag = append(gp.Diag, [4]float64{sg.x1, sg.y1, sg.x2, sg.y2})
 					}
 				}
-				if dupe {
+			} else {
+				gp.Body = gp.Text
+			}
+			for k, pin := range c.pins {
+				dupe := -1
+				for qi, q := range p.Pins {
+					if q.Num != pin.Num || pin.Num == "" || pin.Num == "?" || q.Name != pin.Name {
+						continue
+					}
+					// the same pin drawn on two sections (U2A/U2B power pins),
+					// or an identical repeat on the same net
+					if base != ref || q.Net == fmt.Sprintf("%d:%s", i, pin.Net) {
+						dupe = qi
+					}
+				}
+				pr := c.recs[k]
+				raw := ""
+				if pin.Net != "-1" {
+					raw = fmt.Sprintf("%d:%s", i, pin.Net)
+				}
+				g := GPin{Num: pin.Num, Name: pin.Name, Net: raw, X1: pr.s.x1, Y1: pr.s.y1, X2: pr.s.x2, Y2: pr.s.y2, IX: pr.inner.x, IY: pr.inner.y}
+				if dupe >= 0 {
+					g.Idx = dupe
+					if raw != "" {
+						if p.Pins[dupe].Net == "" {
+							p.Pins[dupe].Net = raw
+						} else {
+							join(p.Pins[dupe].Net, raw) // same pin drawn on two sections
+						}
+					}
+					gp.Pins = append(gp.Pins, g)
 					continue
 				}
+				g.Idx = len(p.Pins)
+				gp.Pins = append(gp.Pins, g)
 				if pin.Net == "-1" {
 					pin.Net = ""
 				} else {
@@ -517,7 +611,13 @@ func FromPDF(d *Doc) (*netlist.Netlist, error) {
 				}
 				p.Pins = append(p.Pins, pin)
 			}
+			geo.Parts = append(geo.Parts, gp)
 		}
+		for k, sg := range res.e.segs {
+			geo.Wires = append(geo.Wires, GWire{X1: sg.x1, Y1: sg.y1, X2: sg.x2, Y2: sg.y2, Net: fmt.Sprintf("%d:%d", i, res.e.u.f(k)), Kind: string(res.e.kinds[k])})
+			find(geo.Wires[len(geo.Wires)-1].Net)
+		}
+		d.Geo[i] = geo
 		if res.unassign > 0 {
 			notes = append(notes, fmt.Sprintf("p.%d: 부품에 귀속하지 못한 핀 %d개", i+1, res.unassign))
 		}
@@ -553,6 +653,22 @@ func FromPDF(d *Doc) (*netlist.Netlist, error) {
 	for i, r := range roots {
 		label[r] = fmt.Sprintf("N%03d", i+1)
 	}
+	for _, g := range d.Geo {
+		for k := range g.Wires {
+			r := find(g.Wires[k].Net)
+			if label[r] == "" {
+				label[r] = fmt.Sprintf("W%03d", len(label)+1)
+			}
+			g.Wires[k].Net = label[r]
+		}
+		for pi := range g.Parts {
+			for k := range g.Parts[pi].Pins {
+				if n := g.Parts[pi].Pins[k].Net; n != "" {
+					g.Parts[pi].Pins[k].Net = label[find(n)]
+				}
+			}
+		}
+	}
 	for _, p := range nl.Parts {
 		for k := range p.Pins {
 			if p.Pins[k].Net != "" {
@@ -563,6 +679,9 @@ func FromPDF(d *Doc) (*netlist.Netlist, error) {
 			}
 		}
 		p.Value = pickValue(p.Lines)
+	}
+	for _, g := range d.Geo {
+		g.Finish()
 	}
 	nl.Notes = append(notes, fmt.Sprintf("회로도 PDF 에서 그림 색상으로 복원한 넷리스트입니다(%d페이지). 핀 귀속·넷 이름은 추정이므로 원본 회로도로 확인하세요.", pages))
 	nl.Index()

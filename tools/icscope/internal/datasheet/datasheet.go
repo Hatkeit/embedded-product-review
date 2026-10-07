@@ -48,6 +48,7 @@ type Datasheet struct {
 	Pages    int      `json:"pages"`
 	TextLess bool     `json:"textLess"`
 	Notes    []string `json:"notes,omitempty"`
+	Text     string   `json:"-"` // text of the first pages (model hints)
 }
 
 var classes = []struct {
@@ -80,7 +81,7 @@ var specDefs = []struct {
 	{"bw", "대역폭(-3 dB)", regexp.MustCompile(`(?i)bandwidth`), regexp.MustCompile(`(?i)gain[- ]bandwidth|unity`)},
 	{"sr", "슬루율", regexp.MustCompile(`(?i)slew rate|\bSR\b`), nil},
 	{"aol", "개루프 이득", regexp.MustCompile(`(?i)open[- ]loop (voltage )?gain|\bAOL\b`), nil},
-	{"gain", "이득", regexp.MustCompile(`(?i)^gain$|^G\b`), nil},
+	{"gain", "이득", regexp.MustCompile(`(?i)^gain$|^G\b|nominal gain|^gain\b`), regexp.MustCompile(`(?i)error|drift|nonlinearity|bandwidth`)},
 	{"gain_err", "이득 오차", regexp.MustCompile(`(?i)gain error`), regexp.MustCompile(`(?i)drift|temperature`)},
 	{"cmrr", "CMRR", regexp.MustCompile(`(?i)common[- ]mode rejection|\bCMRR\b`), nil},
 	{"psrr", "PSRR", regexp.MustCompile(`(?i)power[- ]supply rejection|\bPSRR\b|\bkSVR\b`), nil},
@@ -91,6 +92,14 @@ var specDefs = []struct {
 	{"tpd", "전파 지연", regexp.MustCompile(`(?i)propagation delay|\btPD\b|\btPLH\b|\btPHL\b|\btd\(on\)`), nil},
 	{"vhys", "히스테리시스", regexp.MustCompile(`(?i)hysteresis|\bVHYS\b|\bΔVT\b`), regexp.MustCompile(`(?i)thermal|UVLO|lockout|undervoltage`)},
 	{"vt", "입력 문턱 전압", regexp.MustCompile(`(?i)positive[- ]going|negative[- ]going|input (high |low )?(voltage )?threshold|logic threshold|^VT[+-]|^VI[HL]\b`), regexp.MustCompile(`(?i)UVLO|lockout|undervoltage|DCDC|overvoltage`)},
+	{"vtp", "상승 입력 문턱 (VT+)", regexp.MustCompile(`(?i)positive[- ]going|^VT\+|^VIH\b|input high threshold|logic.?high input threshold`), regexp.MustCompile(`(?i)UVLO|lockout|undervoltage|DCDC|overvoltage`)},
+	{"vtn", "하강 입력 문턱 (VT−)", regexp.MustCompile(`(?i)negative[- ]going|^VT[-−–]|^VIL\b|input low threshold|logic.?low input threshold`), regexp.MustCompile(`(?i)UVLO|lockout|undervoltage|DCDC|overvoltage`)},
+	{"vf", "순방향 전압", regexp.MustCompile(`(?i)forward voltage|^VF\b|^V_F\b`), regexp.MustCompile(`(?i)recovery|temperature|coefficient`)},
+	{"vbr", "항복/역전압", regexp.MustCompile(`(?i)breakdown voltage|zener voltage|reverse stand-?off|working peak reverse|^V\(?BR\)?|^VZ\b|^VRWM\b|repetitive peak reverse voltage|^VRRM\b`), regexp.MustCompile(`(?i)gate|drain-source breakdown`)},
+	{"vgsth", "게이트 문턱 전압", regexp.MustCompile(`(?i)gate threshold voltage|^VGS\(?th\)?|^V_?GS\(th\)`), nil},
+	{"rdson", "온저항 RDS(on)", regexp.MustCompile(`(?i)drain[- ]source on[- ]state resistance|on[- ]resistance|^RDS\(?on\)?`), regexp.MustCompile(`(?i)temperature|coefficient|gate|insulation|isolation`)},
+	{"ctr", "전류 전달비 (CTR)", regexp.MustCompile(`(?i)current transfer ratio|^CTR\b`), nil},
+	{"vcmout", "출력 동상 전압", regexp.MustCompile(`(?i)output common[- ]mode voltage|^VCMout|^VCM\s*out`), nil},
 	{"iq", "소비 전류", regexp.MustCompile(`(?i)quiescent current|supply current|\bIQ\b|\bIDD\b|\bICC\b`), nil},
 	{"vs", "전원 전압 범위", regexp.MustCompile(`(?i)supply voltage|operating (supply )?voltage|power supply|^VDD\b|^VCC\b|^VS$|^V\+`), regexp.MustCompile(`(?i)rejection|current|UVLO|lockout|regulation|undervoltage|threshold|ripple`)},
 	{"vout", "출력 전압", regexp.MustCompile(`(?i)output voltage$|initial accuracy|\bVOUT\b`), regexp.MustCompile(`(?i)swing|noise|high|low`)},
@@ -142,6 +151,7 @@ func Analyze(name string, b []byte) (*Datasheet, error) {
 		ds.TextLess = true
 		ds.Notes = append(ds.Notes, "텍스트가 거의 없는 PDF입니다(스캔 이미지로 보임). 사양 추출이 불가능합니다.")
 	}
+	ds.Text = firstText
 	ds.Title, ds.Parts = titleAndParts(firstLines, name)
 	ds.Class, ds.ClassKo = classify(ds.Title + "\n" + firstText)
 	ds.Specs = pickSpecs(ds.Rows)

@@ -23,6 +23,7 @@ type Doc struct {
 	pages map[int]*pdf.PageContent
 	texts map[int][]*text
 	OrCAD bool
+	Geo   map[int]*PageGeo
 }
 
 func NewDoc(name string, r *pdf.Reader) *Doc {

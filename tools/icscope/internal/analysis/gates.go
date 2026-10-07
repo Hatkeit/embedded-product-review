@@ -202,3 +202,12 @@ func tagOf(name string) string {
 	}
 	return strings.Trim(n, "AY_")
 }
+
+// GatesOf exposes the section pin assignment for other packages.
+func GatesOf(p *netlist.Part, class string) []Gate { return gatesOf(p, class) }
+
+// PinRole classifies a pin name: "in+", "in-", "out", "v+", "v-", "in" or "".
+func PinRole(name string) string { return pinRole(name) }
+
+// RailVolts guesses a supply voltage from a net name (3V3, VCC_12V0 …).
+func RailVolts(net string) (float64, bool) { return railVolts(net) }
