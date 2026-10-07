@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ICScope</title>
+<style>
+:root{
+  --bg:#f6f7f9; --panel:#fff; --ink:#1d2330; --muted:#5d6676; --line:#dfe3ea; --accent:#2457c5; --accent-soft:#e8eefb;
+  --warn:#a15c00; --warn-bg:#fff4e0; --bad:#b3261e; --bad-bg:#fdecea; --ok:#1d7a3a; --ok-bg:#e7f5ec; --sug:#245c9e; --sug-bg:#eaf2fc;
+  --mono:ui-monospace,SFMono-Regular,Consolas,"D2Coding",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#14171c;--panel:#1d2128;--ink:#e6e9ef;--muted:#9aa3b2;--line:#323844;--accent:#7aa2ff;--accent-soft:#25304a;
+  --warn:#f0b35a;--warn-bg:#3a2e1a;--bad:#ff8a80;--bad-bg:#3d2020;--ok:#7fd69a;--ok-bg:#1c3324;--sug:#9cc3ff;--sug-bg:#1f2b3d;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 "Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif}
+header{display:flex;align-items:center;gap:12px;padding:10px 20px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header h1{font-size:17px;margin:0}
+header .sub{color:var(--muted);font-size:12.5px}
+header .sp{flex:1}
+button{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:5px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.small{padding:2px 8px;font-size:12.5px}
+main{max-width:1320px;margin:0 auto;padding:16px 20px 60px}
+#drop{border:2px dashed var(--line);border-radius:10px;background:var(--panel);padding:18px;text-align:center;color:var(--muted);transition:.15s}
+#drop.over{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+#drop b{color:var(--ink)}
+.files{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font-size:12.5px}
+.chip .x{cursor:pointer;color:var(--muted)}
+.chip.k-sch{border-color:#7a5cc5}.chip.k-pst{border-color:#1d7a3a}.chip.k-ds{border-color:var(--accent)}
+nav.tabs{display:flex;gap:4px;margin:16px 0 10px;border-bottom:1px solid var(--line)}
+nav.tabs button{border:none;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 14px;color:var(--muted)}
+nav.tabs button.on{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.muted{color:var(--muted)}
+.note{padding:8px 12px;border-radius:8px;margin:6px 0;font-size:13.5px}
+.note.warn{background:var(--warn-bg);color:var(--warn)}
+.note.bad{background:var(--bad-bg);color:var(--bad)}
+.note.info{background:var(--accent-soft)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.card-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.card-h .ref{font-weight:700;font-size:16px}
+.card-b{padding:10px 14px}
+.badge{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;background:var(--accent-soft);color:var(--accent)}
+.badge.cmp{background:#f3e8ff;color:#7a3db8}.badge.inv{background:#e6f6f4;color:#11766a}.badge.unused{background:var(--line);color:var(--muted)}
+@media (prefers-color-scheme: dark){.badge.cmp{background:#33244a;color:#d6b4ff}.badge.inv{background:#173330;color:#7fe0d2}}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:4px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;background:var(--bg);position:sticky;top:0}
+td.num{font-family:var(--mono);white-space:nowrap}
+.mono{font-family:var(--mono);font-size:12.5px}
+ul.calc{margin:6px 0;padding-left:18px}
+ul.calc li{margin:2px 0}
+.list{margin:6px 0;padding:0;list-style:none}
+.list li{padding:5px 10px;border-radius:6px;margin:4px 0}
+.list.w li{background:var(--warn-bg);color:var(--warn)}
+.list.s li{background:var(--sug-bg);color:var(--sug)}
+.members{font-size:12.5px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:900px){.grid2{grid-template-columns:1fr}}
+.empty{color:var(--muted);text-align:center;padding:40px 10px}
+input[type=search],select{font:inherit;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
+details>summary{cursor:pointer;color:var(--accent);margin:6px 0}
+.scroll{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:6px}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:20}
+#modal .box{background:var(--panel);border-radius:10px;width:min(1200px,96vw);height:min(820px,92vh);display:flex;flex-direction:column;overflow:hidden}
+#modal .bar{display:flex;gap:8px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line)}
+#modal .view{flex:1;overflow:hidden;background:#fff;cursor:grab;position:relative}
+#modal .view svg{width:100%;height:100%;display:block}
+#log{font-family:var(--mono);font-size:12px;white-space:pre-wrap;max-height:200px;overflow:auto;color:var(--muted)}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:2px 12px;font-size:13px}
+.kv div:nth-child(odd){color:var(--muted)}
+.cmp-sel label{margin-right:12px;white-space:nowrap}
+</style>
+</head>
+<body>
+<header>
+  <h1>ICScope</h1>
+  <span class="sub">Op-amp · 비교기 · 인버터 — 데이터시트 사양 추출 / 회로 형태 분석 / IC 대체 검토</span>
+  <span class="sp"></span>
+  <span class="sub" id="ver"></span>
+  <button id="btnClear" class="small">모두 비우기</button>
+  <button id="btnQuit" class="small">종료</button>
+</header>
+<main>
+  <div id="drop">
+    <div><b>PDF 또는 OrCAD 넷리스트 파일을 여기로 끌어다 놓으세요</b> (여러 개 동시 가능)</div>
+    <div style="margin-top:4px">데이터시트 PDF · 회로도 PDF · <span class="mono">pstxnet.dat / pstxprt.dat / pstchip.dat</span></div>
+    <div style="margin-top:8px"><button class="primary" id="btnPick">파일 선택…</button><input type="file" id="file" multiple accept=".pdf,.dat,.txt" hidden></div>
+    <div id="busy" class="muted" style="margin-top:8px;display:none">처리 중…</div>
+  </div>
+  <div class="files" id="files"></div>
+
+  <nav class="tabs">
+    <button data-tab="circuit" class="on">회로 분석</button>
+    <button data-tab="ds">데이터시트</button>
+    <button data-tab="cmp">사양 비교</button>
+    <button data-tab="help">사용법·한계</button>
+  </nav>
+
+  <section id="tab-circuit"></section>
+  <section id="tab-ds" hidden></section>
+  <section id="tab-cmp" hidden></section>
+  <section id="tab-help" hidden>
+    <div class="panel">
+      <h3 style="margin-top:0">넣을 수 있는 파일</h3>
+      <ul>
+        <li><b>데이터시트 PDF</b> — 전기적 특성 표(MIN/TYP/MAX/UNIT)에서 오프셋·GBW·슬루율·CMRR·전원 범위 등 핵심 사양과 핀 표를 뽑습니다. 값마다 <b>페이지 번호와 표 이름</b>을 같이 보여주니 원문과 대조하세요.</li>
+        <li><b>OrCAD 넷리스트</b> (<span class="mono">pstxnet.dat</span> 필수, <span class="mono">pstxprt.dat·pstchip.dat</span> 권장) — 연결이 정확합니다. 회로 분석은 이 경로가 가장 신뢰할 수 있습니다.</li>
+        <li><b>회로도 PDF</b> — OrCAD Capture 기본 색상(배선 파랑, 핀 갈색, 접속점 빨강)으로 내보낸 PDF는 그림에서 넷리스트를 복원합니다(<b>추정</b>). 다른 CAD의 PDF는 부품 목록만 읽습니다. 넷리스트와 회로도 PDF를 같이 넣으면 분석은 넷리스트로 하고, 회로도는 <b>“회로도 보기”</b> 확대 화면에 씁니다.</li>
+      </ul>
+      <h3>분석 내용</h3>
+      <ul>
+        <li>Op-amp·비교기·로직 인버터를 품번(및 IN+/IN−/OUT 핀 이름)으로 찾아 섹션별로 팔로워·반전·비반전·차동·비교기(히스테리시스)·미사용을 판정하고, 이득·필터 극·분압비·히스테리시스를 계산합니다.</li>
+        <li>션트 전류 검출 차동증폭기는 전류감지 증폭기 IC로, ADC 앞 버퍼는 분압 직결/MCU 내장 OPAMP로, 비교기는 MCU 내장 COMP로, MCU 신호를 뒤집는 인버터는 극성 설정으로 대체할 수 있는지 제안합니다.</li>
+        <li>STM32G474 계열 MCU 핀은 ST 핀 데이터로 ADC/COMP/OPAMP 기능을 함께 표시합니다.</li>
+        <li>넷 이름 <span class="mono">NC</span> 에 여러 핀이 묶인 경우처럼 분석 중 보이는 넷리스트 문제도 알려줍니다.</li>
+      </ul>
+      <h3>한계</h3>
+      <ul>
+        <li>모든 결과는 <b>규칙 기반 추출</b>입니다. 판정·계산 근거(부품·넷·페이지)를 같이 보여주니 설계 결정 전에 원문으로 확인하세요.</li>
+        <li>스캔(이미지) PDF는 글자가 없어 읽지 못합니다.</li>
+        <li>데이터시트 표 구조가 특이하면 값이 다른 열로 들어갈 수 있습니다. “추출된 표 행 전체”에서 원 행을 확인할 수 있습니다.</li>
+        <li>제안은 회로 형태에 따른 일반 대안입니다. 대체 IC의 공통모드 범위·대역·정밀도는 해당 데이터시트로 확인해야 합니다.</li>
+      </ul>
+      <p class="muted">모든 처리는 이 PC 안에서만 이뤄지며 인터넷 연결을 쓰지 않습니다.</p>
+    </div>
+    <div class="panel"><b>처리 기록</b><div id="log"></div></div>
+  </section>
+</main>
+
+<div id="modal"><div class="box">
+  <div class="bar"><b id="mTitle"></b><span class="muted" id="mSub"></span><span style="flex:1"></span>
+    <button class="small" id="mIn">확대 +</button><button class="small" id="mOut">축소 −</button><button class="small" id="mFit">전체</button><button class="small" id="mClose">닫기</button></div>
+  <div class="view" id="mView"></div>
+</div></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S = {};             // server state
+let filt = {cls:'all', hideUnused:false, q:''};
+let cmpSel = new Set();
+
+async function api(path, opts){ const r = await fetch(path, opts); if(!r.ok) throw new Error(await r.text()); return r.json(); }
+async function refresh(){ S = await api('/api/state'); render(); }
+
+// ---------- import ----------
+const drop = $('#drop');
+['dragenter','dragover'].forEach(e => drop.addEventListener(e, ev => {ev.preventDefault(); drop.classList.add('over');}));
+['dragleave','drop'].forEach(e => drop.addEventListener(e, ev => {ev.preventDefault(); drop.classList.remove('over');}));
+drop.addEventListener('drop', ev => upload(ev.dataTransfer.files));
+document.addEventListener('dragover', ev => ev.preventDefault());
+document.addEventListener('drop', ev => { ev.preventDefault(); if(!drop.contains(ev.target)) upload(ev.dataTransfer.files); });
+$('#btnPick').onclick = () => $('#file').click();
+$('#file').onchange = ev => upload(ev.target.files);
+async function upload(files){
+  if(!files || !files.length) return;
+  const fd = new FormData();
+  for(const f of files) fd.append('file', f, f.name);
+  $('#busy').style.display = 'block';
+  $('#busy').textContent = `처리 중… (${files.length}개 파일)`;
+  try{
+    const r = await api('/api/import', {method:'POST', body:fd});
+    $('#busy').textContent = (r.messages||[]).join(' · ');
+    setTimeout(()=>{$('#busy').style.display='none'}, 6000);
+  }catch(e){ $('#busy').textContent = '오류: ' + e.message; }
+  $('#file').value = '';
+  await refresh();
+}
+async function removeItem(kind, id){ await api(`/api/remove?kind=${kind}&id=${id||''}`, {method:'POST'}); cmpSel.delete(id); refresh(); }
+$('#btnClear').onclick = () => { if(confirm('불러온 파일을 모두 비울까요?')) removeItem('all'); };
+$('#btnQuit').onclick = async () => { if(!confirm('ICScope 를 종료할까요?')) return; await api('/api/quit',{method:'POST'}); document.body.innerHTML = '<main><div class="panel">ICScope 가 종료되었습니다. 이 탭을 닫으세요.</div></main>'; };
+
+document.querySelectorAll('nav.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('nav.tabs button').forEach(x => x.classList.toggle('on', x===b));
+  document.querySelectorAll('main > section').forEach(s => s.hidden = s.id !== 'tab-' + b.dataset.tab);
+});
+
+// ---------- render ----------
+function render(){
+  $('#ver').textContent = 'v' + (S.version||'');
+  const fl = [];
+  if(S.schematic) fl.push(`<span class="chip k-sch">회로도: ${esc(S.schematic.name)} (${S.schematic.pages}쪽${S.schematic.orcad?', OrCAD':''}) <span class="x" onclick="removeItem('sch')">✕</span></span>`);
+  if(S.pst) fl.push(`<span class="chip k-pst">넷리스트: ${esc(S.pst.names.join(', '))}${S.pst.net?'':' — pstxnet.dat 없음'} <span class="x" onclick="removeItem('pst')">✕</span></span>`);
+  for(const d of S.datasheets||[]) fl.push(`<span class="chip k-ds">${esc(d.parts?.[0] || d.file)} <span class="muted">${esc(d.classKo)}</span> <span class="x" onclick="removeItem('ds',${d.id})">✕</span></span>`);
+  $('#files').innerHTML = fl.join('');
+  $('#log').textContent = (S.log||[]).join('\n');
+  renderCircuit(); renderDS(); renderCmp();
+}
+
+function topoBadge(f){
+  let c = 'badge';
+  if(f.topology==='unused') c += ' unused';
+  else if(f.class==='comparator' || f.topology==='comparator') c += ' cmp';
+  else if(f.class==='inverter') c += ' inv';
+  return `<span class="${c}">${esc(f.topoKo)}</span>`;
+}
+
+function renderCircuit(){
+  const el = $('#tab-circuit');
+  const R = S.report;
+  if(!R){
+    el.innerHTML = `<div class="empty">회로도 PDF 또는 OrCAD 넷리스트(pstxnet.dat …)를 넣으면 Op-amp·비교기·인버터 회로를 분석합니다.<br>데이터시트를 같이 넣으면 해당 품번의 사양을 회로 옆에 붙여 보여줍니다.</div>`;
+    return;
+  }
+  const src = R.kind==='orcad' ? '<span class="badge" style="background:var(--ok-bg);color:var(--ok)">OrCAD 넷리스트 (정확)</span>'
+            : R.kind==='pdf' ? '<span class="badge" style="background:var(--warn-bg);color:var(--warn)">회로도 PDF 복원 (추정)</span>'
+            : '<span class="badge unused">부품 목록만 (연결 정보 없음)</span>';
+  const fs = (R.findings||[]).filter(f => {
+    if(filt.hideUnused && f.topology==='unused') return false;
+    if(filt.cls!=='all' && f.class!==filt.cls) return false;
+    if(filt.q){ const q = filt.q.toLowerCase(); const hay = (f.ref+' '+f.value+' '+f.topoKo+' '+JSON.stringify(f.nets)).toLowerCase(); if(!hay.includes(q)) return false; }
+    return true;
+  });
+  const cnt = c => (R.findings||[]).filter(f=>f.class===c).length;
+  let h = `<div class="panel"><div class="row">${src}<span class="muted">${esc(R.source)}</span><span style="flex:1"></span>
+    <span>부품 ${R.parts} · 넷 ${R.nets} · Op-amp 섹션 ${cnt('opamp')} · 비교기 ${cnt('comparator')} · 인버터 게이트 ${cnt('inverter')}</span></div>`;
+  for(const n of R.notes||[]) h += `<div class="note ${n.startsWith('⚠')?'bad':'info'}">${esc(n)}</div>`;
+  if(R.others?.length) h += `<div class="muted" style="margin-top:6px">보드의 관련 IC: ${esc(R.others.join(' · '))}</div>`;
+  h += `</div>`;
+  h += `<div class="row" style="margin-bottom:10px">
+    <select id="fCls"><option value="all">전체</option><option value="opamp">Op-amp</option><option value="comparator">비교기</option><option value="inverter">인버터</option></select>
+    <label><input type="checkbox" id="fUnused" ${filt.hideUnused?'checked':''}> 미사용 섹션 숨기기</label>
+    <input type="search" id="fQ" placeholder="부품·넷 검색" value="${esc(filt.q)}">
+    <span style="flex:1"></span><button class="small" id="csvF">CSV 저장</button></div>`;
+  if(!fs.length) h += `<div class="empty">대상 회로가 없습니다.</div>`;
+  for(const f of fs) h += findingCard(f);
+  el.innerHTML = h;
+  $('#fCls').value = filt.cls;
+  $('#fCls').onchange = e => {filt.cls = e.target.value; renderCircuit();};
+  $('#fUnused').onchange = e => {filt.hideUnused = e.target.checked; renderCircuit();};
+  $('#fQ').oninput = e => {filt.q = e.target.value; clearTimeout(window._qt); window._qt = setTimeout(()=>{renderCircuit(); $('#fQ').focus(); const v=$('#fQ').value; $('#fQ').setSelectionRange(v.length,v.length);}, 250);};
+  $('#csvF').onclick = () => csvFindings(fs);
+  el.querySelectorAll('[data-loc]').forEach(b => b.onclick = () => showLoc(b.dataset.loc));
+}
+
+function findingCard(f){
+  const gate = f.gates>1 ? `섹션 ${f.gate}/${f.gates}` : '';
+  const src = f.pinSrc==='pinout' ? '<span class="muted" title="핀 이름이 없어 표준 핀 배치로 섹션을 정했습니다">(표준 핀배치 가정)</span>' : '';
+  const locs = (S.locs||{})[f.ref] || [];
+  let h = `<div class="card"><div class="card-h"><span class="ref">${esc(f.ref)}</span><span class="mono">${esc(f.value)}</span>
+    <span class="badge">${esc(f.classKo)}</span>${topoBadge(f)}${f.gain?`<span>이득 <b>${esc(f.gain)}</b></span>`:''}
+    <span class="muted">${gate}${f.page?` · 시트 ${esc(f.page)}`:''}</span>${src}<span style="flex:1"></span>
+    ${locs.length?`<button class="small" data-loc="${esc(f.ref)}">회로도 보기</button>`:''}</div><div class="card-b">`;
+  h += `<table><tr><th style="width:70px">핀</th><th style="width:190px">넷</th><th>연결된 부품</th></tr>`;
+  for(const n of f.nets||[]) h += `<tr><td>${esc(n.role)} ${n.pin?`<span class="mono muted">${esc(n.pin)}</span>`:''}</td><td class="mono">${esc(n.net)}</td><td class="members">${esc((n.members||[]).join(' ; '))}</td></tr>`;
+  h += `</table>`;
+  if(f.calc?.length) h += `<ul class="calc">${f.calc.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`;
+  if(f.warn?.length) h += `<ul class="list w">${f.warn.map(c=>`<li>⚠ ${esc(c)}</li>`).join('')}</ul>`;
+  if(f.suggest?.length) h += `<ul class="list s">${f.suggest.map(c=>`<li>→ ${esc(c)}</li>`).join('')}</ul>`;
+  if(f.ds){
+    h += `<details><summary>데이터시트 사양: ${esc(f.ds.file)}</summary>${specTable(f.ds.specs)}</details>`;
+  }
+  return h + `</div></div>`;
+}
+
+function specTable(specs){
+  if(!specs?.length) return '<div class="muted">추출된 핵심 사양 없음</div>';
+  let h = `<table><tr><th>항목</th><th>원문 파라미터</th><th>조건</th><th>MIN</th><th>TYP</th><th>MAX</th><th>단위</th><th>쪽</th></tr>`;
+  for(const s of specs){
+    h += `<tr><td>${esc(s.label)}</td><td>${esc(s.param)}</td><td class="muted">${esc(s.cond)}</td><td class="num">${esc(s.min)}</td><td class="num">${esc(s.typ)}</td><td class="num">${esc(s.max)}</td><td>${esc(s.unit)}</td><td class="num" title="${esc(s.table)}">p.${s.page}</td></tr>`;
+    if(s.variants?.length) h += `<tr><td></td><td colspan="7" class="members">다른 조건/변형: ${esc(s.variants.join(' | '))}</td></tr>`;
+  }
+  return h + `</table>`;
+}
+
+function renderDS(){
+  const el = $('#tab-ds');
+  const ds = S.datasheets||[];
+  if(!ds.length){ el.innerHTML = `<div class="empty">데이터시트 PDF를 넣으면 품번·분류·패키지·핵심 사양·핀 표를 정리합니다.</div>`; return; }
+  let h = `<div class="row" style="margin-bottom:10px"><span style="flex:1"></span><button class="small" id="csvS">사양 CSV 저장</button></div>`;
+  for(const d of ds){
+    h += `<div class="card"><div class="card-h"><span class="ref">${esc(d.parts?.slice(0,4).join(', ') || d.file)}</span><span class="badge">${esc(d.classKo)}</span>
+      <span class="muted">${esc(d.file)} · ${d.pages}쪽</span><span style="flex:1"></span><button class="small" onclick="removeItem('ds',${d.id})">제거</button></div><div class="card-b">`;
+    h += `<div class="kv"><div>제목</div><div>${esc(d.title)}</div><div>패키지</div><div>${esc((d.packages||[]).join(', '))}</div></div>`;
+    for(const n of d.notes||[]) h += `<div class="note warn">${esc(n)}</div>`;
+    h += `<h4 style="margin:12px 0 6px">핵심 사양</h4>${specTable(d.specs)}`;
+    if(d.pins?.length){
+      const pk = [...new Set(d.pins.flatMap(p=>Object.keys(p.nums||{})))];
+      h += `<details><summary>핀 표 (${d.pins.length}핀)</summary><div class="scroll"><table><tr><th>이름</th><th>번호</th>${pk.map(k=>`<th>${esc(k)}</th>`).join('')}<th>유형</th><th>설명</th><th>쪽</th></tr>`;
+      for(const p of d.pins) h += `<tr><td class="mono">${esc(p.name)}</td><td class="num">${esc(p.num)}</td>${pk.map(k=>`<td class="num">${esc((p.nums||{})[k])}</td>`).join('')}<td>${esc(p.type)}</td><td class="members">${esc(p.desc)}</td><td class="num">p.${p.page}</td></tr>`;
+      h += `</table></div></details>`;
+    }
+    h += `<details data-rows="${d.id}"><summary>추출된 표 행 전체 (${d.nrows}행) — 원문 대조용</summary><div class="rows-box">불러오는 중…</div></details>`;
+    h += `</div></div>`;
+  }
+  el.innerHTML = h;
+  $('#csvS').onclick = csvSpecs;
+  el.querySelectorAll('details[data-rows]').forEach(det => det.addEventListener('toggle', async () => {
+    if(!det.open || det.dataset.loaded) return;
+    det.dataset.loaded = 1;
+    const rows = await api('/api/rows?id=' + det.dataset.rows);
+    const box = det.querySelector('.rows-box');
+    box.innerHTML = `<input type="search" placeholder="행 검색 (예: offset, GBW)" style="margin:6px 0;width:280px"><div class="scroll"></div>`;
+    const draw = q => {
+      q = (q||'').toLowerCase();
+      const rs = rows.filter(r => !q || JSON.stringify(r).toLowerCase().includes(q)).slice(0, 800);
+      box.querySelector('.scroll').innerHTML = `<table><tr><th>쪽</th><th>표</th><th>파라미터</th><th>기호</th><th>조건</th><th>MIN</th><th>TYP</th><th>MAX</th><th>단위</th></tr>` +
+        rs.map(r => `<tr><td class="num">${r.page}</td><td class="members">${esc(r.table)}</td><td>${esc(r.param)}</td><td class="mono">${esc(r.symbol)}</td><td class="members">${esc(r.cond)}</td><td class="num">${esc(r.min)}</td><td class="num">${esc(r.typ)}</td><td class="num">${esc(r.max)}</td><td>${esc(r.unit)}</td></tr>`).join('') + `</table>`;
+    };
+    box.querySelector('input').oninput = e => draw(e.target.value);
+    draw('');
+  }));
+}
+
+function renderCmp(){
+  const el = $('#tab-cmp');
+  const ds = S.datasheets||[];
+  if(ds.length < 1){ el.innerHTML = `<div class="empty">데이터시트를 2개 이상 넣으면 같은 항목끼리 나란히 비교합니다.</div>`; return; }
+  if(!cmpSel.size) ds.slice(0,4).forEach(d => cmpSel.add(d.id));
+  const sel = ds.filter(d => cmpSel.has(d.id));
+  let h = `<div class="panel cmp-sel">비교할 데이터시트: ${ds.map(d=>`<label><input type="checkbox" data-id="${d.id}" ${cmpSel.has(d.id)?'checked':''}> ${esc(d.parts?.[0]||d.file)}</label>`).join('')}</div>`;
+  const keys = []; const labels = {};
+  for(const d of sel) for(const s of d.specs||[]) if(!labels[s.key]){ keys.push(s.key); labels[s.key] = s.label; }
+  h += `<div class="panel" style="overflow:auto"><table><tr><th>항목</th>${sel.map(d=>`<th>${esc(d.parts?.[0]||d.file)}<div class="muted" style="font-weight:400">${esc(d.classKo)}</div></th>`).join('')}</tr>`;
+  for(const k of keys){
+    h += `<tr><td>${esc(labels[k])}</td>`;
+    for(const d of sel){
+      const s = (d.specs||[]).find(x => x.key===k);
+      h += s ? `<td><span class="mono">${esc([s.min,s.typ,s.max].map(v=>v||'–').join(' / '))}</span> ${esc(s.unit)}<div class="members">p.${s.page}${s.cond?' · '+esc(s.cond):''}</div></td>` : `<td class="muted">–</td>`;
+    }
+    h += `</tr>`;
+  }
+  h += `</table><div class="muted" style="margin-top:6px">값은 MIN / TYP / MAX 순서입니다. 조건이 다르면 직접 비교할 수 없으니 조건 칸을 같이 보세요.</div></div>`;
+  el.innerHTML = h;
+  el.querySelectorAll('input[data-id]').forEach(c => c.onchange = () => { const id = +c.dataset.id; c.checked ? cmpSel.add(id) : cmpSel.delete(id); renderCmp(); });
+}
+
+// ---------- CSV ----------
+function csv(name, rows){
+  const q = v => { v = String(v ?? ''); return /[",\n]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; };
+  const blob = new Blob(['﻿' + rows.map(r => r.map(q).join(',')).join('\r\n')], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+function csvFindings(fs){
+  const rows = [['부품','값','분류','섹션','회로 형태','이득','IN+ 넷','IN- 넷','OUT 넷','계산','주의','제안']];
+  for(const f of fs){
+    const net = r => (f.nets||[]).find(n=>n.role===r)?.net || '';
+    rows.push([f.ref, f.value, f.classKo, f.gates>1?`${f.gate}/${f.gates}`:'', f.topoKo, f.gain||'', net('IN+')||net('IN'), net('IN−'), net('OUT'), (f.calc||[]).join(' | '), (f.warn||[]).join(' | '), (f.suggest||[]).join(' | ')]);
+  }
+  csv('icscope_circuits.csv', rows);
+}
+function csvSpecs(){
+  const rows = [['파일','품번','분류','항목','원문 파라미터','조건','MIN','TYP','MAX','단위','쪽','표']];
+  for(const d of S.datasheets||[]) for(const s of d.specs||[]) rows.push([d.file, (d.parts||[])[0]||'', d.classKo, s.label, s.param, s.cond, s.min, s.typ, s.max, s.unit, s.page, s.table]);
+  csv('icscope_specs.csv', rows);
+}
+
+// ---------- schematic viewer ----------
+let vb = null, full = null, svgEl = null, locList = [], locIdx = 0;
+async function showLoc(ref){
+  locList = (S.locs||{})[ref] || []; locIdx = 0;
+  if(!locList.length) return;
+  $('#modal').style.display = 'flex';
+  $('#mTitle').textContent = ref;
+  await drawLoc();
+}
+async function drawLoc(){
+  const L = locList[locIdx];
+  $('#mSub').innerHTML = ` — ${L.page+1}쪽 ${locList.length>1?`<button class="small" id="mNext">다음 위치 (${locIdx+1}/${locList.length})</button>`:''}`;
+  if($('#mNext')) $('#mNext').onclick = () => { locIdx = (locIdx+1) % locList.length; drawLoc(); };
+  const txt = await (await fetch('/api/svg?page=' + L.page)).text();
+  const view = $('#mView');
+  view.innerHTML = txt;
+  svgEl = view.querySelector('svg');
+  svgEl.removeAttribute('width'); svgEl.removeAttribute('height');
+  svgEl.setAttribute('preserveAspectRatio','xMidYMid meet');
+  full = svgEl.getAttribute('viewBox').split(' ').map(Number);
+  const [x0,y0,x1,y1] = L.box;
+  const mark = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  mark.setAttribute('x', x0-2); mark.setAttribute('y', y0-2); mark.setAttribute('width', x1-x0+4); mark.setAttribute('height', y1-y0+4);
+  mark.setAttribute('fill','rgba(255,200,0,.35)'); mark.setAttribute('stroke','#e0a000'); mark.setAttribute('stroke-width','0.8');
+  svgEl.appendChild(mark);
+  const cx = (x0+x1)/2, cy = (y0+y1)/2, w = 220, hh = 150;
+  vb = [cx-w/2, cy-hh/2+30, w, hh];
+  apply();
+}
+function apply(){ if(svgEl) svgEl.setAttribute('viewBox', vb.join(' ')); }
+function zoom(f, px, py){
+  const nx = vb[2]*f, ny = vb[3]*f;
+  const ax = px ?? .5, ay = py ?? .5;
+  vb = [vb[0] + (vb[2]-nx)*ax, vb[1] + (vb[3]-ny)*ay, nx, ny]; apply();
+}
+$('#mIn').onclick = () => zoom(.7); $('#mOut').onclick = () => zoom(1/.7);
+$('#mFit').onclick = () => { vb = full.slice(); apply(); };
+$('#mClose').onclick = () => { $('#modal').style.display = 'none'; $('#mView').innerHTML=''; };
+$('#modal').addEventListener('click', e => { if(e.target.id==='modal') $('#mClose').click(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') $('#mClose').click(); });
+const mv = $('#mView');
+mv.addEventListener('wheel', e => { e.preventDefault(); const r = mv.getBoundingClientRect(); zoom(e.deltaY<0?.85:1/.85, (e.clientX-r.left)/r.width, (e.clientY-r.top)/r.height); }, {passive:false});
+let drag = null;
+mv.addEventListener('mousedown', e => { drag = {x:e.clientX, y:e.clientY, vb:vb.slice()}; mv.style.cursor='grabbing'; });
+window.addEventListener('mouseup', () => { drag = null; mv.style.cursor='grab'; });
+window.addEventListener('mousemove', e => {
+  if(!drag) return;
+  const r = mv.getBoundingClientRect();
+  const s = Math.max(drag.vb[2]/r.width, drag.vb[3]/r.height);
+  vb = [drag.vb[0] - (e.clientX-drag.x)*s, drag.vb[1] - (e.clientY-drag.y)*s, drag.vb[2], drag.vb[3]]; apply();
+});
+
+refresh();
+</script>
+</body>
+</html>
