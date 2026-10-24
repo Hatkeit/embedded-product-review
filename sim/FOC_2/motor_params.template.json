@@ -1,0 +1,22 @@
+{
+  "_comment": "모든 값 ❓ — 모터·시스템 사양 확정 후 채움. SI 단위. 추정값으로 채우지 말 것.",
+  "Rs": null,             "_Rs": "상저항 [Ω] (선간 측정값 ÷ 2, Y결선 기준)",
+  "Ld": null,             "_Ld": "d축 인덕턴스 [H]",
+  "Lq": null,             "_Lq": "q축 인덕턴스 [H]",
+  "pole_pairs": null,     "_pole_pairs": "극쌍 수",
+  "psi_pm": null,         "_psi_pm": "영구자석 쇄교자속 [Wb] = Ke(V_LL,pk/rad_e/s)/√3 (Ke 정의는 모터 데이터시트 확인)",
+  "J": null,              "_J": "회전자 + 부하 관성 [kg·m²]",
+  "omega_m0": null,       "_omega_m0": "제동 시작 기계 속도 [rad/s]",
+  "iq_motoring": null,    "_iq_motoring": "정속 구간 iq [A, 진폭] — 정격 49.9 A(진폭) = 35.3 A RMS",
+  "iq_braking": null,     "_iq_braking": "제동 구간 iq [A, 진폭, 음수]",
+  "bw_current_hz": null,  "_bw_current_hz": "전류 루프 대역폭 [Hz]",
+  "C_bus": null,          "_C_bus": "버스 커패시턴스 [F]",
+  "V_supply": null,       "_V_supply": "공급 전압 [V] — 85 또는 95",
+  "R_supply": null,       "_R_supply": "공급 측 직렬 저항 [Ω] (전원+배선). 공급은 다이오드로 단방향 가정",
+  "V_chop_on": null,      "_V_chop_on": "제동 초퍼 ON 임계 [V]",
+  "V_chop_off": null,     "_V_chop_off": "제동 초퍼 OFF 임계 [V]",
+  "R_brake": null,        "_R_brake": "제동 저항 [Ω]",
+  "fsw": null,            "_fsw": "스위칭(=전류 루프) 주파수 [Hz]",
+  "td": null,             "_td": "데드타임 [s]",
+  "t_end": null,          "_t_end": "시뮬레이션 시간 [s] — 앞 절반 정속, 뒤 절반 제동"
+}
