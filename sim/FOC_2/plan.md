@@ -18,7 +18,7 @@
 | Q3 | 데드타임이 손실·전압 오차에 미치는 영향은? | 데드타임 설정값, 보상 필요 여부 | 다이오드 손실, 기본파 오차 % |
 | Q4 | 회생 제동 시 버스 전압이 소자 한계(B 96 V / C 120 V, 80 % 디레이팅)를 넘는가? | 경로 B 성립 여부, 초퍼·C_bus 규모 | V_bus,max ≤ 한계 − 오버슈트 |
 | Q5 | 전류 센싱 방식(하단 3션트/인라인/DC 링크)별 손실과 변조 한계는? | 센싱 토폴로지 | 손실 W, m_max |
-| Q6 | 소자 1개 손실과 Tj (열 모듈) | 호스트 PCB 열저항 목표(01 §5 #4) | Tj ≤ 정격 − 여유 (❓ 여유 기준 미정) |
+| Q6 | 소자 1개 손실과 Tj (열 모듈). **정지(stall) 포함** — docs/FOC_1 R5 | 호스트 PCB 열저항 목표(01 §5 #4) | Tj ≤ 정격 − 여유 (❓ 여유 기준 미정) |
 
 ## 2. 시뮬레이션 단계
 
@@ -51,16 +51,18 @@ S1–S3는 모터 사양 없이 지금 실행할 수 있다. 전류원 부하는
 | VDS | 120 V 🔍 | 150 V 🔍 | 판정 기준 |
 | RDS(on) max @25 °C, VGS 10 V | 1.7 mΩ 🔍 | 2.5 mΩ 🔍 | 도통 (S1), Vds-Id 곡선 (S2) |
 | RDS(on)-Tj 곡선 | ❓ → ×1.5 가정 (docs/01 §2.4) | ❓ → ×1.5 가정 | S1 고정값, S2 곡선 |
-| Qg typ @10 V | 113 nC 🔍 | 105 nC 🔍 | 게이트 구동 손실 |
+| Qg typ @10 V | 113 nC 🔍 | 105 nC 🔍 ⚠ | 게이트 구동 손실 |
 | Qgd typ | 25 nC 🔍 (max 38 nC, @60 V·75 A, 검색 요약) | **❓** | 스위칭 전이 시간 |
 | Miller plateau | 5.0 V 🔍 (검색 요약) | **❓** | 게이트 전류 |
 | Qgs2 (Qg(th)–plateau) | ❓ | ❓ | 전류 전이 시간 — 빠지면 오버랩 손실 하한 |
-| Qoss | 266 nC 🔍 (VDS 조건 ❓) | 310 nC 🔍 (라벨 깨진 추출 텍스트, 순서로 매칭) | Coss 손실 |
+| Qoss | 266 nC 🔍 (VDS 조건 ❓) | 310 nC 🔍 ⚠ (라벨 깨진 추출 텍스트, 순서로 매칭) | Coss 손실 |
 | Qrr | 301 nC 🔍 @1000 A/µs (IF·VR ❓) | 184 nC 🔍 @500 A/µs | 역회복 손실 |
 | 바디 다이오드 VSD | ❓ | ❓ | 데드타임 손실 → **W/V 계수로 출력** |
 | RG,int | ❓ (형제 품번 IPTC017N12NM6 값은 다른 품번이라 사용 안 함) | ❓ | 게이트 전류 |
 | RthJC max | 0.38 K/W 🔍 (제3자 DB, 원문 미대조) | ❓ | 열 모듈 |
 | 패키지 | PG-HSOF-8 (TOLL) 🔍 | PG-HSOF-8 (TOLL) 🔍 | — |
+
+⚠ **C의 Table 1 해석 불일치**: 이 문서는 제품 페이지의 "Q_G typ @10 V = 105 nC"를 근거로 Table 1의 310/105/184 nC를 **Qoss/Qg/Qrr**로 읽었다. [docs/FOC_1/design-review.md](../../docs/FOC_1/design-review.md)는 같은 표를 **"Qg 310 nC, Qgd 105 nC"**로 읽었다. 둘 다 원문을 보지 못한 상태다. 계산에는 C의 Qgd를 ❓로 두었으므로 이 불일치가 결과에 들어가지는 않았다. 다만 FOC_1 해석이 맞다면 C의 게이트 손실은 약 3배(0.30 → 0.89 W @40 kHz)가 되고, Qoss 항은 다시 ❓가 된다. **원문 대조 #1의 첫 항목이다.**
 
 출처: [IPT017N12NM6 DS Rev 2.0](https://www.infineon.com/assets/row/public/documents/24/49/infineon-ipt017n12nm6-datasheet-en.pdf), [IPT025N15NM6 제품 페이지](https://www.infineon.com/part/IPT025N15NM6), [Farnell 사본 (OptiMOS 6 150 V)](https://farnell.com/datasheets/4406514.pdf), [discoveree IPT017N12NM6](https://www.fet.discoveree.io/L09QUXMzTEUyZDhVc3NGbEFMeWRtZz09OjoxNg==/ipt017n12nm6). 이 환경에서는 PDF 원문에 접속할 수 없어 전부 검색 요약으로 확인했다. **원문 대조가 우선이다 (§7 #1).**
 
@@ -125,12 +127,13 @@ S1–S3는 모터 사양 없이 지금 실행할 수 있다. 전류원 부하는
 3. **SVPWM 선형 한계에서는 듀티가 0–1까지 간다.** 하단 션트 샘플 창을 확보하려면 m이 줄어든다 (예: 40 kHz·1 µs → 출력 3.38 kW, 단상 기준 보수적 계산). 4.0 kW 표기와 직접 충돌하는 제약이다.
 4. **회생**: 경로 B를 95 V 공급에서 쓰면 C_bus 흡수 여유가 1 V(96 V 한계)뿐이다. 정격 회생 전력 3.68 kW·470 µF에서 85→96 V까지 **0.13 ms**. 초퍼나 FW 버스전압 제한이 0.1 ms 단위로 응답해야 한다. 경로 C(→120 V)는 0.46 ms.
 5. 데드타임 전압 오차는 40 kHz·100 ns에서 상전압 피크의 0.9 %, 100 kHz·500 ns에서 11 %다.
+6. **정지(fe = 0, A상 피크 고정)에서는 손실이 가장 큰 소자 1개가 8.3 W(경로 B, VSD 1 V)**로, 회전 중 최악 소자(3.7 W)의 2.2배다. 도통만 따지면 정확히 2.0배로 FOC_1 R5와 일치한다. 스위칭 손실은 레그 하나 몫이 한 소자에 몰려서 비율이 더 커진다. 열 설계(S2)의 기준 동작점은 회전이 아니라 정지 쪽이다.
 
 ## 5. Python ↔ PSIM 비교 방법
 
 ### 5.1 체크 표
 
-[crosscheck_results.md §7](crosscheck_results.md#7-psim-비교-체크-표--op1-fsw-40-khz-td-100-ns) 표(E1–E9, B1–B6, C1–C6, R1–R2)의 PSIM 열을 채운다. 같은 입력이면 다음 기준으로 일치해야 한다.
+[crosscheck_results.md §7](crosscheck_results.md#7-psim-비교-체크-표--op1-fsw-40-khz-td-100-ns) 표(E1–E9, B1–B7, C1–C7, R1–R2)의 PSIM 열을 채운다. 같은 입력이면 다음 기준으로 일치해야 한다.
 
 ### 5.2 판정 기준과 어긋날 때 해석
 

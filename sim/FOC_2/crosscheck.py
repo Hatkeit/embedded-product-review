@@ -483,7 +483,8 @@ def report(motor: dict | None) -> str:
         note = "" if d.qgd else " (오버랩 ❓ 제외)"
         w(f"| {d.name} | {st['cond_worst']:.2f} / {st['cond_rot']:.2f} W ({st['cond_worst']/st['cond_rot']:.2f}×) | "
           f"{st['worst']:.2f} W{note} | {st['rot_dev']:.2f} W | {st['ratio']:.2f}× | {st['total']:.2f} W |")
-    w("\n도통만 보면 정확히 2.0× (FOC_1 R5 와 일치). 스위칭 손실도 |i| 가 피크로 고정되어 π/2 배가 된다. "
+    w("\n도통만 보면 정확히 2.0× (FOC_1 R5 와 일치). 스위칭 손실은 더 나쁘다 — 레그의 하드 스위칭이 "
+      "한 소자(A상 상단)에 전부 몰리고(회전 중에는 상·하단이 반주기씩 나눔), 오버랩 항은 |i| 가 피크로 고정된다. "
       "열 설계·PSIM S2 는 이 케이스를 별도로 돌린다.\n")
 
     # 7.3 sweep
