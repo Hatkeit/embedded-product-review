@@ -75,7 +75,8 @@ DEVICES = [
         qg=105e-9, qgd=None, vpl=None, qoss=310e-9, qrr=184e-9, rthjc=None,
         status=dict(
             vds="🔍 DS Rev 2.0 (2024-04-16) Table 1", rds25_max="🔍 DS Rev 2.0 Table 1",
-            qg="🔍 제품 페이지 typ @10 V", qoss="🔍 DS Rev 2.0 Table 1 (추출 텍스트 라벨 깨짐, 순서로 매칭)",
+            qg="🔍 제품 페이지 typ @10 V. ⚠ docs/FOC_1 은 같은 Table 1 을 'Qg 310 / Qgd 105 nC' 로 읽음 — 원문 대조 필수",
+            qoss="🔍 DS Rev 2.0 Table 1 (추출 텍스트 라벨 깨짐, 순서로 매칭) ⚠ 위와 같은 불일치",
             qrr="🔍 DS Rev 2.0 Table 1, @500 A/µs", qgd="❓", vpl="❓", rthjc="❓",
             vsd="❓", rg_int="❓",
         ),
@@ -243,6 +244,29 @@ def time_domain(dev: Device, op: dict, fsw: float, td: float, fe: float = 100.0,
         p_shunt_low=float(i_low_ms.sum() * SHUNT_R), p_shunt_dc=idc_rms**2 * SHUNT_R,
         p_per_device_max=worst_dev, d_min=float(d.min()), d_max=float(d.max()),
     )
+
+
+def stall_losses(dev: Device, irms: float, fsw: float, td: float, vdc: float, vsd: float = 1.0) -> dict:
+    """정지(fe = 0)·전기각이 A상 피크에 고정된 최악 경우. 듀티 ≈ 0.5 (m ≈ 0).
+
+    i = [Ipk, −Ipk/2, −Ipk/2] (DC). docs/FOC_1 design-review R5 와 같은 조건.
+    반환: 소자별 최대 손실과 회전 중(1주기 평균) 소자 1개 손실의 비.
+    """
+    ipk = irms * SQ2
+    i = np.array([ipk, -ipk / 2, -ipk / 2])
+    d = 0.5
+    r = dev.rds25_max * RDS_TJ_FACTOR
+    tdf = td * fsw
+    t_ov = overlap_time(dev) or 0.0
+    e_sw = 0.5 * vdc * np.abs(i) * t_ov + ((dev.qoss or 0) + (dev.qrr or 0)) * vdc
+    pos = i > 0
+    hi = (d - tdf) * i**2 * r + np.where(~pos, 2 * tdf * vsd * np.abs(i), 0) + np.where(pos, e_sw * fsw, 0)
+    lo = (1 - d - tdf) * i**2 * r + np.where(pos, 2 * tdf * vsd * np.abs(i), 0) + np.where(~pos, e_sw * fsw, 0)
+    rot = time_domain(dev, op_point(vdc, irms, 1.0), fsw, td, vsd=vsd)
+    worst = float(max(hi.max(), lo.max()))
+    return dict(worst=worst, total=float(hi.sum() + lo.sum()), rot_dev=rot["p_per_device_max"],
+                ratio=worst / rot["p_per_device_max"],
+                cond_worst=float(((d - tdf) * i**2 * r).max()), cond_rot=rot["cond"] / 6)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -451,6 +475,17 @@ def report(motor: dict | None) -> str:
         w(f"| {fs/1e3:.0f} kHz | " + " | ".join(cells) + " |")
     w("")
 
+    w("### 정지 상태 (fe = 0, A상 피크 고정, 85 V) — docs/FOC_1 R5 🔢\n")
+    w("| 소자 | 도통: 정지 최악 소자 / 회전 평균 소자 | 전체(도통+다이오드 1 V+스위칭) 최악 소자 | 회전 중 최악 소자 | 비 | 인버터 총합 (정지) |")
+    w("|---|---|---|---|---|---|")
+    for d in DEVICES:
+        st = stall_losses(d, I_RMS, REF_FSW, REF_TD, VDC_NOM)
+        note = "" if d.qgd else " (오버랩 ❓ 제외)"
+        w(f"| {d.name} | {st['cond_worst']:.2f} / {st['cond_rot']:.2f} W ({st['cond_worst']/st['cond_rot']:.2f}×) | "
+          f"{st['worst']:.2f} W{note} | {st['rot_dev']:.2f} W | {st['ratio']:.2f}× | {st['total']:.2f} W |")
+    w("\n도통만 보면 정확히 2.0× (FOC_1 R5 와 일치). 스위칭 손실도 |i| 가 피크로 고정되어 π/2 배가 된다. "
+      "열 설계·PSIM S2 는 이 케이스를 별도로 돌린다.\n")
+
     # 7.3 sweep
     w("## 3. Sweep — 알려진 손실 합 (W), OP1 기준 🔢\n")
     for d in DEVICES:
@@ -567,6 +602,10 @@ def report(motor: dict | None) -> str:
             (f"{tag}5", f"{d.name} 다이오드 손실 6개 합 (Vsd 1 V 당)", "W/V", f"{a['k_dt_per_V']:.3f}", "±10 %"),
             (f"{tag}6", f"{d.name} 인버터 총손실 (알려진 항목)", "W", f"{a['total_known']:.2f}", "plan.md §5.2 참조"),
         ]
+    for d in DEVICES:
+        st = stall_losses(d, I_RMS, REF_FSW, REF_TD, VDC_NOM)
+        tag = d.path.split()[0]
+        rows.append((f"{tag}7", f"{d.name} 정지 시 S1 도통 손실 (A상 피크 고정)", "W", f"{st['cond_worst']:.3f}", "±5 %"))
     c470 = 470e-6
     rows += [
         ("R1", "회생 dV/dt, C 470 µF, 정격 회생, 단방향 전원", "V/ms", f"{regen_dvdt(c470, 85, abs(p_reg))/1e3:.1f}", "±5 %"),
