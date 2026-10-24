@@ -1,0 +1,54 @@
+RefDes,Qty,Value,Part,Package,Function,Block,Status,Variant,Note
+Q1-Q6,6,120V 1.7mOhm,IPT017N12NM6,PG-HSOF-8 (TOLL),3-phase bridge,B3,🔍,B,Path B. Shares footprint with path C. Stock unavailable per distributor (02 §5 #2)
+Q1-Q6,6,150V 2.5mOhm,IPT025N15NM6,PG-HSOF-8 (TOLL),3-phase bridge,B3,🔍,C,Path C
+U2,1,,6ED2742S01QXTMA1,PG-VQFN-32 5x5,3-phase gate driver 160V,B4,🔍,B/C,Pin numbers ❓; CSA single channel (VSS-COM)
+C_BS_U/V/W,3,1uF 25V X7R,TBD,0603,Bootstrap cap,B4,🔢,B/C,>=226 nF from Qg only (SD §4.3); recalc with I_QBS
+C_VCC1-3,3,10uF/1uF/100nF 25V,TBD,0805/0603/0402,Driver VCC decoupling,B4,초안,B/C,
+R_GON_x,6,4.7R,TBD,0603,Gate turn-on resistor,B4,[가정],B/C,Finalize by double-pulse test (di/dt <=7.5 A/ns B / 15 A/ns C)
+R_GOFF_x,6,2.2R,TBD,0603,Gate turn-off resistor,B4,[가정],B/C,
+D_GOFF_x,6,Schottky 30V,TBD,SOD-323,Turn-off diode,B4,❓,B/C,
+R_GS_x,6,10k,TBD,0402,Gate-source pulldown,B4,초안,B/C,
+R_SH_U/V/W,3,0.5mOhm >=3W 4-terminal,TBD,2512/2725 class,Low-side phase shunt,B5,🔢,B/C,0.31 W each continuous / 1.25 W at peak
+R_DC,1,0.5mOhm,TBD,2512/2725 class,DC-link shunt (optional),B5,DNP,B/C,For 6ED2742 CSA/ITRIP; +1.13 W if fitted
+U5A-U5C,3,,TBD (GBW>=20MHz RRIO 3.3V),TBD,Current sense amplifier G=20,B5,❓,B/C,Part not selected
+R_IN/R_F/R_REF,12,1k/20k 0.1%,TBD,0402,Diff amp gain network,B5,🔢,B/C,G = 20
+U6,1,,TBD,SOT-23-5,1.65V bias buffer,B5,❓,B/C,
+R_AAF/C_AAF,6,TBD,TBD,0402,Anti-alias filter,B5,❓,B/C,Depends on ADC sample window
+C1-Cn,TBD,>=150V MLCC (250V preferred),TBD,1210/1812,DC bus ceramic bank,B1,❓,B/C,Ripple up to 22.9 A RMS total (SD §1.3); split with host bulk
+D10,1,TVS,TBD,SMB/SMC,ESD/surge only (not regen clamp),B2,❓,B/C,
+Q7,1,,IPT017N12NM6 / IPT025N15NM6 or smaller 150V,TOLL or TBD,Brake chopper switch,B2,❓,B/C,
+D_BRK,1,>=150V fast/Schottky,TBD,TBD,Brake freewheel diode,B2,❓,B/C,
+U3,1,,TBD low-side driver,TBD,Brake gate driver,B2,❓,B/C,
+R_BRKG,1,TBD,TBD,0603,Brake gate resistor,B2,❓,B/C,
+R_DIV1-3,3,332k 0.1%,TBD,0805,Bus divider top,B6,🔢,B/C,FS 167.6 V
+R_DIV4,1,20.0k 0.1%,TBD,0402,Bus divider bottom,B6,🔢,B/C,
+C_DIV,1,1nF C0G,TBD,0402,Bus divider filter,B6,🔢,B/C,tau 19.6 us
+RT1,1,10k NTC,TBD,0603,Power stage temperature,B6,❓,B/C,B value ❓
+RT2,1,10k NTC,TBD,0603,Driver/shunt temperature (optional),B6,DNP,B/C,
+R_NTC1-2,2,10k 0.1%,TBD,0402,NTC divider,B6,초안,B/C,
+F1,1,0.5-1A >=125VDC,TBD,chip,VL fuse,B7,❓,B/C,
+D1,1,Schottky >=150V 1A,TBD,SOD-123F class,VL reverse protection,B7,❓,B/C,
+D2,1,>=150V,TBD,TBD,VBUS-to-aux OR diode (single-supply mode),B7,DNP,B/C,
+U10,1,,LM5169,SO-PowerPAD-8 / WSON-8,Buck VL->12V_GD 500kHz,B7,🔍,B/C,6-120 V in / 0.65 A
+U11,1,,LM5169,SO-PowerPAD-8 / WSON-8,Buck VL->5V 400kHz,B7,🔍,B/C,
+L10/L11,2,TBD,TBD,TBD,Buck inductors,B7,❓,B/C,From LM5169 datasheet design equations
+U12,1,,TBD LDO >=300mA,TBD,5V->3.3V,B7,❓,B/C,Consider buck to meet <2.5 W
+FB1,1,ferrite,TBD,0402,3V3 -> 3V3A filter,B7,초안,B/C,
+Q40,1,,TBD load switch,TBD,STO1 VCC_GD cut,B11,❓,B/C,
+U13,1,,TBD current-limited switch,TBD,Encoder 5V output,B10,❓,B/C,>=250 mA limit
+U1,1,,PSC3M8 (package TBD),VQFN-64 / LQFP-64,MCU,B8,🔍,B/C,All pin assignments ❓
+Y1,1,TBD,TBD,TBD,MCU crystal (optional),B8,DNP,B/C,Need ❓
+U20,1,,TLE9251VLE,PG-TSON-8,CAN FD transceiver 5 Mbps,B9,🔍,B/C,VCC 4.5-5.5 V; VIO 3.3 V
+R_TERM1-2,2,60.4R,TBD,0603,CAN split termination,B9,초안,B/C,Via JP1
+C_TERM,1,4.7nF,TBD,0402,CAN split cap,B9,초안,B/C,
+JP1,1,,solder jumper,–,CAN termination select,B9,초안,B/C,
+D20,1,,TBD CAN ESD,SOT-23,CAN ESD,B9,❓,B/C,
+U30,1,,TBD RS-422 quad receiver 3.3V,TBD,Incremental encoder A/B/Z,B10,❓,B/C,
+R_ET1-3,3,120R,TBD,0402,Encoder termination,B10,초안,B/C,
+U31,1,,TBD RS-485 transceiver,TBD,Absolute encoder (BiSS-C/SSI),B10,❓,B/C,
+U32,1,,TBD Schmitt buffer 3ch,TBD,Hall input,B10,❓,B/C,
+U40/U41,2,,TBD optocoupler,TBD,STO input isolation,B11,❓,B/C,
+U42,1,,TBD 8ch buffer with OE,TBD,STO2 PWM gate,B11,❓,B/C,
+Q41,1,,TBD small NMOS,SOT-23,STO2 RFE pulldown,B11,❓,B/C,
+J1,1,,TBD PCB-mount pins,TBD,Module host interface,–,❓,B/C,Pin current rating sets VBUS/PGND/phase pin count
+J2,1,,Tag-Connect-type pads,–,SWD debug,B12,초안,B/C,
