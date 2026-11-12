@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 600" width="1020" height="600" font-family="'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif">
+  <rect x="0" y="0" width="1020" height="600" fill="#ffffff"/>
+  <rect x="0.5" y="0.5" width="1019" height="599" fill="none" stroke="#d5d9e0"/>
+  <text x="24" y="38" font-size="19" font-weight="700" fill="#111827">플라이백 LCD 스너버 회로</text>
+  <text x="24" y="58" font-size="12" fill="#6b7280">입력 18~50 V (MPPT 30~37.6 V) · 출력 342 V / 250 W 피크 · 100 kHz 가정</text>
+
+  <!-- LCD 스너버 영역 -->
+  <rect x="170" y="150" width="206" height="352" fill="#eff4ff" stroke="#1d4ed8" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <text x="172" y="143" font-size="13" font-weight="700" fill="#1d4ed8">LCD 스너버</text>
+
+  <!-- 주 회로 배선 -->
+  <g fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="90" y1="90" x2="460" y2="90"/>
+    <line x1="90" y1="520" x2="460" y2="520"/>
+    <!-- Cin -->
+    <line x1="150" y1="90" x2="150" y2="298"/>
+    <line x1="136" y1="298" x2="164" y2="298"/>
+    <line x1="136" y1="312" x2="164" y2="312"/>
+    <line x1="150" y1="312" x2="150" y2="520"/>
+    <!-- 1차: Llk + Lp -->
+    <line x1="460" y1="90" x2="460" y2="112"/>
+    <path d="M460 112 a8 8 0 0 1 0 16 a8 8 0 0 1 0 16 a8 8 0 0 1 0 16"/>
+    <line x1="460" y1="160" x2="460" y2="190"/>
+    <path d="M460 190 a10 10 0 0 1 0 20 a10 10 0 0 1 0 20 a10 10 0 0 1 0 20 a10 10 0 0 1 0 20 a10 10 0 0 1 0 20"/>
+    <line x1="460" y1="290" x2="460" y2="392"/>
+    <!-- 코어 -->
+    <line x1="490" y1="186" x2="490" y2="294"/>
+    <line x1="498" y1="186" x2="498" y2="294"/>
+    <!-- 2차 -->
+    <path d="M530 190 a10 10 0 0 0 0 20 a10 10 0 0 0 0 20 a10 10 0 0 0 0 20 a10 10 0 0 0 0 20 a10 10 0 0 0 0 20"/>
+    <line x1="530" y1="190" x2="580" y2="190"/>
+    <line x1="604" y1="178" x2="604" y2="202"/>
+    <line x1="604" y1="190" x2="816" y2="190"/>
+    <line x1="530" y1="290" x2="816" y2="290"/>
+    <!-- Cf -->
+    <line x1="700" y1="190" x2="700" y2="233"/>
+    <line x1="686" y1="233" x2="714" y2="233"/>
+    <line x1="686" y1="247" x2="714" y2="247"/>
+    <line x1="700" y1="247" x2="700" y2="290"/>
+    <!-- Q1 -->
+    <line x1="460" y1="392" x2="476" y2="392"/>
+    <line x1="460" y1="420" x2="460" y2="520"/>
+    <line x1="460" y1="448" x2="476" y2="448"/>
+    <line x1="460" y1="420" x2="469" y2="420"/>
+    <line x1="476" y1="386" x2="476" y2="454" stroke-width="3"/>
+    <line x1="484" y1="392" x2="484" y2="448"/>
+    <line x1="484" y1="420" x2="528" y2="420"/>
+    <!-- GND 기호 -->
+    <line x1="320" y1="520" x2="320" y2="534"/>
+    <line x1="306" y1="534" x2="334" y2="534"/>
+    <line x1="311" y1="540" x2="329" y2="540"/>
+    <line x1="316" y1="546" x2="324" y2="546"/>
+  </g>
+  <polygon points="580,178 580,202 604,190" fill="#1f2937"/>
+  <polygon points="469,415 469,425 476,420" fill="#1f2937"/>
+
+  <!-- 스너버 부품 -->
+  <g fill="none" stroke="#1d4ed8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- D1 : X → Vin+ -->
+    <line x1="250" y1="330" x2="250" y2="222"/>
+    <line x1="238" y1="198" x2="262" y2="198"/>
+    <line x1="250" y1="198" x2="250" y2="90"/>
+    <!-- Ls -->
+    <line x1="250" y1="330" x2="250" y2="350"/>
+    <path d="M250 350 a8 8 0 0 1 0 16 a8 8 0 0 1 0 16 a8 8 0 0 1 0 16 a8 8 0 0 1 0 16"/>
+    <line x1="250" y1="414" x2="250" y2="450"/>
+    <!-- D2 : GND → X -->
+    <line x1="238" y1="450" x2="262" y2="450"/>
+    <line x1="250" y1="474" x2="250" y2="520"/>
+    <!-- Cs -->
+    <line x1="250" y1="330" x2="319" y2="330"/>
+    <line x1="319" y1="316" x2="319" y2="344"/>
+    <line x1="331" y1="316" x2="331" y2="344"/>
+    <line x1="331" y1="330" x2="460" y2="330"/>
+  </g>
+  <polygon points="238,222 262,222 250,198" fill="#1d4ed8"/>
+  <polygon points="238,474 262,474 250,450" fill="#1d4ed8"/>
+
+  <!-- 접점 -->
+  <g fill="#1f2937">
+    <circle cx="150" cy="90" r="4"/><circle cx="150" cy="520" r="4"/>
+    <circle cx="250" cy="90" r="4"/><circle cx="250" cy="520" r="4"/>
+    <circle cx="460" cy="330" r="4"/><circle cx="320" cy="520" r="4"/>
+    <circle cx="700" cy="190" r="4"/><circle cx="700" cy="290" r="4"/>
+    <circle cx="447" cy="197" r="3.5"/><circle cx="543" cy="283" r="3.5"/>
+  </g>
+  <circle cx="250" cy="330" r="4.5" fill="#1d4ed8"/>
+  <g fill="#ffffff" stroke="#1f2937" stroke-width="2">
+    <circle cx="90" cy="90" r="5"/><circle cx="90" cy="520" r="5"/>
+    <circle cx="820" cy="190" r="5"/><circle cx="820" cy="290" r="5"/>
+  </g>
+
+  <!-- 라벨 -->
+  <g font-size="12.5" fill="#111827">
+    <text x="78" y="82" text-anchor="end" font-weight="700">Vin+</text>
+    <text x="78" y="540" text-anchor="end" font-weight="700">GND</text>
+    <text x="24" y="210" fill="#374151">PV 입력</text>
+    <text x="24" y="228" fill="#374151">18~50 V</text>
+    <text x="132" y="309" text-anchor="end">Cin</text>
+    <text x="444" y="134" text-anchor="end">Llk</text>
+    <text x="444" y="150" text-anchor="end" fill="#4b5563">0.16 µH</text>
+    <text x="440" y="240" text-anchor="end">Lp 12 µH</text>
+    <text x="440" y="257" text-anchor="end" fill="#4b5563">Np 4T</text>
+    <text x="548" y="238">Ns 30T</text>
+    <text x="494" y="176" text-anchor="middle" fill="#4b5563">T1</text>
+    <text x="592" y="168" text-anchor="middle">D3</text>
+    <text x="634" y="168" fill="#4b5563">SiC 1200 V</text>
+    <text x="722" y="244">Cf</text>
+    <text x="832" y="186" font-weight="700">PHV+</text>
+    <text x="832" y="294" font-weight="700">PHV−</text>
+    <text x="832" y="232" fill="#374151">342 V 피크 / 250 W 피크</text>
+    <text x="832" y="250" fill="#374151">→ 언폴더</text>
+    <text x="472" y="326">드레인</text>
+    <text x="448" y="412" text-anchor="end">Q1</text>
+    <text x="448" y="428" text-anchor="end" fill="#4b5563">150 V</text>
+    <text x="534" y="424" fill="#4b5563">PWM</text>
+  </g>
+  <g font-size="12.5" fill="#1d4ed8">
+    <text x="226" y="207" text-anchor="end" font-weight="700">D1</text>
+    <text x="226" y="223" text-anchor="end">200 V / 5 A</text>
+    <text x="236" y="324" text-anchor="end" font-weight="700">X</text>
+    <text x="226" y="378" text-anchor="end" font-weight="700">Ls</text>
+    <text x="226" y="394" text-anchor="end">10 µH</text>
+    <text x="226" y="459" text-anchor="end" font-weight="700">D2</text>
+    <text x="226" y="475" text-anchor="end">200 V / 5 A</text>
+    <text x="325" y="306" text-anchor="middle" font-weight="700">Cs 68 nF</text>
+    <text x="325" y="362" text-anchor="middle">C0G/PP 250 V</text>
+  </g>
+
+  <!-- 동작 순서 -->
+  <rect x="590" y="340" width="410" height="236" fill="#f8fafc" stroke="#d5d9e0"/>
+  <text x="606" y="366" font-size="13.5" font-weight="700" fill="#111827">동작 순서</text>
+  <g font-size="12.5" fill="#111827">
+    <text x="606" y="394" font-weight="700" fill="#1d4ed8">① 턴오프 — 누설 에너지 흡수</text>
+    <text x="622" y="412" fill="#374151">1차 권선 → Cs → D1 → Vin+</text>
+    <text x="606" y="440" font-weight="700" fill="#1d4ed8">② 턴온 — 공진 반전</text>
+    <text x="622" y="458" fill="#374151">GND → D2 → Ls → Cs → Q1 → GND</text>
+    <text x="606" y="486" font-weight="700" fill="#1d4ed8">③ 다음 턴오프 — 회생</text>
+    <text x="622" y="504" fill="#374151">Cs 전하가 D1을 거쳐 입력으로 되돌아감</text>
+    <line x1="606" y1="522" x2="984" y2="522" stroke="#d5d9e0"/>
+    <text x="606" y="544" fill="#374151">Vds 피크 116.6 V (입력 37.6 V, 150 V의 78%)</text>
+    <text x="606" y="562" fill="#374151">반전 시간 3.2~3.7 µs (온타임 5.5~6.0 µs)</text>
+  </g>
+</svg>
